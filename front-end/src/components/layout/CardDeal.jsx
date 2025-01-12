@@ -1,5 +1,5 @@
 import React from 'react'
-import styles,{layout}  from '../../style'
+import styles,{layout}  from '../../styles/Layout'
 import { card } from '../../assets'
 import Button from '../layout/Button'
 
