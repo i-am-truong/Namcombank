@@ -1,6 +1,6 @@
 import React from 'react'
-import styles from '../style'
-import { discount, robot } from '../assets'
+import styles from '../../style'
+import { discount, robot } from '../../assets'
 import GetStarted from "./GetStarted"
 
 export default function Hero() {

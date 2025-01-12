@@ -1,6 +1,6 @@
 import { React, useState } from 'react'
-import { close, logo, menu } from '../assets/index'
-import { navLinks } from '../constants/index'
+import { close, logo, menu } from '../../assets/index'
+import { navLinks } from '../../constants/index'
 
 export default function Navbar() {
   const [toggle, setToggle] = useState(false);

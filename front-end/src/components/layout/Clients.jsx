@@ -1,6 +1,6 @@
 import React from 'react'
-import { clients } from '../constants'
-import styles from '../style'
+import { clients } from '../../constants'
+import styles from '../../style'
 
 export default function Clients() {
   return (
