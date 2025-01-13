@@ -4,8 +4,12 @@ import styles from "./style";
 import { Billing, Business, CardDeal, Clients, CTA, Footer, Navbar, Stats, Testimonials, Hero } from "./components";
 import Login from './components/Login';
 import Register from './components/Register';
+import { GoogleOAuthProvider } from '@react-oauth/google';
+import CustomerDashboard from './components/CustomerDashboard';
+import ForgotPassword from './components/ForgotPassword';
 
 export default function App() {
+  
   return (
     <Router>
       <div className="w-full overflow-hidden">
@@ -47,6 +51,12 @@ export default function App() {
 
           {/* Trang Register */}
           <Route path="/register" element={<Register />} />
+
+          {/* Trang Forgot Password */}
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+
+          {/* Trang Customer Dashboard */}
+          <Route path="/customer-dashboard" element={<CustomerDashboard />} />
         </Routes>
       </div>
     </Router>

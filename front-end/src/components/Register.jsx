@@ -78,16 +78,16 @@ const Register = () => {
           </div>
           <button
             type="submit"
-            className="w-full bg-indigo-600 text-white py-2 px-4 rounded hover:bg-indigo-700"
+            className="w-full bg-green-800 text-white py-2 px-4 rounded hover:bg-green-700"
           >
             Register
           </button>
           {errorMessage && (
             <p className="mt-4 text-center text-sm text-red-600">{errorMessage}</p>
           )}
-          <p className="mt-4 text-center text-sm text-gray-600">
+          <p className="mt-4 text-center text-sm text-black-600">
             You have an account?{' '}
-            <Link to="/login" className="text-indigo-600 hover:underline">
+            <Link to="/login" className="text-green-800 hover:underline">
               Login here
             </Link>
           </p>
