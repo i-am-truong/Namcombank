@@ -9,10 +9,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@react-oauth/google": "^0.12.1",
     "@vitejs/plugin-react": "^4.3.4",
+    "axios": "^1.7.9",
     "bank-app": "file:",
+    "nodemailer": "^6.9.16",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-google-recaptcha": "^3.1.0",
     "react-recaptcha": "^2.3.10",
     "react-router-dom": "^7.1.1"
   },
