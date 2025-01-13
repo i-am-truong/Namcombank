@@ -19,7 +19,6 @@ export default function Testimonials() {
           </p>
         </div>
       </div>
-    <p>ds</p>
       <div className="flex flex-col md:flex-row sm:justify-start justify-center w-full feedback-container relative z-[1]">
         {feedback.map((card) => <FeedbackCard key={card.id} {...card} />)}
       </div>
