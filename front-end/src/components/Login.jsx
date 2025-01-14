@@ -110,6 +110,7 @@ const Login = () => {
             Register
           </Link>
         </p>
+        <p style={{textAlign: 'center'}}>OR</p>
         <GoogleOAuthProvider clientId="147676468818-86oa6l06us45c8as6272v1mbc6egenf5.apps.googleusercontent.com"> {/* Add your Google Client ID */}
           <div className="mt-4">
             <GoogleLogin
