@@ -1,0 +1,62 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Jan 18, 2025, 1:17:36 PM
+    Author     : lenovo
+*/
+
+/* register.css */
+body, html {
+    height: 100%;
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.bg-dark {
+    background-color: #343a40 !important;
+}
+
+.card-registration {
+    border-radius: 15px;
+}
+
+.card-body {
+    padding: 2rem;
+}
+
+.form-outline {
+    margin-bottom: 1.5rem;
+}
+
+.form-control-lg {
+    height: calc(1.5em + 1rem + 2px);
+    padding: 0.5rem 1rem;
+    font-size: 1.25rem;
+    line-height: 1.5;
+}
+
+label {
+    margin-bottom: .5rem;
+    font-weight: bold;
+}
+
+.btn {
+    padding: 0.5rem 2rem;
+    font-size: 1.25rem;
+}
+
+.btn-light {
+    background-color: #f8f9fa;
+    border-color: #f8f9fa;
+}
+
+.btn-warning {
+    background-color: #ffc107;
+    border-color: #ffc107;
+}
+
+img.img-fluid {
+    border-radius: 15px 0 0 15px;
+}
