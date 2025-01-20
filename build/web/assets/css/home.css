@@ -24,7 +24,7 @@ section {
 }
 
 nav li {
-  color: var(--1st, #212832);
+  color: var(-1st, #212832);
   font-family: "Open Sans";
   font-size: 16px;
   font-style: normal;
