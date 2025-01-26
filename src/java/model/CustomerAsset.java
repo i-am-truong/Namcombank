@@ -10,7 +10,7 @@ import java.util.Date;
  *
  * @author TQT
  */
-public class CustomerAssets {
+public class CustomerAsset {
     private int assetId;
     private int customerId;
     private int staffId;
@@ -21,10 +21,10 @@ public class CustomerAssets {
     private Date createdDate;
     private Date approvedDate;
 
-    public CustomerAssets() {
+    public CustomerAsset() {
     }
 
-    public CustomerAssets(int assetId, int customerId, int staffId, String assetName, double assetValue, String approvedBy, String status, Date createdDate, Date approvedDate) {
+    public CustomerAsset(int assetId, int customerId, int staffId, String assetName, double assetValue, String approvedBy, String status, Date createdDate, Date approvedDate) {
         this.assetId = assetId;
         this.customerId = customerId;
         this.staffId = staffId;
@@ -110,8 +110,10 @@ public class CustomerAssets {
 
     @Override
     public String toString() {
-        return "CustomerAssets{" + "assetId=" + assetId + ", customerId=" + customerId + ", staffId=" + staffId + ", assetName=" + assetName + ", assetValue=" + assetValue + ", approvedBy=" + approvedBy + ", status=" + status + ", createdDate=" + createdDate + ", approvedDate=" + approvedDate + '}';
+        return "CustomerAsset{" + "assetId=" + assetId + ", customerId=" + customerId + ", staffId=" + staffId + ", assetName=" + assetName + ", assetValue=" + assetValue + ", approvedBy=" + approvedBy + ", status=" + status + ", createdDate=" + createdDate + ", approvedDate=" + approvedDate + '}';
     }
+
+    
     
     
 }
