@@ -1,8 +1,10 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8    ">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Namcombank | Banking Services System</title>
     <link rel="icon" href="./assets/img/namcombank.jpg" type="image/x-icon">
@@ -20,43 +22,9 @@
 </head>
 
 <body class="body-whole">
+    <!-- Header  -->
 
-    <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-transparent pb-5 header">
-        <div class="container">
-            <a class="navbar-brand nav-logo" href="index.jsp">
-                <img src="./assets/img/namcombank.jpg" alt="Logo" width="100">
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class=""><i class="fas fa-bars fa-sm"></i></span>
-            </button>
-            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link text-dark nav-change-color" href="#services">Services</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark nav-change-color" href="#about">About</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark nav-change-color" href="#contact">Contact</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark nav-change-color" href="./login.jsp">Login</a>
-                    </li>
-                    <li class="nav-item">
-                        <div class="nav-signup-container">
-                            <div class="nav-signup">
-                                <a href="./register.jsp" class="no-underline">Sign Up</a>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
+    <%@include file="header.jsp" %>
 
     <!-- Home Front Section  -->
     <section class="pt-3">
@@ -339,56 +307,7 @@
 
 
     <!-- Footer -->
-    <footer id="contact">
-        <div class="container pt-5 pb-3">
-            <div class="row">
-                <div class="col-lg-3">
-                    <h5>About</h5>
-                    <p>Namcombank | Banking Services System</p>
-                    <ul class="list-inline">
-                        <li class="list-inline-item"><a href="#"><i class="fab fa-facebook fa-lg"
-                                    id="icon-awesome"></i></a></li>
-                        <li class="list-inline-item"><a href="#"><i class="fab fa-instagram fa-lg"
-                                    id="icon-awesome"></i></a></li>
-                        <li class="list-inline-item"><a href="#"><i class="fab fa-twitter fa-lg"
-                                    id="icon-awesome"></i></a></li>
-                        <li class="list-inline-item"><a href="#"><i class="fab fa-linkedin fa-lg"
-                                    id="icon-awesome"></i></a></li>
-                    </ul>
-                </div>
-                <div class="col-lg-3">
-                    <h5>Services</h5>
-                    <ul>
-                        <li><a href="#">Home Loan</a></li>
-                        <li><a href="#">Auto Loan</a></li>
-                        <li><a href="#">Personal Loan</a></li>
-                        <li><a href="#">Education Loan</a></li>
-                        <li><a href="#">SME Loan</a></li>
-                    </ul>
-                </div>
-                <div class="col-lg-3">
-                    <h5>Information</h5>
-                    <ul>
-                        <li><a href="#">Branches</a></li>
-                        <li><a href="#">ATM Locations</a></li>
-                        <li><a href="#">EMI Calculator</a></li>
-                        <li><a href="#">Service Charges</a></li>
-                        <li><a href="#">Financial Reports</a></li>
-                    </ul>
-                </div>
-                <div class="col-lg-3">
-                    <h5>Support</h5>
-                    <ul>
-                        <li><a href="#">FAQs</a></li>
-                        <li><a href="#">Career</a></li>
-                        <li><a href="#">Contact Us</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
-                        <li><a href="#">Document Verification</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </footer>
+    <%@include file="footer.jsp" %>
     <script src="./assets/js/bootstrap.min.js"></script>
 </body>
 
