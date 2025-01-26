@@ -22,11 +22,12 @@ public class Customer {
     private String phonenumber;
     private float balance;
     private int cid;
+    private String address;
 
     public Customer() {
     }
 
-    public Customer(int customerId, String fullname, String username, String password, Boolean active, String email, Date dob, Boolean gender, String phonenumber, float balance, int cid) {
+    public Customer(int customerId, String fullname, String username, String password, Boolean active, String email, Date dob, Boolean gender, String phonenumber, float balance, int cid, String address) {
         this.customerId = customerId;
         this.fullname = fullname;
         this.username = username;
@@ -38,7 +39,10 @@ public class Customer {
         this.phonenumber = phonenumber;
         this.balance = balance;
         this.cid = cid;
+        this.address = address;
     }
+
+    
 
     public int getCustomerId() {
         return customerId;
@@ -127,6 +131,18 @@ public class Customer {
     public void setCid(int cid) {
         this.cid = cid;
     }
-    
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    @Override
+    public String toString() {
+        return "Customer{" + "customerId=" + customerId + ", fullname=" + fullname + ", username=" + username + ", password=" + password + ", active=" + active + ", email=" + email + ", dob=" + dob + ", gender=" + gender + ", phonenumber=" + phonenumber + ", balance=" + balance + ", cid=" + cid + ", address=" + address + '}';
+    }
     
 }
