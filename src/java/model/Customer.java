@@ -4,7 +4,7 @@
  */
 package model;
 
-import java.util.Date;
+import java.sql.Date;
 
 /**
  *
@@ -15,19 +15,19 @@ public class Customer {
     private String fullname;
     private String username;
     private String password; 
-    private Boolean active;
+    private int active;
     private String email;
     private Date dob;
-    private Boolean gender;
+    private int gender;
     private String phonenumber;
     private float balance;
-    private int cid;
+    private String cid;
     private String address;
-
+    
     public Customer() {
     }
 
-    public Customer(int customerId, String fullname, String username, String password, Boolean active, String email, Date dob, Boolean gender, String phonenumber, float balance, int cid, String address) {
+    public Customer(int customerId, String fullname, String username, String password, int active, String email, Date dob, int gender, String phonenumber, float balance, String cid, String address) {
         this.customerId = customerId;
         this.fullname = fullname;
         this.username = username;
@@ -76,11 +76,11 @@ public class Customer {
         this.password = password;
     }
 
-    public Boolean getActive() {
+    public int getActive() {
         return active;
     }
 
-    public void setActive(Boolean active) {
+    public void setActive(int active) {
         this.active = active;
     }
 
@@ -100,11 +100,11 @@ public class Customer {
         this.dob = dob;
     }
 
-    public Boolean getGender() {
+    public int getGender() {
         return gender;
     }
 
-    public void setGender(Boolean gender) {
+    public void setGender(int gender) {
         this.gender = gender;
     }
 
@@ -124,11 +124,11 @@ public class Customer {
         this.balance = balance;
     }
 
-    public int getCid() {
+    public String getCid() {
         return cid;
     }
 
-    public void setCid(int cid) {
+    public void setCid(String cid) {
         this.cid = cid;
     }
 
@@ -139,10 +139,7 @@ public class Customer {
     public void setAddress(String address) {
         this.address = address;
     }
-
-    @Override
-    public String toString() {
-        return "Customer{" + "customerId=" + customerId + ", fullname=" + fullname + ", username=" + username + ", password=" + password + ", active=" + active + ", email=" + email + ", dob=" + dob + ", gender=" + gender + ", phonenumber=" + phonenumber + ", balance=" + balance + ", cid=" + cid + ", address=" + address + '}';
-    }
+    
+    
     
 }

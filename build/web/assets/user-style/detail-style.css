@@ -1,0 +1,26 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : May 26, 2023, 3:37:57 AM
+    Author     : Mạc Huyền
+*/
+.btn-cancel {
+    color: #fff;
+    background-color: #999999;
+    border-color: #999999;
+}
+.btn-success {
+    color: #fff;
+    background-color: #33b900;
+    border-color: #33b900;
+}
+.content {
+    width: 100%;
+    box-sizing: border-box;
+    box-shadow: 0px 0px 32px -7px #ccc;
+    padding: 30px 30px;
+    text-align: justify;
+}
+

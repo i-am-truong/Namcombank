@@ -4,12 +4,10 @@
  */
 package model;
 
-import java.math.BigDecimal;
-import java.util.Date;
-
+import java.sql.Date;
 /**
  *
- * @author TQT
+ * @author lenovo
  */
 public class LoanPackage {
     private int packageId;
@@ -17,16 +15,17 @@ public class LoanPackage {
     private String packageName;
     private String loanType;
     private String description;
-    private BigDecimal interestRate;
-    private BigDecimal maxAmount;
-    private BigDecimal minAmount;
+    private double interestRate;
+    private double maxAmount;
+    private double minAmount;
     private int loanTerm;
     private Date createdDate;
 
     public LoanPackage() {
+        
     }
 
-    public LoanPackage(int packageId, int staffId, String packageName, String loanType, String description, BigDecimal interestRate, BigDecimal maxAmount, BigDecimal minAmount, int loanTerm, Date createdDate) {
+    public LoanPackage(int packageId, int staffId, String packageName, String loanType, String description, double interestRate, double maxAmount, double minAmount, int loanTerm, Date createdDate) {
         this.packageId = packageId;
         this.staffId = staffId;
         this.packageName = packageName;
@@ -79,27 +78,27 @@ public class LoanPackage {
         this.description = description;
     }
 
-    public BigDecimal getInterestRate() {
+    public double getInterestRate() {
         return interestRate;
     }
 
-    public void setInterestRate(BigDecimal interestRate) {
+    public void setInterestRate(double interestRate) {
         this.interestRate = interestRate;
     }
 
-    public BigDecimal getMaxAmount() {
+    public double getMaxAmount() {
         return maxAmount;
     }
 
-    public void setMaxAmount(BigDecimal maxAmount) {
+    public void setMaxAmount(double maxAmount) {
         this.maxAmount = maxAmount;
     }
 
-    public BigDecimal getMinAmount() {
+    public double getMinAmount() {
         return minAmount;
     }
 
-    public void setMinAmount(BigDecimal minAmount) {
+    public void setMinAmount(double minAmount) {
         this.minAmount = minAmount;
     }
 
@@ -118,11 +117,7 @@ public class LoanPackage {
     public void setCreatedDate(Date createdDate) {
         this.createdDate = createdDate;
     }
-
-    @Override
-    public String toString() {
-        return "LoanPackage{" + "packageId=" + packageId + ", staffId=" + staffId + ", packageName=" + packageName + ", loanType=" + loanType + ", description=" + description + ", interestRate=" + interestRate + ", maxAmount=" + maxAmount + ", minAmount=" + minAmount + ", loanTerm=" + loanTerm + ", createdDate=" + createdDate + '}';
-    }
+    
     
     
 }

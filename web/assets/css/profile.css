@@ -1,0 +1,68 @@
+/* General Body Style */
+body {
+    margin-top: 20px;
+    background-color: #f2f6fc; /* Light background for a clean look */
+    color: #69707a; /* Neutral text color */
+}
+
+/* Profile Image Style */
+.img-account-profile {
+    height: 10rem;
+}
+.rounded-circle {
+    border-radius: 50% !important; /* Ensures circular profile images */
+}
+
+/* Card Styles */
+.card {
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(33, 40, 50, 0.15); /* Subtle shadow for depth */
+}
+.card .card-header {
+    font-weight: 500; /* Slightly bold header text */
+}
+.card-header:first-child {
+    border-radius: 0.35rem 0.35rem 0 0; /* Rounded top corners for the first header */
+}
+.card-header {
+    padding: 1rem 1.35rem;
+    margin-bottom: 0;
+    background-color: rgba(33, 40, 50, 0.03); /* Light gray background for headers */
+    border-bottom: 1px solid rgba(33, 40, 50, 0.125); /* Subtle border for separation */
+}
+
+/* Form Control Style */
+.form-control, .dataTable-input {
+    display: block;
+    width: 100%;
+    padding: 0.875rem 1.125rem;
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1;
+    color: #69707a; /* Neutral text color */
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #c5ccd6; /* Light border */
+    appearance: none;
+    border-radius: 0.35rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+/* Navigation Borders */
+.nav-borders .nav-link.active {
+    color: #0061f2; /* Primary blue color for active state */
+    border-bottom-color: #0061f2; /* Matches the text color */
+}
+.nav-borders .nav-link {
+    color: #69707a; /* Neutral color for inactive links */
+    border-bottom-width: 0.125rem;
+    border-bottom-style: solid;
+    border-bottom-color: transparent; /* Invisible by default */
+    padding: 0.5rem 0; /* Consistent vertical padding */
+    margin: 0 1rem; /* Horizontal spacing between links */
+}
+
+/* Additional Styling */
+.nav-borders .nav-link:hover {
+    color: #0056d2; /* Slightly darker blue on hover */
+    border-bottom-color: #0056d2; /* Matches the hover text color */
+}
