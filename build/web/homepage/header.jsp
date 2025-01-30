@@ -156,7 +156,7 @@
 
                     </c:if>
 
-                     Mini Cart Content 
+                     Mini Cart Content
 
                 </div>
             </div>
@@ -164,22 +164,22 @@
     </div>-->
 
                     <!-- User Icon and Name -->
-                    <!--                <div class="col-lg-1 text-right">
-                    <c:if test="${sessionScope.user != null}">
+                                   <!-- <div class="col-lg-1 text-right">
+                    <c:if test="${sessionScope.customer != null}">
                         <span style="line-height: 30px;">hello</span>
                     </c:if>
-                
 
-                </div>-->
+
+                </div> -->
                     <div class="col-lg-1 text-center" style="margin-left: 100px">
-                        <c:if test="${sessionScope.user != null}" >
+                        <c:if test="${sessionScope.customer != null}" >
                             <div style="position: relative; display: inline-block;">
 
                                 <!--                                <i class="fas fa-user" id="userIcon" style="font-size: 30px; color: black; cursor: pointer;"></i>-->
                                 <span class="logo" style="margin-left: 20px"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQuzZt1REzKbmypTgYKn0rAvtrwEIPnK6Kfnw&s" id="userIcon" style="border-radius: 50%; height: 50px; width: 50px;"></span>
 
                                 <span class="dropdown-menu" id="dropdownMenu">
-                                    <a href="#">&nbsp;&nbsp;$${sessionScope.wallet}</a>
+                                    <a href="#">&nbsp;&nbsp;$${sessionScope.customer.balance}</a>
                                     <a href="userProfile"><i class="fas fa-user"></i>&nbsp;&nbsp;Show profile</a>
                                     <a href="orderHistory">
                                         <i class="fas fa-shopping-bag"></i>&nbsp;&nbsp;History Order
@@ -187,10 +187,10 @@
                                     <a href="logOut"><i class="fas fa-sign-out-alt"></i>&nbsp;&nbsp;Logout</a>
 
                                 </span>
-                                <span style="line-height: 30px; display: block; color: #04414d; white-space: nowrap ">${sessionScope.user.fullName}</span>
+                                <span style="line-height: 30px; display: block; color: #04414d; white-space: nowrap ">${sessionScope.customer.fullname}</span>
                             </div>
                         </c:if>
-                        <c:if test="${sessionScope.user == null}">
+                        <c:if test="${sessionScope.customer == null}">
                             <a href="login" style="display: block;">
                                 <i class="fas fa-user" id ="userIcon" style="font-size: 30px; color: #ccc; cursor: pointer"></i>
                                 <span style="line-height: 30px; display: block; color: #04414d  ">Login/Register</span>

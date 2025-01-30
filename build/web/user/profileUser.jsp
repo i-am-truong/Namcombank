@@ -1,4 +1,4 @@
-<%-- 
+<%--
     Document   : cart
     Created on : 07/07/2024, 8:28:36 AM
     Author     : ADMIN
@@ -12,7 +12,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <title>Clothes Shop</title>
+        <title>Namcombank</title>
         <link rel="icon" href="assets/img/icon.png" type="image/gif" sizes="16x16">
         <link rel="icon" href="assets/img/icon.png" type="image/gif" sizes="18x18">
         <link rel="icon" href="assets/img/icon.png" type="image/gif" sizes="20x20">
@@ -107,105 +107,105 @@
                         <div class="card">
                             <div class="card-body">
                                 <div class="d-flex flex-column align-items-center text-center">
-                                    <c:if test="${sessionScope.user.gender == 0}">
+                                    <c:if test="${sessionScope.customer.gender == 0}">
                                     <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="Admin" class="rounded-circle p-1 bg-primary" width="110">
                                     </c:if>
-                                    <c:if test="${sessionScope.user.gender == 1}">
+                                    <c:if test="${sessionScope.customer.gender == 1}">
                                     <img src="https://bootdey.com/img/Content/avatar/avatar6.png" alt="Admin" class="rounded-circle p-1 bg-primary" width="110">
                                     </c:if>
                                     <div class="mt-3">
-                                        <h4>${sessionScope.user.fullName}</h4>
+                                        <h4>${sessionScope.customer.fullname}</h4>
                                                <hr class="my-4">
                                         <button class="btn btn-primary">Follow</button>
                                         <button class="btn btn-outline-primary">Message</button>
                                     </div>
                                 </div>
-                        
+
 
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-6 container" style="margin-left: 100px">            
+                    <div class="col-lg-6 container" style="margin-left: 100px">
 
 
 
                         <form id="profile-form" action="userProfile" method="post">
                             <div class="col-md-9">
                                 <label class="labels">Full Name</label>
-                                <input 
+                                <input
                                     name="fullName"
-                                    required 
-                                    type="text" 
-                                    class="form-control" 
-                                    placeholder="enter full name" 
+                                    required
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="enter full name"
                                     maxlength="50"
-                                    pattern=".+\S+.*" 
+                                    pattern=".+\S+.*"
                                     title="Full Name cannot be just spaces."
-                                    value="${sessionScope.user.fullName}"
+                                    value="${sessionScope.customer.fullname}"
                                     >
                             </div>
 
                             <div class="col-md-9">
                                 <label class="labels">Phone Number</label>
-                                <input 
+                                <input
                                     name="phoneNumber"
-                                    required 
-                                    type="text" 
-                                    class="form-control" 
-                                    placeholder="enter phone number" 
-                                    pattern="\d{10}" 
+                                    required
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="enter phone number"
+                                    pattern="\d{10}"
                                     title="Please enter a valid 10-digit phone number"
-                                    value="${sessionScope.user.phone}"
+                                    value="${sessionScope.customer.phonenumber}"
                                     >
                             </div>
 
                             <div class="col-md-9">
                                 <label class="labels">Email</label>
-                                <input 
+                                <input
                                     name="email"
-                                    type="email" 
-                                    id="email-input" 
-                                    class="form-control" 
-                                    placeholder="enter email" 
+                                    type="email"
+                                    id="email-input"
+                                    class="form-control"
+                                    placeholder="enter email"
                                     required
                                     maxlength="50"
-                                    value="${sessionScope.user.email}"
+                                    value="${sessionScope.customer.email}"
                                     >
                                 <div id="email-error" style="color: red; display: none;">Please enter a valid email address.</div>
                             </div>
 
                             <div class="col-md-9">
                                 <label class="labels">Address</label>
-                                <input 
+                                <input
                                     name="address"
-                                    required 
-                                    type="text" 
-                                    class="form-control" 
-                                    placeholder="enter address" 
+                                    required
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="enter address"
                                     maxlength="50"
-                                    pattern=".+\S+.*" 
+                                    pattern=".+\S+.*"
                                     title="Address cannot be just spaces."
-                                    value="${sessionScope.user.address}"
+                                    value="${sessionScope.customer.address}"
                                     >
                             </div>
 
                             <div class="col-md-9">
                                 <label class="labels">Gender</label>
-                                <c:if test="${sessionScope.user.gender == 1}">
+                                <c:if test="${sessionScope.customer.gender == 1}">
                                     <select name="gender" class="form-control" required>
                                         <option value="" disabled selected>Select gender</option>
                                         <option selected value="male">Male</option>
                                         <option value="female">Female</option>
                                     </select>
                                 </c:if>
-                                <c:if test="${sessionScope.user.gender == 0}">
+                                <c:if test="${sessionScope.customer.gender == 0}">
                                     <select name="gender" class="form-control" required>
                                         <option value="" disabled selected>Select gender</option>
                                         <option  value="male">Male</option>
                                         <option selected value="female">Female</option>
                                     </select>
                                 </c:if>
-                                <c:if test="${sessionScope.user.gender != 1 && sessionScope.user.gender != 2} ">
+                                <c:if test="${sessionScope.customer.gender != 1 && sessionScope.customer.gender != 2} ">
                                     <select name="gender" class="form-control" required>
                                         <option value="" disabled selected>Select gender</option>
                                         <option  value="male">Male</option>
@@ -216,14 +216,14 @@
 
                             <div class="col-md-9">
                                 <label class="labels">Date of birth</label>
-                                <input 
+                                <input
                                     name="dateOfBirth"
-                                    required 
-                                    type="date" 
-                                    class="form-control" 
-                                    placeholder="enter date of birth" 
+                                    required
+                                    type="date"
+                                    class="form-control"
+                                    placeholder="enter date of birth"
                                     max=""
-                                    value="${sessionScope.user.dob}"
+                                    value="${sessionScope.customer.dob}"
                                     >
                             </div>
 
@@ -232,7 +232,7 @@
                                 <a href="changePass" style="margin-left: 100px" class="btn btn-primary profile-button" type="button">Change Password</a>
                             </div>
                         </form>
-                        
+
 
                     </div>
 

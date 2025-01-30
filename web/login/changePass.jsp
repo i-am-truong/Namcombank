@@ -1,4 +1,4 @@
-<%-- 
+ <%-- 
     Document   : changePass
     Created on : Jun 21, 2024, 11:14:44 AM
     Author     : chien
@@ -51,7 +51,7 @@
                     <div class="login-register-form-full">
                         <form action="changePass" method="post" onsubmit="return validateResetForm()">
                             <p style="color: #0061f2;">${requestScope.eee}</p>
-                            <input type="text" class="form-control" name="username" id="username" value="${sessionScope.user.fullName}" readonly="">
+                            <input type="text" class="form-control" name="username" id="username" value="${sessionScope.customer.fullname}" readonly="">
                             <input type="password" class="form-control" name="oldpass" id="oldpass" placeholder="Enter old password">
                             <input type="password" class="form-control" name="pass" id="newpass" placeholder="Enter new password">
                             <input type="password" class="form-control" name="repass" id="repass" placeholder="Confirm password">

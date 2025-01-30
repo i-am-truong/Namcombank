@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import model.Customer;
 
 /**
  *
@@ -88,20 +89,38 @@ public class login extends HttpServlet {
             throws ServletException, IOException {
         String param_user = request.getParameter("username");//user input
         String param_pass = request.getParameter("password");
-        String mess = "";
+        String remember = request.getParameter("rem");
+        HttpSession session = request.getSession();
 
-        CustomerDAO db = new CustomerDAO();
-        model.Customer account = db.get(param_user, param_pass);
+        CustomerDAO cdao = new CustomerDAO();
+        Customer customer = cdao.checkUser(param_user, param_pass);
 
-        if (account != null) {
-//            resp.getWriter().println("login successful!");
-            request.getSession().setAttribute("account", account);
-            request.getRequestDispatcher("Home").forward(request, response);
+        if (customer == null) {
+            request.setAttribute("err", "Invalid username or password!");
+            request.getRequestDispatcher("login/login.jsp").forward(request, response);
+            return;
+        } else if (customer.getActive() == 0) {
+            request.setAttribute("err", "Your account has been blocked!");
+            request.getRequestDispatcher("login/login.jsp").forward(request, response);
+            return;
         } else {
-//            resp.getWriter().println("login failed!");
-            mess = "Wrong username or password!";
-            request.setAttribute("mess", mess); // Pass error message to the JSP
-            request.getRequestDispatcher("login").forward(request, response);
+            double balance = cdao.getBalanceByCId(customer);
+            session.setAttribute("balance", balance);
+            session.setAttribute("customer", customer);
+
+            Cookie username = new Cookie("username", param_user);
+            Cookie password = new Cookie("password", param_pass);
+            Cookie remem = new Cookie("rem", remember);
+            int cookieAge = (remember != null) ? (24 * 60 * 60 * 60) : 0;
+            username.setMaxAge(cookieAge);
+            password.setMaxAge(cookieAge);
+            remem.setMaxAge(cookieAge);
+
+            response.addCookie(username);
+            response.addCookie(password);
+            response.addCookie(remem);
+
+            response.sendRedirect("Home");
         }
     }
 

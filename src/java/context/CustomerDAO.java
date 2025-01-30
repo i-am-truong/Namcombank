@@ -109,6 +109,25 @@ public class CustomerDAO extends DBContext {
         return customer;
     }
 
+    // lay so du tai khoan cua khach hang
+    public double getBalanceByCId(Customer c){
+        int cid = c.getCustomerId();
+        String sql = "SELECT [balance]\n"
+                + "FROM [dbo].[Customer]\n"
+                + "WHERE customer_id = ?";
+        try{
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, cid);
+            ResultSet rs = st.executeQuery();
+            if(rs.next()){
+                return rs.getInt("balance");
+            }
+        } catch (SQLException e){
+
+        }
+        return 0;
+    }
+
     //___________________________Active Customer_________________________
     // set active of account
     public void changeActive(int customer_id, int active) {
@@ -152,7 +171,7 @@ public class CustomerDAO extends DBContext {
 //                + "  FROM [dbo].[Customer]"
 //                + "where username = ? and password = ?";
 //        try{
-//            
+//
 //        }
 //        return 0;
 //    }
@@ -230,7 +249,7 @@ public class CustomerDAO extends DBContext {
         return String.format("%06d", number);
     }
 
-    //encode string  
+    //encode string
     public static String toSHA1(String str) {
         String tim_ho = "kaisd#$%^&*(sg~~sda";
         String result = null;
@@ -461,5 +480,4 @@ public class CustomerDAO extends DBContext {
 //
 //        return listU;
 //    }
-
 }
