@@ -57,16 +57,16 @@ public class CustomerDAO extends DBContext {
             if (rs.next()) {
                 return new Customer(
                         rs.getInt(1), // customer_id
-                        rs.getNString(2), // fullname
-                        rs.getNString(3), // username
-                        rs.getNString(4), // password
+                        rs.getString(2), // fullname
+                        rs.getString(3), // username
+                        rs.getString(4), // password
                         rs.getInt(5), // active
-                        rs.getNString(6), // email
+                        rs.getString(6), // email
                         rs.getDate(7), // date of birth
                         rs.getInt(8), // gender
-                        rs.getNString(9), // phone number
+                        rs.getString(9), // phone number
                         rs.getFloat(10), // balance
-                        rs.getNString(11), // citizen ID card
+                        rs.getString(11), // citizen ID card
                         rs.getNString("address") // address
                 );
             }
@@ -110,19 +110,19 @@ public class CustomerDAO extends DBContext {
     }
 
     // lay so du tai khoan cua khach hang
-    public double getBalanceByCId(Customer c){
+    public double getBalanceByCId(Customer c) {
         int cid = c.getCustomerId();
         String sql = "SELECT [balance]\n"
                 + "FROM [dbo].[Customer]\n"
                 + "WHERE customer_id = ?";
-        try{
+        try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setInt(1, cid);
             ResultSet rs = st.executeQuery();
-            if(rs.next()){
+            if (rs.next()) {
                 return rs.getInt("balance");
             }
-        } catch (SQLException e){
+        } catch (SQLException e) {
 
         }
         return 0;
@@ -251,16 +251,17 @@ public class CustomerDAO extends DBContext {
 
     //encode string
     public static String toSHA1(String str) {
-        String tim_ho = "kaisd#$%^&*(sg~~sda";
+        String salt = "kaisd#$%^&*(sg~~sda";
         String result = null;
 
-        str = str + tim_ho;
+        str = str + salt;
         try {
             byte[] dataByte = str.getBytes("UTF-8");
             MessageDigest md = MessageDigest.getInstance("SHA-1");
             byte[] hashBytes = md.digest(dataByte);
             result = Base64.getEncoder().encodeToString(hashBytes);
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return result;
 
@@ -270,24 +271,25 @@ public class CustomerDAO extends DBContext {
     //resgister with customer
     public void registerAcc(String fullname, String username, String password, String email, String dob, int gender, String phonenumber, String cic, String address) {
         String sql = "INSERT INTO [dbo].[Customer] "
-                + "([fullname], [username], [password], [email], [dob], [gender], [phonenumber], [citizen identification card], [address], [active], [balance]) "
+                + "([fullname], [username], [password], [email], [dob], [gender], [phonenumber], [citizen_identification_card], [address], [active], [balance]) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 1, 0);";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
 
-            ps.setNString(1, fullname);
-            ps.setNString(2, username);
+            ps.setString(1, fullname);
+            ps.setString(2, username);
             // Use hashed password here
-            ps.setNString(3, password);
-            ps.setNString(4, email);
+            ps.setString(3, password);
+            ps.setString(4, email);
             ps.setDate(5, Date.valueOf(dob));
             ps.setInt(6, gender);
-            ps.setNString(7, phonenumber);
-            ps.setNString(8, cic);
-            ps.setNString(9, address);
+            ps.setString(7, phonenumber);
+            ps.setString(8, cic);
+            ps.setString(9, address);
 
             ps.executeUpdate();
 
         } catch (SQLException e) {
+            e.printStackTrace(); // In lỗi ra console
             Logger.getLogger(CustomerDAO.class.getName()).log(Level.SEVERE, "SQL Error: " + e.getMessage(), e);
         }
     }
@@ -363,6 +365,9 @@ public class CustomerDAO extends DBContext {
         }
     }
 
+    public static void main(String[] args) {
+        
+    }
     //search user
 //Name Phone Email Username
 //    public List<Customer> searchU(String key, int active, int index, int quantity, String sortField, String sortOrder) {
@@ -419,7 +424,6 @@ public class CustomerDAO extends DBContext {
 //
 //        return listU;
 //    }
-
     //search user
 //Name Phone Email Username
 //    public List<Customer> searchU(String key, int rid, int active, int index, int quantity, String sortField, String sortOrder) {

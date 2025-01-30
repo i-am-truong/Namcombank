@@ -1,7 +1,7 @@
 <%-- 
     Document   : login
-    Created on : Jun 12, 2024, 7:13:08 PM
-    Author     : chien
+    Created on : Jan 23, 2025, 7:13:08 PM
+    Author     : lenovo
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -12,9 +12,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <title>Namcombank || Login</title>
-                <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-                <link rel="stylesheet" href="assets/css/normalize.css">
-                <link rel="stylesheet" href="assets/css/style.css">
+        <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+        <link rel="stylesheet" href="assets/css/normalize.css">
+        <link rel="stylesheet" href="assets/css/style.css">
         <style>
             /* General styles */
             body {
@@ -151,7 +151,7 @@
                                         <a href="resetPass">Forgot password?</a>
                                     </div>
                                 </div>
-                                <p>${requestScope.err}</p>
+                                <p style="color: red">${requestScope.err}</p>
                                 <button class="button-1" type="submit">Log In</button>
                             </form>
                             <p>Don't Have an Account? <a href="register">Sign up now</a></p>

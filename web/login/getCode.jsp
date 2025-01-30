@@ -10,7 +10,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <title>BulkShop - Electronics Shop HTML Template | Register</title>
+        <title>Namcombank - Banking Services System | Register</title>
         <link rel="icon" href="assets/img/icon.png" type="image/gif" sizes="16x16">
         <link rel="icon" href="assets/img/icon.png" type="image/gif" sizes="18x18">
         <link rel="icon" href="assets/img/icon.png" type="image/gif" sizes="20x20">

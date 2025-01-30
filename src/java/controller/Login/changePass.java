@@ -78,16 +78,16 @@ public class changePass extends HttpServlet {
         CustomerDAO cd = new CustomerDAO();
         oldPass = cd.toSHA1(oldPass);
         newPass = cd.toSHA1(newPass);
-        Customer user = (Customer) session.getAttribute("user");
-        String sname = user.getUsername();
-        String spass = user.getPassword();
+        Customer customer = (Customer) session.getAttribute("customer");
+        String sname = customer.getUsername();
+        String spass = customer.getPassword();
         if (!oldPass.equals(spass)) {
             request.setAttribute("err", "oldPass: "+oldPass+"spass: "+spass);
             request.getRequestDispatcher("login/changePass.jsp").forward(request, response);
         } else {
             cd.changePass(sname, newPass);
-            user.setPassword(newPass);
-            session.setAttribute("user", user);
+            customer.setPassword(newPass);
+            session.setAttribute("customer", customer);
             request.setAttribute("err", "change password successfully!");
             request.getRequestDispatcher("login/changePass.jsp").forward(request, response);
 

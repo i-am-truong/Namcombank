@@ -128,6 +128,14 @@
         <servlet-name>DeleteLoanPackageController</servlet-name>
         <servlet-class>controller.loanpackage.DeleteLoanPackageController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ListSavingController</servlet-name>
+        <servlet-class>controller.saving.ListSavingController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CreateSavingController</servlet-name>
+        <servlet-class>controller.saving.CreateSavingController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>newsList</servlet-name>
         <url-pattern>/newsList</url-pattern>
@@ -251,6 +259,14 @@
     <servlet-mapping>
         <servlet-name>DeleteLoanPackageController</servlet-name>
         <url-pattern>/loanpackage/deleteloanpackage</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ListSavingController</servlet-name>
+        <url-pattern>/saving/list</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CreateSavingController</servlet-name>
+        <url-pattern>/saving/create</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

@@ -1,9 +1,10 @@
 <%-- 
     Document   : register
-    Created on : Jun 16, 2024, 4:22:47 PM
+    Created on : Jan 23, 2025, 4:22:47 PM
     Author     : chien
 --%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html class="no-js" lang="en">
     <head>
@@ -102,37 +103,37 @@
                                 <div class="row gy-3 overflow-hidden">
                                     <div class="col-12">
                                         <div class="form-floating mb-3">
-                                            <input type="text" class="form-control" name="nameC" id="fullname" placeholder="Full Name" value="${param.fullnameC != null ? param.fullnameC : ''}" required>
+                                            <input type="text" class="form-control" name="fullnameC" id="fullname" placeholder="Full Name" value="${param.fullnameC != null ? param.fullnameC : ''}" >
                                             <label for="fullname" class="form-label">Full Name</label>
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <div class="form-floating mb-3">
-                                            <input type="text" class="form-control" name="usernameC" id="username" placeholder="Username" value="${param.usernameC != null ? param.usernameC : ''}" required>
+                                            <input type="text" class="form-control" name="usernameC" id="username" placeholder="Username" value="${param.usernameC != null ? param.usernameC : ''}" >
                                             <label for="username" class="form-label">Username</label>
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <div class="form-floating mb-3">
-                                            <input type="password" class="form-control" name="passwordC" id="password" placeholder="Password" value="${param.passwordC != null ? param.passwordC : ''}" required>
+                                            <input type="password" class="form-control" name="passwordC" id="password" placeholder="Password" value="${param.passwordC != null ? param.passwordC : ''}" >
                                             <label for="password" class="form-label">Password</label>
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <div class="form-floating mb-3">
-                                            <input type="password" class="form-control" name="confirmPasswordC" id="confirmPassword" placeholder="Confirm Password" value="${param.confirmPasswordC != null ? param.confirmPasswordC : ''}" required>
+                                            <input type="password" class="form-control" name="confirmPasswordC" id="confirmPassword" placeholder="Confirm Password" value="${param.confirmPasswordC != null ? param.confirmPasswordC : ''}" >
                                             <label for="confirmPassword" class="form-label">Confirm Password</label>
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <div class="form-floating mb-3">
-                                            <input type="email" class="form-control" name="emailC" id="email" placeholder="name@example.com" value="${param.emailC != null ? param.emailC : ''}" required>
+                                            <input type="email" class="form-control" name="emailC" id="email" placeholder="name@example.com" value="${param.emailC != null ? param.emailC : ''}" >
                                             <label for="email" class="form-label">Email</label>
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <div class="form-floating mb-3">
-                                            <input type="date" class="form-control" name="dobC" id="dob" placeholder="Date of Birth" required>
+                                            <input type="date" class="form-control" name="dobC" id="dob" placeholder="Date of Birth" >
                                             <label for="dob" class="form-label">Date of Birth</label>
                                         </div>
                                     </div>
@@ -151,19 +152,19 @@
                                     <div class="col-12">
                                         <div class="form-floating mb-3">
                                             <input type="tel" class="form-control" name="phonenumberC" id="phonenumber"
-                                                   value="${param.phonenumberC != null ? param.phonenumberC : ''}" required>
+                                                   value="${param.phonenumberC != null ? param.phonenumberC : ''}" >
                                             <label for="phonenumber" class="form-label">Phone Number</label>
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <div class="form-floating mb-3">
-                                            <input type="address" class="form-control" name="addressC" id="address" placeholder="Address" required>
+                                            <input type="address" class="form-control" name="addressC" id="address" placeholder="Address" >
                                             <label for="address" class="form-label">Address</label>
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <div class="form-floating mb-3">
-                                            <input type="text" class="form-control" name="cicC" id="citizenID" placeholder="Citizen Identification Card" maxlength="15" required>
+                                            <input type="text" class="form-control" name="cicC" id="citizenID" placeholder="Citizen Identification Card" maxlength="15" >
                                             <label for="citizenID" class="form-label">Citizen Identification Card</label>
                                         </div>
                                     </div>
@@ -181,7 +182,12 @@
                                         </div>
                                     </div>
                                 </div>
-
+                                <c:if test="${not empty error}">
+                                    <div class="alert alert-danger">${error}</div>
+                                </c:if>
+                                <c:if test="${not empty suc}">
+                                    <div class="alert alert-success">${suc}</div>
+                                </c:if>
                             </form>
                             <div class="row">
                                 <div class="col-12">
@@ -219,90 +225,98 @@
         </div>
 
     </section>
-<c:if test="${not empty error}">
-    <div class="alert alert-danger">${error}</div>
-</c:if>
-<c:if test="${not empty success}">
-    <div class="alert alert-success">${success}</div>
-</c:if> 
-<!-- JS File -->
-<script src="assets/js/jquery-3.5.1.min.js"></script>
-<script src="assets/js/bootstrap.min.js"></script>
-<script src="assets/js/script.js"></script>
-<script>
+
+    <!-- JS File -->
+    <script src="assets/js/jquery-3.5.1.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/script.js"></script>
 
     <script>
-    document.getElementById('resetBtn').addEventListener('click', function (event) {
-            var name = document.getElementById('name').value.trim();
-    var phone = document.getElementById('phone').value.trim();
-    var email = document.getElementById('email').value.trim();
-    var address = document.getElementById('address').value.trim();
-    var date = document.getElementById('date').value.trim();
-    var username = document.getElementById('username').value.trim();
-    var pass = document.getElementById('pass').value.trim();
-    var repass = document.getElementById('repass').value.trim();
-    //        var nameRegex = /^[A-Za-z\s]+$/;
-    var phoneRegex = /^0[0-9]{9,10}$/;
-    var emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    var addressRegex = /^[A-Za-z0-9\s,.'-]{3,}$/;
-    var usernameRegex = /^[A-Za-z0-9_\.]+$/;
-    var passRegex = /^(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
-    var isValid = true;
-    if (!name) {
-    alert('Name cannot be empty');
-    isValid = false;
-    }
-    //        else if (!nameRegex.test(name)) {
-    //            alert('Invalid name');
-    //            isValid = false;
-    //        }
-    else if (!phone) {
-    alert('Phone cannot be empty');
-    isValid = false;
-    } else if (!phoneRegex.test(phone)) {
-    alert('Phone must be 10-11 digits and start with 0');
-    isValid = false;
-    } else if (!email) {
-    alert('Email cannot be empty');
-    isValid = false;
-    } else if (!emailRegex.test(email)) {
-    alert('Invalid email');
-    isValid = false;
-    } else if (!address) {
-    alert('Address cannot be empty');
-    isValid = false;
-    } else if (!addressRegex.test(address)) {
-    alert('Invalid address');
-    isValid = false;
-    } else if (!date) {
-    alert('Date of birth cannot be empty');
-    isValid = false;
-    } else if (!username) {
-    alert('Username cannot be empty');
-    isValid = false;
-    } else if (!usernameRegex.test(username)) {
-    alert('Invalid username');
-    isValid = false;
-    } else if (!pass) {
-    alert('Password cannot be empty');
-    isValid = false;
-    } else if (!passRegex.test(pass)) {
-    alert('Password must be at least 8 characters, uppercase and lowercase');
-    isValid = false;
-    } else if (!repass) {
-    alert('Re-enter password cannot be empty');
-    isValid = false;
-    } else if (pass !== repass) {
-    alert('Passwords do not match');
-    isValid = false;
-    }
+        document.getElementById('registerForm').addEventListener('submit', function (event) {
+            var fullname = document.getElementById('fullname').value.trim();
+            var phonenumber = document.getElementById('phonenumber').value.trim();
+            var email = document.getElementById('email').value.trim();
+            var address = document.getElementById('address').value.trim();
+            var dob = document.getElementById('dob').value.trim();
+            var username = document.getElementById('username').value.trim();
+            var password = document.getElementById('password').value.trim();
+            var confirmPassword = document.getElementById('confirmPassword').value.trim();
+            var cic = document.getElementById('citizenID').value.trim();
 
-    if (isValid) {
-    // Submit the form
-    document.getElementById('registerForm').submit();
-    }
+            // Regex Patterns
+            var phonenumberRegex = /^0[0-9]{9,10}$/; // Phone must start with 0 and be 10-11 digits
+            var emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            var addressRegex = /^[A-Za-z0-9\s,.'-]{3,}$/;
+            var usernameRegex = /^[A-Za-z0-9_\.]+$/;
+            var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z]).{8,}$/; // At least 1 uppercase, 1 lowercase, min 8 chars
+            var cicRegex = /^[0-9]{9,12}$/; // Chỉ cho phép số, 9 hoặc 12 chữ số
+
+            var isValid = true;
+            var errorMessage = '';
+            if (!fullname) {
+                errorMessage += 'Name cannot be empty.\n';
+                isValid = false;
+            }
+            if (!phonenumber) {
+                errorMessage += 'Phone number cannot be empty.\n';
+                isValid = false;
+            } else if (!phonenumberRegex.test(phonenumber)) {
+                errorMessage += 'Phone number must be 10-11 digits and start with 0.\n';
+                isValid = false;
+            }
+            if (!email) {
+                errorMessage += 'Email cannot be empty.\n';
+                isValid = false;
+            } else if (!emailRegex.test(email)) {
+                errorMessage += 'Invalid email format.\n';
+                isValid = false;
+            }
+            if (!address) {
+                errorMessage += 'Address cannot be empty.\n';
+                isValid = false;
+            } else if (!addressRegex.test(address)) {
+                errorMessage += 'Invalid address format.\n';
+                isValid = false;
+            }
+            if (!dob) {
+                errorMessage += 'Date of birth cannot be empty.\n';
+                isValid = false;
+            }
+            if (!username) {
+                errorMessage += 'Username cannot be empty.\n';
+                isValid = false;
+            } else if (!usernameRegex.test(username)) {
+                errorMessage += 'Username can only contain letters, numbers, dots, and underscores.\n';
+                isValid = false;
+            }
+            if (!password) {
+                errorMessage += 'Password cannot be empty.\n';
+                isValid = false;
+            } else if (!passwordRegex.test(password)) {
+                errorMessage += 'Password must have at least 8 characters, including an uppercase and lowercase letter.\n';
+                isValid = false;
+            }
+            if (!confirmPassword) {
+                errorMessage += 'Confirm password cannot be empty.\n';
+                isValid = false;
+            } else if (confirmPassword !== password) {
+                errorMessage += 'Confirm password does not match.\n';
+                isValid = false;
+            }
+            if (!cic) {
+                errorMessage += 'Citizen Identification Card cannot be empty\n';
+                isValid = false;
+            } else if (!cicRegex.test(cic)) {
+                errorMessage += 'Invalid Citizen Identification Card. It must be 9 or 12 digits.\n';
+                isValid = false;
+            }
+
+            if (!isValid) {
+                event.preventDefault(); // Prevent form submission
+                alert(errorMessage);
+            }
         });
-</script>
+    </script>
 
 
 
