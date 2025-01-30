@@ -21,8 +21,8 @@ import model.Customer;
  * @author lenovo
  */
 public class userProfile extends HttpServlet {
-   
-    /** 
+
+    /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
      * @param response servlet response
@@ -37,17 +37,17 @@ public class userProfile extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet userProfile</title>");  
+            out.println("<title>Servlet userProfile</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet userProfile at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
-    } 
+    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /** 
+    /**
      * Handles the HTTP <code>GET</code> method.
      * @param request servlet request
      * @param response servlet response
@@ -58,17 +58,17 @@ public class userProfile extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         HttpSession session = request.getSession();
-        Customer user = (Customer) session.getAttribute("user");
-        if (user == null) {
+        Customer customer = (Customer) session.getAttribute("customer");
+        if (customer == null) {
             response.sendRedirect("login");
             return; // Ensure the method returns to avoid further execution
         }
         else
-        request.getRequestDispatcher("user/profileCustomer.jsp").forward(request, response);
+        request.getRequestDispatcher("user/profileUser.jsp").forward(request, response);
 
-    } 
+    }
 
-    /** 
+    /**
      * Handles the HTTP <code>POST</code> method.
      * @param request servlet request
      * @param response servlet response
@@ -79,8 +79,8 @@ public class userProfile extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
          HttpSession session = request.getSession();
-        Customer user = (Customer) session.getAttribute("user");
-        if (user == null) {
+        Customer customer = (Customer) session.getAttribute("customer");
+        if (customer == null) {
             response.sendRedirect("login");
             return; // Ensure the method returns to avoid further execution
         }
@@ -91,26 +91,26 @@ public class userProfile extends HttpServlet {
         String address = request.getParameter("address");
         String gender = request.getParameter("gender");
         String dob = request.getParameter("dateOfBirth");
-        CustomerDAO dao = new CustomerDAO();
-        user.setFullname(fullName);
-        user.setPhonenumber(phoneNumber);
-        user.setAddress(address);
-        user.setEmail(email);
-        user.setDob(Date.valueOf(dob));
+        CustomerDAO cdao = new CustomerDAO();
+        customer.setFullname(fullName);
+        customer.setPhonenumber(phoneNumber);
+        customer.setAddress(address);
+        customer.setEmail(email);
+        customer.setDob(Date.valueOf(dob));
         if(gender.equals("male")){
-            user.setGender(1);
+            customer.setGender(1);
         }
         else{
-             user.setGender(0);
+            customer.setGender(0);
         }
-        dao.updateProfile(user);
-  
-        request.getRequestDispatcher("user/profileCustomer.jsp").forward(request, response);
+        cdao.updateProfile(customer);
+
+        request.getRequestDispatcher("user/profileUser.jsp").forward(request, response);
         }
-       
+
     }
 
-    /** 
+    /**
      * Returns a short description of the servlet.
      * @return a String containing servlet description
      */
