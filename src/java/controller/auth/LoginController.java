@@ -35,11 +35,11 @@ public class LoginController extends HttpServlet {
             boolean hasValidRole = false;
             for (Role role : roles) {
                 if ("Staff".equalsIgnoreCase(role.getName())) {
-                    resp.getWriter().println("Login staff!");
+                    resp.sendRedirect("/staffDashboard"); 
                     hasValidRole = true;
                     break;
                 } else if ("Administrator".equalsIgnoreCase(role.getName())) {
-                    resp.getWriter().println("Login admin!");
+                    resp.sendRedirect("/Namcombank/admin");
                     hasValidRole = true;
                     break;
                 }

@@ -34,11 +34,11 @@
     </servlet>
     <servlet>
         <servlet-name>admin</servlet-name>
-        <servlet-class>controller.Home.adminHome</servlet-class>
+        <servlet-class>controller.home.AdminHome</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>guestHome</servlet-name>
-        <servlet-class>controller.Home.guestHome</servlet-class>
+        <servlet-class>controller.home.guestHome</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>newsListStaff</servlet-name>
