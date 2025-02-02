@@ -136,6 +136,10 @@
         <servlet-name>CreateSavingController</servlet-name>
         <servlet-class>controller.saving.CreateSavingController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>StaffLoginController</servlet-name>
+        <servlet-class>controller.auth.LoginController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>newsList</servlet-name>
         <url-pattern>/newsList</url-pattern>
@@ -267,6 +271,10 @@
     <servlet-mapping>
         <servlet-name>CreateSavingController</servlet-name>
         <url-pattern>/saving/create</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>StaffLoginController</servlet-name>
+        <url-pattern>/admin.login</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
