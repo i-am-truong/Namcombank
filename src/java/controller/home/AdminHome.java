@@ -11,10 +11,10 @@ public class AdminHome extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // Use sendRedirect if file is outside webapp
-        //response.sendRedirect(request.getContextPath() + "/AdminLTE-master/index.html");
+        response.sendRedirect(request.getContextPath() + "/AdminLTE-master/index.html");
 
         // If file is inside webapp, use forward:
-         request.getRequestDispatcher("/AdminLTE-master/index.html").forward(request, response);
+        // request.getRequestDispatcher("/AdminLTE-master/index.html").forward(request, response);
     }
 
     @Override
