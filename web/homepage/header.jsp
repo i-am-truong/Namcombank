@@ -122,10 +122,10 @@
                     <div class="col-lg-6" style="margin-top: 10px;">
                         <div class="header-search-form">
                             <form action="search" method="get" style="display: flex; align-items: center;">
-                                <select class="form-select" name="categoryId" style="height: 40px;">
+                                <select class="form-select" name="loanPackages" style="height: 40px;">
                                     <option value="0" selected>All Loan Packages</option>
-                                    <c:forEach var="category" items="${categories}">
-                                        <option value="${category.cid}">${category.name}</option>
+                                    <c:forEach var="loan" items="${loanPackages}">
+                                        <option value="${loan.packageId}">${loan.packageName}</option>
                                     </c:forEach>
                                 </select>
                                 <input type="search" name="searchKeyword" placeholder="Search keyword here..." style="height: 40px; color: #0D4F2F">
@@ -134,37 +134,8 @@
                         </div>
                     </div>
 
-
-
-                    <!-- MiniCart -->
-                    <!--                    <div class="col-lg-2">
-                                            <div class="desktop-mini-cart">
-                                                <div class="mini-cart">
-                                                    <div class="mini-cart-icon" style="display: flex; align-items: center;">
-                                                        <a href="cartView" class="cart-link" style="display: flex; align-items: center; text-decoration: none; color: inherit;">
-                                                            <i class="fas fa-shopping-cart"></i>
-                                                        </a>
-                                                        <span class="counter-cart" style="margin-left: 10px;"><small>Your Cart</small></span>
-                    <c:if test="${empty sessionScope.cart}">
-
-                        <span class="counter" style="margin-left: 10px;">0</span>
-
-                    </c:if>
-                    <c:if test="${not empty sessionScope.cart}">
-
-                        <span class="counter" style="margin-left: 10px;">${sessionScope.productInCart}</span>
-
-                    </c:if>
-
-                     Mini Cart Content
-
-                </div>
-            </div>
-        </div>
-    </div>-->
-
                     <!-- User Icon and Name -->
-                                   <!-- <div class="col-lg-1 text-right">
+                    <!-- <div class="col-lg-1 text-right">
                     <c:if test="${sessionScope.customer != null}">
                         <span style="line-height: 30px;">hello</span>
                     </c:if>
@@ -194,6 +165,10 @@
                             <a href="login" style="display: block;">
                                 <i class="fas fa-user" id ="userIcon" style="font-size: 30px; color: #ccc; cursor: pointer"></i>
                                 <span style="line-height: 30px; display: block; color: #04414d  ">Login/Register</span>
+                            </a>
+                            <a href="admin.login" style="display: block;">
+                                <i class="fas fa-user" id ="userIcon" style="font-size: 30px; color: #ccc; cursor: pointer"></i>
+                                <span style="line-height: 30px; display: block; color: #04414d  ">Login by admin</span>
                             </a>
                         </c:if>
                     </div>

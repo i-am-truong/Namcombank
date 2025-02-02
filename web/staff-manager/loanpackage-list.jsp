@@ -30,7 +30,7 @@
                         <th class="border border-gray-300 px-4 py-2">Min Amount</th>
                         <th class="border border-gray-300 px-4 py-2">Loan Term</th>
                         <th class="border border-gray-300 px-4 py-2">Created Date</th>
-<!--                        <th class="border border-gray-300 px-4 py-2">Actions</th>-->
+                        <th class="border border-gray-300 px-4 py-2">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -51,14 +51,14 @@
                         <td class="border border-gray-300 px-4 py-2"><%= loanPackage.getMinAmount() %></td>
                         <td class="border border-gray-300 px-4 py-2"><%= loanPackage.getLoanTerm() %></td>
                         <td class="border border-gray-300 px-4 py-2"><%= loanPackage.getCreatedDate() %></td>
-                        <!--                        <td class="border border-gray-300 px-4 py-2">
-                                                    <form action="updateloanpackage" method="post"><a href="loanpackage-update.jsp?id=<%= loanPackage.getPackageId() %>" class="text-blue-500 hover:underline">Edit</a></form> 
-                                                    <a href="deleteloanpackage?packageId=<%= loanPackage.getPackageId() %>" 
-                                                       class="text-red-500 hover:underline"
-                                                       onclick="return confirm('Are you sure you want to delete this package?');">
-                                                        Delete
-                                                    </a>
-                                                </td>-->
+                        <td class="border border-gray-300 px-4 py-2">
+                            <form action="updateloanpackage" method="post"><a href="loanpackage-update.jsp?id=<%= loanPackage.getPackageId() %>" class="text-blue-500 hover:underline">Edit</a></form> 
+                            <a href="deleteloanpackage?packageId=<%= loanPackage.getPackageId() %>" 
+                               class="text-red-500 hover:underline"
+                               onclick="return confirm('Are you sure you want to delete this package?');">
+                                Delete
+                            </a>
+                        </td>
                     </tr>
                     <%
                         }
@@ -66,10 +66,9 @@
                 </tbody>
             </table>
 
-            <!-- comment <div class="mt-4">
-            <a href="loanpackage-create.jsp" class="bg-green-500 text-white px-4 py-2 rounded">Create New Loan Package</a>
-        </div>
-            -->
+            <div class="mt-4">
+                <a href="loanpackage-create.jsp" class="bg-green-500 text-white px-4 py-2 rounded">Create New Loan Package</a>
+            </div>
         </div>
     </body>
 </html>

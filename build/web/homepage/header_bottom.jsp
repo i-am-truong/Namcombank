@@ -8,17 +8,17 @@
                             <div class="canvas_open">
                                 <a href="javascript:void(0)"><i class="fas fa-bars"></i></a>
                             </div>
-                            <div class="mobile-mini-cart">
+<!--                            <div class="mobile-mini-cart">
                                 <div class="mini-cart">
                                     <div class="mini-cart-icon">
                                         <i class="fas fa-shopping-cart"></i>
                                         <span class="counter">02</span>
                                         <span class="counter-cart"><small>Your Cart</small></span>
-                                        <!-- Mini Cart Content -->
+                                         Mini Cart Content 
 
                                     </div>
                                 </div>
-                            </div>
+                            </div>-->
                             <div class="menu" >
                                 <nav>
                                     <ul>
