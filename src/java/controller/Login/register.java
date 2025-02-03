@@ -71,7 +71,7 @@ public class register extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String fullname = request.getParameter("fullnameC");
-        String phone = request.getParameter("phonenumberC");
+        String phonenumber = request.getParameter("phonenumberC");
         String email = request.getParameter("emailC");
         String address = request.getParameter("addressC");
         String dob = request.getParameter("dobC");
@@ -88,7 +88,7 @@ public class register extends HttpServlet {
         CustomerDAO cd = new CustomerDAO();
         if (cd.checkUsername(username, email)) {
             password = cd.toSHA1(password);
-            cd.registerAcc(fullname, username, password, email, dob, Integer.parseInt(gender), phone, cic, address);
+            cd.registerAcc(fullname, username, password, email, dob, Integer.parseInt(gender), phonenumber, cic, address);
             request.setAttribute("suc", "Create account successfully! ");
             request.getRequestDispatcher("login/register.jsp").forward(request, response);
         } else {

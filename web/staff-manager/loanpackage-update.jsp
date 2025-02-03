@@ -29,13 +29,24 @@
                 border-radius: 8px;
                 box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
             }
-            input[type="text"], input[type="number"], input[type="date"], textarea {
+            .form-group {
+                margin-bottom: 15px;
+            }
+            label {
+                font-weight: bold;
+                display: block;
+                margin-bottom: 5px;
+            }
+            input, textarea {
                 width: 100%;
                 padding: 10px;
-                margin: 10px 0;
                 border-radius: 4px;
                 border: 1px solid #ccc;
                 box-sizing: border-box;
+            }
+            textarea {
+                min-height: 100px;
+                max-width: 100%;
             }
             button {
                 background: #007bff;
@@ -45,18 +56,16 @@
                 border-radius: 4px;
                 cursor: pointer;
                 font-size: 16px;
+                width: 100%;
             }
             button:hover {
                 background: #0056b3;
             }
-            label {
-                font-weight: bold;
-                display: block;
-                margin-bottom: 5px;
-            }
             .error {
                 color: red;
                 font-size: 14px;
+                margin-top: -10px;
+                margin-bottom: 10px;
             }
             h1 {
                 text-align: center;
@@ -67,48 +76,66 @@
     <body>
         <div class="container">
             <h1>Update Loan Package</h1>
-            <form action="updateloanpackage" method="post">
-                <!-- Hidden Fields -->
+
+            <!-- Hiển thị thông báo lỗi nếu có -->
+            <c:if test="${not empty errorMessage}">
+                <p class="error">${errorMessage}</p>
+            </c:if>
+
+            <form action="updateloanpackage" method="post" onsubmit="return validateForm()">
                 <input type="hidden" name="packageId" value="${loanPackage.packageId}" />
                 <input type="hidden" name="staffId" value="${loanPackage.staffId}" />
 
-                <!-- Package Name -->
-                <label for="packageName">Package Name:</label>
-                <input type="text" id="packageName" name="packageName" value="${loanPackage.packageName}" required />
+                <div class="form-group">
+                    <label for="packageName">Package Name:</label>
+                    <input type="text" id="packageName" name="packageName" value="${loanPackage.packageName}" required />
+                </div>
 
-                <!-- Loan Type -->
-                <label for="loanType">Loan Type:</label>
-                <input type="text" id="loanType" name="loanType" value="${loanPackage.loanType}" required />
+                <div class="form-group">
+                    <label for="loanType">Loan Type:</label>
+                    <input type="text" id="loanType" name="loanType" value="${loanPackage.loanType}" required />
+                </div>
 
-                <!-- Description -->
-                <label for="description">Description:</label>
-                <textarea id="description" name="description" required>${loanPackage.description}</textarea>
+                <div class="form-group">
+                    <label for="description">Description:</label>
+                    <textarea id="description" name="description" required>${loanPackage.description}</textarea>
+                </div>
 
-                <!-- Interest Rate -->
-                <label for="interestRate">Interest Rate (%):</label>
-                <input type="number" id="interestRate" step="0.01" name="interestRate" value="${loanPackage.interestRate}" required />
+                <div class="form-group">
+                    <label for="interestRate">Interest Rate (%):</label>
+                    <input type="number" id="interestRate" step="0.01" name="interestRate" value="${loanPackage.interestRate}" required />
+                </div>
 
-                <!-- Max Amount -->
-                <label for="maxAmount">Max Amount:</label>
-                <input type="number" id="maxAmount" step="0.01" name="maxAmount" value="${loanPackage.maxAmount}" required />
+                <div class="form-group">
+                    <label for="maxAmount">Max Amount:</label>
+                    <input type="number" id="maxAmount" step="0.01" name="maxAmount" value="${loanPackage.maxAmount}" required />
+                </div>
 
-                <!-- Min Amount -->
-                <label for="minAmount">Min Amount:</label>
-                <input type="number" id="minAmount" step="0.01" name="minAmount" value="${loanPackage.minAmount}" required />
+                <div class="form-group">
+                    <label for="minAmount">Min Amount:</label>
+                    <input type="number" id="minAmount" step="0.01" name="minAmount" value="${loanPackage.minAmount}" required />
+                </div>
 
-                <!-- Loan Term -->
-                <label for="loanTerm">Loan Term (in months):</label>
-                <input type="number" id="loanTerm" name="loanTerm" value="${loanPackage.loanTerm}" required />
+                <div class="form-group">
+                    <label for="loanTerm">Loan Term (in months):</label>
+                    <input type="number" id="loanTerm" name="loanTerm" value="${loanPackage.loanTerm}" required />
+                </div>
 
-                <!-- Optional: Created Date -->
-                <%-- Uncomment if the created date is editable
-                <label for="createdDate">Created Date:</label>
-                <input type="date" id="createdDate" name="createdDate" value="${loanPackage.createdDate}" required />
-                --%>
-
-                <!-- Submit Button -->
                 <button type="submit">Update</button>
             </form>
+
+            <script>
+                function validateForm() {
+                    var maxAmount = parseFloat(document.getElementById('maxAmount').value);
+                    var minAmount = parseFloat(document.getElementById('minAmount').value);
+                    if (minAmount > maxAmount) {
+                        alert("Minimum amount cannot be greater than Maximum amount.");
+                        return false;
+                    }
+                    return true;
+                }
+            </script>
+
         </div>
     </body>
 </html>

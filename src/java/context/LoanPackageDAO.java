@@ -89,7 +89,7 @@ public class LoanPackageDAO extends DBContext {
 //        }
 //}
     public boolean updateLoanPackage(LoanPackage loanPackage) {
-        String query = "UPDATE LoanPackage SET staffId = ?, packageName = ?, loanType = ?, description = ?, interestRate = ?, maxAmount = ?, minAmount = ?, loanTerm = ?, createdDate = ? WHERE packageId = ?";
+        String query = "UPDATE LoanPackages SET staff_id = ?, package_name = ?, loan_type = ?, description = ?, interest_rate = ?, max_amount = ?, min_amount = ?, loan_term = ?, created_date = ? WHERE package_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, loanPackage.getStaffId());
             ps.setString(2, loanPackage.getPackageName());

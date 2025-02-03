@@ -162,14 +162,16 @@
                             </div>
                         </c:if>
                         <c:if test="${sessionScope.customer == null}">
-                            <a href="login" style="display: block;">
-                                <i class="fas fa-user" id ="userIcon" style="font-size: 30px; color: #ccc; cursor: pointer"></i>
-                                <span style="line-height: 30px; display: block; color: #04414d  ">Login/Register</span>
-                            </a>
-                            <a href="admin.login" style="display: block;">
-                                <i class="fas fa-user" id ="userIcon" style="font-size: 30px; color: #ccc; cursor: pointer"></i>
-                                <span style="line-height: 30px; display: block; color: #04414d  ">Login by admin</span>
-                            </a>
+                            <div style="display: flex; align-items: center; gap: 20px;">
+                                <a href="login" style="text-align: center;">
+                                    <i class="fas fa-user" style="font-size: 30px; color: #ccc; cursor: pointer"></i>
+                                    <span style="display: block; color: #04414d;">Login/Register</span>
+                                </a>
+                                <a href="admin.login" style="text-align: center; gap: 20px;">
+                                    <i class="fas fa-user" style="font-size: 30px; color: #ccc; cursor: pointer"></i>
+                                    <span style="display: block; color: #04414d;">Login By Admin</span>
+                                </a>
+                            </div>
                         </c:if>
                     </div>
                 </div>

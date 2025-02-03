@@ -76,15 +76,15 @@ public class UpdateLoanPackageController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             // Lấy dữ liệu từ form
-            int packageId = Integer.parseInt(request.getParameter("packageId"));
-            String staffId = request.getParameter("staffId");
-            String packageName = request.getParameter("packageName");
-            String loanType = request.getParameter("loanType");
+            int packageId = Integer.parseInt(request.getParameter("package_id"));
+            String staffId = request.getParameter("staff_id");
+            String packageName = request.getParameter("package_name");
+            String loanType = request.getParameter("loan_type");
             String description = request.getParameter("description");
-            double interestRate = Double.parseDouble(request.getParameter("interestRate"));
-            double maxAmount = Double.parseDouble(request.getParameter("maxAmount"));
-            double minAmount = Double.parseDouble(request.getParameter("minAmount"));
-            int loanTerm = Integer.parseInt(request.getParameter("loanTerm"));
+            double interestRate = Double.parseDouble(request.getParameter("interest_rate"));
+            double maxAmount = Double.parseDouble(request.getParameter("max_amount"));
+            double minAmount = Double.parseDouble(request.getParameter("min_amount"));
+            int loanTerm = Integer.parseInt(request.getParameter("loan_term"));
             
             // Kiểm tra staffId có hợp lệ không
             int staffIdInt = (staffId != null && !staffId.isEmpty()) ? Integer.parseInt(staffId) : 1;

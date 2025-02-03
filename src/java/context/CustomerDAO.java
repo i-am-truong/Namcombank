@@ -47,7 +47,7 @@ public class CustomerDAO extends DBContext {
                 + "      ,[citizen_identification_card]\n"
                 + "      ,[address]\n"
                 + "  FROM [dbo].[Customer]\n"
-                + "  where username =? and password=? ";
+                + "  where username = ? and password = ? ";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setNString(1, username);
@@ -333,8 +333,8 @@ public class CustomerDAO extends DBContext {
         }
 
         String sql = "UPDATE [Customer] "
-                + "SET [fullName] = ?, "
-                + "[phone] = ?, "
+                + "SET [fullname] = ?, "
+                + "[phonenumber] = ?, "
                 + "[address] = ?, "
                 + "[email] = ?, "
                 + "[dob] = ?, "

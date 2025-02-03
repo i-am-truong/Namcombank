@@ -89,12 +89,11 @@ public class login extends HttpServlet {
             throws ServletException, IOException {
         String param_user = request.getParameter("username");//user input
         String param_pass = request.getParameter("password");
-        String remember = request.getParameter("rem");
-        HttpSession session = request.getSession();
-
+        String remember = request.getParameter("rem");       
         CustomerDAO cdao = new CustomerDAO();
-        Customer customer = cdao.checkUser(param_user, param_pass);
-
+        String pass = cdao.toSHA1(param_pass);
+        HttpSession session = request.getSession();
+        Customer customer = cdao.checkUser(param_user, pass);
         if (customer == null) {
             request.setAttribute("err", "Invalid username or password!");
             request.getRequestDispatcher("login/login.jsp").forward(request, response);
