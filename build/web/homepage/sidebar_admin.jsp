@@ -43,9 +43,9 @@
     
     <!-- Nav Item - Tables -->
     <li class="nav-item active">
-        <a class="nav-link" href="listproduct">
+        <a class="nav-link" href="/Namcombank/staff-manager/loanpackage-list.jsp">
             <i class="fas fa-fw fa-table"></i>
-            <span>Product Table</span></a>
+            <span>Loan Packages Table</span></a>
     </li>
     <c:if test="${sessionScope.roleId == 1}">
         <li class="nav-item active">
