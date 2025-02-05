@@ -9,9 +9,11 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
 import model.auth.Role;
+import model.auth.Staff;
 
 /**
  *
@@ -21,7 +23,7 @@ public class LoginController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+        
         String param_user = req.getParameter("username"); // User input
         String param_pass = req.getParameter("password");
         StaffAccountDBContext db = new StaffAccountDBContext();
@@ -33,17 +35,23 @@ public class LoginController extends HttpServlet {
             // Lưu tài khoản vào session
             req.getSession().setAttribute("account", account);
             boolean hasValidRole = false;
+            Integer roleId = null;
+            Staff staffRole = null;
             for (Role role : roles) {
                 if ("Staff".equalsIgnoreCase(role.getName())) {
+                    roleId = role.getId();
                     resp.sendRedirect("/staffDashboard"); 
                     hasValidRole = true;
                     break;
-                } else if ("Administrator".equalsIgnoreCase(role.getName())) {
-                    resp.sendRedirect("/Namcombank/admin");
+                } else if (role.getId() == 1) {
+                    roleId = role.getId();
+                    resp.sendRedirect("managerUser");
                     hasValidRole = true;
                     break;
                 }
             }
+            req.getSession().setAttribute("roleId", roleId);
+            req.getSession().setAttribute("staffRole", staffRole);
             if (!hasValidRole) {
                 resp.getWriter().println("Your account does not have valid roles!");
             }

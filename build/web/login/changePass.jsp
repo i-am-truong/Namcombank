@@ -1,7 +1,7 @@
  <%-- 
     Document   : changePass
     Created on : Jun 21, 2024, 11:14:44 AM
-    Author     : chien
+    Author     : lenovo
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>

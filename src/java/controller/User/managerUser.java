@@ -5,6 +5,7 @@
 package controller.User;
 
 import context.CustomerDAO;
+import context.StaffAccountDBContext;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -12,9 +13,11 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 import model.Customer;
 import model.Role;
+import model.auth.Staff;
 
 /**
  *
@@ -34,7 +37,7 @@ public class managerUser extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try ( PrintWriter out = response.getWriter()) {
+        try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
@@ -60,12 +63,22 @@ public class managerUser extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-//        HttpSession session = request.getSession();
-//        Customer o = (Customer) session.getAttribute("user");
-//        if (o == null) {
-//            response.sendRedirect("login");
-//            return; // Ensure the method returns to avoid further execution
-//        }
+        HttpSession session = request.getSession();
+        String param_user = request.getParameter("username");
+        Staff staff = (Staff) session.getAttribute("account");
+        StaffAccountDBContext dbContext = new StaffAccountDBContext();
+        ArrayList<model.auth.Role> roles = dbContext.getRoles(param_user);
+        if (staff == null) {
+            response.sendRedirect("admin.login");
+            return; // Ensure the method returns to avoid further execution
+        }
+        CustomerDAO cdao = new CustomerDAO();
+        List<Customer> customers = cdao.getAllCustomers();
+        int count = cdao.getAllCustomers().size();
+        request.setAttribute("customers", customers);
+        request.setAttribute("count", count);
+        request.getRequestDispatcher("user/managerUser.jsp").forward(request, response);
+
 //
 //        if (o.equals("Customer")) {
 //            CustomerDAO ud = new CustomerDAO();
@@ -97,7 +110,6 @@ public class managerUser extends HttpServlet {
 //                int index1 = Integer.parseInt(indexPage);
 //                int roleId = (role != null && !role.isEmpty()) ? Integer.parseInt(role) : -1;
 //                int activeId = (active != null && !active.isEmpty()) ? Integer.parseInt(active) : -1;
-
 //                int count = ud.searchU((searchU != null) ? searchU.trim() : "", roleId, activeId, 0, 999, null, null).size();
 //                int endPage = count / 5;
 //                if (count % 5 != 0) {
@@ -109,7 +121,6 @@ public class managerUser extends HttpServlet {
 //                request.setAttribute("role", roleId);
 //                request.setAttribute("active", activeId);
 //                request.setAttribute("countU", count);
-//                request.getRequestDispatcher("user/managerUser.jsp").forward(request, response);
 //            }
 //        } else {
 //            response.sendRedirect("login");

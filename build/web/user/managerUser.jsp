@@ -1,7 +1,7 @@
 <%-- 
     Document   : managerUser
     Created on : Jun 16, 2024, 10:00:51 AM
-    Author     : chien
+    Author     : lenovo
 --%>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -17,7 +17,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
 
-        <title>Clothes Shop Manager</title>
+        <title>Banking Manager</title>
 
         <!-- Custom fonts for this template -->
         <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -69,10 +69,10 @@
                     <!-- Begin Page Content -->
                     <div class="container-fluid">
                         <!-- Page Heading -->
-                        <h1 class="h3 mb-2 text-gray-800">User List</h1>
+                        <h1 class="h3 mb-2 text-gray-800">Customer List</h1>
                         <a href="addStaff">  <button type="button" style="margin-bottom: 20px" class="btn btn-primary">Add new staff</button></a>
                         <br> 
- <br> 
+                        <br> 
                         <!-- Search and Filter Form -->
                         <form id="filterForm" name="filterForm" action="managerUser" method="get" onsubmit="return validateForm()">
                             <div class="form-row">
@@ -86,21 +86,21 @@
                                 </div>
 
                                 <!-- Brands Dropdown -->
-                                <div class="col-md-2 mb-3">
+<!--                                <div class="col-md-2 mb-3">
                                     <select name="role" class="form-select">
                                         <option value="-1">All Role</option>
                                         <c:forEach var="r" items="${listR}">
                                             <option value="${r.rid}" ${requestScope.role == r.rid ? 'selected' : ''}>${r.role}</option>
                                         </c:forEach>
                                     </select>
-                                </div>
+                                </div>-->
 
                                 <!-- Genders Dropdown -->
                                 <div class="col-md-2 mb-3">
                                     <select name="active" class="form-select">
                                         <option value="-1"  ${requestScope.active == -1 ? 'selected' : ''}>All Active</option>
-                                        <option value="0" ${requestScope.active == 0 ? 'selected' : ''}>Close</option>
-                                        <option value="1" ${requestScope.active == 1 ? 'selected' : ''}>Open</option>
+                                        <option value="0" ${requestScope.active == 0 ? 'selected' : ''}>Closed</option>
+                                        <option value="1" ${requestScope.active == 1 ? 'selected' : ''}>Opening</option>
                                     </select>
                                 </div>
                                 <!-- Submit Button (hidden) -->
@@ -108,7 +108,7 @@
                                     <button type="submit" class="btn btn-primary btn-block">Search</button>
                                 </div>
                                 <div class="col-md-1 mb-1">
-                                    <input class="form-control" readonly="" value="Total: ${requestScope.countU}">
+                                    <input class="form-control" readonly="" value="Total: ${requestScope.count}">
                                 </div>
                             </div>
                         </form>
@@ -126,47 +126,38 @@
                                             <th>Phone<a href="managerUser?indexU=${currentIndex + 1}&searchU=${param.searchU}&role=${param.role}&active=${param.active}&sortField=phone&sortOrder=${param.sortOrder == 'asc' ? 'desc' : 'asc'}"><span class="fa fa-sort"></span></a></th>
                                             <th>Email<a href="managerUser?indexU=${currentIndex + 1}&searchU=${param.searchU}&role=${param.role}&active=${param.active}&sortField=email&sortOrder=${param.sortOrder == 'asc' ? 'desc' : 'asc'}"><span class="fa fa-sort"></span></a></th>
                                             <th>Username<a href="managerUser?indexU=${currentIndex + 1}&searchU=${param.searchU}&role=${param.role}&active=${param.active}&sortField=username&sortOrder=${param.sortOrder == 'asc' ? 'desc' : 'asc'}"><span class="fa fa-sort"></span></a></th>
-                                            <th>Role</th>
+                                            <th>CIC</th>
+                                            <th>DOB</th>
+                                            <th>Address</th>
+                                            <th>Balance</th>
                                             <th>Active</th>
                                             <th>Ban</th>
-                                            <th> UnBan</th>
+                                            <th>Unban</th>
 
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <c:forEach items="${requestScope.listU}" var="u">
+                                        <c:forEach items="${requestScope.customers}" var="c">
                                             <tr>
 
 
-                                                <td>${u.uid}</td>
-                                                <td>${u.fullName}</td>
-                                                <td>${u.phone}</td>
-                                                <td>${u.email}</td>
-                                                <td>${u.username}</td>
+                                                <td>${c.customerId}</td>
+                                                <td>${c.fullname}</td>
+                                                <td>${c.phonenumber}</td>
+                                                <td>${c.email}</td>
+                                                <td>${c.username}</td>
+                                                <td>${c.cid}</td>
+                                                <td>${c.dob}</td>
+                                                <td>${c.address}</td>
+                                                <td>${c.balance}</td>
                                                 <td>
                                                     <c:choose>
-                                                        <c:when test="${u.rid == 1}">
-                                                            admin
-                                                        </c:when>
-                                                        <c:when test="${u.rid == 2}">
-                                                            staff
-                                                        </c:when>
-                                                        <c:otherwise>
-                                                            customer
-                                                        </c:otherwise>
+                                                        <c:when test="${c.active == 0}">closed</c:when>
+                                                        <c:when test="${c.active == 1}">opening</c:when>
                                                     </c:choose>
                                                 </td>
-                                                <td>
-                                                    <c:choose>
-                                                        <c:when test="${u.active == 0}">
-                                                            close
-                                                        </c:when>
-                                                        <c:when test="${u.active ==1}">
-                                                            open</c:when>
-                                                    </c:choose>
-                                                </td>
-                                                <td><a href="#" onclick="return checkBan('${u.uid}')"><i class="bi bi-ban"></i></a></td>
-                                                <td><a href="#" onclick="return checkUnBan('${u.uid}')"><i class="bi bi-unlock"></i></a></td>
+                                                <td><a href="#" onclick="return checkBan('${c.customerId}')"><i class="bi bi-ban"></i></a></td>
+                                                <td><a href="#" onclick="return checkUnBan('${c.username}')"><i class="bi bi-unlock"></i></a></td>
 
                                             </tr>
                                         </c:forEach>
@@ -178,7 +169,7 @@
                         </div>
 
                         <!-- Pagination -->
-                        <!--                        <nav aria-label="Page navigation example" class="mt-4">
+<!--                                                <nav aria-label="Page navigation example" class="mt-4">
                                                     <ul class="pagination justify-content-center">
                                                         
                         <c:set var="currentIndex" value="${param.index != null ? param.index : 1}" />
@@ -202,7 +193,7 @@
                                     <li style="margin: 0 5px;">
                                         <a href="managerUser?indexU=${currentIndex - 2}&searchU=${param.searchU}&role=${param.role}&active=${param.active}&sortField=${param.sortField != null ? param.sortField : 'uid'}&sortOrder=${param.sortOrder != null ? param.sortOrder : 'asc'}"
                                            style="text-decoration: none; padding: 8px 16px; border: 1px solid #ddd; border-radius: 4px;">
-                                              ${currentIndex -2}
+                                            ${currentIndex -2}
                                         </a>
                                     </li>
                                 </c:if>
@@ -222,7 +213,7 @@
                                     <li style="margin: 0 5px;">
                                         <a href="managerUser?indexU=${currentIndex + 2}&searchU=${param.searchU}&role=${param.role}&active=${param.active}&sortField=${param.sortField != null ? param.sortField : 'uid'}&sortOrder=${param.sortOrder != null ? param.sortOrder : 'asc'}"
                                            style="text-decoration: none; padding: 8px 16px; border: 1px solid #ddd; border-radius: 4px;">
-                                              ${currentIndex + 2 }
+                                            ${currentIndex + 2 }
                                         </a>
                                     </li>
                                 </c:if>

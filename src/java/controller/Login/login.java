@@ -59,7 +59,9 @@ public class login extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        // lấy danh sách cookie từ trình duyệt
         Cookie arr[] = request.getCookies();
+        // ktra nếu có username, password thì lưu vào request
         if (arr != null) {
             for (Cookie o : arr) {
                 if (o.getName().equals("username")) {
@@ -87,13 +89,13 @@ public class login extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String param_user = request.getParameter("username");//user input
+        String param_user = request.getParameter("username");//lấy username và password từ form
         String param_pass = request.getParameter("password");
-        String remember = request.getParameter("rem");       
+        String remember = request.getParameter("rem");       // ktra checkbox remember me
         CustomerDAO cdao = new CustomerDAO();
-        String pass = cdao.toSHA1(param_pass);
+        String pass = cdao.toSHA1(param_pass); // mã hóa mk bằng SHA-1
         HttpSession session = request.getSession();
-        Customer customer = cdao.checkUser(param_user, pass);
+        Customer customer = cdao.checkUser(param_user, pass); // check ttin người dùng
         if (customer == null) {
             request.setAttribute("err", "Invalid username or password!");
             request.getRequestDispatcher("login/login.jsp").forward(request, response);
@@ -104,13 +106,13 @@ public class login extends HttpServlet {
             return;
         } else {
             double balance = cdao.getBalanceByCId(customer);
-            session.setAttribute("balance", balance);
-            session.setAttribute("customer", customer);
+            session.setAttribute("balance", balance); // lưu số dư tài khoảng vào session
+            session.setAttribute("customer", customer); // lưu customer vào session để tái sử dụng
 
             Cookie username = new Cookie("username", param_user);
             Cookie password = new Cookie("password", param_pass);
             Cookie remem = new Cookie("rem", remember);
-            int cookieAge = (remember != null) ? (24 * 60 * 60 * 60) : 0;
+            int cookieAge = (remember != null) ? (24 * 60 * 60 * 7) : 0; // lưu Cookie trong vòng 7 ngày
             username.setMaxAge(cookieAge);
             password.setMaxAge(cookieAge);
             remem.setMaxAge(cookieAge);

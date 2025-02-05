@@ -1,7 +1,7 @@
 <%-- 
     Document   : getCode
     Created on : Jun 13, 2024, 2:52:33 PM
-    Author     : chien
+    Author     : lenovo
 --%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>

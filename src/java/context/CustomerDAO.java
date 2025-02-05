@@ -109,6 +109,96 @@ public class CustomerDAO extends DBContext {
         return customer;
     }
 
+    public List<Customer> getAllCustomers() {
+        List<Customer> customers = new ArrayList<>();
+        String sql = "SELECT [customer_id]\n"
+                + "      ,[fullname]\n"
+                + "      ,[username]\n"
+                + "      ,[password]\n"
+                + "      ,[active]\n"
+                + "      ,[email]\n"
+                + "      ,[dob]\n"
+                + "      ,[gender]\n"
+                + "      ,[phonenumber]\n"
+                + "      ,[balance]\n"
+                + "      ,[citizen_identification_card]\n"
+                + "      ,[address]\n"
+                + "  FROM [dbo].[Customer]\n";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                customers.add(new Customer(
+                        rs.getInt("customer_id"),
+                        rs.getString("fullname"),
+                        rs.getString("username"),
+                        rs.getString("password"),
+                        rs.getInt("active"),
+                        rs.getString("email"),
+                        rs.getDate("dob"),
+                        rs.getInt("gender"),
+                        rs.getString("phonenumber"),
+                        rs.getFloat("balance"),
+                        rs.getString("citizen_identification_card"),
+                        rs.getString("address")
+                ));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return customers;
+    }
+
+    public List<Customer> listAllCustomers(int index, int quantity, String sortField, String sortOrder) {
+        List<Customer> customers = new ArrayList<>();
+        String sql = "SELECT [customer_id]\n"
+                + "      ,[fullname]\n"
+                + "      ,[username]\n"
+                + "      ,[password]\n"
+                + "      ,[active]\n"
+                + "      ,[email]\n"
+                + "      ,[dob]\n"
+                + "      ,[gender]\n"
+                + "      ,[phonenumber]\n"
+                + "      ,[balance]\n"
+                + "      ,[citizen_identification_card]\n"
+                + "      ,[address]\n"
+                + "  FROM [dbo].[Customer]\n";
+        if (sortField != null && sortOrder != null) {
+            sql += "ORDER BY " + sortField + " " + sortOrder + " ";
+        } else {
+            sql += "ORDER BY customer_id ";
+        }
+
+        sql += "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY;";
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, (index - 1) * quantity);
+            ps.setInt(2, quantity);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                customers.add(new Customer(
+                        rs.getInt("customer_id"),
+                        rs.getString("fullname"),
+                        rs.getString("username"),
+                        rs.getString("password"),
+                        rs.getInt("active"),
+                        rs.getString("email"),
+                        rs.getDate("dob"),
+                        rs.getInt("gender"),
+                        rs.getString("phonenumber"),
+                        rs.getFloat("balance"),
+                        rs.getString("citizen_identification_card"),
+                        rs.getString("address")
+                ));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return customers;
+    }
+
     // lay so du tai khoan cua khach hang
     public double getBalanceByCId(Customer c) {
         int cid = c.getCustomerId();
@@ -366,7 +456,11 @@ public class CustomerDAO extends DBContext {
     }
 
     public static void main(String[] args) {
-        
+//        CustomerDAO cdao = new CustomerDAO();
+//        List<Customer> customers = cdao.getAllCustomers();
+//        for(Customer customer : customers){
+//            System.out.println(customer.toString());
+//        }
     }
     //search user
 //Name Phone Email Username
