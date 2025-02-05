@@ -3,10 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/FPT%20University/Semester%205/SWP/Namcombank/web/user/managerUser.jsp</file>
-            <file>file:/D:/FPT%20University/Semester%205/SWP/Namcombank/src/java/controller/User/managerUser.java</file>
-            <file>file:/D:/FPT%20University/Semester%205/SWP/Namcombank/src/java/controller/auth/LoginController.java</file>
-            <file>file:/D:/FPT%20University/Semester%205/SWP/Namcombank/web/homepage/sidebar_admin.jsp</file>
+            <file>file:/D:/Github/Namcombank/src/java/context/DBContext.java</file>
+            <file>file:/D:/Github/Namcombank/src/java/controller/Admin/viewCustomerFeedback.java</file>
+            <file>file:/D:/Github/Namcombank/src/java/context/FeedbackDao.java</file>
         </group>
     </open-files>
 </project-private>

@@ -58,10 +58,17 @@
     </head>
     <body>
 
-
+        <button onclick="window.location.href = '/Namcombank/Home'" style="padding: 10px 20px; background-color: #6c757d; color: white; border: none; border-radius: 5px; cursor: pointer;">
+            Home
+        </button>
         <h2>Customer Feedback</h2>
+        <div style="text-align: center; margin-top: 20px;">
+            <button onclick="window.location.href = 'addFeedback'" style="padding: 10px 20px; background-color: #6c757d; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                Add Your Feedback
+            </button>
+        </div>
 
-        <form action="viewCustomerFeedback" method="post" onsubmit="return confirmSubmit()">
+        <form action="viewFeedback" method="post" onsubmit="return confirmSubmit()">
             <label for="rating">Lọc theo đánh giá:</label>
             <select name="rating" id="rating" onchange="this.form.submit()">
                 <option value="" ${empty param.rating ? 'selected' : ''}>Tất cả</option>
@@ -75,29 +82,24 @@
 
         <table>
             <tr>
-                <th>Customer ID</th>
+                <!--                <th>Customer ID</th>-->
+                <th>Rating</th>
                 <th>Content</th>
                 <th>Submitted At</th>
-                <th>Rating</th>
+                
             </tr>
-            <c:forEach var="feedback" items="${listPaging}">
+            <c:forEach var="feedback" items="${list}">
                 <tr>
-                    <td><a href="viewCustomerDetail?customer_id=${feedback.customer_id}" style="color: #007bff; text-decoration: none;">${feedback.customer_id}</a></td>
+                    <!--<td>$/{feedback.customer_id}</td>-->
+                    <td>${feedback.rating} Sao</td>
                     <td>${feedback.content}</td>
                     <td>${feedback.submitted_at}</td>
-                    <td>${feedback.rating} Sao</td>
+                    
                 </tr>
             </c:forEach>
         </table>
 
-        <div style="text-align: center; margin-top: 20px;">
-            <button onclick="window.location.href = 'managerUser'" style="padding: 10px 20px; background-color: #6c757d; color: white; border: none; border-radius: 5px; cursor: pointer;">
-                Quay lại
-            </button>
-        </div>
-        <c:forEach begin="1" end="${endP}" var="i">
-             <a href="viewCustomerFeedback?index=${i}&rating=${selectedRating}">${i}</a>
-        </c:forEach>
+
 
     </body>
 </html>

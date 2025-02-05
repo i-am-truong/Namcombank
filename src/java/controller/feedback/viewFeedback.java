@@ -2,24 +2,25 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controller.Login;
+package controller.feedback;
 
-import context.CustomerDAO;
+import context.FeedbackDao;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import model.Customer;
+import java.util.ArrayList;
+import java.util.List;
+import model.Feedback;
 
 /**
  *
- * @author lenovo
+ * @author admin
  */
-public class login extends HttpServlet {
+public class viewFeedback extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,10 +39,10 @@ public class login extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet login</title>");
+            out.println("<title>Servlet viewFeedback</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet login at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet viewFeedback at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -59,21 +60,18 @@ public class login extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Cookie arr[] = request.getCookies();
-        if (arr != null) {
-            for (Cookie o : arr) {
-                if (o.getName().equals("username")) {
-                    request.setAttribute("username", o.getValue());
-                }
-                if (o.getName().equals("password")) {
-                    request.setAttribute("password", o.getValue());
-                }
-            }
-            request.getRequestDispatcher("login/login.jsp").forward(request, response);
-        } else {
-            response.sendRedirect("Home");
+        
+        HttpSession session = request.getSession();
+        if (session.getAttribute("customer") == null) {
+            response.sendRedirect("login");
+            return;
         }
         
+        FeedbackDao dao = new FeedbackDao();
+        List<Feedback> list = new ArrayList<>();
+        list = dao.getAllFeedback();
+        request.setAttribute("list", list);
+        request.getRequestDispatcher("feedback/viewFeedback.jsp").forward(request, response);
     }
 
     /**
@@ -87,43 +85,43 @@ public class login extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String param_user = request.getParameter("username");//user input
-        String param_pass = request.getParameter("password");
-        String remember = request.getParameter("rem");
-        CustomerDAO cdao = new CustomerDAO();
-        String pass = cdao.toSHA1(param_pass);
+        
         HttpSession session = request.getSession();
-        Customer customer = cdao.checkUser(param_user, pass);
-        if (customer == null) {
-            request.setAttribute("err", "Invalid username or password!");
-            request.getRequestDispatcher("login/login.jsp").forward(request, response);
+        if (session.getAttribute("customer") == null) {
+            response.sendRedirect("login");
             return;
-        } else if (customer.getActive() == 0) {
-            request.setAttribute("err", "Your account has been blocked!");
-            request.getRequestDispatcher("login/login.jsp").forward(request, response);
-            return;
-        } else {
-            double balance = cdao.getBalanceByCId(customer);
-            
-            session.setAttribute("balance", balance);
-            session.setAttribute("customer", customer);
-            
-            session.setAttribute("customer_id", cdao.getCustomerId(param_user, pass));  
-            
-            Cookie username = new Cookie("username", param_user);
-            Cookie password = new Cookie("password", param_pass);
-            Cookie remem = new Cookie("rem", remember);
-            int cookieAge = (remember != null) ? (24 * 60 * 60 * 60) : 0;
-            username.setMaxAge(cookieAge);
-            password.setMaxAge(cookieAge);
-            remem.setMaxAge(cookieAge);
-            
-            response.addCookie(username);
-            response.addCookie(password);
-            response.addCookie(remem);
-            
-            response.sendRedirect("Home");
         }
+        
+        FeedbackDao dao = new FeedbackDao();
+        List<Feedback> list = new ArrayList<>();
+        String ratingStr = request.getParameter("rating");
+
+        if (ratingStr == null || ratingStr.isEmpty()) {
+            list = dao.getAllFeedback();
+        } else {
+            try {
+                int rating = Integer.parseInt(ratingStr);
+
+                if (rating == 1) {
+                    list = dao.getAllFeedback1();
+                } else if (rating == 2) {
+                    list = dao.getAllFeedback2();
+                } else if (rating == 3) {
+                    list = dao.getAllFeedback3();
+                } else if (rating == 4) {
+                    list = dao.getAllFeedback4();
+                } else if (rating == 5) {
+                    list = dao.getAllFeedback5();
+                } else {
+                    list = dao.getAllFeedback();
+                }
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+                list = dao.getAllFeedback();
+            }
+        }
+        request.setAttribute("list", list);
+        request.getRequestDispatcher("feedback/viewFeedback.jsp").forward(request, response);
     }
 
     /**
