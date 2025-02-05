@@ -9,13 +9,13 @@
 
 </head>
 
-<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+<ul class="navbar-nav bg-gradient-success sidebar sidebar-dark accordion" id="accordionSidebar">
     <!-- Sidebar - Brand -->
     <a class="sidebar-brand d-flex align-items-center justify-content-center" href="Home">
         <div class="sidebar-brand-icon rotate-n-15">
             <i class="fas fa-laugh-wink"></i>
         </div>
-        <div class="sidebar-brand-text mx-3">Namcombank
+        <div class="sidebar-brand-text mx-3">Banking Services System
         </div>
     </a>
 
@@ -47,7 +47,7 @@
             <i class="fas fa-fw fa-table"></i>
             <span>Product Table</span></a>
     </li>
-    <c:if test="${sessionScope.user.rid == 1}">
+    <c:if test="${sessionScope.roleId == 1}">
         <li class="nav-item active">
             <a class="nav-link" href="managerUser">
                 <i class="fas fa-fw fa-table"></i>

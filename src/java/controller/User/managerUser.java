@@ -109,7 +109,7 @@ public class managerUser extends HttpServlet {
 //                request.setAttribute("role", roleId);
 //                request.setAttribute("active", activeId);
 //                request.setAttribute("countU", count);
-//                request.getRequestDispatcher("user/managerUser.jsp").forward(request, response);
+                request.getRequestDispatcher("user/managerUser.jsp").forward(request, response);
 //            }
 //        } else {
 //            response.sendRedirect("login");
