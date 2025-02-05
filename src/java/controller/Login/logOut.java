@@ -56,13 +56,14 @@ public class logOut extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession(false); // Không tạo phiên mới
-        if (session == null) {
+        // Chỉ lấy session nếu đã tồn tại, nếu không có session thì trả về null.
+        HttpSession session = request.getSession(false); 
+        if (session == null) { // chưa đăng nhập
             response.sendRedirect("Home");
             return; // Ensure the method returns to avoid further execution
         }
 
-        session.invalidate(); // Vô hiệu hóa phiên
+        session.invalidate(); // Vô hiệu hóa session, xóa dữ liệu trong session 
         response.sendRedirect("Home");
     }
 
