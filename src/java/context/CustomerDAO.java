@@ -153,7 +153,7 @@ public class CustomerDAO extends DBContext {
             ps.setString(2, username);
             ps.executeUpdate();
         } catch (SQLException e) {
-        }
+        }   
     }
 
 //    public Customer checkCustomer(String username, String password) {
