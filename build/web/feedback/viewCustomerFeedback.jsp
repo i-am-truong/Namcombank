@@ -95,6 +95,7 @@
                 Quay lại
             </button>
         </div>
+            
         <c:forEach begin="1" end="${endP}" var="i">
              <a href="viewCustomerFeedback?index=${i}&rating=${selectedRating}">${i}</a>
         </c:forEach>

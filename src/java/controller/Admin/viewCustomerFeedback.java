@@ -61,6 +61,12 @@ public class viewCustomerFeedback extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("roleId") == null || (int) session.getAttribute("roleId") != 1) {
+            response.sendRedirect("admin.login");
+            return;
+        }
+
         String indexStr = request.getParameter("index");
         int index = 1;
 
@@ -102,7 +108,7 @@ public class viewCustomerFeedback extends HttpServlet {
         request.setAttribute("listPaging", listPaging);
         request.setAttribute("endP", endPage);
         request.setAttribute("selectedRating", rating);
-        request.setAttribute("currentPage", index); // Thêm để giữ trang hiện tại
+        request.setAttribute("currentPage", index);
         request.getRequestDispatcher("feedback/viewCustomerFeedback.jsp").forward(request, response);
 
     }
