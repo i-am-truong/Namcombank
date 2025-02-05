@@ -70,6 +70,7 @@ public class register extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        // lấy dữ liệu từ form đăng ký
         String fullname = request.getParameter("fullnameC");
         String phonenumber = request.getParameter("phonenumberC");
         String email = request.getParameter("emailC");
@@ -86,13 +87,14 @@ public class register extends HttpServlet {
         }
         String cic = request.getParameter("cicC");
         CustomerDAO cd = new CustomerDAO();
+        // check xem username or email đã tồn tại hay chưa
         if (cd.checkUsername(username, email)) {
             password = cd.toSHA1(password);
             cd.registerAcc(fullname, username, password, email, dob, Integer.parseInt(gender), phonenumber, cic, address);
             request.setAttribute("suc", "Create account successfully! ");
             request.getRequestDispatcher("login/register.jsp").forward(request, response);
         } else {
-            request.setAttribute("suc", "Username or email already exist!");
+            request.setAttribute("error", "Username or email already exist!");
             request.getRequestDispatcher("login/register.jsp").forward(request, response);
         }
     }

@@ -1,7 +1,7 @@
 <%-- 
     Document   : managerUser
     Created on : Jun 16, 2024, 10:00:51 AM
-    Author     : chien
+    Author     : lenovo
 --%>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
