@@ -74,7 +74,7 @@ public class managerUser extends HttpServlet {
         }
         CustomerDAO cdao = new CustomerDAO();
         List<Customer> customers = cdao.getAllCustomers();
-        int count = cdao.countAllCustomers(1, 9999, null, null);
+        int count = cdao.getAllCustomers().size();
         request.setAttribute("customers", customers);
         request.setAttribute("count", count);
         request.getRequestDispatcher("user/managerUser.jsp").forward(request, response);

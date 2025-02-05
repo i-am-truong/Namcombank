@@ -149,7 +149,7 @@ public class CustomerDAO extends DBContext {
         return customers;
     }
 
-    public int countAllCustomers(int index, int quantity, String sortField, String sortOrder) {
+    public List<Customer> listAllCustomers(int index, int quantity, String sortField, String sortOrder) {
         List<Customer> customers = new ArrayList<>();
         String sql = "SELECT [customer_id]\n"
                 + "      ,[fullname]\n"
@@ -196,7 +196,7 @@ public class CustomerDAO extends DBContext {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return customers.size();
+        return customers;
     }
 
     // lay so du tai khoan cua khach hang
