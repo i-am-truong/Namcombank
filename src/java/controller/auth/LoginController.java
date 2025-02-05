@@ -44,7 +44,6 @@ public class LoginController extends HttpServlet {
                     hasValidRole = true;
                     break;
                 } else if (role.getId() == 1) {
-//                    staffRole.getFullname();
                     roleId = role.getId();
                     resp.sendRedirect("managerUser");
                     hasValidRole = true;
