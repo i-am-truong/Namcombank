@@ -157,7 +157,7 @@
                                                     </c:choose>
                                                 </td>
                                                 <td><a href="#" onclick="return checkBan('${c.customerId}')"><i class="bi bi-ban"></i></a></td>
-                                                <td><a href="#" onclick="return checkUnBan('${c.username}')"><i class="bi bi-unlock"></i></a></td>
+                                                <td><a href="#" onclick="return checkUnBan('${c.customerId}')"><i class="bi bi-unlock"></i></a></td>
 
                                             </tr>
                                         </c:forEach>
