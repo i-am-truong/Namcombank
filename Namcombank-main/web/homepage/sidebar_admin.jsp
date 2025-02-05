@@ -1,0 +1,92 @@
+<%-- 
+    Document   : sidebar_admin
+    Created on : Jun 17, 2024, 4:31:07 PM
+    Author     : chien
+--%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<head>
+    <link rel="stylesheet" href="assets/css/fontawesome.all.min.css">
+
+</head>
+
+<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+    <!-- Sidebar - Brand -->
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="Home">
+        <div class="sidebar-brand-icon rotate-n-15">
+            <i class="fas fa-laugh-wink"></i>
+        </div>
+        <div class="sidebar-brand-text mx-3">Namcombank
+        </div>
+    </a>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider my-0">
+
+    <!-- Nav Item - Dashboard -->
+    <li class="nav-item">
+        <a class="nav-link" href="Dashboard">
+            <i class="fas fa-fw fa-tachometer-alt"></i>
+            <span>Dashboard</span></a>
+    </li>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+
+    <!-- Heading -->
+    <div class="sidebar-heading">Interface</div>
+    
+        <li class="nav-item active">
+            <a class="nav-link" href="userProfile">
+                <i class="fas fa-fw fa-table"></i>
+                <span>Profile</span></a>
+        </li>
+    
+    <!-- Nav Item - Tables -->
+    <li class="nav-item active">
+        <a class="nav-link" href="listproduct">
+            <i class="fas fa-fw fa-table"></i>
+            <span>Product Table</span></a>
+    </li>
+    <c:if test="${sessionScope.user.rid == 1}">
+        <li class="nav-item active">
+            <a class="nav-link" href="managerUser">
+                <i class="fas fa-fw fa-table"></i>
+                <span>Manager User</span></a>
+        </li>
+    </c:if>
+    <c:if test="${sessionScope.user.rid == 1}">
+        <li class="nav-item active">
+            <a class="nav-link" href="listCate">
+                <i class="fas fa-fw fa-table"></i>
+                <span>Category Table</span></a>
+        </li>
+    </c:if>
+    
+    <c:if test="${sessionScope.user.rid == 1}">
+        <li class="nav-item active">
+            <a class="nav-link" href="newsListStaff">
+                <i class="fas fa-fw fa-table"></i>
+                <span>News Manager</span></a>
+        </li>
+    </c:if>
+    <c:if test="${sessionScope.user.rid == 2}">
+        <li class="nav-item active">
+            <a class="nav-link" href="addNews">
+                <i class="fas fa-fw fa-table"></i>
+                <span> News Manager</span></a>
+        </li>
+    </c:if>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider d-none d-md-block">
+
+    <!-- Sidebar Toggler (Sidebar) -->
+    <div class="text-center d-none d-md-inline">
+        <button class="rounded-circle border-0" id="sidebarToggle"></button>
+    </div>
+</ul>
+<script>
+    document.getElementById('sidebarToggle').addEventListener('click', function () {
+        document.getElementById('accordionSidebar').classList.toggle('toggled');
+    });
+</script>

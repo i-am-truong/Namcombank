@@ -1,0 +1,249 @@
+/* 
+ * Pricing Table Default
+ */
+.pricing-item-default {
+	box-shadow: 0 0 10px 0 #f0eaea;
+	box-sizing: border-box;
+	padding: 35px 0px;
+	text-align: center;
+	-webkit-transition: all .3s ease-in-out;
+	transition: all .4s ease-in-out;
+	position: relative;
+	overflow: hidden;
+	.pricing-badge {
+		position: absolute;
+		top: 19px;
+		right: -49px;
+		padding: 7px 50px;
+		background: #28a745;
+		color: #fff;
+		text-transform: uppercase;
+		font-weight: 600;
+		font-size: 12px;
+		letter-spacing: 1px;
+		transform: rotate(49deg);
+	}
+	h4 {
+		text-transform: capitalize;
+		font-size: 20px;
+		font-weight: 600;
+		color: #444;
+	}
+	h2 {
+		font-size: 50px;
+		font-weight: 900;
+		color: #333;
+		margin-bottom: 20px;
+		sub{
+			font-size: 32px;
+		}
+		span {
+			font-size: 18px;
+			font-weight: 400;
+		}
+	}
+	ul{
+		li{
+			line-height: 30px;
+			font-size: 15px;
+			color: #555;
+			padding: 6px 0px;
+			border-bottom: 1px solid #eee;
+			i{
+				font-size: 14px;
+				padding-right: 5px;
+			}
+			&:last-child{
+				border: none;
+			}
+		}
+	}
+	a{
+		display: inline-block;
+		margin-top: 15px;
+		background: #28a745;
+		padding: 10px 20px;
+		border-radius: 5px;
+		color: #fff;
+		font-weight: 500;
+		font-size: 14px;
+		&:hover{
+			background: #051242;
+		}
+	}
+}
+
+/* 
+ * Style 01
+ */
+
+.pricing-item-style-1 {
+	width: 90%;
+	margin: 0 auto;
+	box-sizing: border-box;
+	box-shadow: 0px 0px 10px 0px #eee;
+	text-align: center;
+	padding: 40px 0px;
+	-webkit-transition: all .4s ease-in-out;
+	transition: all .4s ease-in-out;
+	h4 {
+		font-size: 20px;
+		font-weight: 600;
+		margin: 0 0 13px;
+		text-transform: capitalize;
+		.badge {
+			background: #28a745;
+			font-size: 12px;
+		}
+	}
+	h2{
+		font-size: 36px;
+		font-weight: 900;
+		margin: 0;
+		line-height: 40px;
+		margin-bottom: 20px;
+		sup{
+			color: #9192A6;
+			font-size: 20px;
+			padding-right: 4px;
+		}
+		span{
+			color: #9192A6;
+			font-size: 20px;
+			font-weight: 500;
+		}
+	}
+	ul{
+		li{
+			line-height: 30px;
+			font-size: 15px;
+			color: #555;
+			padding: 6px 0px;
+			border-bottom: 1px solid #eee;
+			&:last-child{
+				border: none;
+			}
+		}
+	}
+	a{
+		display: inline-block;
+		margin-top: 15px;
+		background: #28a745;
+		padding: 10px 20px;
+		border-radius: 5px;
+		color: #fff;
+		font-weight: 500;
+		font-size: 14px;
+		&:hover{
+			background: #051242;
+		}
+	}
+	&:hover{
+		transform: scale(1.13);
+		box-shadow: 0px 4px 10px 6px #3333;
+	}
+}
+.pricing-item-style-1.active {
+	transform: scale(1.13);
+	box-shadow: 0px 4px 10px 6px #3333;
+}
+
+/* 
+ * Style 02
+ */
+.pricing-item-style-2 {
+	float: left;
+	width: 95%;
+	margin: 0 auto;
+	text-align: left;
+	background: #fff;
+	position: relative;
+	padding: 38px 30px;
+	border-radius: 20px;
+	box-shadow: 0px 0px 10px 0px #f0eaea;
+	h4 {
+		font-size: 20px;
+		font-weight: 600;
+		margin: 0 0 13px;
+		text-transform: capitalize;
+		.badge {
+			background: #333;
+			font-size: 12px;
+		}
+	}
+	h2{
+		font-size: 36px;
+		font-weight: 900;
+		margin: 0;
+		line-height: 40px;
+		margin-bottom: 20px;
+		sup{
+			color: #9192A6;
+			font-size: 20px;
+			padding-right: 4px;
+		}
+		span{
+			color: #9192A6;
+			font-size: 20px;
+			font-weight: 500;
+		}
+	}
+	ul{
+		li{
+			overflow: hidden;
+			line-height: 20px;
+			font-size: 14px;
+			margin-bottom: 0px;
+			padding: 8px 0px;
+			border: none;
+			i{
+				color: #28a745;
+				background: rgba(197, 65, 0, 0.1);
+				font-size: 10px;
+				width: 20px;
+				height: 20px;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				border-radius: 50%;
+				float: left;
+				margin-top: 0px;
+				margin-right: 7px;
+			}
+		}
+	}
+	a{
+		display: inline-block;
+		margin-top: 15px;
+		background: #28a745;
+		padding: 10px 20px;
+		border-radius: 5px;
+		color: #fff;
+		font-weight: 500;
+		font-size: 14px;
+		&:hover{
+			background: #051242;
+		}
+	}
+}
+.pricing-item-style-2.active {
+	background: #28a745;
+	color: #fff;
+	transform: translateY(-14px);
+	h4{
+		color: #fff;
+	}
+	h2{
+		color: #fff;
+	}
+	a{
+		background: #051242;
+	}
+	ul{
+		li{
+			i{
+				background: rgba(0, 0, 0, 0.94);
+			}
+		}
+	}
+}

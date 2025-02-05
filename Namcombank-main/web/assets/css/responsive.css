@@ -1,0 +1,124 @@
+/* Styles for screens 1300px and above */
+@media (min-width: 1300px) {
+    .about-content h3 {
+        font-size: 30px;
+    }
+    .about-content p {
+        font-size: 18px;
+        margin-bottom: 12px;
+        line-height: 30px;
+    }
+    .deal-product-slider-single-content .left .count-time ul li {
+        padding: 15px;
+        margin-bottom: 12px;
+    }
+}
+
+/* Styles for screens between 992px and 1299px */
+@media (max-width: 1299px) {
+    .deal-product-slider-single-content .right p {
+        margin-bottom: 5px;
+        margin-top: 2px;
+        line-height: 26px;
+    }
+}
+
+/* Styles for screens between 768px and 1199px */
+@media (max-width: 1199px) {
+    .menu ul li ul.mega-sub-menu {
+        left: -500px;
+    }
+    .team-style-1 .content {
+        line-height: 24px;
+        padding: 10px 0;
+    }
+}
+
+/* Styles for tablet and desktop (992px and above) */
+@media (min-width: 992px) {
+    .canvas_open,
+    .logo-2 {
+        display: none;
+    }
+    .desktop-mini-cart {
+        display: block;
+    }
+    .mobile-mini-cart {
+        display: none;
+    }
+}
+
+/* Styles for tablets and smaller devices (991px and below) */
+@media (max-width: 991px) {
+    .logo,
+    .desktop-mini-cart,
+    .menu {
+        display: none;
+    }
+    .mobile-mini-cart {
+        height: 100%;
+        padding-right: 30px;
+    }
+    .canvas_open {
+        float: right;
+        display: flex;
+        align-items: center;
+        height: 100%;
+    }
+    .header-bottm {
+        padding: 20px 0;
+    }
+}
+
+/* Styles for mobile devices (767px and below) */
+@media (max-width: 767px) {
+    .sales-banner .text-right {
+        float: left;
+        margin-top: 20px;
+    }
+    .breadcrumb-area {
+        padding: 50px 0;
+    }
+    .modal_tab_img img {
+        width: auto;
+    }
+    .copyright-text,
+    .footer_payment {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+}
+
+/* Styles for small mobile devices (450px and below) */
+@media (max-width: 450px) {
+    .minicart-content-wrapper {
+        width: 280px;
+        right: -73px;
+    }
+    .privacy-policy-content {
+        padding: 30px 10px;
+    }
+    .mini-cart-icon i {
+        font-size: 28px;
+    }
+}
+
+/* Styles for very small devices (400px and below) */
+@media (max-width: 400px) {
+    .mobile-mini-cart {
+        padding-right: 5px;
+    }
+    .minicart-content-wrapper {
+        right: -50px;
+    }
+    .logo-2 img {
+        width: 155px;
+    }
+    .mini-cart-icon i {
+        font-size: 22px;
+    }
+    .modal_add_to_cart button {
+        margin-left: 10px;
+        padding: 15px 20px;
+    }
+}

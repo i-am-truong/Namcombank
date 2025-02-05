@@ -1,0 +1,314 @@
+.header-top{
+	background: #28a745;
+	padding: 10px 0px;
+	.top-text {
+		p{
+			color: #fff;
+			font-size: 14px;
+			font-weight: 600;
+			letter-spacing: 1px;
+		}
+	}
+	.top-list {
+		text-align: right;
+		a{
+			color: #fff;
+			font-size: 14px;
+			font-weight: 600;
+			letter-spacing: 1px;
+			padding-right: 30px;
+			&:last-child{
+				padding-right: 0px;
+			}
+			&:hover{
+				color: #333;
+			}
+		}
+	}
+}
+
+/* 
+ * Header Bottom
+ */
+.header-bottm{
+    border: 1px solid #efefef;
+    background: #fbfbfb;
+}
+.logo h2 {
+	font-size: 32px;
+	line-height: 1;
+}
+.logo h2 a {
+	color: #333;
+}
+.header-search-form {
+	width: 100%;
+}
+.header-search-form form {
+	width: 100%;
+	position: relative;
+}
+.header-search-form form .form-select {
+	width: 200px;
+	border-radius: 0px;
+	height: 60px;
+	-webkit-transition: all .3s ease-in-out;
+	transition: all .3s ease-in-out;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+.header-search-form form .form-select:focus{
+	box-shadow: none;
+}
+.header-search-form form input {
+	width: 100%;
+	height: 60px;
+	border: 1px solid #ddd;
+	padding-left: 210px;
+	padding-right: 30px;
+}
+.header-search-form form button {
+	position: absolute;
+	right: 0;
+	top: 0;
+	height: 60px;
+	border: none;
+	padding: 10px 20px;
+	color: #fff;
+	font-size: 20px;
+	background: #28a745;
+	-webkit-transition: all .3s ease-in-out;
+	transition: all .3s ease-in-out;
+}
+.header-search-form form button:hover {
+	background: $base-hover-color;
+}
+.logo {
+	height: 100%;
+	display: flex;
+	align-items: center;
+}
+.mini-cart {
+	text-align: right;
+	height: 100%;
+	float: right;
+}
+.mini-cart-icon {
+	position: relative;
+	display: flex;
+	align-items: center;
+	height: 100%;
+}
+.mini-cart-icon i {
+	font-size: 30px;
+	cursor: pointer;
+}
+.mini-cart-icon .counter-cart {
+	display: block;
+	font-size: 14px;
+	font-weight: 600;
+	padding-left: 22px;
+}
+.mini-cart-icon .counter {
+	position: absolute;
+	top: 0;
+	left: 24px;
+	width: 26px;
+	height: 26px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background: #28a745;
+	border-radius: 50%;
+	font-size: 13px;
+	font-weight: 600;
+	color: #fff;
+}
+.mini-cart-icon .counter-cart small {
+	display: block;
+	line-height: 1;
+}
+/*Mincart*/
+.minicart-content-wrapper ul li {
+	position: relative;
+}
+.minicart-content-wrapper ul li img {
+	width: 80px;
+	position: absolute;
+	left: 0;
+	top: 0;
+}
+.minicart-content-wrapper {
+	width: 300px;
+	box-shadow: 0px 0px 10px 0px #cccccc;
+	border-top: 5px solid #28a745;
+	position: absolute;
+	top: 105px;
+	right: 0;
+	float: left;
+	text-align: left;
+	background: #fff;
+	-webkit-transition: all .3s ease-in-out;
+	transition: all .3s ease-in-out;
+	padding: 20px;
+	opacity: 0;
+	visibility: hidden;
+	z-index: 999;
+}
+.mini-cart-icon:hover .minicart-content-wrapper{
+	opacity: 1;
+	visibility: visible;
+	top: 80px;
+}
+.minicart-content-wrapper ul li {
+	position: relative;
+	border-bottom: 1px solid #ccc;
+	padding-bottom: 10px;
+	margin-bottom: 10px;
+	padding-left: 90px;
+}
+.minicart-content-wrapper ul li h5 {
+	font-size: 18px;
+	text-transform: capitalize;
+	font-weight: 600;
+	line-height: 1;
+	padding-bottom: 10px;
+}
+.minicart-content-wrapper ul li h5 a{
+	color: #333;
+}
+.minicart-content-wrapper ul li:hover h5 a{
+	color: #28a745;
+}
+.minicart-content-wrapper ul li span.price {
+	color: #333;
+	font-size: 16px;
+	font-weight: 600;
+}
+.minicart-content-wrapper ul li .close {
+	position: absolute;
+	bottom: 10px;
+	right: 0px;
+}
+.minicart-content-wrapper ul li .close i {
+	font-size: 16px;
+	width: 28px;
+	height: 28px;
+	border: 2px solid #ccc;
+	border-radius: 50%;
+	display: flex;
+	justify-content: center;
+	-webkit-transition: all .3s ease-in-out;
+	transition: all .3s ease-in-out;
+	align-items: center;
+}
+.minicart-content-wrapper ul li .close i:hover{
+	color: #28a745;
+}
+.minicart-content-wrapper ul li img {
+	height: 70px;
+}
+.minicart-content-wrapper h2.subtotal {
+	font-size: 20px;
+	font-weight: 600;
+	margin-bottom: 16px;
+}
+.minicart-content-wrapper h2.subtotal span {
+	text-align: right;
+	float: right;
+}
+.minicart-content-wrapper .minicart-btn a {
+	width: 100%;
+	display: block;
+	margin: 5px 0px;
+}
+.minicart-content-wrapper ul li img {
+	height: 70px;
+	border: 1px solid #ddd;
+	margin-bottom: 10px;
+}
+.menu nav ul li {
+	display: inline-block;
+	position: relative;
+	margin: 0px 32px;
+}
+.menu nav ul li a {
+	font-weight: 500;
+	text-transform: uppercase;
+	font-size: 15px;
+	color: #333333;
+	padding: 30px 0px;
+	display: inline-block;
+	position: relative;
+}
+.menu nav ul li:hover > a{
+	color: #051242;
+}
+.menu nav ul li > ul.submenu-item {
+	position: absolute;
+	top: 100px;
+	left: 0;
+	background-color: #fff;
+	border-top: 5px solid #051242;
+	-webkit-transition: all .3s ease-in-out;
+	-moz-transition: all .3s ease-in-out;
+	transition: all .3s ease-in-out;
+	width: 200px;
+	opacity: 0;
+	visibility: hidden;
+	z-index: 999;
+	text-align: left;
+	box-shadow: 0px 0px 16px #ccc;
+}
+.menu nav ul li:hover > ul.submenu-item{
+	opacity: 1;
+	visibility: visible;
+	top: 75px;
+}
+.menu nav ul li > ul.submenu-item > li {
+	display: block;
+	position: relative;
+	-webkit-transition: all .3s ease-in-out;
+	transition: all .3s ease-in-out;
+	margin: 0px;
+}
+.menu nav ul li:hover > ul.submenu-item > li a:after{
+	width:0;
+}
+.menu nav ul li > ul.submenu-item > li:hover{
+	background: #fff;
+	color: #fff;
+}
+.menu nav ul li > ul.submenu-item > li a{
+	text-transform: capitalize;
+}
+.menu nav ul li > ul.submenu-item > li:hover a {
+	color: #28a745;
+	padding-left: 34px;
+}
+.menu nav ul li > ul.submenu-item > li:hover li > a{
+	color: #28a745;
+	padding-left: 34px;
+}
+.menu nav ul li > ul.submenu-item > li li > a:hover{
+	color: #28a745;
+	padding-left: 34px;
+}
+.menu nav ul li > ul.submenu-item > li a {
+	display: inline-block;
+	width: 100%;
+	padding: 10px 20px;
+	border-bottom: 1px solid #ddd;
+	font-size: 14px;
+}
+.menu nav ul li > ul.submenu-item > li:last-child a{
+	border-bottom: none;
+}
+.menu nav ul > li > ul.submenu-item > li > ul {
+	left: 200px;
+	top: 28px;
+}
+.menu nav ul li > ul.submenu-item > li:hover > ul {
+	top: -3px;
+}
