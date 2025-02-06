@@ -26,6 +26,7 @@ import model.auth.Staff;
  */
 public class managerUser extends BaseRBACControlller {
 
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
