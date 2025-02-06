@@ -87,14 +87,14 @@ public class register extends HttpServlet {
         }
         String cic = request.getParameter("cicC");
         CustomerDAO cd = new CustomerDAO();
-        // check xem username or email đã tồn tại hay chưa
-        if (cd.checkUsername(username, email)) {
+        // check xem username or email or phonenumber đã tồn tại hay chưa
+        if (cd.checkUsername(username, email, phonenumber)) {
             password = cd.toSHA1(password);
             cd.registerAcc(fullname, username, password, email, dob, Integer.parseInt(gender), phonenumber, cic, address);
-            request.setAttribute("suc", "Create account successfully! ");
+            request.setAttribute("suc", "Create account successfully!");
             request.getRequestDispatcher("login/register.jsp").forward(request, response);
         } else {
-            request.setAttribute("error", "Username or email already exist!");
+            request.setAttribute("error", "Username or email or phonenumber already exist!");
             request.getRequestDispatcher("login/register.jsp").forward(request, response);
         }
     }

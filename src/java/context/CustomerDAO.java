@@ -12,9 +12,6 @@ import jakarta.mail.Transport;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import java.security.MessageDigest;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.logging.Level;
@@ -199,6 +196,78 @@ public class CustomerDAO extends DBContext {
         return customers;
     }
 
+    public List<Customer> searchCustomers(String key, int active, int index, int quantity, String sortField, String sortOrder) {
+        List<Customer> customers = new ArrayList<>();
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT [customer_id], [fullname], [username], [password], [active], ")
+           .append("[email], [dob], [gender], [phonenumber], [balance], ")
+           .append("[citizen_identification_card], [address] ")
+           .append("FROM [dbo].[Customer] WHERE 1=1 ");
+
+        // Add search conditions if key is provided
+        if (key != null && !key.trim().isEmpty()) {
+            sql.append("AND (fullname LIKE ? OR phonenumber LIKE ? OR email LIKE ? OR username LIKE ?) ");
+        }
+
+        // Add active filter condition
+        if (active != -1) {
+            sql.append("AND active = ? ");
+        }
+
+        // Add sorting
+        if (sortField != null && sortOrder != null) {
+            sql.append("ORDER BY ").append(sortField).append(" ").append(sortOrder).append(" ");
+        } else {
+            sql.append("ORDER BY customer_id ");
+        }
+
+        sql.append("OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+
+        try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+            int paramIndex = 1;
+
+            // Set search parameters if key is provided
+            if (key != null && !key.trim().isEmpty()) {
+                String searchPattern = "%" + key + "%";
+                ps.setString(paramIndex++, searchPattern);
+                ps.setString(paramIndex++, searchPattern);
+                ps.setString(paramIndex++, searchPattern);
+                ps.setString(paramIndex++, searchPattern);
+            }
+
+            // Set active parameter if specified
+            if (active != -1) {
+                ps.setInt(paramIndex++, active);
+            }
+
+            // Set pagination parameters
+            ps.setInt(paramIndex++, (index - 1) * quantity);
+            ps.setInt(paramIndex, quantity);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    customers.add(new Customer(
+                        rs.getInt("customer_id"),
+                        rs.getString("fullname"),
+                        rs.getString("username"),
+                        rs.getString("password"),
+                        rs.getInt("active"),
+                        rs.getString("email"),
+                        rs.getDate("dob"),
+                        rs.getInt("gender"),
+                        rs.getString("phonenumber"),
+                        rs.getFloat("balance"),
+                        rs.getString("citizen_identification_card"),
+                        rs.getString("address")
+                    ));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return customers;
+    }
+
     // lay so du tai khoan cua khach hang
     public double getBalanceByCId(Customer c) {
         int cid = c.getCustomerId();
@@ -265,12 +334,13 @@ public class CustomerDAO extends DBContext {
 //        }
 //        return 0;
 //    }
-    public boolean checkUsername(String username, String email) {
-        String sql = "SELECT [username] FROM Customer WHERE [username] = ? or [email] = ?";
+    public boolean checkUsername(String username, String email, String phonenumber) {
+        String sql = "SELECT [username] FROM Customer WHERE [username] = ? or [email] = ? or [phonenumber] = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, username);
             ps.setString(2, email);
+            ps.setString(3, phonenumber);
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
@@ -453,6 +523,43 @@ public class CustomerDAO extends DBContext {
             System.err.println("SQL error: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    public int getTotalCustomerCount(String searchKey, int active) {
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT COUNT(*) as total FROM [dbo].[Customer] WHERE 1=1 ");
+
+        if (searchKey != null && !searchKey.trim().isEmpty()) {
+            sql.append("AND (fullname LIKE ? OR phonenumber LIKE ? OR email LIKE ? OR username LIKE ?) ");
+        }
+
+        if (active != -1) {
+            sql.append("AND active = ? ");
+        }
+
+        try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+            int paramIndex = 1;
+
+            if (searchKey != null && !searchKey.trim().isEmpty()) {
+                String pattern = "%" + searchKey + "%";
+                ps.setString(paramIndex++, pattern);
+                ps.setString(paramIndex++, pattern);
+                ps.setString(paramIndex++, pattern);
+                ps.setString(paramIndex++, pattern);
+            }
+
+            if (active != -1) {
+                ps.setInt(paramIndex, active);
+            }
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("total");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 
     public static void main(String[] args) {

@@ -1,4 +1,4 @@
-<%-- 
+<%--
     Document   : sidebar_admin
     Created on : Jun 17, 2024, 4:31:07 PM
     Author     : lenvo
@@ -40,18 +40,23 @@
             <i class="fas fa-fw fa-table"></i>
             <span>Profile</span></a>
     </li>
+<!--    <li class="nav-item active">
+        <a class="nav-link" href="userProfile">
+            <i class="fas fa-fw fa-table"></i>
+            <span>Profile</span></a>
+    </li>-->
 
     <!-- Nav Item - Tables -->
     <li class="nav-item active">
-        <a class="nav-link" href="/Namcombank/staff-manager/loanpackage-list.jsp">
+        <a class="nav-link" href="loanpackage/listloanpackage">
             <i class="fas fa-fw fa-table"></i>
             <span>Loan Packages Table</span></a>
     </li>
-    <c:if test="${sessionScope.roleId == 1}">
+    
         <li class="nav-item active">
             <a class="nav-link" href="managerUser">
                 <i class="fas fa-fw fa-table"></i>
-                <span>Manager User</span></a>
+                <span>Manager Customer</span></a>
         </li>
     </c:if>
 
@@ -86,6 +91,22 @@
                 <span> News Manager</span></a>
         </li>
     </c:if>
+    
+
+<!--    <li class="nav-item active">
+        <a class="nav-link" href="listCate">
+            <i class="fas fa-fw fa-table"></i>
+            <span>Category Table</span></a>
+    </li>
+
+
+
+-->    <li class="nav-item active">
+        <a class="nav-link" href="newsList">
+            <i class="fas fa-fw fa-table"></i>
+            <span> News</span></a>
+    </li>
+
 
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">

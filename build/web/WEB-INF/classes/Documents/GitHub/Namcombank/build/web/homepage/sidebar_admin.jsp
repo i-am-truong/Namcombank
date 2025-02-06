@@ -35,11 +35,6 @@
     <!-- Heading -->
     <div class="sidebar-heading">Interface</div>
 
-    <li class="nav-item active">
-        <a class="nav-link" href="userProfile">
-            <i class="fas fa-fw fa-table"></i>
-            <span>Profile</span></a>
-    </li>
 <!--    <li class="nav-item active">
         <a class="nav-link" href="userProfile">
             <i class="fas fa-fw fa-table"></i>
@@ -58,39 +53,6 @@
                 <i class="fas fa-fw fa-table"></i>
                 <span>Manager Customer</span></a>
         </li>
-    </c:if>
-
-    <!-- feedback cua admin -->
-    <c:if test="${sessionScope.roleId == 1}">
-        <li class="nav-item active">
-            <a class="nav-link" href="viewCustomerFeedback">
-                <i class="fas fa-fw fa-table"></i>
-                <span>View Customer Feedback</span></a>
-        </li>
-    </c:if>
-
-    <c:if test="${sessionScope.user.rid == 1}">
-        <li class="nav-item active">
-            <a class="nav-link" href="listCate">
-                <i class="fas fa-fw fa-table"></i>
-                <span>Category Table</span></a>
-        </li>
-    </c:if>
-
-    <c:if test="${sessionScope.user.rid == 1}">
-        <li class="nav-item active">
-            <a class="nav-link" href="newsListStaff">
-                <i class="fas fa-fw fa-table"></i>
-                <span>News Manager</span></a>
-        </li>
-    </c:if>
-    <c:if test="${sessionScope.user.rid == 2}">
-        <li class="nav-item active">
-            <a class="nav-link" href="addNews">
-                <i class="fas fa-fw fa-table"></i>
-                <span> News Manager</span></a>
-        </li>
-    </c:if>
     
 
 <!--    <li class="nav-item active">
