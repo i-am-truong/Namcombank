@@ -105,7 +105,7 @@ public class CustomerDAO extends DBContext {
         }
         return customer;
     }
-
+    
     public List<Customer> getAllCustomers() {
         List<Customer> customers = new ArrayList<>();
         String sql = "SELECT [customer_id]\n"
@@ -685,6 +685,52 @@ public class CustomerDAO extends DBContext {
 //
 //        return listU;
 //    }
+
+    public int getCustomerId(String username, String password) {
+        String sql = "SELECT customer_id FROM Customer WHERE username = ? AND password = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, username);
+            ps.setString(2, password);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("customer_id");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Handle the error
+        }
+        return -1; // Return -1 if no customer found
+    }
+
+    public Customer getCustomerDetail(int customerId) {
+        Customer customer = null;
+        String sql = "SELECT [customer_id], [fullname], [username], [password], [active], [email], [dob], [gender], [phonenumber], [balance], [citizen_identification_card], [address] "
+                + "FROM [dbo].[Customer] "
+                + "WHERE [customer_id] = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, customerId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                customer = new Customer(
+                        rs.getInt("customer_id"),
+                        rs.getString("fullname"),
+                        rs.getString("username"),
+                        rs.getString("password"),
+                        rs.getInt("active"),
+                        rs.getString("email"),
+                        rs.getDate("dob"),
+                        rs.getInt("gender"),
+                        rs.getString("phonenumber"),
+                        rs.getFloat("balance"),
+                        rs.getString("citizen_identification_card"),
+                        rs.getString("address")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // In lỗi nếu có
+        }
+        return customer;
+    }
 
     @Override
     public void insert(Object model) {

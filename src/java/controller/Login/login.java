@@ -108,7 +108,8 @@ public class login extends HttpServlet {
             double balance = cdao.getBalanceByCId(customer);
             session.setAttribute("balance", balance); // lưu số dư tài khoảng vào session
             session.setAttribute("customer", customer); // lưu customer vào session để tái sử dụng
-
+            session.setAttribute("customer_id", cdao.getCustomerId(param_user, pass));
+            
             Cookie username = new Cookie("username", param_user);
             Cookie password = new Cookie("password", param_pass);
             Cookie remem = new Cookie("rem", remember);
