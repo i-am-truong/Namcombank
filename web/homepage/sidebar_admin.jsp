@@ -34,13 +34,13 @@
 
     <!-- Heading -->
     <div class="sidebar-heading">Interface</div>
-    
-        <li class="nav-item active">
-            <a class="nav-link" href="userProfile">
-                <i class="fas fa-fw fa-table"></i>
-                <span>Profile</span></a>
-        </li>
-    
+
+    <li class="nav-item active">
+        <a class="nav-link" href="userProfile">
+            <i class="fas fa-fw fa-table"></i>
+            <span>Profile</span></a>
+    </li>
+
     <!-- Nav Item - Tables -->
     <li class="nav-item active">
         <a class="nav-link" href="/Namcombank/staff-manager/loanpackage-list.jsp">
@@ -54,6 +54,16 @@
                 <span>Manager User</span></a>
         </li>
     </c:if>
+
+    <!-- feedback cua admin -->
+    <c:if test="${sessionScope.roleId == 1}">
+        <li class="nav-item active">
+            <a class="nav-link" href="viewCustomerFeedback">
+                <i class="fas fa-fw fa-table"></i>
+                <span>View Customer Feedback</span></a>
+        </li>
+    </c:if>
+
     <c:if test="${sessionScope.user.rid == 1}">
         <li class="nav-item active">
             <a class="nav-link" href="listCate">
@@ -61,7 +71,7 @@
                 <span>Category Table</span></a>
         </li>
     </c:if>
-    
+
     <c:if test="${sessionScope.user.rid == 1}">
         <li class="nav-item active">
             <a class="nav-link" href="newsListStaff">
