@@ -334,12 +334,13 @@ public class CustomerDAO extends DBContext {
 //        }
 //        return 0;
 //    }
-    public boolean checkUsername(String username, String email) {
-        String sql = "SELECT [username] FROM Customer WHERE [username] = ? or [email] = ?";
+    public boolean checkUsername(String username, String email, String phonenumber) {
+        String sql = "SELECT [username] FROM Customer WHERE [username] = ? or [email] = ? or [phonenumber] = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, username);
             ps.setString(2, email);
+            ps.setString(3, phonenumber);
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
