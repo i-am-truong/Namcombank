@@ -95,14 +95,14 @@ public class ResendEmail extends HttpServlet {
 
             Session session = Session.getDefaultInstance(props, new jakarta.mail.Authenticator() {
                 protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication("isp1804cardweb3@gmail.com", "htjf amxi obmi mhxp");
+                    return new PasswordAuthentication("your-email@gmail.com", "tzpt dikz yfuq jeth");
                 }
             });
 
             // Compose message
             try {
                 MimeMessage message = new MimeMessage(session);
-                message.setFrom(new InternetAddress("isp1804cardweb3@gmail.com"));
+                message.setFrom(new InternetAddress("Duongkoi0504@gmail.com"));
                 message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
                 message.setSubject("Yêu cầu gửi lại mã OTP để đổi mật khẩu mới", StandardCharsets.UTF_8.name());
                 message.setText("Mã OTP để đổi mật khẩu của bạn là: " + otpvalue, StandardCharsets.UTF_8.name());

@@ -111,14 +111,14 @@ public class ResendEmailUtil extends HttpServlet {
             Session mailSession = Session.getDefaultInstance(props, new jakarta.mail.Authenticator() {
                 @Override
                 protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication("isp1804cardweb3@gmail.com", "pchn xlef opnr bhca");
+                    return new PasswordAuthentication("your-email@gmail.com", "tzpt dikz yfuq jeth");
                 }
             });
 
             // Compose message
             try {
                 MimeMessage message = new MimeMessage(mailSession);
-                message.setFrom(new InternetAddress("isp1804cardweb3@gmail.com"));
+                message.setFrom(new InternetAddress("your-email@gmail.com"));
                 message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
                 message.setSubject("Mã OTP ");
                 message.setText("Mã OTP: " + otpvalue);

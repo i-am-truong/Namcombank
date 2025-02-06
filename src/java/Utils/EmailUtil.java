@@ -4,6 +4,7 @@
  */
 package Utils;
 
+import context.CustomerDAO;
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
 import jakarta.mail.PasswordAuthentication;
@@ -12,6 +13,7 @@ import jakarta.mail.Transport;
 import jakarta.mail.internet.AddressException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
+import java.net.URLDecoder;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.Properties;
@@ -23,8 +25,8 @@ import java.util.Random;
  */
 class EmailUtil {
 
-    public static final String USERNAME = "swp@gmail.com";
-    public static final String PASSWORD = "jklh jklh jklh jklh";
+    public static final String USERNAME = "duongkoi0504@gmail.com";
+    public static final String PASSWORD = "tzpt dikz yfuq jeth";
 
     public static boolean sendMail(String to, String subject, String content) throws AddressException, MessagingException {
         Properties props = new Properties();
@@ -75,5 +77,11 @@ class EmailUtil {
 
         return Integer.parseInt(otp.toString());
     }
-    
+    public static void main(String[] args) throws MessagingException {
+        
+             CustomerDAO ud = new CustomerDAO();
+        String code = ud.getCode();
+        boolean test = ud.verifyCode("your-email@gmail.com", code);
+        
+    }
 }

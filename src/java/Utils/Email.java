@@ -64,7 +64,7 @@ public class Email extends HttpServlet{
         Session mailSession = Session.getDefaultInstance(props, new jakarta.mail.Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication("isp1804cardweb3@gmail.com", "pchn xlef opnr bhca");
+                return new PasswordAuthentication("duongkoi0504@gmail.com", "tzpt dikz yfuq jeth");
             }
         });
 

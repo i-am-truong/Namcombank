@@ -105,7 +105,7 @@ public class ForgotPassword extends HttpServlet {
             Session s = Session.getDefaultInstance(props, new jakarta.mail.Authenticator() {
                 @Override
                 protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication("swp@gmail.com", "pchn jkll jklj kjll");
+                    return new PasswordAuthentication("duongkoi0504@gmail.com", "Duong123");
                 }
             });
             try {
