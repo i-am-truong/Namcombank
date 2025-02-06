@@ -43,7 +43,7 @@
 
     <!-- Nav Item - Tables -->
     <li class="nav-item active">
-        <a class="nav-link" href="/Namcombank/staff-manager/loanpackage-list.jsp">
+        <a class="nav-link" href="loanpackage/listloanpackage">
             <i class="fas fa-fw fa-table"></i>
             <span>Loan Packages Table</span></a>
     </li>
