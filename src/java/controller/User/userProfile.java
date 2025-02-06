@@ -85,6 +85,7 @@ public class userProfile extends HttpServlet {
             return; // Ensure the method returns to avoid further execution
         }
         else{
+        // lấy dữ liệu từ form
         String fullName = request.getParameter("fullName");
         String phoneNumber = request.getParameter("phoneNumber");
         String email = request.getParameter("email");
@@ -92,6 +93,7 @@ public class userProfile extends HttpServlet {
         String gender = request.getParameter("gender");
         String dob = request.getParameter("dateOfBirth");
         CustomerDAO cdao = new CustomerDAO();
+        // update ttin khách hàng
         customer.setFullname(fullName);
         customer.setPhonenumber(phoneNumber);
         customer.setAddress(address);

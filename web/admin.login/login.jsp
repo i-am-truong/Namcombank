@@ -1,4 +1,4 @@
-    <%-- 
+<%-- 
     Document   : login
     Created on : Jan 23, 2025, 7:13:08 PM
     Author     : lenovo
@@ -147,15 +147,15 @@
                                             <label class="form-check-label" >Remember me</label></div>
 
                                     </div>
-                                    <div class="col-6 text-right">
+<!--                                    <div class="col-6 text-right">
                                         <a href="resetPass">Forgot password?</a>
-                                    </div>
+                                    </div>-->
                                 </div>
                                 <p style="color: red">${requestScope.err}</p>
                                 <button class="button-1" type="submit">Log In</button>
                             </form>
-                            <p>Don't Have an Account? <a href="register">Sign up now</a></p>
-                        </div>
+<!--                            <p>Don't Have an Account? <a href="register">Sign up now</a></p>
+                        </div>-->
                     </div>
                 </div>
             </div>

@@ -1,7 +1,7 @@
 <%-- 
     Document   : listCate2
     Created on : Jun 22, 2024, 10:19:05 PM
-    Author     : chien
+    Author     : lenovo
 --%>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>

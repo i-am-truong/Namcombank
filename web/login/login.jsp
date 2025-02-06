@@ -137,7 +137,7 @@
                         <div class="login-register-form-full"  style="background-color: #ffffff; padding: 30px; border-radius: 8px; box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);">
                             <h3 style="margin-bottom: 35px"><img src="assets/img/logo3.png"></h3>
                             <form action="login" method="post">
-                                <input type="text" class="form-control" id="email"  value="${username}" name="username" placeholder="Your Username" required>
+                                <input type="text" class="form-control" id="username"  value="${username}" name="username" placeholder="Your Username" required>
                                 <div id="email-error" class="error"></div>
                                 <input type="password" class="form-control"  value="${password}" name="password" placeholder="Your Password" required>
                                 <div class="row">

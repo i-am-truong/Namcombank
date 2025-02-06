@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="7e3ec092-3327-465f-b5c8-c7129fcfcb32" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/build/web/WEB-INF/classes/context/CustomerDAO.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/web/WEB-INF/classes/context/CustomerDAO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/context/CustomerDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/context/CustomerDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/context/StaffAccountDBContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/context/StaffAccountDBContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/controller/Login/logOut.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/controller/Login/logOut.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/controller/Login/login.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/controller/Login/login.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/controller/Login/register.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/controller/Login/register.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/controller/User/managerUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/controller/User/managerUser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/controller/User/userProfile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/controller/User/userProfile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/controller/auth/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/controller/auth/LoginController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/model/Customer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/model/Customer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/WEB-INF/web.xml" beforeDir="false" afterPath="$PROJECT_DIR$/web/WEB-INF/web.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/admin.login/login.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/web/admin.login/login.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/homepage/cart.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/web/homepage/cart.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/homepage/header_bottom.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/web/homepage/header_bottom.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/homepage/home.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/web/homepage/home.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/homepage/sidebar_admin.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/web/homepage/sidebar_admin.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/login/changePass.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/web/login/changePass.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/login/getCode.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/web/login/getCode.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/login/login.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/web/login/login.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/login/register.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/web/login/register.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/user/addStaff.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/web/user/addStaff.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/user/managerUser.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/web/user/managerUser.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/user/profileUser.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/web/user/profileUser.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/user/verify.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/web/user/verify.jsp" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 2
+}</component>
+  <component name="ProjectId" id="2sePPhTl5zTbmtLYzQDMe7GPprL" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "duylinh2",
+    "kotlin-language-version-configured": "true"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="7e3ec092-3327-465f-b5c8-c7129fcfcb32" name="Changes" comment="" />
+      <created>1738813046394</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1738813046394</updated>
+    </task>
+    <servers />
+  </component>
+</project>

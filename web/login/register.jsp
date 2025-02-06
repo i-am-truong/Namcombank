@@ -1,7 +1,7 @@
 <%-- 
     Document   : register
     Created on : Jan 23, 2025, 4:22:47 PM
-    Author     : chien
+    Author     : lenovo
 --%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -158,13 +158,15 @@
                                     </div>
                                     <div class="col-12">
                                         <div class="form-floating mb-3">
-                                            <input type="address" class="form-control" name="addressC" id="address" placeholder="Address" >
+                                            <input type="address" class="form-control" name="addressC" id="address" placeholder="Address" 
+                                                   value="${param.addressC != null ? param.addressC : ''}">
                                             <label for="address" class="form-label">Address</label>
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <div class="form-floating mb-3">
-                                            <input type="text" class="form-control" name="cicC" id="citizenID" placeholder="Citizen Identification Card" maxlength="15" >
+                                            <input type="text" class="form-control" name="cicC" id="citizenID" placeholder="Citizen Identification Card" 
+                                                   value="${param.cicC != null ? param.cicC : ''}">
                                             <label for="citizenID" class="form-label">Citizen Identification Card</label>
                                         </div>
                                     </div>
