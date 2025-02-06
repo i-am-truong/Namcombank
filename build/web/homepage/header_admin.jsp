@@ -140,7 +140,7 @@
             <a href="userProfile"><i class="fas fa-user"></i>&nbsp;&nbsp;Show profile </a>
             <a href="#"><i class="fas fa-cog"></i>&nbsp;&nbsp;Setting</a>
             <a href="logOut"><i class="fas fa-sign-out-alt"></i>&nbsp;&nbsp;Logout</a>
-   
+
 
         </div>
 

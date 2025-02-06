@@ -1,4 +1,4 @@
-<%-- 
+<%--
     Document   : sidebar_admin
     Created on : Jun 17, 2024, 4:31:07 PM
     Author     : lenvo
@@ -34,13 +34,13 @@
 
     <!-- Heading -->
     <div class="sidebar-heading">Interface</div>
-    
+
         <li class="nav-item active">
             <a class="nav-link" href="userProfile">
                 <i class="fas fa-fw fa-table"></i>
                 <span>Profile</span></a>
         </li>
-    
+
     <!-- Nav Item - Tables -->
     <li class="nav-item active">
         <a class="nav-link" href="/Namcombank/staff-manager/loanpackage-list.jsp">
@@ -51,7 +51,7 @@
         <li class="nav-item active">
             <a class="nav-link" href="managerUser">
                 <i class="fas fa-fw fa-table"></i>
-                <span>Manager User</span></a>
+                <span>Manager Customer</span></a>
         </li>
     </c:if>
     <c:if test="${sessionScope.user.rid == 1}">
@@ -61,7 +61,7 @@
                 <span>Category Table</span></a>
         </li>
     </c:if>
-    
+
     <c:if test="${sessionScope.user.rid == 1}">
         <li class="nav-item active">
             <a class="nav-link" href="newsListStaff">
