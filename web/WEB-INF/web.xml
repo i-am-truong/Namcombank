@@ -144,6 +144,10 @@
         <servlet-name>viewCustomerFeedback</servlet-name>
         <servlet-class>controller.Admin.viewCustomerFeedback</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>manageCustomer</servlet-name>
+        <servlet-class>controller.customer.manageCustomer</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>newsList</servlet-name>
         <url-pattern>/newsList</url-pattern>
@@ -283,6 +287,10 @@
     <servlet-mapping>
         <servlet-name>viewCustomerFeedback</servlet-name>
         <url-pattern>/viewCustomerFeedback</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>manageCustomer</servlet-name>
+        <url-pattern>/manageCustomer</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
