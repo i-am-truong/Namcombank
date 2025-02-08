@@ -1,4 +1,4 @@
-<%-- 
+<%--
     Document   : manageCustomer
     Created on : Feb 7, 2025, 10:23:28 AM
     Author     : TQT
@@ -32,7 +32,16 @@
                                     <div class="card-body">
                                         <table id="datatables-column-search-text-inputs" class="table table-striped"
                                                style="width:100%">
-                                            <h1>List Customers</h1>
+                                            <div class="d-flex align-items-center justify-content-between mb-3" style="position: relative;">
+                                                <a href="addCustomer" class="btn btn-primary">
+                                                    Add New Customer
+                                                </a>
+                                                <h1>List Customers</h1>
+                                                <a href="managerUser" class="btn btn-outline-secondary">
+                                                    Back to Admin Page
+                                                </a>
+
+                                            </div>
                                             <thead>
                                                 <tr>
                                                     <th>Name</th>
@@ -71,7 +80,7 @@
                                                             <c:choose>
                                                                 <c:when test="${c.active == 0}">
                                                                     Closed
-                                                                    <a href="#" onclick="return checkUnBan('${c.customerId}')">
+                                                                    <a href="javascript:void(0)" onclick="return checkUnBan('${c.customerId}')">
                                                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-unlock" viewBox="0 0 16 16">
                                                                         <path d="M11 1a2 2 0 0 0-2 2v4a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h5V3a3 3 0 0 1 6 0v4a.5.5 0 0 1-1 0V3a2 2 0 0 0-2-2M3 8a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1z"/>
                                                                         </svg>
@@ -79,7 +88,7 @@
                                                                 </c:when>
                                                                 <c:when test="${c.active ==1}">
                                                                     Opening
-                                                                    <a href="#" onclick="return checkBan('${c.customerId}')">
+                                                                    <a href="javascript:void(0)" onclick="return checkBan('${c.customerId}')">
                                                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lock" viewBox="0 0 16 16">
                                                                         <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2M5 8h6a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1"/>
                                                                         </svg>
@@ -90,7 +99,8 @@
                                                         <td>${c.address}</td>
                                                         <td>${c.balance}</td>
                                                         <td>
-                                                            <a href="#" onclick="return checkDeleteCustomer('${c.customerId}')">
+                                                            <a href="editCustomer?customerId=${c.customerId}">Edit</a>
+                                                            <a href="javascript:void(0)" onclick="return checkDeleteCustomer('${c.customerId}')">
                                                                 Delete
                                                             </a>
                                                         </td>
@@ -98,7 +108,7 @@
                                                 </c:forEach>
                                             </tbody>
                                             <tfoot>
-                                                <tr>                 
+                                                <tr>
                                                     <th>Name</th>
                                                     <th>Gender</th>
                                                     <th>Date of Birth</th>
