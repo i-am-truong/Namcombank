@@ -51,14 +51,14 @@
                         <td class="border border-gray-300 px-4 py-2"><%= loanPackage.getMinAmount() %></td>
                         <td class="border border-gray-300 px-4 py-2"><%= loanPackage.getLoanTerm() %></td>
                         <td class="border border-gray-300 px-4 py-2"><%= loanPackage.getCreatedDate() %></td>
-                        <!--                        <td class="border border-gray-300 px-4 py-2">
+                                                <td class="border border-gray-300 px-4 py-2">
                                                     <form action="updateloanpackage" method="post"><a href="loanpackage-update.jsp?id=<%= loanPackage.getPackageId() %>" class="text-blue-500 hover:underline">Edit</a></form> 
                                                     <a href="deleteloanpackage?packageId=<%= loanPackage.getPackageId() %>" 
                                                        class="text-red-500 hover:underline"
                                                        onclick="return confirm('Are you sure you want to delete this package?');">
                                                         Delete
                                                     </a>
-                                                </td>-->
+                                                </td>
                     </tr>
                     <%
                         }
