@@ -100,52 +100,44 @@
                     <div class="col-lg-6 offset-lg-3">
                         <div class="login-register-form-full">
 
-                            <form id="registerForm" action="editCustomer" method="post">
+                            <form id="registerForm" action="editCustomer" method="get">
                                 <div class="row gy-3 overflow-hidden">
                                     <div class="col-12">
                                         <div class="form-floating mb-3">
-                                            <input type="text" class="form-control" name="fullnameC" id="fullname" placeholder="Full Name" value="${param.fullnameC != null ? param.fullnameC : ''}" >
+                                            <input type="text" class="form-control" name="fullnameC" id="fullname" placeholder="Full Name" value="${customer.fullname != null ? customer.fullname : ''}" >
                                             <label for="fullname" class="form-label">Full Name</label>
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <div class="form-floating mb-3">
-                                            <input type="text" class="form-control" name="usernameC" id="username" placeholder="Username" value="${param.usernameC != null ? param.usernameC : ''}" >
+                                            <input type="text" class="form-control" name="usernameC" id="username" placeholder="Username" value="${customer.username != null ? customer.username : ''}" >
                                             <label for="username" class="form-label">Username</label>
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <div class="form-floating mb-3">
-                                            <input type="password" class="form-control" name="passwordC" id="password" placeholder="Password" value="${param.passwordC != null ? param.passwordC : ''}" >
+                                            <input type="password" class="form-control" name="passwordC" id="password" placeholder="Password" value="${customer.password != null ? customer.password : ''}" >
                                             <label for="password" class="form-label">Password</label>
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <div class="form-floating mb-3">
-                                            <input type="password" class="form-control" name="confirmPasswordC" id="confirmPassword" placeholder="Confirm Password" value="${param.confirmPasswordC != null ? param.confirmPasswordC : ''}" >
-                                            <label for="confirmPassword" class="form-label">Confirm Password</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="form-floating mb-3">
-                                            <input type="email" class="form-control" name="emailC" id="email" placeholder="name@example.com" value="${param.emailC != null ? param.emailC : ''}" >
+                                            <input type="email" class="form-control" name="emailC" id="email" placeholder="name@example.com" value="${customer.email != null ? customer.email : ''}" >
                                             <label for="email" class="form-label">Email</label>
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <div class="form-floating mb-3">
-                                            <input type="date" class="form-control" name="dobC" id="dob" placeholder="Date of Birth" >
+                                            <input type="date" class="form-control" name="dobC" id="dob" placeholder="Date of Birth" value="${customer.dob}">
                                             <label for="dob" class="form-label">Date of Birth</label>
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <div class="form-floating mb-3">
                                             <select class="form-select" name="genderC" id="gender" required>
-                                                <option value="">Select Gender</option>
-                                                <option value="1" ${param.genderC == "1" ? "selected" : ""}>Male</option>
-                                                <option value="2" ${param.genderC == "2" ? "selected" : ""}>Female</option>
-                                                <option value="3" ${param.genderC == "3" ? "selected" : ""}>Other</option>
-
+                                                <option value="-1"${customer.gender == -1 ? 'selected' : ''}>Select Gender</option>
+                                                <option value="0" ${customer.gender == 0 ? 'selected' : ''}>Female</option>
+                                                <option value="1" ${customer.gender == 1 ? 'selected' : ''}>Male</option>
                                             </select>
                                             <label for="gender" class="form-label">Gender</label>
                                         </div>
@@ -153,21 +145,21 @@
                                     <div class="col-12">
                                         <div class="form-floating mb-3">
                                             <input type="tel" class="form-control" name="phonenumberC" id="phonenumber"
-                                                   value="${param.phonenumberC != null ? param.phonenumberC : ''}" >
+                                                   value="${customer.phonenumber != null ? customer.phonenumber : ''}" >
                                             <label for="phonenumber" class="form-label">Phone Number</label>
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <div class="form-floating mb-3">
                                             <input type="address" class="form-control" name="addressC" id="address" placeholder="Address"
-                                                   value="${param.addressC != null ? param.addressC : ''}">
+                                                   value="${customer.address != null ? customer.address : ''}">
                                             <label for="address" class="form-label">Address</label>
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <div class="form-floating mb-3">
                                             <input type="text" class="form-control" name="cicC" id="citizenID" placeholder="Citizen Identification Card"
-                                                   value="${param.cicC != null ? param.cicC : ''}">
+                                                   value="${customer.cid != null ? customer.cid : ''}">
                                             <label for="citizenID" class="form-label">Citizen Identification Card</label>
                                         </div>
                                     </div>

@@ -6,6 +6,8 @@ package controller.customer;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+
+import context.CustomerDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -55,8 +57,7 @@ public class addCustomer extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("customer/addCustomer.jsp").forward(request, response);
-
+        doPost(request, response);
     }
 
     /**
@@ -70,6 +71,34 @@ public class addCustomer extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        // xửa lý đoạn này sau
+//        String fullname = request.getParameter("fullnameC");
+//        String phonenumber = request.getParameter("phonenumberC");
+//        String email = request.getParameter("emailC");
+//        String address = request.getParameter("addressC");
+//        String dob = request.getParameter("dobC");
+//        String gender = request.getParameter("genderC");
+//        String username = request.getParameter("usernameC");
+//        String password = request.getParameter("passwordC");
+////        String confirmPassword = request.getParameter("confirmPasswordC");
+////        if (!password.equals(confirmPassword)) {
+////            request.setAttribute("suc", "Passwords do not match!");
+////            request.getRequestDispatcher("login/register.jsp").forward(request, response);
+////            return;
+////        }
+//        String cic = request.getParameter("cicC");
+//        CustomerDAO cd = new CustomerDAO();
+//        // check xem username or email or phonenumber đã tồn tại hay chưa
+//        if (cd.checkUsername(username, email, phonenumber)) {
+//            password = cd.toSHA1(password);
+//            int genderInt = gender != null ? Integer.parseInt(gender) : -1;
+//            cd.registerAcc(fullname, username, password, email, dob, genderInt, phonenumber, cic, address);
+//            request.setAttribute("suc", "Create account successfully!");
+//            request.getRequestDispatcher("customer/addCustomer.jsp").forward(request, response);
+//        } else {
+//            request.setAttribute("error", "Username or email or phonenumber already exist!");
+//            request.getRequestDispatcher("customer/addCustomer.jsp").forward(request, response);
+//        }
         request.getRequestDispatcher("customer/addCustomer.jsp").forward(request, response);
     }
 
