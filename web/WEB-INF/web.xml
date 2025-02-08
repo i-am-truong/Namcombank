@@ -156,6 +156,14 @@
         <servlet-name>deleteCustomer</servlet-name>
         <servlet-class>controller.customer.deleteCustomer</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>editCustomer</servlet-name>
+        <servlet-class>controller.customer.editCustomer</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>addCustomer</servlet-name>
+        <servlet-class>controller.customer.addCustomer</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>newsList</servlet-name>
         <url-pattern>/newsList</url-pattern>
@@ -307,6 +315,14 @@
     <servlet-mapping>
         <servlet-name>deleteCustomer</servlet-name>
         <url-pattern>/deleteCustomer</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>editCustomer</servlet-name>
+        <url-pattern>/editCustomer</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>addCustomer</servlet-name>
+        <url-pattern>/addCustomer</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
