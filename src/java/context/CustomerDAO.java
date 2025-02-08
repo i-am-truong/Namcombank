@@ -146,6 +146,48 @@ public class CustomerDAO extends DBContext {
         return customers;
     }
 
+    public Customer getCustomerById(int customerId) {
+        Customer customer = null;
+        String sql = "SELECT [customer_id]\n"
+                + "      ,[fullname]\n"
+                + "      ,[username]\n"
+                + "      ,[password]\n"
+                + "      ,[active]\n"
+                + "      ,[email]\n"
+                + "      ,[dob]\n"
+                + "      ,[gender]\n"
+                + "      ,[phonenumber]\n"
+                + "      ,[balance]\n"
+                + "      ,[citizen_identification_card]\n"
+                + "      ,[address]\n"
+                + "  FROM [dbo].[Customer]\n"
+                + "  WHERE customer_id = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, customerId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                customer = new Customer(
+                        rs.getInt("customer_id"),
+                        rs.getString("fullname"),
+                        rs.getString("username"),
+                        rs.getString("password"),
+                        rs.getInt("active"),
+                        rs.getString("email"),
+                        rs.getDate("dob"),
+                        rs.getInt("gender"),
+                        rs.getString("phonenumber"),
+                        rs.getFloat("balance"),
+                        rs.getString("citizen_identification_card"),
+                        rs.getString("address")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return customer;
+    }
+
     public List<Customer> listAllCustomers(int index, int quantity, String sortField, String sortOrder) {
         List<Customer> customers = new ArrayList<>();
         String sql = "SELECT [customer_id]\n"
@@ -563,6 +605,9 @@ public class CustomerDAO extends DBContext {
     }
 
     public static void main(String[] args) {
+//        CustomerDAO cdao = new CustomerDAO();
+//        Customer customer = cdao.getCustomerById(1);
+//        System.out.println(customer.toString());
 //        CustomerDAO cdao = new CustomerDAO();
 //        cdao.deleteCustomer(5);
 //        List<Customer> customers = cdao.getAllCustomers();

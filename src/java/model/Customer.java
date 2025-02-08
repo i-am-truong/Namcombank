@@ -139,4 +139,12 @@ public class Customer {
     public void setAddress(String address) {
         this.address = address;
     }
+
+    // Test
+//    @Override
+//    public String toString() {
+//        return "Customer{" + "customerId=" + customerId + ", fullname=" + fullname + ", username=" + username + ", password=" + password + ", active=" + active + ", email=" + email + ", dob=" + dob + ", gender=" + gender + ", phonenumber=" + phonenumber + ", balance=" + balance + ", cid=" + cid + ", address=" + address + '}';
+//    }
+    
+    
 }

@@ -15,6 +15,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import model.Customer;
 
 /**
  *
@@ -60,6 +61,10 @@ public class editCustomer extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        int customerId = Integer.parseInt(request.getParameter("customerId"));
+        CustomerDAO cdao = new CustomerDAO();
+        Customer customer = cdao.getCustomerById(customerId);
+        request.setAttribute("customer", customer);
         // try {
         //     int productId = Integer.parseInt(request.getParameter("productId"));
         //     String name = request.getParameter("name");
@@ -131,7 +136,7 @@ public class editCustomer extends HttpServlet {
         //     request.setAttribute("error", "Username or email or phonenumber already exist!");
         //     request.getRequestDispatcher("login/register.jsp").forward(request, response);
         // }
-        request.getRequestDispatcher("customer/editCustomer.jsp").forward(request, response);
+//        request.getRequestDispatcher("customer/editCustomer.jsp").forward(request, response);
     }
 
     /**
