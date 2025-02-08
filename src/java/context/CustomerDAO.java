@@ -105,7 +105,7 @@ public class CustomerDAO extends DBContext {
         }
         return customer;
     }
-    
+
     public List<Customer> getAllCustomers() {
         List<Customer> customers = new ArrayList<>();
         String sql = "SELECT [customer_id]\n"
@@ -200,9 +200,9 @@ public class CustomerDAO extends DBContext {
         List<Customer> customers = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT [customer_id], [fullname], [username], [password], [active], ")
-           .append("[email], [dob], [gender], [phonenumber], [balance], ")
-           .append("[citizen_identification_card], [address] ")
-           .append("FROM [dbo].[Customer] WHERE 1=1 ");
+                .append("[email], [dob], [gender], [phonenumber], [balance], ")
+                .append("[citizen_identification_card], [address] ")
+                .append("FROM [dbo].[Customer] WHERE 1=1 ");
 
         // Add search conditions if key is provided
         if (key != null && !key.trim().isEmpty()) {
@@ -247,18 +247,18 @@ public class CustomerDAO extends DBContext {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     customers.add(new Customer(
-                        rs.getInt("customer_id"),
-                        rs.getString("fullname"),
-                        rs.getString("username"),
-                        rs.getString("password"),
-                        rs.getInt("active"),
-                        rs.getString("email"),
-                        rs.getDate("dob"),
-                        rs.getInt("gender"),
-                        rs.getString("phonenumber"),
-                        rs.getFloat("balance"),
-                        rs.getString("citizen_identification_card"),
-                        rs.getString("address")
+                            rs.getInt("customer_id"),
+                            rs.getString("fullname"),
+                            rs.getString("username"),
+                            rs.getString("password"),
+                            rs.getInt("active"),
+                            rs.getString("email"),
+                            rs.getDate("dob"),
+                            rs.getInt("gender"),
+                            rs.getString("phonenumber"),
+                            rs.getFloat("balance"),
+                            rs.getString("citizen_identification_card"),
+                            rs.getString("address")
                     ));
                 }
             }
@@ -564,6 +564,7 @@ public class CustomerDAO extends DBContext {
 
     public static void main(String[] args) {
 //        CustomerDAO cdao = new CustomerDAO();
+//        cdao.deleteCustomer(5);
 //        List<Customer> customers = cdao.getAllCustomers();
 //        for(Customer customer : customers){
 //            System.out.println(customer.toString());
@@ -686,6 +687,18 @@ public class CustomerDAO extends DBContext {
 //        return listU;
 //    }
 
+    public void deleteCustomer(int cid) {
+        String sql = "DELETE FROM [dbo].[Customer]\n"
+                + "      WHERE customer_id = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, cid);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public int getCustomerId(String username, String password) {
         String sql = "SELECT customer_id FROM Customer WHERE username = ? AND password = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -743,11 +756,6 @@ public class CustomerDAO extends DBContext {
     }
 
     @Override
-    public void delete(Object model) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
     public ArrayList list() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
@@ -756,4 +764,10 @@ public class CustomerDAO extends DBContext {
     public Object get(int id) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
+
+    @Override
+    public void delete(Object model) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
 }
