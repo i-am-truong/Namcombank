@@ -83,7 +83,9 @@ public class viewCustomerDetail extends BaseRBACControlller {
         CustomerDAO dao = new CustomerDAO();
         Customer customer = new Customer();
 
-        int cus_id = 1;//Integer.parseInt(request.getParameter("customer_id"));
+        String cusId= request.getParameter("customer_id");
+        
+        int cus_id= Integer.parseInt(cusId);
 
         customer = dao.getCustomerDetail(cus_id);
         request.setAttribute("customerDetail", customer);
