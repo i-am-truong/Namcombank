@@ -58,24 +58,24 @@ public class viewCustomerDetail extends BaseRBACControlller {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+//    @Override
+//    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+//            throws ServletException, IOException {
 //        HttpSession session = request.getSession(false);
 //        if (session == null || session.getAttribute("roleId") == null || (int) session.getAttribute("roleId") != 1) {
 //            response.sendRedirect("admin.login");
 //            return;
 //        }
-        CustomerDAO dao = new CustomerDAO();
-        Customer customer = new Customer();
-
-        int cus_id = 1;//Integer.parseInt(request.getParameter("customer_id"));
-
-        customer = dao.getCustomerDetail(cus_id);
-        request.setAttribute("customerDetail", customer);
-        request.getRequestDispatcher("feedback/viewCustomerDetail.jsp").forward(request, response);
-
-    }
+//        CustomerDAO dao = new CustomerDAO();
+//        Customer customer = new Customer();
+//
+//        int cus_id = 1;//Integer.parseInt(request.getParameter("customer_id"));
+//
+//        customer = dao.getCustomerDetail(cus_id);
+//        request.setAttribute("customerDetail", customer);
+//        request.getRequestDispatcher("feedback/viewCustomerDetail.jsp").forward(request, response);
+//
+//    }
 
     /**
      * Handles the HTTP <code>POST</code> method.
@@ -85,11 +85,11 @@ public class viewCustomerDetail extends BaseRBACControlller {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
-    }
+//    @Override
+//    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+//            throws ServletException, IOException {
+//        processRequest(request, response);
+//    }
 
     /**
      * Returns a short description of the servlet.
