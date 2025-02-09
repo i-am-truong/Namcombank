@@ -21,7 +21,7 @@ import model.auth.Staff;
  * @author admin
  */
 public class viewCustomerDetail extends BaseRBACControlller {
-public class viewCustomerDetail extends HttpServlet {
+
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
