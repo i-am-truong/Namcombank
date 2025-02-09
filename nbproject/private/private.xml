@@ -10,6 +10,9 @@
             <file>file:/C:/Users/lenovo/Downloads/Namcombank-main/Namcombank/src/java/controller/Login/register.java</file>
             <file>file:/C:/Users/lenovo/Downloads/Namcombank-main/Namcombank/web/login/register.jsp</file>
             <file>file:/C:/Users/lenovo/Downloads/Namcombank-main/Namcombank/src/java/controller/auth/LoginController.java</file>
+            <file>file:/D:/Github/Namcombank/src/java/context/DBContext.java</file>
+            <file>file:/D:/Github/Namcombank/src/java/controller/Admin/viewCustomerFeedback.java</file>
+            <file>file:/D:/Github/Namcombank/src/java/context/FeedbackDao.java</file>
         </group>
     </open-files>
 </project-private>

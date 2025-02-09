@@ -44,7 +44,6 @@ public class managerUser extends BaseRBACControlller {
         }
     }
 
-
     @Override
     public String getServletInfo() {
         return "Short description";

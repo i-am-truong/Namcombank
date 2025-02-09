@@ -181,6 +181,20 @@
         <servlet-class>controller.contract.ListContractsController</servlet-class>
         <servlet-name>viewCustomer</servlet-name>
         <servlet-class>controller.customer.viewCustomer</servlet-class>
+        <servlet-name>deleteFeedback</servlet-name>
+        <servlet-class>controller.feedback.deleteFeedback</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>viewFeedback</servlet-name>
+        <servlet-class>controller.feedback.viewFeedback</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>addFeedback</servlet-name>
+        <servlet-class>controller.feedback.addFeedback</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>viewCustomerDetail</servlet-name>
+        <servlet-class>controller.Admin.viewCustomerDetail</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>newsList</servlet-name>
@@ -359,6 +373,20 @@
         <url-pattern>/listContracts</url-pattern>
         <servlet-name>viewCustomer</servlet-name>
         <url-pattern>/viewCustomer</url-pattern>
+        <servlet-name>deleteFeedback</servlet-name>
+        <url-pattern>/deleteFeedback</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>viewFeedback</servlet-name>
+        <url-pattern>/viewFeedback</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>addFeedback</servlet-name>
+        <url-pattern>/addFeedback</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>viewCustomerDetail</servlet-name>
+        <url-pattern>/viewCustomerDetail</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
