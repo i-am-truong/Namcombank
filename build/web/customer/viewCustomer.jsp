@@ -80,7 +80,7 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="breadcrumb-content">
-                            <h2>Create New Customer </h2>
+                            <h2>View Customer Info</h2>
                             <div class="col-12">
                                 <div class="d-grid">
                                     <a href="manageCustomer"><button class="btn btn-primary btn-lg">Back to List Customers</button></a>
@@ -100,44 +100,45 @@
                     <div class="col-lg-6 offset-lg-3">
                         <div class="login-register-form-full">
 
-                            <form id="registerForm" action="addCustomer" method="post">
+                            <form id="registerForm" action="viewCustomer" method="get">
                                 <div class="row gy-3 overflow-hidden">
+                                    <input type="hidden" name="customerId" value="${customer.customerId}">
                                     <div class="col-12">
                                         <div class="form-floating mb-3">
-                                            <input type="text" class="form-control" name="fullnameC" id="fullname" placeholder="Full Name" value="${param.fullnameC != null ? param.fullnameC : ''}" >
+                                            <input type="text" class="form-control" name="fullnameC" id="fullname" placeholder="Full Name" value="${customer.fullname}" disabled>
                                             <label for="fullname" class="form-label">Full Name</label>
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <div class="form-floating mb-3">
-                                            <input type="text" class="form-control" name="usernameC" id="username" placeholder="Username" value="${param.usernameC != null ? param.usernameC : ''}" >
+                                            <input type="text" class="form-control" name="usernameC" id="username" placeholder="Username" value="${customer.username}" disabled>
                                             <label for="username" class="form-label">Username</label>
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <div class="form-floating mb-3">
-                                            <input type="password" class="form-control" name="passwordC" id="password" placeholder="Password" value="${param.passwordC != null ? param.passwordC : ''}" >
+                                            <input type="text" class="form-control" name="passwordC" id="password" placeholder="Password" value="${customer.password}" disabled>
                                             <label for="password" class="form-label">Password</label>
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <div class="form-floating mb-3">
-                                            <input type="email" class="form-control" name="emailC" id="email" placeholder="name@example.com" value="${param.emailC != null ? param.emailC : ''}" >
+                                            <input type="email" class="form-control" name="emailC" id="email" placeholder="name@example.com" value="${customer.email}" disabled>
                                             <label for="email" class="form-label">Email</label>
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <div class="form-floating mb-3">
-                                            <input type="date" class="form-control" name="dobC" id="dob" placeholder="Date of Birth" >
+                                            <input type="date" class="form-control" name="dobC" id="dob" placeholder="Date of Birth" value="${customer.dob}" disabled>
                                             <label for="dob" class="form-label">Date of Birth</label>
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <div class="form-floating mb-3">
-                                            <select class="form-select" name="genderC" id="gender" required>
+                                            <select class="form-select" name="genderC" id="gender" disabled>
                                                 <option value="">Select Gender</option>
-                                                <option value="1" ${param.genderC == "1" ? "selected" : ""}>Male</option>
-                                                <option value="0" ${param.genderC == "0" ? "selected" : ""}>Female</option>
+                                                <option value="1" ${customer.gender == "1" ? "selected" : ""}>Male</option>
+                                                <option value="0" ${customer.gender == "0" ? "selected" : ""}>Female</option>
                                             </select>
                                             <label for="gender" class="form-label">Gender</label>
                                         </div>
@@ -145,36 +146,40 @@
                                     <div class="col-12">
                                         <div class="form-floating mb-3">
                                             <input type="tel" class="form-control" name="phonenumberC" id="phonenumber"
-                                                   value="${param.phonenumberC != null ? param.phonenumberC : ''}" >
+                                                   value="${customer.phonenumber}" disabled>
                                             <label for="phonenumber" class="form-label">Phone Number</label>
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <div class="form-floating mb-3">
                                             <input type="address" class="form-control" name="addressC" id="address" placeholder="Address"
-                                                   value="${param.addressC != null ? param.addressC : ''}">
+                                                   value="${customer.address}" disabled>
                                             <label for="address" class="form-label">Address</label>
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <div class="form-floating mb-3">
                                             <input type="text" class="form-control" name="cicC" id="citizenID" placeholder="Citizen Identification Card"
-                                                   value="${param.cicC != null ? param.cicC : ''}">
+                                                   value="${customer.cid}" disabled>
                                             <label for="citizenID" class="form-label">Citizen Identification Card</label>
                                         </div>
                                     </div>
                                     <div class="col-12">
-                                        <div class="d-grid">
-                                            <button class="btn btn-success btn-lg" id="resetBtn" type="submit">Create New Customer</button>
+                                        <div class="form-floating mb-3">
+                                            <input type="text" class="form-control" name="balaceC" id="balance" placeholder="Balance" value="${customer.balance}" disabled>
+                                            <label for="balance" class="form-label">Balance</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-floating mb-3">
+                                            <select class="form-select" name="statusC" id="status" disabled>
+                                                <option value="1" ${customer.active == "1" ? "selected" : ""}>Opening</option>
+                                                <option value="0" ${customer.active == "0" ? "selected" : ""}>Closed</option>
+                                            </select>
+                                            <label for="status" class="form-label">Account Status</label>
                                         </div>
                                     </div>
                                 </div>
-                                <c:if test="${not empty error}">
-                                    <div class="alert alert-danger">${error}</div>
-                                </c:if>
-                                <c:if test="${not empty suc}">
-                                    <div class="alert alert-success">${suc}</div>
-                                </c:if>
                             </form>
                         </div>
                     </div>
@@ -188,96 +193,6 @@
     <script src="assets/js/jquery-3.5.1.min.js"></script>
     <script src="assets/js/bootstrap.min.js"></script>
     <script src="assets/js/script.js"></script>
-
-    <script>
-        document.getElementById('registerForm').addEventListener('submit', function (event) {
-            var fullname = document.getElementById('fullname').value.trim();
-            var phonenumber = document.getElementById('phonenumber').value.trim();
-            var email = document.getElementById('email').value.trim();
-            var address = document.getElementById('address').value.trim();
-            var dob = document.getElementById('dob').value.trim();
-            var username = document.getElementById('username').value.trim();
-            var password = document.getElementById('password').value.trim();
-            var cic = document.getElementById('citizenID').value.trim();
-
-            // Regex Patterns
-            var phonenumberRegex = /^(09|03)[0-9]{8}$/; // Phone must start with 09 or 03 and have 10 digits
-            var emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-            var addressRegex = /^[A-Za-z0-9\s,.'-]{3,}$/;
-            var usernameRegex = /^[A-Za-z0-9_\.]+$/;
-            var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z]).{8,}$/; // At least 1 uppercase, 1 lowercase, min 8 chars
-            var cicRegex = /^[0-9]{9,12}$/; // Chỉ cho phép số, 9 hoặc 12 chữ số
-
-            var isValid = true;
-            var errorMessage = '';
-            if (!fullname) {
-                errorMessage += 'Name cannot be empty.\n';
-                isValid = false;
-            }
-            if (!phonenumber) {
-                errorMessage += 'Phone number cannot be empty.\n';
-                isValid = false;
-            } else if (!phonenumberRegex.test(phonenumber)) {
-                errorMessage += 'Phone number must start with 09 or 03 and have 10 digits.\n';
-                isValid = false;
-            }
-            if (!email) {
-                errorMessage += 'Email cannot be empty.\n';
-                isValid = false;
-            } else if (!emailRegex.test(email)) {
-                errorMessage += 'Invalid email format.\n';
-                isValid = false;
-            }
-            if (!address) {
-                errorMessage += 'Address cannot be empty.\n';
-                isValid = false;
-            } else if (!addressRegex.test(address)) {
-                errorMessage += 'Invalid address format.\n';
-                isValid = false;
-            }
-            if (!dob) {
-                errorMessage += 'Date of birth cannot be empty.\n';
-                isValid = false;
-            } else {
-                // Validate that DOB is not today's date
-                var today = new Date();
-                var dobDate = new Date(dob);
-                today.setHours(0, 0, 0, 0); // Reset time to compare only dates
-
-                if (dobDate >= today) {
-                    errorMessage += 'Date of birth cannot be today or in the future.\n';
-                    isValid = false;
-                }
-            }
-            if (!username) {
-                errorMessage += 'Username cannot be empty.\n';
-                isValid = false;
-            } else if (!usernameRegex.test(username)) {
-                errorMessage += 'Username can only contain letters, numbers, dots, and underscores.\n';
-                isValid = false;
-            }
-            if (!password) {
-                errorMessage += 'Password cannot be empty.\n';
-                isValid = false;
-            } else if (!passwordRegex.test(password)) {
-                errorMessage += 'Password must have at least 8 characters, including an uppercase and lowercase letter.\n';
-                isValid = false;
-            }
-            if (!cic) {
-                errorMessage += 'Citizen Identification Card cannot be empty\n';
-                isValid = false;
-            } else if (!cicRegex.test(cic)) {
-                errorMessage += 'Invalid Citizen Identification Card. It must be 9 or 12 digits.\n';
-                isValid = false;
-            }
-
-            if (!isValid) {
-                event.preventDefault(); // Prevent form submission
-                alert(errorMessage);
-            }
-        });
-    </script>
-
 
 
 </body>

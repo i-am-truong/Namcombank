@@ -164,6 +164,10 @@
         <servlet-name>addCustomer</servlet-name>
         <servlet-class>controller.customer.addCustomer</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>viewCustomer</servlet-name>
+        <servlet-class>controller.customer.viewCustomer</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>newsList</servlet-name>
         <url-pattern>/newsList</url-pattern>
@@ -323,6 +327,10 @@
     <servlet-mapping>
         <servlet-name>addCustomer</servlet-name>
         <url-pattern>/addCustomer</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>viewCustomer</servlet-name>
+        <url-pattern>/viewCustomer</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

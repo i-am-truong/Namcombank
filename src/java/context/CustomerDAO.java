@@ -23,6 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Properties;
 import java.util.Random;
+import java.sql.Date;
 
 /**
  *
@@ -483,6 +484,30 @@ public class CustomerDAO extends DBContext {
             ps.setString(3, password);
             ps.setString(4, email);
             ps.setDate(5, Date.valueOf(dob));
+            ps.setInt(6, gender);
+            ps.setString(7, phonenumber);
+            ps.setString(8, cic);
+            ps.setString(9, address);
+
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace(); // In lỗi ra console
+            Logger.getLogger(CustomerDAO.class.getName()).log(Level.SEVERE, "SQL Error: " + e.getMessage(), e);
+        }
+    }
+    public void addAcc(String fullname, String username, String password, String email, Date dob, int gender, String phonenumber, String cic, String address) {
+        String sql = "INSERT INTO [dbo].[Customer] "
+                + "([fullname], [username], [password], [email], [dob], [gender], [phonenumber], [citizen_identification_card], [address], [active], [balance]) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 1, 0);";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setString(1, fullname);
+            ps.setString(2, username);
+            // Use hashed password here
+            ps.setString(3, password);
+            ps.setString(4, email);
+            ps.setDate(5, dob);
             ps.setInt(6, gender);
             ps.setString(7, phonenumber);
             ps.setString(8, cic);

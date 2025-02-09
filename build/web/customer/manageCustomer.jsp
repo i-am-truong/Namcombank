@@ -44,6 +44,7 @@
                                             </div>
                                             <thead>
                                                 <tr>
+                                                    <th>ID</th>
                                                     <th>Name</th>
                                                     <th>Gender</th>
                                                     <th>Date of Birth</th>
@@ -60,6 +61,7 @@
                                             <tbody>
                                                 <c:forEach items="${requestScope.customers}" var="c">
                                                     <tr>
+                                                        <td><a href="${pageContext.request.contextPath}/viewCustomer?customerId=${c.customerId}">${c.customerId}</a></td>
                                                         <td>${c.fullname}</td>
                                                         <td>
                                                             <c:choose>
@@ -109,6 +111,7 @@
                                             </tbody>
                                             <tfoot>
                                                 <tr>
+                                                    <th>ID</th>
                                                     <th>Name</th>
                                                     <th>Gender</th>
                                                     <th>Date of Birth</th>

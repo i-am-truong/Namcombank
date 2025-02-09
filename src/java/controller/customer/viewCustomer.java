@@ -4,22 +4,20 @@
  */
 package controller.customer;
 
+import context.CustomerDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
-
-import context.CustomerDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-//import java.util.Date;
-import java.sql.Date;
+import model.Customer;
 
 /**
  *
  * @author TQT
  */
-public class addCustomer extends HttpServlet {
+public class viewCustomer extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,10 +36,10 @@ public class addCustomer extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet addCustomer</title>");
+            out.println("<title>Servlet viewCustomer</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet addCustomer at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet viewCustomer at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -59,7 +57,30 @@ public class addCustomer extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("customer/addCustomer.jsp").forward(request, response);
+        try {
+            String customerId = request.getParameter("customerId");
+            if (customerId == null || customerId.trim().isEmpty()) {
+                response.sendRedirect("manageCustomer");
+                return;
+            }
+
+            CustomerDAO cdao = new CustomerDAO();
+            Customer customer = cdao.getCustomerById(Integer.parseInt(customerId));
+
+            if (customer == null) {
+                response.sendRedirect("manageCustomer");
+                return;
+            }
+
+            request.setAttribute("customer", customer);
+            request.getRequestDispatcher("customer/viewCustomer.jsp").forward(request, response);
+
+        } catch (NumberFormatException e) {
+            response.sendRedirect("manageCustomer");
+            return;
+        } catch (Exception e) {
+            response.sendRedirect("manageCustomer");
+        }
     }
 
     /**
@@ -73,42 +94,16 @@ public class addCustomer extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        String fullname = request.getParameter("fullnameC");
-        String phonenumber = request.getParameter("phonenumberC");
-        String email = request.getParameter("emailC");
-        String address = request.getParameter("addressC");
-        String dob = request.getParameter("dobC");
-        String gender = request.getParameter("genderC");
-        String username = request.getParameter("usernameC");
-        String password = request.getParameter("passwordC");
-        String cic = request.getParameter("cicC");
-
-        // Check if any required field is empty (not just null)
-        if (password == null || password.trim().isEmpty() ||
-            fullname == null || fullname.trim().isEmpty() ||
-            dob == null || dob.trim().isEmpty() ||
-            username == null || username.trim().isEmpty() ||
-            email == null || email.trim().isEmpty() ||
-            phonenumber == null || phonenumber.trim().isEmpty() ||
-            address == null || address.trim().isEmpty() ||
-            gender == null || gender.trim().isEmpty() ||
-            cic == null || cic.trim().isEmpty()) {
-            request.setAttribute("error", "All fields cannot be empty!");
-            request.getRequestDispatcher("customer/addCustomer.jsp").forward(request, response);
-            return;
-        }
-
-        CustomerDAO cd = new CustomerDAO();
-        // check xem username or email or phonenumber đã tồn tại hay chưa
-        if (cd.checkUsername(username, email, phonenumber)) {
-            password = cd.toSHA1(password);
-            cd.registerAcc(fullname, username, password, email, dob, Integer.parseInt(gender), phonenumber, cic, address);
-            request.setAttribute("suc", "Create account successfully!");
-            request.getRequestDispatcher("customer/addCustomer.jsp").forward(request, response);
-        } else {
-            request.setAttribute("error", "Username or email or phonenumber already exist!");
-            request.getRequestDispatcher("customer/addCustomer.jsp").forward(request, response);
+        try {
+            int customerId = Integer.parseInt(request.getParameter("customerId"));
+            CustomerDAO cdao = new CustomerDAO();
+            Customer customer = cdao.getCustomerById(customerId);
+            request.setAttribute("customer", customer);
+            request.getRequestDispatcher("customer/viewCustomer.jsp").forward(request, response);
+        } catch (NumberFormatException e) {
+            doGet(request, response);
+        } catch (Exception e) {
+            doGet(request, response);
         }
     }
 
