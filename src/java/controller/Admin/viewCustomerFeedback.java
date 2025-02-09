@@ -77,7 +77,7 @@ public class viewCustomerFeedback extends HttpServlet {
                 index = 1;
             }
         }
-
+ 
         String ratingStr = request.getParameter("rating");
         int rating = 0;
         if (ratingStr != null && !ratingStr.isEmpty()) {
