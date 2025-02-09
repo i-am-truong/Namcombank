@@ -100,7 +100,7 @@
                     <div class="col-lg-6 offset-lg-3">
                         <div class="login-register-form-full">
 
-                            <form id="registerForm" action="editCustomer" method="post">
+                            <form id="registerForm" action="addCustomer" method="post">
                                 <div class="row gy-3 overflow-hidden">
                                     <div class="col-12">
                                         <div class="form-floating mb-3">
@@ -122,12 +122,6 @@
                                     </div>
                                     <div class="col-12">
                                         <div class="form-floating mb-3">
-                                            <input type="password" class="form-control" name="confirmPasswordC" id="confirmPassword" placeholder="Confirm Password" value="${param.confirmPasswordC != null ? param.confirmPasswordC : ''}" >
-                                            <label for="confirmPassword" class="form-label">Confirm Password</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="form-floating mb-3">
                                             <input type="email" class="form-control" name="emailC" id="email" placeholder="name@example.com" value="${param.emailC != null ? param.emailC : ''}" >
                                             <label for="email" class="form-label">Email</label>
                                         </div>
@@ -142,10 +136,8 @@
                                         <div class="form-floating mb-3">
                                             <select class="form-select" name="genderC" id="gender" required>
                                                 <option value="">Select Gender</option>
-                                                <option value="1" ${param.genderC == "1" ? "selected" : ""}>Male</option>
-                                                <option value="2" ${param.genderC == "2" ? "selected" : ""}>Female</option>
-                                                <option value="3" ${param.genderC == "3" ? "selected" : ""}>Other</option>
-
+                                                <option value="0" ${param.genderC == "0" ? "selected" : ""}>Male</option>
+                                                <option value="1" ${param.genderC == "1" ? "selected" : ""}>Female</option>
                                             </select>
                                             <label for="gender" class="form-label">Gender</label>
                                         </div>

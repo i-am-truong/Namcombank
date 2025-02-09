@@ -26,7 +26,7 @@
         <link rel="stylesheet" href="assets/css/normalize.css">
         <link rel="stylesheet" href="assets/css/style.css">
         <link rel="stylesheet" href="assets/css/responsive.css">
-        <script type="text/javascript">
+<!--        <script type="text/javascript">
             function removeProduct(pid) {
                 var result = confirm("Confirm remove this product?");
                 var totalAmountElement = document.querySelector('.total-amount');
@@ -52,7 +52,7 @@
                 }
             }
 
-        </script>
+        </script>-->
     </head>
     <body>
         <div id="preloader" class="preeloader">
