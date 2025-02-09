@@ -100,82 +100,59 @@
                     <div class="col-lg-6 offset-lg-3">
                         <div class="login-register-form-full">
 
-                            <form id="registerForm" action="editCustomer" method="get">
-                                <div class="row gy-3 overflow-hidden">
-                                    <div class="col-12">
-                                        <div class="form-floating mb-3">
-                                            <input type="text" class="form-control" name="fullnameC" id="fullname" placeholder="Full Name" value="${customer.fullname != null ? customer.fullname : ''}" >
-                                            <label for="fullname" class="form-label">Full Name</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="form-floating mb-3">
-                                            <input type="text" class="form-control" name="usernameC" id="username" placeholder="Username" value="${customer.username != null ? customer.username : ''}" >
-                                            <label for="username" class="form-label">Username</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="form-floating mb-3">
-                                            <input type="password" class="form-control" name="passwordC" id="password" placeholder="Password" value="${customer.password != null ? customer.password : ''}" >
-                                            <label for="password" class="form-label">Password</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="form-floating mb-3">
-                                            <input type="email" class="form-control" name="emailC" id="email" placeholder="name@example.com" value="${customer.email != null ? customer.email : ''}" >
-                                            <label for="email" class="form-label">Email</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="form-floating mb-3">
-                                            <input type="date" class="form-control" name="dobC" id="dob" placeholder="Date of Birth" value="${customer.dob}">
-                                            <label for="dob" class="form-label">Date of Birth</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="form-floating mb-3">
-                                            <select class="form-select" name="genderC" id="gender" required>
-                                                <option value="-1"${customer.gender == -1 ? 'selected' : ''}>Select Gender</option>
-                                                <option value="0" ${customer.gender == 0 ? 'selected' : ''}>Female</option>
-                                                <option value="1" ${customer.gender == 1 ? 'selected' : ''}>Male</option>
-                                            </select>
-                                            <label for="gender" class="form-label">Gender</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="form-floating mb-3">
-                                            <input type="tel" class="form-control" name="phonenumberC" id="phonenumber"
-                                                   value="${customer.phonenumber != null ? customer.phonenumber : ''}" >
-                                            <label for="phonenumber" class="form-label">Phone Number</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="form-floating mb-3">
-                                            <input type="address" class="form-control" name="addressC" id="address" placeholder="Address"
-                                                   value="${customer.address != null ? customer.address : ''}">
-                                            <label for="address" class="form-label">Address</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="form-floating mb-3">
-                                            <input type="text" class="form-control" name="cicC" id="citizenID" placeholder="Citizen Identification Card"
-                                                   value="${customer.cid != null ? customer.cid : ''}">
-                                            <label for="citizenID" class="form-label">Citizen Identification Card</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="d-grid">
-                                            <button class="btn btn-success btn-lg" id="resetBtn" type="submit">Update Customer Info</button>
-                                        </div>
+                            <form action="editCustomer" method="post">
+                                <input type="hidden" name="customerId" value="${customer.customerId}">
+
+                                <div class="form-group">
+                                    <label for="fullnameC">Full Name</label>
+                                    <input type="text" class="form-control" id="fullnameC" name="fullnameC"
+                                           value="${customer.fullname}" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="phonenumberC">Phone Number</label>
+                                    <input type="tel" class="form-control" id="phonenumberC" name="phonenumberC"
+                                           value="${customer.phonenumber}" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="emailC">Email</label>
+                                    <input type="email" class="form-control" id="emailC" name="emailC"
+                                           value="${customer.email}" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="addressC">Address</label>
+                                    <input type="text" class="form-control" id="addressC" name="addressC"
+                                           value="${customer.address}" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="dobC">Date of Birth</label>
+                                    <input type="date" class="form-control" id="dobC" name="dobC"
+                                           value="${customer.dob}" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="genderC">Gender</label>
+                                    <select class="form-control" id="genderC" name="genderC" required>
+                                        <option value="1" ${customer.gender == 1 ? 'selected' : ''}>Male</option>
+                                        <option value="0" ${customer.gender == 0 ? 'selected' : ''}>Female</option>
+                                    </select>
+                                </div>
+                                <div class="col-12">
+                                    <div class="d-grid">
+                                        <button type="submit" class="btn btn-success btn-lg">Update Customer</button>
                                     </div>
                                 </div>
-                                <c:if test="${not empty error}">
-                                    <div class="alert alert-danger">${error}</div>
-                                </c:if>
-                                <c:if test="${not empty suc}">
-                                    <div class="alert alert-success">${suc}</div>
-                                </c:if>
                             </form>
+
+                            <c:if test="${not empty error}">
+                                <div class="alert alert-danger">${error}</div>
+                            </c:if>
+                            <c:if test="${not empty success}">
+                                <div class="alert alert-success">${success}</div>
+                            </c:if>
                         </div>
                     </div>
                 </div>

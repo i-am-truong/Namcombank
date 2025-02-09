@@ -136,8 +136,8 @@
                                         <div class="form-floating mb-3">
                                             <select class="form-select" name="genderC" id="gender" required>
                                                 <option value="">Select Gender</option>
-                                                <option value="0" ${param.genderC == "0" ? "selected" : ""}>Male</option>
-                                                <option value="1" ${param.genderC == "1" ? "selected" : ""}>Female</option>
+                                                <option value="1" ${param.genderC == "1" ? "selected" : ""}>Male</option>
+                                                <option value="0" ${param.genderC == "0" ? "selected" : ""}>Female</option>
                                             </select>
                                             <label for="gender" class="form-label">Gender</label>
                                         </div>
@@ -198,7 +198,6 @@
             var dob = document.getElementById('dob').value.trim();
             var username = document.getElementById('username').value.trim();
             var password = document.getElementById('password').value.trim();
-            var confirmPassword = document.getElementById('confirmPassword').value.trim();
             var cic = document.getElementById('citizenID').value.trim();
 
             // Regex Patterns
@@ -262,13 +261,6 @@
                 isValid = false;
             } else if (!passwordRegex.test(password)) {
                 errorMessage += 'Password must have at least 8 characters, including an uppercase and lowercase letter.\n';
-                isValid = false;
-            }
-            if (!confirmPassword) {
-                errorMessage += 'Confirm password cannot be empty.\n';
-                isValid = false;
-            } else if (confirmPassword !== password) {
-                errorMessage += 'Confirm password does not match.\n';
                 isValid = false;
             }
             if (!cic) {

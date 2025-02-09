@@ -179,6 +179,8 @@
     <servlet>
         <servlet-name>ListContractsController</servlet-name>
         <servlet-class>controller.contract.ListContractsController</servlet-class>
+        <servlet-name>viewCustomer</servlet-name>
+        <servlet-class>controller.customer.viewCustomer</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>newsList</servlet-name>
@@ -355,6 +357,8 @@
     <servlet-mapping>
         <servlet-name>ListContractsController</servlet-name>
         <url-pattern>/listContracts</url-pattern>
+        <servlet-name>viewCustomer</servlet-name>
+        <url-pattern>/viewCustomer</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
