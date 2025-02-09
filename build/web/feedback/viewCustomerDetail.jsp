@@ -104,7 +104,7 @@
                 <p class="no-detail">No customer details found.</p>
             </c:if>
 
-            <button class="button" onclick="window.location.href = '/Namcombank/viewCustomerFeedback'">
+            <button class="button" onclick="window.location.href = 'viewCustomerFeedback'">
                 Back
             </button>
         </div>
