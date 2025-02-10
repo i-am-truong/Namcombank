@@ -106,7 +106,7 @@ public class CustomerDAO extends DBContext {
         }
         return customer;
     }
-
+    
     public List<Customer> getAllCustomers() {
         List<Customer> customers = new ArrayList<>();
         String sql = "SELECT [customer_id]\n"
@@ -188,7 +188,7 @@ public class CustomerDAO extends DBContext {
         }
         return customer;
     }
-
+    
     public List<Customer> listAllCustomers(int index, int quantity, String sortField, String sortOrder) {
         List<Customer> customers = new ArrayList<>();
         String sql = "SELECT [customer_id]\n"
@@ -682,11 +682,8 @@ public class CustomerDAO extends DBContext {
 //        Customer customer = cdao.getCustomerById(1);
 //        System.out.println(customer.toString());
 //        CustomerDAO cdao = new CustomerDAO();
-//        cdao.deleteCustomer(5);
 //        List<Customer> customers = cdao.getAllCustomers();
 //        for(Customer customer : customers){
-//            System.out.println(customer.toString());
-//        }
     }
     //search user
 //Name Phone Email Username
@@ -811,7 +808,6 @@ public class CustomerDAO extends DBContext {
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, cid);
-            ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -823,7 +819,6 @@ public class CustomerDAO extends DBContext {
             ps.setString(1, username);
             ps.setString(2, password);
             ResultSet rs = ps.executeQuery();
-
             if (rs.next()) {
                 return rs.getInt("customer_id");
             }
