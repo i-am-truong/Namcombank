@@ -35,11 +35,16 @@
     <!-- Heading -->
     <div class="sidebar-heading">Interface</div>
 
-<!--    <li class="nav-item active">
+    <li class="nav-item active">
         <a class="nav-link" href="userProfile">
             <i class="fas fa-fw fa-table"></i>
             <span>Profile</span></a>
-    </li>-->
+    </li>
+    <!--    <li class="nav-item active">
+            <a class="nav-link" href="userProfile">
+                <i class="fas fa-fw fa-table"></i>
+                <span>Profile</span></a>
+        </li>-->
 
     <!-- Nav Item - Tables -->
     <li class="nav-item active">
@@ -47,15 +52,44 @@
             <i class="fas fa-fw fa-table"></i>
             <span>Loan Packages Table</span></a>
     </li>
-    
-        <li class="nav-item active">
-            <a class="nav-link" href="managerUser">
-                <i class="fas fa-fw fa-table"></i>
-                <span>Manager Customer</span></a>
-        </li>
-    
 
-<!--    <li class="nav-item active">
+    <li class="nav-item active">
+        <a class="nav-link" href="managerUser">
+            <i class="fas fa-fw fa-table"></i>
+            <span>Manager Customer</span></a>
+    </li>
+
+    <li class="nav-item active">
+        <a class="nav-link" href="manageCustomer">
+            <i class="fas fa-fw fa-table"></i>
+            <span>Manage Customer</span>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#" data-toggle="collapse" data-target="#staffMenu" aria-expanded="false">
+            <i class="fas fa-fw fa-user"></i>
+            <span>Staff Manager</span>
+        </a>
+        <div id="staffMenu" class="collapse">
+            <a class="nav-link sub-menu" href="staffFilter">
+                <i class="fas fa-fw fa-filter"></i> Filter Staff
+            </a>
+            <a class="nav-link sub-menu" href="addStaff">
+                <i class="fas fa-fw fa-user-plus"></i> Add Staff
+            </a>
+        </div>
+    </li>
+    <!-- feedback cua admin -->
+
+    <li class="nav-item active">
+        <a class="nav-link" href="viewCustomerFeedback">
+            <i class="fas fa-fw fa-table"></i>
+            <span>View Customer Feedback</span></a>
+    </li>
+
+
+
+    <li class="nav-item active">
         <a class="nav-link" href="listCate">
             <i class="fas fa-fw fa-table"></i>
             <span>Category Table</span></a>
@@ -63,7 +97,29 @@
 
 
 
--->    <li class="nav-item active">
+    <li class="nav-item active">
+        <a class="nav-link" href="newsListStaff">
+            <i class="fas fa-fw fa-table"></i>
+            <span>News Manager</span></a>
+    </li>
+
+    <li class="nav-item active">
+        <a class="nav-link" href="addNews">
+            <i class="fas fa-fw fa-table"></i>
+            <span> News Manager</span></a>
+    </li>
+
+
+
+    <!--    <li class="nav-item active">
+            <a class="nav-link" href="listCate">
+                <i class="fas fa-fw fa-table"></i>
+                <span>Category Table</span></a>
+        </li>
+    
+    
+    
+    -->    <li class="nav-item active">
         <a class="nav-link" href="newsList">
             <i class="fas fa-fw fa-table"></i>
             <span> News</span></a>
@@ -83,3 +139,6 @@
         document.getElementById('accordionSidebar').classList.toggle('toggled');
     });
 </script>
+<!-- jQuery and Bootstrap  -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
