@@ -4,65 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="05d31456-58c9-4b8c-9dfc-39c0d7a707da" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/web/WEB-INF/classes/Documents/GitHub/Namcombank/build/web/WEB-INF/classes/context/DBContext.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/web/WEB-INF/classes/TestStaffDAO.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/web/WEB-INF/classes/context/StaffDAO.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/web/WEB-INF/classes/context/TestStaffDAO.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/web/WEB-INF/classes/controller/Staff/StaffAddController.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/web/WEB-INF/classes/controller/Staff/StaffDeleteController.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/web/WEB-INF/classes/controller/Staff/StaffFilterController.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/web/WEB-INF/classes/model/Department.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/java/context/StaffDAO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/java/controller/Staff/StaffAddController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/java/controller/Staff/StaffDeleteController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/java/controller/Staff/StaffFilterController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/java/model/Department.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/web/WEB-INF/classes/Documents/GitHub/Namcombank/build/web/WEB-INF/classes/controller/User/managerUser.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/web/WEB-INF/classes/Documents/GitHub/Namcombank/build/web/homepage/sidebar_admin.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/web/WEB-INF/classes/context/CustomerDAO$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/web/WEB-INF/classes/context/CustomerDAO$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/web/WEB-INF/classes/context/CustomerDAO.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/web/WEB-INF/classes/context/CustomerDAO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/web/WEB-INF/classes/context/DBContext.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/web/WEB-INF/classes/context/DBContext.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/web/WEB-INF/classes/context/DepartmentDAO.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/web/WEB-INF/classes/context/DepartmentDAO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/web/WEB-INF/classes/context/StaffAccountDBContext.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/web/WEB-INF/classes/context/StaffAccountDBContext.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/web/WEB-INF/classes/controller/Admin/viewCustomerDetail.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/web/WEB-INF/classes/controller/Admin/viewCustomerDetail.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/web/WEB-INF/classes/controller/auth/BaseRBACControlller.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/web/WEB-INF/classes/controller/auth/BaseRBACControlller.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/web/WEB-INF/classes/controller/auth/LoginController.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/web/WEB-INF/classes/controller/auth/LoginController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/web/WEB-INF/classes/controller/contract/AddContractController.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/web/WEB-INF/classes/controller/contract/AddContractController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/web/WEB-INF/classes/controller/contract/ContractApprovalServlet.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/web/WEB-INF/classes/controller/contract/ContractApprovalServlet.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/web/WEB-INF/classes/controller/contract/EditContractController.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/web/WEB-INF/classes/controller/contract/EditContractController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/web/WEB-INF/classes/controller/contract/ListContractsController.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/web/WEB-INF/classes/controller/contract/ListContractsController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/web/WEB-INF/classes/controller/customer/editCustomer.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/web/WEB-INF/classes/controller/customer/editCustomer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/web/WEB-INF/classes/controller/customer/viewCustomer.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/web/WEB-INF/classes/controller/customer/viewCustomer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/web/WEB-INF/classes/model/auth/Staff.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/web/WEB-INF/classes/model/auth/Staff.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/web/WEB-INF/web.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/web/WEB-INF/web.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/web/customer/editCustomer.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/build/web/customer/editCustomer.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/web/customer/manageCustomer.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/build/web/customer/manageCustomer.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/web/homepage/header_admin.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/build/web/homepage/header_admin.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nbproject/private/private.properties" beforeDir="false" afterPath="$PROJECT_DIR$/nbproject/private/private.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nbproject/private/private.xml" beforeDir="false" afterPath="$PROJECT_DIR$/nbproject/private/private.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/java/context/CustomerDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/context/CustomerDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/java/context/DBContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/context/DBContext.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/java/context/DepartmentDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/context/DepartmentDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/java/context/StaffAccountDBContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/context/StaffAccountDBContext.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/java/controller/Admin/viewCustomerDetail.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/controller/Admin/viewCustomerDetail.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/java/controller/auth/BaseRBACControlller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/controller/auth/BaseRBACControlller.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/java/controller/auth/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/controller/auth/LoginController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/java/controller/contract/AddContractController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/controller/contract/AddContractController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/java/controller/contract/ContractApprovalServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/controller/contract/ContractApprovalServlet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/java/controller/contract/EditContractController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/controller/contract/EditContractController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/java/controller/contract/ListContractsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/controller/contract/ListContractsController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/java/controller/customer/editCustomer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/controller/customer/editCustomer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/java/controller/customer/viewCustomer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/controller/customer/viewCustomer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/java/model/auth/Staff.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/model/auth/Staff.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/WEB-INF/web.xml" beforeDir="false" afterPath="$PROJECT_DIR$/web/WEB-INF/web.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/customer/editCustomer.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/web/customer/editCustomer.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/customer/manageCustomer.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/web/customer/manageCustomer.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/homepage/header_admin.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/web/homepage/header_admin.jsp" afterDir="false" />
-    </list>
+    <list default="true" id="05d31456-58c9-4b8c-9dfc-39c0d7a707da" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -84,7 +26,7 @@
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "Merging duylinh2",
+    "git-widget-placeholder": "duylinh2",
     "kotlin-language-version-configured": "true"
   }
 }]]></component>
