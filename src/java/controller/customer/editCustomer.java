@@ -53,8 +53,9 @@ public class editCustomer extends HttpServlet {
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
-     * Handles the HTTP <code>GET</code> method.
-     * Get Customer ID from request parameter and display edit form
+     * Handles the HTTP <code>GET</code> method. Get Customer ID from request
+     * parameter and display edit form
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -102,7 +103,7 @@ public class editCustomer extends HttpServlet {
         try {
             // Get all parameters
             int customerId = Integer.parseInt(request.getParameter("customerId"));
-            String fullname = request.getParameter("fullnameC");
+            String citizenId = request.getParameter("citizenIdC");
             String phonenumber = request.getParameter("phonenumberC");
             String email = request.getParameter("emailC");
             String address = request.getParameter("addressC");
@@ -110,9 +111,9 @@ public class editCustomer extends HttpServlet {
             String gender = request.getParameter("genderC");
 
             // Validate required fields
-            if (isNullOrEmpty(fullname) || isNullOrEmpty(phonenumber) ||
-                isNullOrEmpty(email) || isNullOrEmpty(address) ||
-                isNullOrEmpty(dobStr) || isNullOrEmpty(gender)) {
+            if (isNullOrEmpty(phonenumber)
+                    || isNullOrEmpty(email) || isNullOrEmpty(address)
+                    || isNullOrEmpty(dobStr) || isNullOrEmpty(gender)) {
 
                 request.setAttribute("error", "All fields are required!");
                 doGet(request, response);
@@ -133,18 +134,22 @@ public class editCustomer extends HttpServlet {
             }
 
             // Update customer details
-            customer.setFullname(fullname);
+            customer.setCid(citizenId);
             customer.setPhonenumber(phonenumber);
             customer.setEmail(email);
             customer.setAddress(address);
             customer.setDob(dob);
             customer.setGender(Integer.parseInt(gender));
 
-            // Update in database
-            cdao.updateProfile(customer);
-
-            request.setAttribute("success", "Customer updated successfully!");
-            doGet(request, response);
+            // Check for duplicates excluding current customer
+            if (cdao.checkCustomerUpdate(citizenId, phonenumber, email, customerId)) {
+                cdao.updateProfile(customer);
+                request.setAttribute("success", "Customer updated successfully!");
+                doGet(request, response);
+            } else {
+                request.setAttribute("error", "Citizen ID, phone number or email is already in use by another customer!");
+                doGet(request, response);
+            }
 
         } catch (IllegalArgumentException e) {
             request.setAttribute("error", "Invalid date format!");

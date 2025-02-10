@@ -188,6 +188,10 @@
         <servlet-name>ListContractsController</servlet-name>
         <servlet-class>controller.contract.ListContractsController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>viewCustomer</servlet-name>
+        <servlet-class>controller.customer.viewCustomer</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ContractApprovalServlet</servlet-name>
         <url-pattern>/contractApproval</url-pattern>
@@ -372,9 +376,13 @@
         <servlet-name>StaffAddController</servlet-name>
         <url-pattern>/addStaff</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>viewCustomer</servlet-name>
+        <url-pattern>/viewCustomer</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
-            100
+            30
         </session-timeout>
     </session-config>
 </web-app>

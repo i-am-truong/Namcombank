@@ -106,7 +106,13 @@
                                 <div class="form-group">
                                     <label for="fullnameC">Full Name</label>
                                     <input type="text" class="form-control" id="fullnameC" name="fullnameC"
-                                           value="${customer.fullname}" required>
+                                           value="${customer.fullname}" readonly>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="cidC">Citizen Identification Card</label>
+                                    <input type="text" class="form-control" id="cidC" name="citizenIdC"
+                                           value="${customer.cid}">
                                 </div>
 
                                 <div class="form-group">
