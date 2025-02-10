@@ -65,7 +65,20 @@
             <span>Manage Customer</span>
         </a>
     </li>
-
+    <li class="nav-item">
+        <a class="nav-link" href="#" data-toggle="collapse" data-target="#staffMenu" aria-expanded="false">
+            <i class="fas fa-fw fa-user"></i>
+            <span>Staff Manager</span>
+        </a>
+        <div id="staffMenu" class="collapse">
+            <a class="nav-link sub-menu" href="staffFilter">
+                <i class="fas fa-fw fa-filter"></i> Filter Staff
+            </a>
+            <a class="nav-link sub-menu" href="addStaff">
+                <i class="fas fa-fw fa-user-plus"></i> Add Staff
+            </a>
+        </div>
+    </li>
     <!-- feedback cua admin -->
 
     <li class="nav-item active">
@@ -126,3 +139,6 @@
         document.getElementById('accordionSidebar').classList.toggle('toggled');
     });
 </script>
+<!-- jQuery and Bootstrap  -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>

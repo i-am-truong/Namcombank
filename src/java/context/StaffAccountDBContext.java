@@ -4,10 +4,12 @@
  */
 package context;
 
+import java.security.MessageDigest;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,8 +23,26 @@ import model.auth.Staff;
  *
  * @author Asus
  */
-public class StaffAccountDBContext  extends DBContext<Staff>{
-     public ArrayList<Role> getRoles(String username) {
+public class StaffAccountDBContext extends DBContext<Staff> {
+
+    public static String toSHA1(String str) {
+        String salt = "kaisd#$%^&*(sg~~sda";
+        String result = null;
+
+        str = str + salt;
+        try {
+            byte[] dataByte = str.getBytes("UTF-8");
+            MessageDigest md = MessageDigest.getInstance("SHA-1");
+            byte[] hashBytes = md.digest(dataByte);
+            result = Base64.getEncoder().encodeToString(hashBytes);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+
+    }
+
+    public ArrayList<Role> getRoles(String username) {
         PreparedStatement stm = null;
         ArrayList<Role> roles = new ArrayList<>();
         try {
@@ -69,7 +89,7 @@ public class StaffAccountDBContext  extends DBContext<Staff>{
         }
         return roles;
     }
-  
+
     public Staff get(String username, String password) {
         Staff staff = null;
 
@@ -97,7 +117,7 @@ public class StaffAccountDBContext  extends DBContext<Staff>{
         }
         return staff;
     }
-    
+
     @Override
     public void insert(Staff model) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
