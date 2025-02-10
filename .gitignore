@@ -43,3 +43,4 @@ dependency-reduced-pom.xml
 .vscode/
 *.swp
 *.swo
+build/web/WEB-INF/classes/context/DBContext.class
