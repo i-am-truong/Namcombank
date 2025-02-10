@@ -3,13 +3,22 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/lenovo/Downloads/Namcombank-main/Namcombank/web/login/login.jsp</file>
-            <file>file:/C:/Users/lenovo/Downloads/Namcombank-main/Namcombank/src/java/context/DBContext.java</file>
-            <file>file:/C:/Users/lenovo/Downloads/Namcombank-main/Namcombank/src/java/controller/Login/login.java</file>
-            <file>file:/C:/Users/lenovo/Downloads/Namcombank-main/Namcombank/src/java/context/CustomerDAO.java</file>
-            <file>file:/C:/Users/lenovo/Downloads/Namcombank-main/Namcombank/src/java/controller/Login/register.java</file>
-            <file>file:/C:/Users/lenovo/Downloads/Namcombank-main/Namcombank/web/login/register.jsp</file>
-            <file>file:/C:/Users/lenovo/Downloads/Namcombank-main/Namcombank/src/java/controller/auth/LoginController.java</file>
+            <file>file:/C:/Users/duong/OneDrive/Documents/GitHub/Namcombank/src/java/context/ValidateOtp.java</file>
+            <file>file:/C:/Users/duong/OneDrive/Documents/GitHub/Namcombank/src/java/Utils/ResendEmail.java</file>
+            <file>file:/C:/Users/duong/OneDrive/Documents/GitHub/Namcombank/src/java/Utils/Email.java</file>
+            <file>file:/C:/Users/duong/OneDrive/Documents/GitHub/Namcombank/src/java/context/ForgotPassword.java</file>
+            <file>file:/C:/Users/duong/OneDrive/Documents/GitHub/Namcombank/src/java/context/RefreshCaptcha.java</file>
+            <file>file:/C:/Users/duong/OneDrive/Documents/GitHub/Namcombank/src/java/context/StaffDAO.java</file>
+            <file>file:/C:/Users/duong/OneDrive/Documents/GitHub/Namcombank/src/java/context/DBContext.java</file>
+            <file>file:/C:/Users/duong/OneDrive/Documents/GitHub/Namcombank/src/java/controller/auth/LoginController.java</file>
+            <file>file:/C:/Users/duong/OneDrive/Documents/GitHub/Namcombank/src/java/Utils/CaptchaUtils.java</file>
+            <file>file:/C:/Users/duong/OneDrive/Documents/GitHub/Namcombank/src/java/Utils/EmailUtil.java</file>
+            <file>file:/C:/Users/duong/OneDrive/Documents/GitHub/Namcombank/src/java/Utils/EmailAlertThread.java</file>
+            <file>file:/C:/Users/duong/OneDrive/Documents/GitHub/Namcombank/src/java/Utils/ValidateOtp.java</file>
+            <file>file:/C:/Users/duong/OneDrive/Documents/GitHub/Namcombank/src/java/context/NewPassword.java</file>
+            <file>file:/C:/Users/duong/OneDrive/Documents/GitHub/Namcombank/src/java/context/EditProfileController.java</file>
+            <file>file:/C:/Users/duong/OneDrive/Documents/GitHub/Namcombank/src/java/Utils/EmailSenderThread.java</file>
+            <file>file:/C:/Users/duong/OneDrive/Documents/GitHub/Namcombank/src/java/Utils/ResendEmailUtil.java</file>
         </group>
     </open-files>
 </project-private>
