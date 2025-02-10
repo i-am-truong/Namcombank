@@ -6,7 +6,6 @@
 package Utils;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 import java.util.Random;
 
@@ -22,14 +21,14 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.PrintWriter;
-
 /**
  *
  * @author duong
  */
-@WebServlet(name="ResendEmail", urlPatterns={"/resendOtp"})
-public class ResendEmail extends HttpServlet {
+@WebServlet(name="ResendEmailUtil", urlPatterns={"/resendEmail"})
+public class ResendEmailUtil extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -46,10 +45,10 @@ public class ResendEmail extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ResendEmail</title>");  
+            out.println("<title>Servlet ResendEmailUtil</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet ResendEmail at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet ResendEmailUtil at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -79,11 +78,27 @@ public class ResendEmail extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        String email = (String) request.getSession().getAttribute("email");
-        String otpvalue = generateOTP(6); // Tạo OTP với độ dài chính xác là 6 số
+        HttpSession session = request.getSession();
+        String email = (String) session.getAttribute("email"); // Retrieve email from session
+        int otpvalue = 0;
 
         if (email != null && !email.equals("")) {
             // Sending OTP
+            Random rand = new Random();
+            int[] otpArray = new int[6]; // Tạo một mảng 6 số nguyên
+
+            // Tạo mỗi chữ số ngẫu nhiên và gán vào mảng
+            for (int i = 0; i < 6; i++) {
+                otpArray[i] = rand.nextInt(10); // Tạo một chữ số ngẫu nhiên từ 0 đến 9
+            }
+
+            // Chuyển đổi mảng thành chuỗi
+            StringBuilder otpValue = new StringBuilder(6);
+            for (int digit : otpArray) {
+                otpValue.append(digit);
+            }
+            otpvalue = Integer.parseInt(otpValue.toString());
+
             String to = email;
 
             // Get the session object
@@ -93,42 +108,36 @@ public class ResendEmail extends HttpServlet {
             props.put("mail.smtp.auth", "true");
             props.put("mail.smtp.starttls.enable", "true");
 
-            Session session = Session.getDefaultInstance(props, new jakarta.mail.Authenticator() {
+            Session mailSession = Session.getDefaultInstance(props, new jakarta.mail.Authenticator() {
+                @Override
                 protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication("duongkoi@gmail.com", "ezig tkls qnql luym");
+                    return new PasswordAuthentication("duongkoi0504@gmail.com", "ezig tkls qnql luym");
                 }
             });
 
             // Compose message
             try {
-                MimeMessage message = new MimeMessage(session);
+                MimeMessage message = new MimeMessage(mailSession);
                 message.setFrom(new InternetAddress("duongkoi0504@gmail.com"));
                 message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
-                message.setSubject("Yêu cầu gửi lại mã OTP để đổi mật khẩu mới", StandardCharsets.UTF_8.name());
-                message.setText("Mã OTP để đổi mật khẩu của bạn là: " + otpvalue, StandardCharsets.UTF_8.name());
+                message.setSubject("Mã OTP ");
+                message.setText("Mã OTP: " + otpvalue);
                 Transport.send(message);
-                System.out.println("message sent successfully");
+                System.out.println("Message sent successfully");
             } catch (MessagingException e) {
                 throw new RuntimeException(e);
             }
 
             // Update session with new OTP
-            request.getSession().setAttribute("otp", otpvalue);
-            response.getWriter().write("Mã OTP đã được gửi đến bạn!");
+            session.setAttribute("otp", otpvalue);
+            response.setContentType("text/plain");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write("Mã OTP đã được gửi đến email của bạn.");
         } else {
-            response.getWriter().write("Error: Email not found in session.");
+            response.setContentType("text/plain");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write("Lỗi: Không tìm thấy email trong phiên.");
         }
-    }
-
-    private String generateOTP(int length) {
-        Random rand = new Random();
-        StringBuilder otp = new StringBuilder(length);
-        while (otp.length() < length) {
-            otp.append(rand.nextInt(10));
-        }
-
-        return otp.toString();
-    
     }
 
     /** 

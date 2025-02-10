@@ -105,12 +105,12 @@ public class ForgotPassword extends HttpServlet {
             Session s = Session.getDefaultInstance(props, new jakarta.mail.Authenticator() {
                 @Override
                 protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication("duongkoi0504@gmail.com", "Duong123");
+                    return new PasswordAuthentication("duongkoi0504@gmail.com", "ezig tkls qnql luym");
                 }
             });
             try {
                 MimeMessage mess = new MimeMessage(session);
-                mess.setFrom(new InternetAddress("swp@gmail.com"));
+                mess.setFrom(new InternetAddress("namcombank@gmail.com"));
                 mess.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
                 mess.setSubject("Mã OTP yêu cầu đặt lại mật khẩu mới", StandardCharsets.UTF_8.name()); //sử dụng UTF_8 cho tiêu đề
                 mess.setText("Mã OTP để đặt lại mật khẩu mới của bạn là: " + otpvalue, StandardCharsets.UTF_8.name()); //sử dụng UTF_8 cho nội dung

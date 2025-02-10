@@ -12,10 +12,9 @@
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/Namcombank-main/src/java/context/EditProfileController.java</file>
-            <file>file:/D:/Namcombank-main/src/java/context/ActivityLog.java</file>
-            <file>file:/D:/Namcombank-main/src/java/model/Customer.java</file>
-            <file>file:/D:/Namcombank-main/src/java/context/AuthenticationController.java</file>
+            <file>file:/C:/Users/duong/OneDrive/Documents/GitHub/Namcombank/src/java/context/DBContext.java</file>
+            <file>file:/C:/Users/duong/OneDrive/Documents/GitHub/Namcombank/src/java/Utils/EmailUtil.java</file>
+            <file>file:/C:/Users/duong/OneDrive/Documents/GitHub/Namcombank/src/java/context/ForgotPassword.java</file>
         </group>
     </open-files>
 </project-private>
