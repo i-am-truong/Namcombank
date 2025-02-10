@@ -3,6 +3,7 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+<<<<<<< HEAD
             <file>file:/C:/Users/duong/OneDrive/Documents/GitHub/Namcombank/src/java/context/ValidateOtp.java</file>
             <file>file:/C:/Users/duong/OneDrive/Documents/GitHub/Namcombank/src/java/Utils/ResendEmail.java</file>
             <file>file:/C:/Users/duong/OneDrive/Documents/GitHub/Namcombank/src/java/Utils/Email.java</file>
@@ -19,6 +20,17 @@
             <file>file:/C:/Users/duong/OneDrive/Documents/GitHub/Namcombank/src/java/context/EditProfileController.java</file>
             <file>file:/C:/Users/duong/OneDrive/Documents/GitHub/Namcombank/src/java/Utils/EmailSenderThread.java</file>
             <file>file:/C:/Users/duong/OneDrive/Documents/GitHub/Namcombank/src/java/Utils/ResendEmailUtil.java</file>
+=======
+            <file>file:/D:/FPT%20University/Semester%205/SWP/Namcombank/src/java/context/StaffAccountDBContext.java</file>
+            <file>file:/D:/FPT%20University/Semester%205/SWP/Namcombank/src/java/controller/auth/LoginController.java</file>
+            <file>file:/D:/FPT%20University/Semester%205/SWP/Namcombank/src/java/controller/User/managerUser.java</file>
+            <file>file:/D:/FPT%20University/Semester%205/SWP/Namcombank/src/java/controller/customer/viewCustomer.java</file>
+            <file>file:/D:/FPT%20University/Semester%205/SWP/Namcombank/src/java/controller/User/lockUser.java</file>
+            <file>file:/D:/FPT%20University/Semester%205/SWP/Namcombank/src/java/context/DBContext.java</file>
+            <file>file:/D:/FPT%20University/Semester%205/SWP/Namcombank/src/java/context/CustomerDAO.java</file>
+            <file>file:/D:/FPT%20University/Semester%205/SWP/Namcombank/web/WEB-INF/web.xml</file>
+            <file>file:/D:/FPT%20University/Semester%205/SWP/Namcombank/web/user/managerUser.jsp</file>
+>>>>>>> 9dcbdd6814afdf33060fa83c01bff43633fbb65b
         </group>
     </open-files>
 </project-private>

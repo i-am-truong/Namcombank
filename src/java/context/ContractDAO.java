@@ -97,4 +97,27 @@ public class ContractDAO extends DBContext<Contract> {
         return null;
     }
 
+    public List<Contract> getContractsByStatus(String status) {
+        List<Contract> contracts = new ArrayList<>();
+        String sql = "SELECT * FROM Contracts WHERE status = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, status);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                contracts.add(new Contract(
+                        rs.getInt("id"),
+                        rs.getString("customer_name"),
+                        rs.getString("type"),
+                        rs.getDouble("amount"),
+                        rs.getString("status")
+                ));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return contracts;
+    }
+
 }

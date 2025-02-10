@@ -110,7 +110,7 @@ public class CustomerDAO extends DBContext {
         }
         return customer;
     }
-
+    
     public List<Customer> getAllCustomers() {
         List<Customer> customers = new ArrayList<>();
         String sql = "SELECT [customer_id]\n"
@@ -192,7 +192,7 @@ public class CustomerDAO extends DBContext {
         }
         return customer;
     }
-
+    
     public List<Customer> listAllCustomers(int index, int quantity, String sortField, String sortOrder) {
         List<Customer> customers = new ArrayList<>();
         String sql = "SELECT [customer_id]\n"
@@ -400,6 +400,50 @@ public class CustomerDAO extends DBContext {
         return true;
     }
 
+    public boolean checkCustomer(String cid, String phonenumber, String email){
+        String sql = " select citizen_identification_card from Customer where citizen_identification_card = ? or phonenumber = ? or email = ?";
+        try{
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, cid);
+            ps.setString(2, phonenumber);
+            ps.setString(3, email);
+            ResultSet rs = ps.executeQuery();
+
+            if(rs.next()){
+                // CID already exists in the database
+                return false;
+            }
+
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return true;
+    }
+
+    public boolean checkCustomerUpdate(String cid, String phonenumber, String email, int customerId) {
+        String sql = "SELECT customer_id FROM Customer WHERE " +
+                    "(citizen_identification_card = ? AND customer_id != ?) OR " +
+                    "(phonenumber = ? AND customer_id != ?) OR " +
+                    "(email = ? AND customer_id != ?)";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, cid);
+            ps.setInt(2, customerId);
+            ps.setString(3, phonenumber);
+            ps.setInt(4, customerId);
+            ps.setString(5, email);
+            ps.setInt(6, customerId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return false; // Found duplicate
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true; // No duplicates found
+    }
+
     //sent code to email
     public static boolean verifyCode(String mailTo, String code) {
         final String from = "tranducanh22062004@gmail.com";
@@ -537,6 +581,7 @@ public class CustomerDAO extends DBContext {
             pst.setString(2, email);
             pst.executeUpdate();
         } catch (SQLException e) {
+
         }
     }
 
@@ -635,14 +680,14 @@ public class CustomerDAO extends DBContext {
 
     public static void main(String[] args) {
 //        CustomerDAO cdao = new CustomerDAO();
+//        boolean flag = cdao.checkCustomer("123456789", "0912345678", "ann@gmail.com");
+//        System.out.println("Customer exist: " + !flag);
+//        CustomerDAO cdao = new CustomerDAO();
 //        Customer customer = cdao.getCustomerById(1);
 //        System.out.println(customer.toString());
 //        CustomerDAO cdao = new CustomerDAO();
-//        cdao.deleteCustomer(5);
 //        List<Customer> customers = cdao.getAllCustomers();
 //        for(Customer customer : customers){
-//            System.out.println(customer.toString());
-//        }
     }
     //search user
 //Name Phone Email Username
@@ -767,7 +812,6 @@ public class CustomerDAO extends DBContext {
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, cid);
-            ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -779,7 +823,6 @@ public class CustomerDAO extends DBContext {
             ps.setString(1, username);
             ps.setString(2, password);
             ResultSet rs = ps.executeQuery();
-
             if (rs.next()) {
                 return rs.getInt("customer_id");
             }
@@ -818,6 +861,7 @@ public class CustomerDAO extends DBContext {
         }
         return customer;
     }
+
 
     @Override
     public void insert(Object model) {

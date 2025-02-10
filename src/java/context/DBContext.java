@@ -14,8 +14,13 @@ public abstract class DBContext<T> {
     {
         try {
             String user = "sa";
+<<<<<<< HEAD
             String pass = "123";
             String url = "jdbc:sqlserver://localhost\\SQLEXPRESS:1433;databaseName=swp391_p1;trustServerCertificate=true;";
+=======
+            String pass = "22062004";
+            String url = "jdbc:sqlserver://localhost\\SQLEXPRESS:1433;databaseName=swp391_v1;trustServerCertificate=true;";
+>>>>>>> 9dcbdd6814afdf33060fa83c01bff43633fbb65b
             
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             connection = DriverManager.getConnection(url, user, pass);

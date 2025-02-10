@@ -33,9 +33,9 @@
                                         <table id="datatables-column-search-text-inputs" class="table table-striped"
                                                style="width:100%">
                                             <div class="d-flex align-items-center justify-content-between mb-3" style="position: relative;">
-                                                <a href="addCustomer" class="btn btn-primary">
+<!--                                                <a href="addCustomer" class="btn btn-primary">
                                                     Add New Customer
-                                                </a>
+                                                </a>-->
                                                 <h1>List Customers</h1>
                                                 <a href="managerUser" class="btn btn-outline-secondary">
                                                     Back to Admin Page
