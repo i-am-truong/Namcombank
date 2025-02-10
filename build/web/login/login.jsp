@@ -145,7 +145,6 @@
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" ${(cookie.remem eq 'ON')?"checked":""} name="rem" style="transform: scale(0.75);" value="" id="flexCheckDefault">
                                             <label class="form-check-label" >Remember me</label></div>
-
                                     </div>
                                     <div class="col-6 text-right">
                                         <a href="resetPass">Forgot password?</a>
@@ -162,28 +161,11 @@
         </div>
         <!-- End Login Register Form -->
 
-
-
-
-
         <!-- Js File -->
 
         <script src="assets/js/jquery-3.5.1.min.js"></script>
 
         <script src="assets/js/script.js"></script>
-        <script>
-//            function checkEmailValidity() {
-//                const input = document.getElementById("email");
-//                const email = input.value.trim();
-//
-//                if (email === "") {
-//                    input.setCustomValidity("Please input your email!");
-//                } else if (!email.endsWith("@gmail.com")) {
-//                    input.setCustomValidity("Please enter an email ending with @gmail.com");
-//                } else {
-//                    input.setCustomValidity("");
-//                }
-//            }
-        </script>
+
     </body>
 </html>

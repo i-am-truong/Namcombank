@@ -66,12 +66,35 @@
                     <!-- Begin Page Content -->
                     <div class="container-fluid">
                         <h1 class="h3 mb-2 text-gray-800">Contracts List</h1>
-                        <a href="contract/addContract.jsp"> <button type="button" style="margin-bottom: 20px" class="btn btn-primary">Add new contract</button></a>
                         <br>
                         <br>
+                        <form id="filterForm" name="filterForm" action="contractApproval" method="Get">
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <input type="text" name="search" class="form-control" placeholder="Search by customer name">
+                                </div>
+                                <div class="col-md-3">
+                                    <select name="sort" class="form-control" onchange="document.getElementById('filterForm').submit();">
+                                        <option value="asc">Amount: Low to High</option>
+                                        <option value="desc">Amount: High to Low</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <select name="status" class="form-control" onchange="document.getElementById('filterForm').submit();">
+                                        <option value="all">All</option>
+                                        <option value="pending">Pending</option>
+                                        <option value="approved">Approved</option>
+                                        <option value="rejected">Rejected</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="submit" class="btn btn-primary">Filter</button>
+                                </div>
+                            </div>
+                        </form>
 
-                        <form id="filterForm" name="filterForm" action="contractApproval" method="POST" onsubmit="return validateForm()">       
-                            <table border="1">
+                        <table class="table table-bordered">
+                            <thead>
                                 <tr>
                                     <th>ID</th>
                                     <th>Customer Name</th>
@@ -80,11 +103,12 @@
                                     <th>Status</th>
                                     <th>Actions</th>
                                 </tr>
+                            </thead>
+                            <tbody>
                                 <% 
                                     ContractDAO contractDAO = new ContractDAO();
                                     List<Contract> contracts = contractDAO.list();
-                                    for (Contract contract : contracts) {
-                                %>
+                                    for (Contract contract : contracts) { %>
                                 <tr>
                                     <td><%= contract.getId() %></td>
                                     <td><%= contract.getCustomerName() %></td>
@@ -92,17 +116,17 @@
                                     <td><%= contract.getAmount() %></td>
                                     <td><%= contract.getStatus() %></td>
                                     <td>
-                                        <form action="contractApproval" method="post">
+                                        <form action="contractApproval" method="post" style="display:inline-block;">
                                             <input type="hidden" name="contractId" value="<%= contract.getId() %>">
-                                            <button type="submit" name="action" value="approve">Approve</button>
-                                            <button type="submit" name="action" value="reject">Reject</button>
+                                            <button type="submit" name="action" value="approve" class="btn btn-success">Approve</button>
+                                            <button type="submit" name="action" value="reject" class="btn btn-danger">Reject</button>
                                         </form>
-                                        <a href="editContract.jsp?id=<%= contract.getId() %>">Edit</a>
+                                        <a href="ContractDetailsController?id=<%= contract.getId() %>" class="btn btn-info">View</a>
                                     </td>
                                 </tr>
                                 <% } %>
-                            </table>
-                        </form>
+                            </tbody>
+                        </table>
                         <!-- Bootstrap core JavaScript-->
                         <script src="vendor/jquery/jquery.min.js"></script>
                         <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
