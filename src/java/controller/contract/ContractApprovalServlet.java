@@ -62,7 +62,7 @@ public class ContractApprovalServlet extends HttpServlet {
             throws ServletException, IOException {
         List<Contract> contracts = contractDAO.list();
         request.setAttribute("contracts", contracts);
-        request.getRequestDispatcher("managerContracts.jsp").forward(request, response);
+        request.getRequestDispatcher("contract/managerContracts.jsp").forward(request, response);
     }
 
     /**

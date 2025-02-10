@@ -65,6 +65,14 @@
             <span>Manage Customer</span>
         </a>
     </li>
+    
+    <!-- manage contracts -->
+    <li class="nav-item active">
+        <a class="nav-link" href="contractApproval">
+            <i class="fas fa-fw fa-table"></i>
+            <span>Manage Contracts</span>
+        </a>
+    </li>
 
     <!-- feedback cua admin -->
 

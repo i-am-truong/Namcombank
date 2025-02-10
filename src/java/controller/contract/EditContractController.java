@@ -68,7 +68,7 @@ public class EditContractController extends HttpServlet {
         Contract contract = contractDAO.get(id);
 
         request.setAttribute("contract", contract);
-        request.getRequestDispatcher("editContract.jsp").forward(request, response);
+        request.getRequestDispatcher("contract/editContract.jsp").forward(request, response);
     }
 
     /**
@@ -91,7 +91,7 @@ public class EditContractController extends HttpServlet {
         Contract contract = new Contract(id, customerName, type, amount, status);
         contractDAO.update(contract);
 
-        response.sendRedirect("listContracts.jsp");
+        response.sendRedirect("contract/listContracts.jsp");
     }
 
     /**

@@ -65,7 +65,7 @@ public class ListContractsController extends HttpServlet {
     throws ServletException, IOException {
         List<Contract> contracts = contractDAO.list();
         request.setAttribute("contracts", contracts);
-        request.getRequestDispatcher("listContracts.jsp").forward(request, response);
+        request.getRequestDispatcher("contract/listContracts.jsp").forward(request, response);
     } 
 
     /** 

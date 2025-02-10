@@ -17,7 +17,7 @@ public class ContractDAO extends DBContext<Contract> {
 
     @Override
     public void insert(Contract contract) {
-        String sql = "INSERT INTO contracts (customer_name, type, amount, status) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO Contracts (customer_name, type, amount, status) VALUES (?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, contract.getCustomerName());
             stmt.setString(2, contract.getType());
@@ -31,7 +31,7 @@ public class ContractDAO extends DBContext<Contract> {
 
     @Override
     public void update(Contract contract) {
-        String sql = "UPDATE contracts SET customer_name = ?, type = ?, amount = ?, status = ? WHERE id = ?";
+        String sql = "UPDATE Contracts SET customer_name = ?, type = ?, amount = ?, status = ? WHERE id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, contract.getCustomerName());
             stmt.setString(2, contract.getType());
@@ -46,7 +46,7 @@ public class ContractDAO extends DBContext<Contract> {
 
     @Override
     public void delete(Contract contract) {
-        String sql = "DELETE FROM contracts WHERE id = ?";
+        String sql = "DELETE FROM Contracts WHERE id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, contract.getId());
             stmt.executeUpdate();
@@ -58,7 +58,7 @@ public class ContractDAO extends DBContext<Contract> {
     @Override
     public ArrayList<Contract> list() {
         ArrayList<Contract> contracts = new ArrayList<>();
-        String sql = "SELECT * FROM contracts";
+        String sql = "SELECT * FROM Contracts";
         try (PreparedStatement stmt = connection.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 contracts.add(new Contract(
@@ -77,7 +77,7 @@ public class ContractDAO extends DBContext<Contract> {
 
     @Override
     public Contract get(int id) {
-        String sql = "SELECT * FROM contracts WHERE id = ?";
+        String sql = "SELECT * FROM Contracts WHERE id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
