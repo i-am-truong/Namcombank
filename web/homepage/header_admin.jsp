@@ -121,7 +121,7 @@
     <body>
         <nav class="navbar">
             <c:if test="${sessionScope.roleId==1}"><h2>Admin manager</h2></c:if>
-            <c:if test="${sessionScope.user.rid==2}"><h2>Staff manager</h2></c:if>
+            <c:if test="${sessionScope.roleId==2}"><h2>Staff manager</h2></c:if>
                 <button class="navbar-toggler" onclick="toggleNavbar()">
                     <i class="fa fa-bars"></i>
                 </button>
@@ -140,7 +140,7 @@
             <a href="userProfile"><i class="fas fa-user"></i>&nbsp;&nbsp;Show profile </a>
             <a href="#"><i class="fas fa-cog"></i>&nbsp;&nbsp;Setting</a>
             <a href="logOut"><i class="fas fa-sign-out-alt"></i>&nbsp;&nbsp;Logout</a>
-   
+
 
         </div>
 

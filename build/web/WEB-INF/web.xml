@@ -109,8 +109,8 @@
         <servlet-class>Dashboard</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>addStaff</servlet-name>
-        <servlet-class>controller.User.addStaff</servlet-class>
+        <servlet-name>StaffAddController</servlet-name>
+        <servlet-class>controller.Staff.StaffAddController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>CreateLoanPackageController</servlet-name>
@@ -139,6 +139,38 @@
     <servlet>
         <servlet-name>StaffLoginController</servlet-name>
         <servlet-class>controller.auth.LoginController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>viewCustomerFeedback</servlet-name>
+        <servlet-class>controller.Admin.viewCustomerFeedback</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>manageCustomer</servlet-name>
+        <servlet-class>controller.customer.manageCustomer</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>lockCustomer</servlet-name>
+        <servlet-class>controller.customer.lockCustomer</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>deleteCustomer</servlet-name>
+        <servlet-class>controller.customer.deleteCustomer</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>editCustomer</servlet-name>
+        <servlet-class>controller.customer.editCustomer</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>addCustomer</servlet-name>
+        <servlet-class>controller.customer.addCustomer</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>StaffFilterController</servlet-name>
+        <servlet-class>controller.Staff.StaffFilterController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>StaffDeleteController</servlet-name>
+        <servlet-class>controller.Staff.StaffDeleteController</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>newsList</servlet-name>
@@ -245,10 +277,6 @@
         <url-pattern>/Dashboard</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>addStaff</servlet-name>
-        <url-pattern>/addStaff</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>CreateLoanPackageController</servlet-name>
         <url-pattern>/loanpackage/createloanpackage</url-pattern>
     </servlet-mapping>
@@ -276,9 +304,45 @@
         <servlet-name>StaffLoginController</servlet-name>
         <url-pattern>/admin.login</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>viewCustomerFeedback</servlet-name>
+        <url-pattern>/viewCustomerFeedback</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>manageCustomer</servlet-name>
+        <url-pattern>/manageCustomer</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>lockCustomer</servlet-name>
+        <url-pattern>/lockCustomer</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>deleteCustomer</servlet-name>
+        <url-pattern>/deleteCustomer</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>editCustomer</servlet-name>
+        <url-pattern>/editCustomer</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>addCustomer</servlet-name>
+        <url-pattern>/addCustomer</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>StaffFilterController</servlet-name>
+        <url-pattern>/staffFilter</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>StaffDeleteController</servlet-name>
+        <url-pattern>/staffDelete</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>StaffAddController</servlet-name>
+        <url-pattern>/addStaff</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
-            30
+            100
         </session-timeout>
     </session-config>
 </web-app>

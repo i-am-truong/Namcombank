@@ -1,4 +1,4 @@
-<%-- 
+<%--
     Document   : sidebar_admin
     Created on : Jun 17, 2024, 4:31:07 PM
     Author     : lenvo
@@ -34,48 +34,106 @@
 
     <!-- Heading -->
     <div class="sidebar-heading">Interface</div>
-    
-        <li class="nav-item active">
+
+    <li class="nav-item active">
+        <a class="nav-link" href="userProfile">
+            <i class="fas fa-fw fa-table"></i>
+            <span>Profile</span></a>
+    </li>
+    <!--    <li class="nav-item active">
             <a class="nav-link" href="userProfile">
                 <i class="fas fa-fw fa-table"></i>
                 <span>Profile</span></a>
-        </li>
-    
+        </li>-->
+
     <!-- Nav Item - Tables -->
     <li class="nav-item active">
-        <a class="nav-link" href="/Namcombank/staff-manager/loanpackage-list.jsp">
+        <a class="nav-link" href="loanpackage/listloanpackage">
             <i class="fas fa-fw fa-table"></i>
             <span>Loan Packages Table</span></a>
     </li>
-    <c:if test="${sessionScope.roleId == 1}">
-        <li class="nav-item active">
-            <a class="nav-link" href="managerUser">
-                <i class="fas fa-fw fa-table"></i>
-                <span>Manager User</span></a>
-        </li>
-    </c:if>
-    <c:if test="${sessionScope.user.rid == 1}">
-        <li class="nav-item active">
+
+    <li class="nav-item active">
+        <a class="nav-link" href="managerUser">
+            <i class="fas fa-fw fa-table"></i>
+            <span>Manager Customer</span></a>
+    </li>
+
+    <li class="nav-item active">
+        <a class="nav-link" href="manageCustomer">
+            <i class="fas fa-fw fa-table"></i>
+            <span>Manage Customer</span>
+        </a>
+    </li>
+    
+    <!-- manage contracts -->
+    <li class="nav-item active">
+        <a class="nav-link" href="contractApproval">
+            <i class="fas fa-fw fa-table"></i>
+            <span>Manage Contracts</span>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link" href="#" data-toggle="collapse" data-target="#staffMenu" aria-expanded="false">
+            <i class="fas fa-fw fa-user"></i>
+            <span>Staff Manager</span>
+        </a>
+        <div id="staffMenu" class="collapse">
+            <a class="nav-link sub-menu" href="staffFilter">
+                <i class="fas fa-fw fa-filter"></i> Filter Staff
+            </a>
+            <a class="nav-link sub-menu" href="addStaff">
+                <i class="fas fa-fw fa-user-plus"></i> Add Staff
+            </a>
+        </div>
+    </li>
+    <!-- feedback cua admin -->
+
+    <li class="nav-item active">
+        <a class="nav-link" href="viewCustomerFeedback">
+            <i class="fas fa-fw fa-table"></i>
+            <span>View Customer Feedback</span></a>
+    </li>
+
+
+
+    <li class="nav-item active">
+        <a class="nav-link" href="listCate">
+            <i class="fas fa-fw fa-table"></i>
+            <span>Category Table</span></a>
+    </li>
+
+
+
+    <li class="nav-item active">
+        <a class="nav-link" href="newsListStaff">
+            <i class="fas fa-fw fa-table"></i>
+            <span>News Manager</span></a>
+    </li>
+
+    <li class="nav-item active">
+        <a class="nav-link" href="addNews">
+            <i class="fas fa-fw fa-table"></i>
+            <span> News Manager</span></a>
+    </li>
+
+
+
+    <!--    <li class="nav-item active">
             <a class="nav-link" href="listCate">
                 <i class="fas fa-fw fa-table"></i>
                 <span>Category Table</span></a>
         </li>
-    </c:if>
     
-    <c:if test="${sessionScope.user.rid == 1}">
-        <li class="nav-item active">
-            <a class="nav-link" href="newsListStaff">
-                <i class="fas fa-fw fa-table"></i>
-                <span>News Manager</span></a>
-        </li>
-    </c:if>
-    <c:if test="${sessionScope.user.rid == 2}">
-        <li class="nav-item active">
-            <a class="nav-link" href="addNews">
-                <i class="fas fa-fw fa-table"></i>
-                <span> News Manager</span></a>
-        </li>
-    </c:if>
+    
+    
+    -->    <li class="nav-item active">
+        <a class="nav-link" href="newsList">
+            <i class="fas fa-fw fa-table"></i>
+            <span> News</span></a>
+    </li>
+
 
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">
@@ -90,3 +148,6 @@
         document.getElementById('accordionSidebar').classList.toggle('toggled');
     });
 </script>
+<!-- jQuery and Bootstrap  -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>

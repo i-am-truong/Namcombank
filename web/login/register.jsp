@@ -246,7 +246,7 @@
             var cic = document.getElementById('citizenID').value.trim();
 
             // Regex Patterns
-            var phonenumberRegex = /^0[0-9]{9,10}$/; // Phone must start with 0 and be 10-11 digits
+            var phonenumberRegex = /^(09|03)[0-9]{8}$/; // Phone must start with 09 or 03 and have 10 digits
             var emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
             var addressRegex = /^[A-Za-z0-9\s,.'-]{3,}$/;
             var usernameRegex = /^[A-Za-z0-9_\.]+$/;
@@ -263,7 +263,7 @@
                 errorMessage += 'Phone number cannot be empty.\n';
                 isValid = false;
             } else if (!phonenumberRegex.test(phonenumber)) {
-                errorMessage += 'Phone number must be 10-11 digits and start with 0.\n';
+                errorMessage += 'Phone number must start with 09 or 03 and have 10 digits.\n';
                 isValid = false;
             }
             if (!email) {
@@ -283,6 +283,16 @@
             if (!dob) {
                 errorMessage += 'Date of birth cannot be empty.\n';
                 isValid = false;
+            } else {
+                // Validate that DOB is not today's date
+                var today = new Date();
+                var dobDate = new Date(dob);
+                today.setHours(0, 0, 0, 0); // Reset time to compare only dates
+
+                if (dobDate >= today) {
+                    errorMessage += 'Date of birth cannot be today or in the future.\n';
+                    isValid = false;
+                }
             }
             if (!username) {
                 errorMessage += 'Username cannot be empty.\n';

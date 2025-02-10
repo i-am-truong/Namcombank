@@ -1,7 +1,7 @@
 <%--
     Document   : userProfile
     Created on : 04/07/2024, 9:18:36 PM
-    Author     : ADMIN
+    Author     : lenovo
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -62,7 +62,7 @@
                                         maxlength="50"
                                         pattern=".+\S+.*"
                                         title="Full Name cannot be just spaces."
-                                        value="${sessionScope.customer.fullname}"
+                                        value="${sessionScope.staff.fullname}"
                                         >
                                 </div>
 
@@ -76,7 +76,7 @@
                                         placeholder="enter phone number"
                                         pattern="\d{10}"
                                         title="Please enter a valid 10-digit phone number"
-                                        value="${sessionScope.customer.phonenumber}"
+                                        value="${sessionScope.staff.phonenumber}"
                                         >
                                 </div>
 
@@ -90,7 +90,7 @@
                                         placeholder="enter email"
                                         required
                                         maxlength="50"
-                                        value="${sessionScope.customer.email}"
+                                        value="${sessionScope.staff.email}"
                                         >
                                     <div id="email-error" style="color: red; display: none;">Please enter a valid email address.</div>
                                 </div>
@@ -106,27 +106,27 @@
                                         maxlength="50"
                                         pattern=".+\S+.*"
                                         title="Address cannot be just spaces."
-                                        value="${sessionScope.customer.address}"
+                                        value="${sessionScope.staff.address}"
                                         >
                                 </div>
 
                                 <div class="col-md-6">
                                     <label class="labels">Gender</label>
-                                     <c:if test="${sessionScope.customer.gender == 1}">
+                                     <c:if test="${sessionScope.staff.gender == 1}">
                                     <select name="gender" class="form-control" required>
                                         <option value="" disabled selected>Select gender</option>
                                         <option selected value="male">Male</option>
                                         <option value="female">Female</option>
                                     </select>
                                          </c:if>
-                                     <c:if test="${sessionScope.customer.gender == 0}">
+                                     <c:if test="${sessionScope.staff.gender == 0}">
                                          <select name="gender" class="form-control" required>
                                         <option value="" disabled selected>Select gender</option>
                                         <option  value="male">Male</option>
                                         <option selected value="female">Female</option>
                                     </select>
                                          </c:if>
-                                    <c:if test="${sessionScope.customer.gender != 0 && sessionScope.customer.gender != 1} ">
+                                    <c:if test="${sessionScope.staff.gender != 0 && sessionScope.customer.gender != 1} ">
                                     <select name="gender" class="form-control" required>
                                         <option value="" disabled selected>Select gender</option>
                                         <option  value="male">Male</option>
@@ -144,7 +144,7 @@
                                         class="form-control"
                                         placeholder="enter date of birth"
                                         max=""
-                                        value="${sessionScope.customer.dob}"
+                                        value="${sessionScope.staff.dob}"
                                         >
                                 </div>
 

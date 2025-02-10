@@ -6,6 +6,7 @@ package controller.User;
 
 import context.CustomerDAO;
 import context.StaffAccountDBContext;
+import controller.auth.BaseRBACControlller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -23,17 +24,9 @@ import model.auth.Staff;
  *
  * @author lenovo
  */
-public class managerUser extends HttpServlet {
+public class managerUser extends BaseRBACControlller {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -51,104 +44,97 @@ public class managerUser extends HttpServlet {
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        String param_user = request.getParameter("username");
-        Staff staff = (Staff) session.getAttribute("account");
-        StaffAccountDBContext dbContext = new StaffAccountDBContext();
-        ArrayList<model.auth.Role> roles = dbContext.getRoles(param_user);
-        if (staff == null) {
-            response.sendRedirect("admin.login");
-            return; // Ensure the method returns to avoid further execution
-        }
-        CustomerDAO cdao = new CustomerDAO();
-        List<Customer> customers = cdao.getAllCustomers();
-        int count = cdao.countAllCustomers(1, 9999, null, null);
-        request.setAttribute("customers", customers);
-        request.setAttribute("count", count);
-        request.getRequestDispatcher("user/managerUser.jsp").forward(request, response);
 
-//
-//        if (o.equals("Customer")) {
-//            CustomerDAO ud = new CustomerDAO();
-//            String indexPage = request.getParameter("indexU");
-//            String searchU = request.getParameter("searchU");
-//            String role = request.getParameter("role");
-//            String active = request.getParameter("active");
-//            String sortField = request.getParameter("sortField");
-//            String sortOrder = request.getParameter("sortOrder");
-//
-//            if (indexPage == null) {
-//                indexPage = "1";
-//            }
-//
-//            if ((searchU == null || searchU.trim().isEmpty()) && (role == null && active == null)) {
-//
-//                int index1 = Integer.parseInt(indexPage);
-////                int count = ud.getListU(1, 9999, null, null).size();
-//                int endPage = count / 5;
-//                if (count % 5 != 0) {
-//                    endPage++;
-//                }
-////                List<Customer> listU = ud.getListU(index1, 5, sortField, sortOrder);
-//                request.setAttribute("endPage", endPage);
-//                request.setAttribute("listU", listU);
-//                request.setAttribute("countU", count);
-//                request.getRequestDispatcher("user/managerUser.jsp").forward(request, response);
-//            } else {
-//                int index1 = Integer.parseInt(indexPage);
-//                int roleId = (role != null && !role.isEmpty()) ? Integer.parseInt(role) : -1;
-//                int activeId = (active != null && !active.isEmpty()) ? Integer.parseInt(active) : -1;
-//                int count = ud.searchU((searchU != null) ? searchU.trim() : "", roleId, activeId, 0, 999, null, null).size();
-//                int endPage = count / 5;
-//                if (count % 5 != 0) {
-//                    endPage++;
-//                }
-//                List<Customer> listU = ud.searchU((searchU != null) ? searchU.trim() : "", roleId, activeId, index1, 5, sortField, sortOrder);
-//                request.setAttribute("endPage", endPage);
-//                request.setAttribute("listU", listU);
-//                request.setAttribute("role", roleId);
-//                request.setAttribute("active", activeId);
-//                request.setAttribute("countU", count);
-//            }
-//        } else {
-//            response.sendRedirect("login");
-//       }
-    }
-
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
-    }
-
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
     @Override
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+
+    @Override
+    protected void doAuthorizedPost(HttpServletRequest request, HttpServletResponse response, Staff account) throws ServletException, IOException {
+      processRequest(request, response);
+    }
+
+    @Override
+    protected void doAuthorizedGet(HttpServletRequest request, HttpServletResponse response, Staff account) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        Staff staff = (Staff) session.getAttribute("account");
+        if (staff == null) {
+            response.sendRedirect("admin.login");
+            return;
+        }
+
+        CustomerDAO cdao = new CustomerDAO();
+
+        // Get parameters
+        String indexPage = request.getParameter("indexC");
+        String searchC = request.getParameter("searchC");
+        String active = request.getParameter("active");
+        String sortField = request.getParameter("sortField");
+        String sortOrder = request.getParameter("sortOrder");
+
+        // Default page index to 1 if not specified
+        int currentPage = 1;
+        try {
+            currentPage = (indexPage != null) ? Integer.parseInt(indexPage) : 1;
+            if (currentPage < 1) {
+                currentPage = 1;
+            }
+        } catch (NumberFormatException e) {
+            currentPage = 1;
+        }
+
+        // Parse active parameter
+        int activeId = -1;
+        if (active != null && !active.isEmpty()) {
+            try {
+                activeId = Integer.parseInt(active);
+                if (activeId != 0 && activeId != 1) {
+                    activeId = -1;
+                }
+            } catch (NumberFormatException e) {
+                activeId = -1;
+            }
+        }
+
+        // Items per page
+        final int ITEMS_PER_PAGE = 5;
+
+        // Get total count
+        int totalCustomers = cdao.getTotalCustomerCount(searchC, activeId);
+
+        // Calculate total pages
+        int totalPages = (totalCustomers + ITEMS_PER_PAGE - 1) / ITEMS_PER_PAGE;
+
+        // Ensure current page is within valid range
+        if (currentPage > totalPages) {
+            currentPage = totalPages;
+        }
+
+        // Get customers for current page
+        List<Customer> customers = cdao.searchCustomers(
+                searchC != null ? searchC.trim() : "",
+                activeId,
+                currentPage,
+                ITEMS_PER_PAGE,
+                sortField,
+                sortOrder
+        );
+
+        // Set request attributes
+        request.setAttribute("currentPage", currentPage);
+        request.setAttribute("totalPages", totalPages);
+        request.setAttribute("customers", customers);
+        request.setAttribute("countC", totalCustomers);
+        request.setAttribute("active", activeId);
+
+        // Maintain search parameters for pagination links
+        request.setAttribute("searchC", searchC);
+        request.setAttribute("sortField", sortField);
+        request.setAttribute("sortOrder", sortOrder);
+
+        // Forward to JSP
+        request.getRequestDispatcher("user/managerUser.jsp").forward(request, response);
+    }
 
 }

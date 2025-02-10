@@ -45,7 +45,7 @@
                                         </li>
                                         <li><a href="newsList">News <i class="fa fa-angle-down"></i></a>
                                         </li>
-
+                            <li><a href="viewFeedback?customer_id=<%= session.getAttribute("customer_id") %>">Feedback <i></i></a></li>
                                     </ul>
                                 </nav>
                             </div>

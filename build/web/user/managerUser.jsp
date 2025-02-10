@@ -1,4 +1,4 @@
-<%-- 
+<%--
     Document   : managerUser
     Created on : Jun 16, 2024, 10:00:51 AM
     Author     : lenovo
@@ -70,19 +70,19 @@
                     <div class="container-fluid">
                         <!-- Page Heading -->
                         <h1 class="h3 mb-2 text-gray-800">Customer List</h1>
-                        <a href="addStaff">  <button type="button" style="margin-bottom: 20px" class="btn btn-primary">Add new staff</button></a>
-                        <br> 
-                        <br> 
+                        <a href="addStaff">  <button type="button" style="margin-bottom: 20px" class="btn btn-primary">Add new customer</button></a>
+                        <br>
+                        <br>
                         <!-- Search and Filter Form -->
                         <form id="filterForm" name="filterForm" action="managerUser" method="get" onsubmit="return validateForm()">
                             <div class="form-row">
                                 <!-- Search properties -->
                                 <%
-                                    String searchU = request.getParameter("searchU");
-     
+                                    String searchC = request.getParameter("searchC");
+
                                 %>
                                 <div class="col-md-2 mb-3">
-                                    <input type="text" name="searchU" placeholder="Search properties" value="<%= searchU != null ? searchU : "" %>" class="form-control">
+                                    <input type="text" name="searchC" placeholder="Search properties" value="<%= searchC != null ? searchC : "" %>" class="form-control">
                                 </div>
 
                                 <!-- Brands Dropdown -->
@@ -104,11 +104,11 @@
                                     </select>
                                 </div>
                                 <!-- Submit Button (hidden) -->
-                                <div class="col-md-2 mb-3" style="display: none;">
+                                <div class="col-md-2 mb-3" style="display: block;">
                                     <button type="submit" class="btn btn-primary btn-block">Search</button>
                                 </div>
                                 <div class="col-md-1 mb-1">
-                                    <input class="form-control" readonly="" value="Total: ${requestScope.count}">
+                                    <input class="form-control" readonly="" value="Total: ${requestScope.countC}">
                                 </div>
                             </div>
                         </form>
@@ -122,10 +122,10 @@
                                         <tr>
 
                                             <th>ID</th>
-                                            <th>Name<a href="managerUser?indexU=${currentIndex + 1}&searchU=${param.searchU}&role=${param.role}&active=${param.active}&sortField=fullName&sortOrder=${param.sortOrder == 'asc' ? 'desc' : 'asc'}"><span class="fa fa-sort"></span></a></th>
-                                            <th>Phone<a href="managerUser?indexU=${currentIndex + 1}&searchU=${param.searchU}&role=${param.role}&active=${param.active}&sortField=phone&sortOrder=${param.sortOrder == 'asc' ? 'desc' : 'asc'}"><span class="fa fa-sort"></span></a></th>
-                                            <th>Email<a href="managerUser?indexU=${currentIndex + 1}&searchU=${param.searchU}&role=${param.role}&active=${param.active}&sortField=email&sortOrder=${param.sortOrder == 'asc' ? 'desc' : 'asc'}"><span class="fa fa-sort"></span></a></th>
-                                            <th>Username<a href="managerUser?indexU=${currentIndex + 1}&searchU=${param.searchU}&role=${param.role}&active=${param.active}&sortField=username&sortOrder=${param.sortOrder == 'asc' ? 'desc' : 'asc'}"><span class="fa fa-sort"></span></a></th>
+                                            <th>Name<a href="managerUser?indexC=${currentIndex + 1}&searchC=${param.searchC}&active=${param.active}&sortField=fullName&sortOrder=${param.sortOrder == 'asc' ? 'desc' : 'asc'}"><span class="fa fa-sort"></span></a></th>
+                                            <th>Phone<a href="managerUser?indexC=${currentIndex + 1}&searchC=${param.searchC}&active=${param.active}&sortField=phone&sortOrder=${param.sortOrder == 'asc' ? 'desc' : 'asc'}"><span class="fa fa-sort"></span></a></th>
+                                            <th>Email<a href="managerUser?indexC=${currentIndex + 1}&searchC=${param.searchC}&active=${param.active}&sortField=email&sortOrder=${param.sortOrder == 'asc' ? 'desc' : 'asc'}"><span class="fa fa-sort"></span></a></th>
+                                            <th>Username<a href="managerUser?indexC=${currentIndex + 1}&searchC=${param.searchC}&active=${param.active}&sortField=username&sortOrder=${param.sortOrder == 'asc' ? 'desc' : 'asc'}"><span class="fa fa-sort"></span></a></th>
                                             <th>CIC</th>
                                             <th>DOB</th>
                                             <th>Address</th>
@@ -157,7 +157,7 @@
                                                     </c:choose>
                                                 </td>
                                                 <td><a href="#" onclick="return checkBan('${c.customerId}')"><i class="bi bi-ban"></i></a></td>
-                                                <td><a href="#" onclick="return checkUnBan('${c.username}')"><i class="bi bi-unlock"></i></a></td>
+                                                <td><a href="#" onclick="return checkUnBan('${c.customerId}')"><i class="bi bi-unlock"></i></a></td>
 
                                             </tr>
                                         </c:forEach>
@@ -171,12 +171,12 @@
                         <!-- Pagination -->
 <!--                                                <nav aria-label="Page navigation example" class="mt-4">
                                                     <ul class="pagination justify-content-center">
-                                                        
+
                         <c:set var="currentIndex" value="${param.index != null ? param.index : 1}" />
                         <c:forEach begin="1" end="${requestScope.endPage}" var="i">
                             <li>
 
-                                <a class="${i == currentIndex ? 'active' : ''}" href="managerUser?indexU=${i}&searchU=${param.searchU}">${i}</a>
+                                <a class="${i == currentIndex ? 'active' : ''}" href="managerUser?indexC=${i}&searchC=${param.searchC}">${i}</a>
 
 
                             </li>
@@ -186,12 +186,12 @@
                 </nav>-->
                         <nav aria-label="Page navigation example" class="mt-4" style="margin-top: 1.5rem;">
                             <ul class="pagination justify-content-center" style="list-style: none; padding: 0; display: flex;">
-                                <c:set var="currentIndex" value="${param.indexU != null ? param.indexU : 1}" />
+                                <c:set var="currentIndex" value="${param.indexC != null ? param.indexC : 1}" />
 
                                 <!-- Previous button -->
                                 <c:if test="${currentIndex > 2}">
                                     <li style="margin: 0 5px;">
-                                        <a href="managerUser?indexU=${currentIndex - 2}&searchU=${param.searchU}&role=${param.role}&active=${param.active}&sortField=${param.sortField != null ? param.sortField : 'uid'}&sortOrder=${param.sortOrder != null ? param.sortOrder : 'asc'}"
+                                        <a href="managerUser?indexC=${currentIndex - 2}&searchC=${param.searchC}&active=${param.active}&sortField=${param.sortField != null ? param.sortField : 'customerId'}&sortOrder=${param.sortOrder != null ? param.sortOrder : 'asc'}"
                                            style="text-decoration: none; padding: 8px 16px; border: 1px solid #ddd; border-radius: 4px;">
                                             ${currentIndex -2}
                                         </a>
@@ -201,7 +201,7 @@
                                 <!-- Page links -->
                                 <c:forEach begin="${currentIndex > 2 ? currentIndex - 1 : 1}" end="${(currentIndex < endPage - 1) ? currentIndex + 1 : endPage}" var="i">
                                     <li style="margin: 0 5px;">
-                                        <a class="${i == currentIndex ? 'active' : ''}" href="managerUser?indexU=${i}&searchU=${param.searchU}&role=${param.role}&active=${param.active}&sortField=${param.sortField != null ? param.sortField : 'uid'}&sortOrder=${param.sortOrder != null ? param.sortOrder : 'asc'}"
+                                        <a class="${i == currentIndex ? 'active' : ''}" href="managerUser?indexC=${i}&searchC=${param.searchC}&active=${param.active}&sortField=${param.sortField != null ? param.sortField : 'customerId'}&sortOrder=${param.sortOrder != null ? param.sortOrder : 'asc'}"
                                            style="text-decoration: none; padding: 8px 16px; border: 1px solid #ddd; border-radius: 4px; color: ${i == currentIndex ? '#fff' : '#007bff'}; background-color: ${i == currentIndex ? '#007bff' : '#fff'};">
                                             ${i}
                                         </a>
@@ -211,7 +211,7 @@
                                 <!-- Next button -->
                                 <c:if test="${currentIndex +2 <= endPage}">
                                     <li style="margin: 0 5px;">
-                                        <a href="managerUser?indexU=${currentIndex + 2}&searchU=${param.searchU}&role=${param.role}&active=${param.active}&sortField=${param.sortField != null ? param.sortField : 'uid'}&sortOrder=${param.sortOrder != null ? param.sortOrder : 'asc'}"
+                                        <a href="managerUser?indexC=${currentIndex + 2}&searchC=${param.searchC}&active=${param.active}&sortField=${param.sortField != null ? param.sortField : 'customerId'}&sortOrder=${param.sortOrder != null ? param.sortOrder : 'asc'}"
                                            style="text-decoration: none; padding: 8px 16px; border: 1px solid #ddd; border-radius: 4px;">
                                             ${currentIndex + 2 }
                                         </a>

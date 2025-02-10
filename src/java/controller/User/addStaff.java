@@ -87,7 +87,7 @@ public class addStaff extends HttpServlet {
         String password = request.getParameter("passS");
         String cic = request.getParameter("cicS");
         CustomerDAO ud = new CustomerDAO();
-        if (ud.checkUsername(username, email)) {
+        if (ud.checkUsername(username, email,phonenumber)) {
             password = ud.toSHA1(password);
             ud.registerAcc(fullname, username, password, email, dob, Integer.parseInt(gender), phonenumber, cic, address);
             ud.changeRole2(username, 2);

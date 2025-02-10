@@ -5,14 +5,15 @@
 package model.auth;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
+import model.Department;
 
 /**
  *
  * @author Asus
  */
 public class Staff {
-    
+    private int id;
     private String fullname;
     private String username;
     private String password;
@@ -23,7 +24,33 @@ public class Staff {
     private String phonenumber;
     private String address;
     private String citizenId;
+    private Department dept;
+    private Department did;
+
+    public Department getDid() {
+        return did;
+    }
+
+    public void setDid(Department did) {
+        this.did = did;
+    }
+
+    public Department getDept() {
+        return dept;
+    }
+
+    public void setDept(Department dept) {
+        this.dept = dept;
+    }
     ArrayList<Role> roles = new ArrayList<>();
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public ArrayList<Role> getRoles() {
         return roles;
@@ -89,6 +116,8 @@ public class Staff {
         this.gender = gender;
     }
 
+
+
     public String getPhonenumber() {
         return phonenumber;
     }
@@ -118,17 +147,5 @@ public class Staff {
     public Staff() {
     }
 
-    public Staff(String fullname, String username, String password, boolean active, String email, Date dob, boolean gender, String phonenumber, String address, String citizenId) {
-        this.fullname = fullname;
-        this.username = username;
-        this.password = password;
-        this.active = active;
-        this.email = email;
-        this.dob = dob;
-        this.gender = gender;
-        this.phonenumber = phonenumber;
-        this.address = address;
-        this.citizenId = citizenId;
-    }
 
 }

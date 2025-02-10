@@ -12,9 +12,6 @@ import jakarta.mail.Transport;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import java.security.MessageDigest;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.logging.Level;
@@ -26,6 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Properties;
 import java.util.Random;
+import java.sql.Date;
 
 /**
  *
@@ -149,7 +147,49 @@ public class CustomerDAO extends DBContext {
         return customers;
     }
 
-    public int countAllCustomers(int index, int quantity, String sortField, String sortOrder) {
+    public Customer getCustomerById(int customerId) {
+        Customer customer = null;
+        String sql = "SELECT [customer_id]\n"
+                + "      ,[fullname]\n"
+                + "      ,[username]\n"
+                + "      ,[password]\n"
+                + "      ,[active]\n"
+                + "      ,[email]\n"
+                + "      ,[dob]\n"
+                + "      ,[gender]\n"
+                + "      ,[phonenumber]\n"
+                + "      ,[balance]\n"
+                + "      ,[citizen_identification_card]\n"
+                + "      ,[address]\n"
+                + "  FROM [dbo].[Customer]\n"
+                + "  WHERE customer_id = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, customerId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                customer = new Customer(
+                        rs.getInt("customer_id"),
+                        rs.getString("fullname"),
+                        rs.getString("username"),
+                        rs.getString("password"),
+                        rs.getInt("active"),
+                        rs.getString("email"),
+                        rs.getDate("dob"),
+                        rs.getInt("gender"),
+                        rs.getString("phonenumber"),
+                        rs.getFloat("balance"),
+                        rs.getString("citizen_identification_card"),
+                        rs.getString("address")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return customer;
+    }
+
+    public List<Customer> listAllCustomers(int index, int quantity, String sortField, String sortOrder) {
         List<Customer> customers = new ArrayList<>();
         String sql = "SELECT [customer_id]\n"
                 + "      ,[fullname]\n"
@@ -196,7 +236,79 @@ public class CustomerDAO extends DBContext {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return customers.size();
+        return customers;
+    }
+
+    public List<Customer> searchCustomers(String key, int active, int index, int quantity, String sortField, String sortOrder) {
+        List<Customer> customers = new ArrayList<>();
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT [customer_id], [fullname], [username], [password], [active], ")
+                .append("[email], [dob], [gender], [phonenumber], [balance], ")
+                .append("[citizen_identification_card], [address] ")
+                .append("FROM [dbo].[Customer] WHERE 1=1 ");
+
+        // Add search conditions if key is provided
+        if (key != null && !key.trim().isEmpty()) {
+            sql.append("AND (fullname LIKE ? OR phonenumber LIKE ? OR email LIKE ? OR username LIKE ?) ");
+        }
+
+        // Add active filter condition
+        if (active != -1) {
+            sql.append("AND active = ? ");
+        }
+
+        // Add sorting
+        if (sortField != null && sortOrder != null) {
+            sql.append("ORDER BY ").append(sortField).append(" ").append(sortOrder).append(" ");
+        } else {
+            sql.append("ORDER BY customer_id ");
+        }
+
+        sql.append("OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+
+        try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+            int paramIndex = 1;
+
+            // Set search parameters if key is provided
+            if (key != null && !key.trim().isEmpty()) {
+                String searchPattern = "%" + key + "%";
+                ps.setString(paramIndex++, searchPattern);
+                ps.setString(paramIndex++, searchPattern);
+                ps.setString(paramIndex++, searchPattern);
+                ps.setString(paramIndex++, searchPattern);
+            }
+
+            // Set active parameter if specified
+            if (active != -1) {
+                ps.setInt(paramIndex++, active);
+            }
+
+            // Set pagination parameters
+            ps.setInt(paramIndex++, (index - 1) * quantity);
+            ps.setInt(paramIndex, quantity);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    customers.add(new Customer(
+                            rs.getInt("customer_id"),
+                            rs.getString("fullname"),
+                            rs.getString("username"),
+                            rs.getString("password"),
+                            rs.getInt("active"),
+                            rs.getString("email"),
+                            rs.getDate("dob"),
+                            rs.getInt("gender"),
+                            rs.getString("phonenumber"),
+                            rs.getFloat("balance"),
+                            rs.getString("citizen_identification_card"),
+                            rs.getString("address")
+                    ));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return customers;
     }
 
     // lay so du tai khoan cua khach hang
@@ -265,12 +377,13 @@ public class CustomerDAO extends DBContext {
 //        }
 //        return 0;
 //    }
-    public boolean checkUsername(String username, String email) {
-        String sql = "SELECT [username] FROM Customer WHERE [username] = ? or [email] = ?";
+    public boolean checkUsername(String username, String email, String phonenumber) {
+        String sql = "SELECT [username] FROM Customer WHERE [username] = ? or [email] = ? or [phonenumber] = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, username);
             ps.setString(2, email);
+            ps.setString(3, phonenumber);
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
@@ -383,6 +496,30 @@ public class CustomerDAO extends DBContext {
             Logger.getLogger(CustomerDAO.class.getName()).log(Level.SEVERE, "SQL Error: " + e.getMessage(), e);
         }
     }
+    public void addAcc(String fullname, String username, String password, String email, Date dob, int gender, String phonenumber, String cic, String address) {
+        String sql = "INSERT INTO [dbo].[Customer] "
+                + "([fullname], [username], [password], [email], [dob], [gender], [phonenumber], [citizen_identification_card], [address], [active], [balance]) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 1, 0);";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setString(1, fullname);
+            ps.setString(2, username);
+            // Use hashed password here
+            ps.setString(3, password);
+            ps.setString(4, email);
+            ps.setDate(5, dob);
+            ps.setInt(6, gender);
+            ps.setString(7, phonenumber);
+            ps.setString(8, cic);
+            ps.setString(9, address);
+
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace(); // In lỗi ra console
+            Logger.getLogger(CustomerDAO.class.getName()).log(Level.SEVERE, "SQL Error: " + e.getMessage(), e);
+        }
+    }
 
     //_____________________________Reset Password_____________________________
     public void changePassByEmail(String email, String password) {
@@ -455,8 +592,49 @@ public class CustomerDAO extends DBContext {
         }
     }
 
+    public int getTotalCustomerCount(String searchKey, int active) {
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT COUNT(*) as total FROM [dbo].[Customer] WHERE 1=1 ");
+
+        if (searchKey != null && !searchKey.trim().isEmpty()) {
+            sql.append("AND (fullname LIKE ? OR phonenumber LIKE ? OR email LIKE ? OR username LIKE ?) ");
+        }
+
+        if (active != -1) {
+            sql.append("AND active = ? ");
+        }
+
+        try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+            int paramIndex = 1;
+
+            if (searchKey != null && !searchKey.trim().isEmpty()) {
+                String pattern = "%" + searchKey + "%";
+                ps.setString(paramIndex++, pattern);
+                ps.setString(paramIndex++, pattern);
+                ps.setString(paramIndex++, pattern);
+                ps.setString(paramIndex++, pattern);
+            }
+
+            if (active != -1) {
+                ps.setInt(paramIndex, active);
+            }
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("total");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
     public static void main(String[] args) {
 //        CustomerDAO cdao = new CustomerDAO();
+//        Customer customer = cdao.getCustomerById(1);
+//        System.out.println(customer.toString());
+//        CustomerDAO cdao = new CustomerDAO();
+//        cdao.deleteCustomer(5);
 //        List<Customer> customers = cdao.getAllCustomers();
 //        for(Customer customer : customers){
 //            System.out.println(customer.toString());
@@ -579,6 +757,64 @@ public class CustomerDAO extends DBContext {
 //        return listU;
 //    }
 
+    public void deleteCustomer(int cid) {
+        String sql = "DELETE FROM [dbo].[Customer]\n"
+                + "      WHERE customer_id = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, cid);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public int getCustomerId(String username, String password) {
+        String sql = "SELECT customer_id FROM Customer WHERE username = ? AND password = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, username);
+            ps.setString(2, password);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("customer_id");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Handle the error
+        }
+        return -1; // Return -1 if no customer found
+    }
+
+    public Customer getCustomerDetail(int customerId) {
+        Customer customer = null;
+        String sql = "SELECT [customer_id], [fullname], [username], [password], [active], [email], [dob], [gender], [phonenumber], [balance], [citizen_identification_card], [address] "
+                + "FROM [dbo].[Customer] "
+                + "WHERE [customer_id] = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, customerId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                customer = new Customer(
+                        rs.getInt("customer_id"),
+                        rs.getString("fullname"),
+                        rs.getString("username"),
+                        rs.getString("password"),
+                        rs.getInt("active"),
+                        rs.getString("email"),
+                        rs.getDate("dob"),
+                        rs.getInt("gender"),
+                        rs.getString("phonenumber"),
+                        rs.getFloat("balance"),
+                        rs.getString("citizen_identification_card"),
+                        rs.getString("address")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // In lỗi nếu có
+        }
+        return customer;
+    }
+
     @Override
     public void insert(Object model) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
@@ -586,11 +822,6 @@ public class CustomerDAO extends DBContext {
 
     @Override
     public void update(Object model) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public void delete(Object model) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
@@ -603,4 +834,10 @@ public class CustomerDAO extends DBContext {
     public Object get(int id) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
+
+    @Override
+    public void delete(Object model) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
 }
