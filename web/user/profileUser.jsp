@@ -26,33 +26,33 @@
         <link rel="stylesheet" href="assets/css/normalize.css">
         <link rel="stylesheet" href="assets/css/style.css">
         <link rel="stylesheet" href="assets/css/responsive.css">
-<!--        <script type="text/javascript">
-            function removeProduct(pid) {
-                var result = confirm("Confirm remove this product?");
-                var totalAmountElement = document.querySelector('.total-amount');
-
-                var pId = pid;
-                var element = document.getElementById(pid);
-                if (result) {
-                    $.ajax({
-                        type: 'POST',
-                        data: {pId: pId},
-                        url: 'cartView',
-                        success: (result) => {
-                            element.remove();
-                            var totalPrice = result.totalPrice;
-                            var productInCart = result.productInCart;
-                            $('.counter').text(productInCart);
-                            totalAmountElement.textContent = totalPrice + "$";
-                        },
-                        error: function () {
-                            console.log('Remove fail something went wrong');
+        <!--        <script type="text/javascript">
+                    function removeProduct(pid) {
+                        var result = confirm("Confirm remove this product?");
+                        var totalAmountElement = document.querySelector('.total-amount');
+        
+                        var pId = pid;
+                        var element = document.getElementById(pid);
+                        if (result) {
+                            $.ajax({
+                                type: 'POST',
+                                data: {pId: pId},
+                                url: 'cartView',
+                                success: (result) => {
+                                    element.remove();
+                                    var totalPrice = result.totalPrice;
+                                    var productInCart = result.productInCart;
+                                    $('.counter').text(productInCart);
+                                    totalAmountElement.textContent = totalPrice + "$";
+                                },
+                                error: function () {
+                                    console.log('Remove fail something went wrong');
+                                }
+                            });
                         }
-                    });
-                }
-            }
-
-        </script>-->
+                    }
+        
+                </script>-->
     </head>
     <body>
         <div id="preloader" class="preeloader">
@@ -108,14 +108,14 @@
                             <div class="card-body">
                                 <div class="d-flex flex-column align-items-center text-center">
                                     <c:if test="${sessionScope.customer.gender == 0}">
-                                    <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="Admin" class="rounded-circle p-1 bg-primary" width="110">
+                                        <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="Admin" class="rounded-circle p-1 bg-primary" width="110">
                                     </c:if>
                                     <c:if test="${sessionScope.customer.gender == 1}">
-                                    <img src="https://bootdey.com/img/Content/avatar/avatar6.png" alt="Admin" class="rounded-circle p-1 bg-primary" width="110">
+                                        <img src="https://bootdey.com/img/Content/avatar/avatar6.png" alt="Admin" class="rounded-circle p-1 bg-primary" width="110">
                                     </c:if>
                                     <div class="mt-3">
                                         <h4>${sessionScope.customer.fullname}</h4>
-                                               <hr class="my-4">
+                                        <hr class="my-4">
                                         <button class="btn btn-primary">Follow</button>
                                         <button class="btn btn-outline-primary">Message</button>
                                     </div>
@@ -157,6 +157,10 @@
                                     title="Please enter a valid 10-digit phone number"
                                     value="${sessionScope.customer.phonenumber}"
                                     >
+                                <c:if test="${not empty requestScope.errorPhoneNumber}">
+                                    <span style="color: red;">${requestScope.errorPhoneNumber}</span>
+                                </c:if>
+
                             </div>
 
                             <div class="col-md-9">
