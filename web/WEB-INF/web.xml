@@ -109,8 +109,8 @@
         <servlet-class>Dashboard</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>addStaff</servlet-name>
-        <servlet-class>controller.User.addStaff</servlet-class>
+        <servlet-name>StaffAddController</servlet-name>
+        <servlet-class>controller.Staff.StaffAddController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>CreateLoanPackageController</servlet-name>
@@ -165,6 +165,14 @@
         <servlet-class>controller.customer.addCustomer</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>StaffFilterController</servlet-name>
+        <servlet-class>controller.Staff.StaffFilterController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>StaffDeleteController</servlet-name>
+        <servlet-class>controller.Staff.StaffDeleteController</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>ContractApprovalServlet</servlet-name>
         <servlet-class>controller.contract.ContractApprovalServlet</servlet-class>
     </servlet>
@@ -179,23 +187,39 @@
     <servlet>
         <servlet-name>ListContractsController</servlet-name>
         <servlet-class>controller.contract.ListContractsController</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>viewCustomer</servlet-name>
         <servlet-class>controller.customer.viewCustomer</servlet-class>
-        <servlet-name>deleteFeedback</servlet-name>
-        <servlet-class>controller.feedback.deleteFeedback</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>viewFeedback</servlet-name>
-        <servlet-class>controller.feedback.viewFeedback</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>addFeedback</servlet-name>
-        <servlet-class>controller.feedback.addFeedback</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>viewCustomerDetail</servlet-name>
         <servlet-class>controller.Admin.viewCustomerDetail</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>DepartmentDao</servlet-name>
+        <servlet-class>context.DepartmentDao</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>viewCustomerDetail</servlet-name>
+        <url-pattern>/viewCustomerDetail</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ContractApprovalServlet</servlet-name>
+        <url-pattern>/contractApproval</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddContractController</servlet-name>
+        <url-pattern>/addContract</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EditContractController</servlet-name>
+        <url-pattern>/editContract</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ListContractsController</servlet-name>
+        <url-pattern>/listContracts</url-pattern>
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>newsList</servlet-name>
         <url-pattern>/newsList</url-pattern>
@@ -301,10 +325,6 @@
         <url-pattern>/Dashboard</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>addStaff</servlet-name>
-        <url-pattern>/addStaff</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>CreateLoanPackageController</servlet-name>
         <url-pattern>/loanpackage/createloanpackage</url-pattern>
     </servlet-mapping>
@@ -357,36 +377,24 @@
         <url-pattern>/addCustomer</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>ContractApprovalServlet</servlet-name>
-        <url-pattern>/contractApproval</url-pattern>
+        <servlet-name>StaffFilterController</servlet-name>
+        <url-pattern>/staffFilter</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>AddContractController</servlet-name>
-        <url-pattern>/addContract</url-pattern>
+        <servlet-name>StaffDeleteController</servlet-name>
+        <url-pattern>/staffDelete</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>EditContractController</servlet-name>
-        <url-pattern>/editContract</url-pattern>
+        <servlet-name>StaffAddController</servlet-name>
+        <url-pattern>/addStaff</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>ListContractsController</servlet-name>
-        <url-pattern>/listContracts</url-pattern>
         <servlet-name>viewCustomer</servlet-name>
         <url-pattern>/viewCustomer</url-pattern>
-        <servlet-name>deleteFeedback</servlet-name>
-        <url-pattern>/deleteFeedback</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>viewFeedback</servlet-name>
-        <url-pattern>/viewFeedback</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>addFeedback</servlet-name>
-        <url-pattern>/addFeedback</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>viewCustomerDetail</servlet-name>
-        <url-pattern>/viewCustomerDetail</url-pattern>
+        <servlet-name>DepartmentDao</servlet-name>
+        <url-pattern>/DepartmentDao</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
