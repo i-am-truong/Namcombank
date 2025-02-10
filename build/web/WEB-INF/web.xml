@@ -172,6 +172,38 @@
         <servlet-name>StaffDeleteController</servlet-name>
         <servlet-class>controller.Staff.StaffDeleteController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ContractApprovalServlet</servlet-name>
+        <servlet-class>controller.contract.ContractApprovalServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddContractController</servlet-name>
+        <servlet-class>controller.contract.AddContractController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>EditContractController</servlet-name>
+        <servlet-class>controller.contract.EditContractController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ListContractsController</servlet-name>
+        <servlet-class>controller.contract.ListContractsController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ContractApprovalServlet</servlet-name>
+        <url-pattern>/contractApproval</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddContractController</servlet-name>
+        <url-pattern>/addContract</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EditContractController</servlet-name>
+        <url-pattern>/editContract</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ListContractsController</servlet-name>
+        <url-pattern>/listContracts</url-pattern>
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>newsList</servlet-name>
         <url-pattern>/newsList</url-pattern>
