@@ -58,27 +58,33 @@ public class viewCustomer extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            String customerId = request.getParameter("customerId");
-            if (customerId == null || customerId.trim().isEmpty()) {
+            // Get customerId from request parameter
+            String customerIdStr = request.getParameter("customerId");
+            if (customerIdStr == null || customerIdStr.trim().isEmpty()) {
                 response.sendRedirect("manageCustomer");
                 return;
             }
 
+            int customerId = Integer.parseInt(customerIdStr);
             CustomerDAO cdao = new CustomerDAO();
-            Customer customer = cdao.getCustomerById(Integer.parseInt(customerId));
+            Customer customer = cdao.getCustomerDetail(customerId);
 
             if (customer == null) {
+                // Customer not found
                 response.sendRedirect("manageCustomer");
                 return;
             }
 
+            // Set the customer object as a request attribute
             request.setAttribute("customer", customer);
-            request.getRequestDispatcher("customer/viewCustomer.jsp").forward(request, response);
 
+            // Forward to the JSP page
+            request.getRequestDispatcher("customer/viewCustomer.jsp").forward(request, response);
         } catch (NumberFormatException e) {
+            // Invalid customer ID format
             response.sendRedirect("manageCustomer");
-            return;
         } catch (Exception e) {
+            e.printStackTrace();
             response.sendRedirect("manageCustomer");
         }
     }

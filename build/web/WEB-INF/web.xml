@@ -196,10 +196,6 @@
         <servlet-name>viewCustomerDetail</servlet-name>
         <servlet-class>controller.Admin.viewCustomerDetail</servlet-class>
     </servlet>
-    <servlet>
-        <servlet-name>DepartmentDao</servlet-name>
-        <servlet-class>context.DepartmentDao</servlet-class>
-    </servlet>
     <servlet-mapping>
         <servlet-name>viewCustomerDetail</servlet-name>
         <url-pattern>/viewCustomerDetail</url-pattern>
@@ -391,10 +387,6 @@
     <servlet-mapping>
         <servlet-name>viewCustomer</servlet-name>
         <url-pattern>/viewCustomer</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>DepartmentDao</servlet-name>
-        <url-pattern>/DepartmentDao</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

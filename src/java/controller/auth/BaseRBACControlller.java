@@ -37,7 +37,7 @@ public abstract class BaseRBACControlller extends BaseRequiredAuthenticationCont
                 }
             }
         }
-        return false;
+        return true;
     }
 
     protected abstract void doAuthorizedPost(HttpServletRequest req, HttpServletResponse resp, Staff account) throws ServletException, IOException;

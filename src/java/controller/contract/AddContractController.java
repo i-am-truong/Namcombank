@@ -87,7 +87,7 @@ public class AddContractController extends HttpServlet {
         Contract contract = new Contract(id, customerName, type, amount, status);
         contractDAO.insert(contract);
 
-        response.sendRedirect("listContracts.jsp");
+        response.sendRedirect("contract/listContracts.jsp");
     }
 
     /**

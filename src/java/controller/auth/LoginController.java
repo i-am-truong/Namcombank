@@ -23,9 +23,11 @@ public class LoginController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        
+
         String param_user = req.getParameter("username"); // User input
         String param_pass = req.getParameter("password");
+//        StaffAccountDBContext sdao = new StaffAccountDBContext();
+//        String pass = sdao.toSHA1(param_pass); 
         StaffAccountDBContext db = new StaffAccountDBContext();
         model.auth.Staff account = db.get(param_user, param_pass); // Lấy tài khoản từ database
         StaffAccountDBContext dbContext = new StaffAccountDBContext();
@@ -40,12 +42,17 @@ public class LoginController extends HttpServlet {
             for (Role role : roles) {
                 if ("Staff".equalsIgnoreCase(role.getName())) {
                     roleId = role.getId();
-                    resp.sendRedirect("/staffDashboard"); 
+                    resp.sendRedirect("contractApproval");
                     hasValidRole = true;
                     break;
                 } else if (role.getId() == 1) {
                     roleId = role.getId();
                     resp.sendRedirect("managerUser");
+                    hasValidRole = true;
+                    break;
+                } else if (role.getId() == 5) {
+                    roleId = role.getId();
+                    resp.sendRedirect("managerContracts");
                     hasValidRole = true;
                     break;
                 }
