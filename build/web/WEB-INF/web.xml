@@ -192,6 +192,14 @@
         <servlet-name>viewCustomer</servlet-name>
         <servlet-class>controller.customer.viewCustomer</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>viewCustomerDetail</servlet-name>
+        <servlet-class>controller.Admin.viewCustomerDetail</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>viewCustomerDetail</servlet-name>
+        <url-pattern>/viewCustomerDetail</url-pattern>
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ContractApprovalServlet</servlet-name>
         <url-pattern>/contractApproval</url-pattern>
