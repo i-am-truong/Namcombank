@@ -44,3 +44,4 @@ dependency-reduced-pom.xml
 *.swp
 *.swo
 build/web/WEB-INF/classes/context/DBContext.class
+.idea/workspace.xml
