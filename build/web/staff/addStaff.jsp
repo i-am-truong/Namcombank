@@ -135,6 +135,8 @@
 
         <script>
             document.getElementById('resetBtn').addEventListener('click', function (event) {
+                event.preventDefault(); // Ngăn form gửi nếu có lỗi
+
                 var name = document.getElementById('name').value.trim();
                 var phone = document.getElementById('phone').value.trim();
                 var email = document.getElementById('email').value.trim();
@@ -145,7 +147,6 @@
                 var pass = document.getElementById('pass').value.trim();
                 var repass = document.getElementById('repass').value.trim();
 
-                //        var nameRegex = /^[A-Za-z\s]+$/;
                 var cicRegex = /^[0-9]{12}$/;
                 var phoneRegex = /^0[0-9]{9,10}$/;
                 var emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -154,67 +155,73 @@
                 var passRegex = /^(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
 
                 var isValid = true;
+                var errorMessage = '';
 
                 if (!name) {
-                    alert('Name cannot be empty');
+                    errorMessage += 'Name cannot be empty\n';
                     isValid = false;
                 }
-                //        else if (!nameRegex.test(name)) {
-                //            alert('Invalid name');
-                //            isValid = false;
-                //        }
-                else if (!phone) {
-                    alert('Phone cannot be empty');
+                if (!phone) {
+                    errorMessage += 'Phone cannot be empty\n';
                     isValid = false;
                 } else if (!phoneRegex.test(phone)) {
-                    alert('Phone must be 10-11 digits and start with 0');
+                    errorMessage += 'Phone must be 10-11 digits and start with 0\n';
                     isValid = false;
-                } else if (!email) {
-                    alert('Email cannot be empty');
+                }
+                if (!email) {
+                    errorMessage += 'Email cannot be empty\n';
                     isValid = false;
                 } else if (!emailRegex.test(email)) {
-                    alert('Invalid email');
+                    errorMessage += 'Invalid email\n';
                     isValid = false;
-                } else if (!cic) {
-                    alert('Citizen Identification cannot be empty');
+                }
+                if (!cic) {
+                    errorMessage += 'Citizen Identification cannot be empty\n';
                     isValid = false;
                 } else if (!cicRegex.test(cic)) {
-                    alert('Citizen Identification must be 12 digits');
+                    errorMessage += 'Citizen Identification must be 12 digits\n';
                     isValid = false;
-                } else if (!address) {
-                    alert('Address cannot be empty');
+                }
+                if (!address) {
+                    errorMessage += 'Address cannot be empty\n';
                     isValid = false;
                 } else if (!addressRegex.test(address)) {
-                    alert('Invalid address');
+                    errorMessage += 'Invalid address\n';
                     isValid = false;
-                } else if (!date) {
-                    alert('Date of birth cannot be empty');
+                }
+                if (!date) {
+                    errorMessage += 'Date of birth cannot be empty\n';
                     isValid = false;
-                } else if (!username) {
-                    alert('Username cannot be empty');
+                }
+                if (!username) {
+                    errorMessage += 'Username cannot be empty\n';
                     isValid = false;
                 } else if (!usernameRegex.test(username)) {
-                    alert('Invalid username');
+                    errorMessage += 'Invalid username\n';
                     isValid = false;
-                } else if (!pass) {
-                    alert('Password cannot be empty');
+                }
+                if (!pass) {
+                    errorMessage += 'Password cannot be empty\n';
                     isValid = false;
                 } else if (!passRegex.test(pass)) {
-                    alert('Password must be at least 8 characters, uppercase and lowercase');
+                    errorMessage += 'Password must be at least 8 characters, uppercase and lowercase\n';
                     isValid = false;
-                } else if (!repass) {
-                    alert('Re-enter password cannot be empty');
+                }
+                if (!repass) {
+                    errorMessage += 'Re-enter password cannot be empty\n';
                     isValid = false;
                 } else if (pass !== repass) {
-                    alert('Passwords do not match');
+                    errorMessage += 'Passwords do not match\n';
                     isValid = false;
                 }
 
-                if (isValid) {
-                    // Submit the form
+                if (!isValid) {
+                    alert(errorMessage);
+                } else {
                     document.getElementById('registerStaffForm').submit();
                 }
             });
+
         </script>
 
 
