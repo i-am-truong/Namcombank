@@ -101,6 +101,10 @@
         <servlet-class>controller.wishList.addWishList</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>viewFeedback</servlet-name>
+        <servlet-class>controller.feedback.viewFeedback</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>viewWishList</servlet-name>
         <servlet-class>controller.wishList.viewWishList</servlet-class>
     </servlet>
@@ -148,6 +152,7 @@
         <servlet-name>manageCustomer</servlet-name>
         <servlet-class>controller.customer.manageCustomer</servlet-class>
     </servlet>
+    
     <servlet>
         <servlet-name>lockCustomer</servlet-name>
         <servlet-class>controller.customer.lockCustomer</servlet-class>
@@ -167,6 +172,10 @@
     <servlet>
         <servlet-name>StaffFilterController</servlet-name>
         <servlet-class>controller.Staff.StaffFilterController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>addFeedback</servlet-name>
+        <servlet-class>controller.feedback.addFeedback</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>StaffDeleteController</servlet-name>
@@ -196,6 +205,10 @@
         <servlet-name>viewCustomerDetail</servlet-name>
         <servlet-class>controller.Admin.viewCustomerDetail</servlet-class>
     </servlet>
+    <servlet-mapping>
+        <servlet-name>viewFeedback</servlet-name>
+        <url-pattern>/viewFeedback</url-pattern>
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>viewCustomerDetail</servlet-name>
         <url-pattern>/viewCustomerDetail</url-pattern>
@@ -335,6 +348,10 @@
     <servlet-mapping>
         <servlet-name>DeleteLoanPackageController</servlet-name>
         <url-pattern>/loanpackage/deleteloanpackage</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>addFeedback</servlet-name>
+        <url-pattern>/addFeedback</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ListSavingController</servlet-name>
