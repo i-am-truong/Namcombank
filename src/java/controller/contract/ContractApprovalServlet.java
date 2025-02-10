@@ -60,9 +60,28 @@ public class ContractApprovalServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        List<Contract> contracts = contractDAO.list();
+        String sort = request.getParameter("sort"); // asc hoặc desc
+        String status = request.getParameter("status"); // pending, approved, rejected, all
+
+        ContractDAO contractDAO = new ContractDAO();
+        List<Contract> contracts;
+
+        // Lọc theo status
+        if (status == null || status.equals("all")) {
+            contracts = contractDAO.list(); // Lấy tất cả hợp đồng
+        } else {
+            contracts = contractDAO.getContractsByStatus(status); // Lọc theo trạng thái
+        }
+
+        // Sắp xếp theo amount
+        if ("desc".equals(sort)) {
+            contracts.sort((c1, c2) -> Double.compare(c2.getAmount(), c1.getAmount()));
+        } else {
+            contracts.sort((c1, c2) -> Double.compare(c1.getAmount(), c2.getAmount()));
+        }
+
         request.setAttribute("contracts", contracts);
-        request.getRequestDispatcher("contract/managerContracts.jsp").forward(request, response);
+        request.getRequestDispatcher("contractApproval").forward(request, response);
     }
 
     /**
