@@ -109,6 +109,10 @@
         <servlet-class>Dashboard</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>viewFeedback</servlet-name>
+        <servlet-class>controller.feedback.viewFeedback</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>StaffAddController</servlet-name>
         <servlet-class>controller.Staff.StaffAddController</servlet-class>
     </servlet>
@@ -147,6 +151,10 @@
     <servlet>
         <servlet-name>manageCustomer</servlet-name>
         <servlet-class>controller.customer.manageCustomer</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>addFeedback</servlet-name>
+        <servlet-class>controller.feedback.addFeedback</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>lockCustomer</servlet-name>
@@ -372,6 +380,16 @@
         <servlet-name>addCustomer</servlet-name>
         <url-pattern>/addCustomer</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>addFeedback</servlet-name>
+        <url-pattern>/addFeedback</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>viewFeedback</servlet-name>
+        <url-pattern>/viewFeedback</url-pattern>
+    </servlet-mapping>
+
     <servlet-mapping>
         <servlet-name>StaffFilterController</servlet-name>
         <url-pattern>/staffFilter</url-pattern>

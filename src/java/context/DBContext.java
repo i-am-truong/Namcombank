@@ -7,21 +7,17 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 public abstract class DBContext<T> {
+
     protected Connection connection;
-    public DBContext()
-    {
+
+    public DBContext() {
         try {
             String user = "sa";
-<<<<<<< HEAD
+
             String pass = "123";
             String url = "jdbc:sqlserver://localhost\\SQLEXPRESS:1433;databaseName=swp391_p1;trustServerCertificate=true;";
-=======
-            String pass = "22062004";
-            String url = "jdbc:sqlserver://localhost\\SQLEXPRESS:1433;databaseName=swp391_v1;trustServerCertificate=true;";
->>>>>>> 9dcbdd6814afdf33060fa83c01bff43633fbb65b
-            
+
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             connection = DriverManager.getConnection(url, user, pass);
         } catch (ClassNotFoundException ex) {
@@ -30,10 +26,14 @@ public abstract class DBContext<T> {
             Logger.getLogger(DBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public abstract void insert(T model);
+
     public abstract void update(T model);
+
     public abstract void delete(T model);
+
     public abstract ArrayList<T> list();
+
     public abstract T get(int id);
 }
