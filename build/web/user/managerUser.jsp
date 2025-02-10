@@ -70,9 +70,9 @@
                     <div class="container-fluid">
                         <!-- Page Heading -->
                         <h1 class="h3 mb-2 text-gray-800">Customer List</h1>
-                        <a href="addStaff">  <button type="button" style="margin-bottom: 20px" class="btn btn-primary">Add new staff</button></a>
-                        <br> 
-                        <br> 
+                        <a href="addStaff">  <button type="button" style="margin-bottom: 20px" class="btn btn-primary">Add new customer</button></a>
+                        <br>
+                        <br>
                         <!-- Search and Filter Form -->
                         <form id="filterForm" name="filterForm" action="managerUser" method="get" onsubmit="return validateForm()">
                             <div class="form-row">
@@ -108,7 +108,7 @@
                                     <button type="submit" class="btn btn-primary btn-block">Search</button>
                                 </div>
                                 <div class="col-md-1 mb-1">
-                                    <input class="form-control" readonly="" value="Total: ${requestScope.count}">
+                                    <input class="form-control" readonly="" value="Total: ${requestScope.countC}">
                                 </div>
                             </div>
                         </form>
@@ -122,10 +122,10 @@
                                         <tr>
 
                                             <th>ID</th>
-                                            <th>Name<a href="managerUser?indexU=${currentIndex + 1}&searchU=${param.searchU}&role=${param.role}&active=${param.active}&sortField=fullName&sortOrder=${param.sortOrder == 'asc' ? 'desc' : 'asc'}"><span class="fa fa-sort"></span></a></th>
-                                            <th>Phone<a href="managerUser?indexU=${currentIndex + 1}&searchU=${param.searchU}&role=${param.role}&active=${param.active}&sortField=phone&sortOrder=${param.sortOrder == 'asc' ? 'desc' : 'asc'}"><span class="fa fa-sort"></span></a></th>
-                                            <th>Email<a href="managerUser?indexU=${currentIndex + 1}&searchU=${param.searchU}&role=${param.role}&active=${param.active}&sortField=email&sortOrder=${param.sortOrder == 'asc' ? 'desc' : 'asc'}"><span class="fa fa-sort"></span></a></th>
-                                            <th>Username<a href="managerUser?indexU=${currentIndex + 1}&searchU=${param.searchU}&role=${param.role}&active=${param.active}&sortField=username&sortOrder=${param.sortOrder == 'asc' ? 'desc' : 'asc'}"><span class="fa fa-sort"></span></a></th>
+                                            <th>Name<a href="managerUser?indexC=${currentIndex + 1}&searchC=${param.searchC}&active=${param.active}&sortField=fullName&sortOrder=${param.sortOrder == 'asc' ? 'desc' : 'asc'}"><span class="fa fa-sort"></span></a></th>
+                                            <th>Phone<a href="managerUser?indexC=${currentIndex + 1}&searchC=${param.searchC}&active=${param.active}&sortField=phone&sortOrder=${param.sortOrder == 'asc' ? 'desc' : 'asc'}"><span class="fa fa-sort"></span></a></th>
+                                            <th>Email<a href="managerUser?indexC=${currentIndex + 1}&searchC=${param.searchC}&active=${param.active}&sortField=email&sortOrder=${param.sortOrder == 'asc' ? 'desc' : 'asc'}"><span class="fa fa-sort"></span></a></th>
+                                            <th>Username<a href="managerUser?indexC=${currentIndex + 1}&searchC=${param.searchC}&active=${param.active}&sortField=username&sortOrder=${param.sortOrder == 'asc' ? 'desc' : 'asc'}"><span class="fa fa-sort"></span></a></th>
                                             <th>CIC</th>
                                             <th>DOB</th>
                                             <th>Address</th>
