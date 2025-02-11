@@ -1,16 +1,16 @@
-### NetBeans ###
-**/nbproject/private/
-**/nbproject/Makefile-*.mk
-**/nbproject/Package-*.bash
+# NetBeans specific
+nbproject/private/
+nbproject/Makefile-*.mk
+nbproject/Package-*.bash
 build/
 nbbuild/
 dist/
 nbdist/
 .nb-gradle/
 
-### Java ###
-# Compiled class files
+# Compiled files
 *.class
+build/web/WEB-INF/classes/
 
 # Log files
 *.log
@@ -24,11 +24,11 @@ nbdist/
 *.tar.gz
 *.rar
 
-# virtual machine crash logs
+# Virtual machine crash logs
 hs_err_pid*
 replay_pid*
 
-### Maven ###
+# Maven
 target/
 pom.xml.tag
 pom.xml.releaseBackup
@@ -37,10 +37,9 @@ pom.xml.next
 release.properties
 dependency-reduced-pom.xml
 
-### IDE ###
+# IDE
 .idea/
 *.iml
 .vscode/
 *.swp
 *.swo
-build/web/WEB-INF/classes/context/DBContext.class
