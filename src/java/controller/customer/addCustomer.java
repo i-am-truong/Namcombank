@@ -8,18 +8,20 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import context.CustomerDAO;
+import controller.auth.BaseRBACControlller;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 //import java.util.Date;
 import java.sql.Date;
+import model.auth.Staff;
 
 /**
  *
  * @author TQT
  */
-public class addCustomer extends HttpServlet {
+public class addCustomer extends BaseRBACControlller {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -59,7 +61,7 @@ public class addCustomer extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("customer/addCustomer.jsp").forward(request, response);
+        
     }
 
     /**
@@ -74,7 +76,22 @@ public class addCustomer extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String fullname = request.getParameter("fullnameC");
+        
+    }
+
+    /**
+     * Returns a short description of the servlet.
+     *
+     * @return a String containing servlet description
+     */
+    @Override
+    public String getServletInfo() {
+        return "Short description";
+    }// </editor-fold>
+
+    @Override
+    protected void doAuthorizedPost(HttpServletRequest request, HttpServletResponse response, Staff account) throws ServletException, IOException {
+       String fullname = request.getParameter("fullnameC");
         String phonenumber = request.getParameter("phonenumberC");
         String email = request.getParameter("emailC");
         String address = request.getParameter("addressC");
@@ -112,14 +129,9 @@ public class addCustomer extends HttpServlet {
         }
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
     @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
+    protected void doAuthorizedGet(HttpServletRequest request, HttpServletResponse response, Staff account) throws ServletException, IOException {
+        request.getRequestDispatcher("customer/addCustomer.jsp").forward(request, response);
+    }
 
 }
