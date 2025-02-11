@@ -204,6 +204,10 @@
         <servlet-name>viewCustomerDetail</servlet-name>
         <servlet-class>controller.Admin.viewCustomerDetail</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>StaffUpdateController</servlet-name>
+        <servlet-class>controller.Staff.StaffUpdateController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>viewCustomerDetail</servlet-name>
         <url-pattern>/viewCustomerDetail</url-pattern>
@@ -384,12 +388,10 @@
         <servlet-name>addFeedback</servlet-name>
         <url-pattern>/addFeedback</url-pattern>
     </servlet-mapping>
-
     <servlet-mapping>
         <servlet-name>viewFeedback</servlet-name>
         <url-pattern>/viewFeedback</url-pattern>
     </servlet-mapping>
-
     <servlet-mapping>
         <servlet-name>StaffFilterController</servlet-name>
         <url-pattern>/staffFilter</url-pattern>
@@ -405,6 +407,10 @@
     <servlet-mapping>
         <servlet-name>viewCustomer</servlet-name>
         <url-pattern>/viewCustomer</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>StaffUpdateController</servlet-name>
+        <url-pattern>/updateStaff</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
