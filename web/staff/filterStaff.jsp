@@ -116,7 +116,7 @@
                                             <td>${s.address}</td>
                                             <td>${s.dept.name}</td>
                                             <td>
-                                                <a href="editCustomer?customerId=${s.id}">Edit</a>
+                                                <a href="updateStaff?id=${s.id}">Edit</a>
                                                 <a onclick="checkDeleteCustomer('${s.id}')" class="btn btn-danger btn-sm">
                                                     Delete
                                                 </a>
@@ -143,22 +143,6 @@
                         "pageLength": 10, // Số bản ghi mặc định trên mỗi trang
                         "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Tất cả"]]
                     });
-
-                    // Thêm input tìm kiếm vào mỗi footer cell
-                    $('#dataTable tfoot th').each(function () {
-                        var title = $(this).text();
-                        $(this).html('<input type="text" class="form-control" placeholder="Search ' + title + '" />');
-                    });
-
-                    // Áp dụng chức năng tìm kiếm cột
-                    table.columns().every(function () {
-                        var column = this;
-                        $('input', this.footer()).on('keyup change', function () {
-                            if (column.search() !== this.value) {
-                                column.search(this.value).draw();
-                            }
-                        });
-                    });
                 }
             });
 
@@ -182,8 +166,9 @@
         </script>
 
         <!-- Bootstrap core JavaScript -->
-        <script src="vendor/jquery/jquery.min.js"></script> <!-- jQuery phải được load trước -->
-        <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+
 
         <!-- Core plugin JavaScript -->
         <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
