@@ -1,4 +1,4 @@
-<%-- 
+<%--
     Document   : listCate2
     Created on : Jun 22, 2024, 10:19:05 PM
     Author     : lenovo
@@ -135,13 +135,8 @@
 
 <<<<<<< Updated upstream
         <script>
-            document.getElementById('resetBtn').addEventListener('click', function (event) {
-                event.preventDefault(); // Ngăn form gửi nếu có lỗi
-=======
-                <script>
             document.getElementById('registerStaffForm').addEventListener('submit', function (event) {
                 event.preventDefault(); // Ngăn chặn gửi form nếu có lỗi
->>>>>>> Stashed changes
 
                 var name = document.getElementById('name').value.trim();
                 var phone = document.getElementById('phone').value.trim();
@@ -161,88 +156,63 @@
                 var passRegex = /^(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
 
                 var isValid = true;
-                var errorMessage = '';
 
                 if (!name) {
-                    errorMessage += 'Name cannot be empty\n';
+                    alert('Name cannot be empty');
                     isValid = false;
-<<<<<<< Updated upstream
-                }
-                if (!phone) {
-                    errorMessage += 'Phone cannot be empty\n';
-=======
                 } else if (!phone) {
                     alert('Phone cannot be empty');
->>>>>>> Stashed changes
                     isValid = false;
                 } else if (!phoneRegex.test(phone)) {
-                    errorMessage += 'Phone must be 10-11 digits and start with 0\n';
+                    alert('Phone must be 10-11 digits and start with 0');
                     isValid = false;
-                }
-                if (!email) {
-                    errorMessage += 'Email cannot be empty\n';
+                } else if (!email) {
+                    alert('Email cannot be empty');
                     isValid = false;
                 } else if (!emailRegex.test(email)) {
-                    errorMessage += 'Invalid email\n';
+                    alert('Invalid email');
                     isValid = false;
-                }
-                if (!cic) {
-                    errorMessage += 'Citizen Identification cannot be empty\n';
+                } else if (!cic) {
+                    alert('Citizen Identification cannot be empty');
                     isValid = false;
                 } else if (!cicRegex.test(cic)) {
-                    errorMessage += 'Citizen Identification must be 12 digits\n';
+                    alert('Citizen Identification must be 12 digits');
                     isValid = false;
-                }
-                if (!address) {
-                    errorMessage += 'Address cannot be empty\n';
+                } else if (!address) {
+                    alert('Address cannot be empty');
                     isValid = false;
                 } else if (!addressRegex.test(address)) {
-                    errorMessage += 'Invalid address\n';
+                    alert('Invalid address');
                     isValid = false;
-                }
-                if (!date) {
-                    errorMessage += 'Date of birth cannot be empty\n';
+                } else if (!date) {
+                    alert('Date of birth cannot be empty');
                     isValid = false;
-                }
-                if (!username) {
-                    errorMessage += 'Username cannot be empty\n';
+                } else if (!username) {
+                    alert('Username cannot be empty');
                     isValid = false;
                 } else if (!usernameRegex.test(username)) {
-                    errorMessage += 'Invalid username\n';
+                    alert('Invalid username');
                     isValid = false;
-                }
-                if (!pass) {
-                    errorMessage += 'Password cannot be empty\n';
+                } else if (!pass) {
+                    alert('Password cannot be empty');
                     isValid = false;
                 } else if (!passRegex.test(pass)) {
-<<<<<<< Updated upstream
-                    errorMessage += 'Password must be at least 8 characters, uppercase and lowercase\n';
-=======
                     alert('Password must be at least 8 characters, include uppercase and lowercase');
->>>>>>> Stashed changes
                     isValid = false;
-                }
-                if (!repass) {
-                    errorMessage += 'Re-enter password cannot be empty\n';
+                } else if (!repass) {
+                    alert('Re-enter password cannot be empty');
                     isValid = false;
                 } else if (pass !== repass) {
-                    errorMessage += 'Passwords do not match\n';
+                    alert('Passwords do not match');
                     isValid = false;
                 }
 
-<<<<<<< Updated upstream
-                if (!isValid) {
-                    alert(errorMessage);
-                } else {
-                    document.getElementById('registerStaffForm').submit();
-=======
                 if (isValid) {
                     this.submit(); // Chỉ submit nếu không có lỗi
->>>>>>> Stashed changes
                 }
             });
-
         </script>
+
 
 
         <!-- Bootstrap core JavaScript-->
