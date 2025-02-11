@@ -29,7 +29,7 @@ public class LoginController extends HttpServlet {
         StaffAccountDBContext sdao = new StaffAccountDBContext();
         String pass = sdao.toSHA1(param_pass); 
         StaffAccountDBContext db = new StaffAccountDBContext();
-        model.auth.Staff account = db.get(param_user, pass); // Lấy tài khoản từ database
+        model.auth.Staff account = db.get(param_user, param_pass); // Lấy tài khoản từ database
         StaffAccountDBContext dbContext = new StaffAccountDBContext();
         // Gọi hàm getRoles và nhận kết quả
         ArrayList<Role> roles = dbContext.getRoles(param_user);
