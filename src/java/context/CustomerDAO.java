@@ -110,7 +110,7 @@ public class CustomerDAO extends DBContext {
         }
         return customer;
     }
-    
+
     public List<Customer> getAllCustomers() {
         List<Customer> customers = new ArrayList<>();
         String sql = "SELECT [customer_id]\n"
@@ -192,7 +192,7 @@ public class CustomerDAO extends DBContext {
         }
         return customer;
     }
-    
+
     public List<Customer> listAllCustomers(int index, int quantity, String sortField, String sortOrder) {
         List<Customer> customers = new ArrayList<>();
         String sql = "SELECT [customer_id]\n"
@@ -614,7 +614,8 @@ public class CustomerDAO extends DBContext {
                 + "[address] = ?, "
                 + "[email] = ?, "
                 + "[dob] = ?, "
-                + "[gender] = ? "
+                + "[gender] = ?, "
+                + "[citizen_identification_card] = ?"
                 + "WHERE [customer_id] = ?";
 
         try {
@@ -626,7 +627,8 @@ public class CustomerDAO extends DBContext {
                 stm.setNString(4, customer.getEmail());
                 stm.setDate(5, customer.getDob());
                 stm.setInt(6, customer.getGender());
-                stm.setInt(7, customer.getCustomerId());
+                stm.setString(7, customer.getCid());
+                stm.setInt(8, customer.getCustomerId());
 
                 int rowsUpdated = stm.executeUpdate();
                 if (rowsUpdated == 0) {
@@ -806,14 +808,14 @@ public class CustomerDAO extends DBContext {
 //        return listU;
 //    }
 
-    public void deleteCustomer(int cid) {
-        String sql = "DELETE FROM [dbo].[Customer]\n"
-                + "      WHERE customer_id = ?";
-        try {
-            PreparedStatement ps = connection.prepareStatement(sql);
+    public void deleteCustomer(int cid) throws SQLException {
+        String sql = "DELETE FROM [dbo].[Customer] WHERE customer_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, cid);
-        } catch (Exception e) {
-            e.printStackTrace();
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected == 0) {
+                throw new SQLException("Customer with ID " + cid + " not found");
+            }
         }
     }
 

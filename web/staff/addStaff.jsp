@@ -133,9 +133,15 @@
         </div>
         <!-- End of Page Wrapper -->
 
+<<<<<<< Updated upstream
         <script>
             document.getElementById('resetBtn').addEventListener('click', function (event) {
                 event.preventDefault(); // Ngăn form gửi nếu có lỗi
+=======
+                <script>
+            document.getElementById('registerStaffForm').addEventListener('submit', function (event) {
+                event.preventDefault(); // Ngăn chặn gửi form nếu có lỗi
+>>>>>>> Stashed changes
 
                 var name = document.getElementById('name').value.trim();
                 var phone = document.getElementById('phone').value.trim();
@@ -160,9 +166,14 @@
                 if (!name) {
                     errorMessage += 'Name cannot be empty\n';
                     isValid = false;
+<<<<<<< Updated upstream
                 }
                 if (!phone) {
                     errorMessage += 'Phone cannot be empty\n';
+=======
+                } else if (!phone) {
+                    alert('Phone cannot be empty');
+>>>>>>> Stashed changes
                     isValid = false;
                 } else if (!phoneRegex.test(phone)) {
                     errorMessage += 'Phone must be 10-11 digits and start with 0\n';
@@ -204,7 +215,11 @@
                     errorMessage += 'Password cannot be empty\n';
                     isValid = false;
                 } else if (!passRegex.test(pass)) {
+<<<<<<< Updated upstream
                     errorMessage += 'Password must be at least 8 characters, uppercase and lowercase\n';
+=======
+                    alert('Password must be at least 8 characters, include uppercase and lowercase');
+>>>>>>> Stashed changes
                     isValid = false;
                 }
                 if (!repass) {
@@ -215,10 +230,15 @@
                     isValid = false;
                 }
 
+<<<<<<< Updated upstream
                 if (!isValid) {
                     alert(errorMessage);
                 } else {
                     document.getElementById('registerStaffForm').submit();
+=======
+                if (isValid) {
+                    this.submit(); // Chỉ submit nếu không có lỗi
+>>>>>>> Stashed changes
                 }
             });
 
