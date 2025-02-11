@@ -134,7 +134,9 @@
         <!-- End of Page Wrapper -->
 
         <script>
-            document.getElementById('resetBtn').addEventListener('click', function (event) {
+            document.getElementById('registerStaffForm').addEventListener('submit', function (event) {
+                event.preventDefault(); // Ngăn chặn gửi form nếu có lỗi
+
                 var name = document.getElementById('name').value.trim();
                 var phone = document.getElementById('phone').value.trim();
                 var email = document.getElementById('email').value.trim();
@@ -145,7 +147,6 @@
                 var pass = document.getElementById('pass').value.trim();
                 var repass = document.getElementById('repass').value.trim();
 
-                //        var nameRegex = /^[A-Za-z\s]+$/;
                 var cicRegex = /^[0-9]{12}$/;
                 var phoneRegex = /^0[0-9]{9,10}$/;
                 var emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -158,12 +159,7 @@
                 if (!name) {
                     alert('Name cannot be empty');
                     isValid = false;
-                }
-                //        else if (!nameRegex.test(name)) {
-                //            alert('Invalid name');
-                //            isValid = false;
-                //        }
-                else if (!phone) {
+                } else if (!phone) {
                     alert('Phone cannot be empty');
                     isValid = false;
                 } else if (!phoneRegex.test(phone)) {
@@ -200,7 +196,7 @@
                     alert('Password cannot be empty');
                     isValid = false;
                 } else if (!passRegex.test(pass)) {
-                    alert('Password must be at least 8 characters, uppercase and lowercase');
+                    alert('Password must be at least 8 characters, include uppercase and lowercase');
                     isValid = false;
                 } else if (!repass) {
                     alert('Re-enter password cannot be empty');
@@ -211,11 +207,11 @@
                 }
 
                 if (isValid) {
-                    // Submit the form
-                    document.getElementById('registerStaffForm').submit();
+                    this.submit(); // Chỉ submit nếu không có lỗi
                 }
             });
         </script>
+
 
 
         <!-- Bootstrap core JavaScript-->
