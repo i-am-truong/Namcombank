@@ -22,6 +22,73 @@ import model.auth.Staff;
  */
 public class StaffDAO extends DBContext<Staff> {
 
+    public boolean updateStaff(Staff model) {
+        String sql_update = "UPDATE [dbo].[Staff]\n"
+                + "   SET [department_id] = ?\n"
+                + "      ,[fullname] = ?\n"
+                + "      ,[email] = ?\n"
+                + "      ,[dob] = ?\n"
+                + "      ,[gender] = ?\n"
+                + "      ,[phonenumber] = ?\n"
+                + "      ,[citizen_identification_card] = ?\n"
+                + "      ,[address] = ?\n"
+                + " WHERE staff_id =?";
+        try (PreparedStatement stm_update = connection.prepareStatement(sql_update)) {
+            // Set parameters...
+            stm_update.setInt(1, model.getDept().getId()); // Department ID
+            stm_update.setNString(2, model.getFullname()); // Full name
+            stm_update.setNString(3, model.getEmail()); // Email
+            stm_update.setDate(4, model.getDob()); // Date of birth
+            stm_update.setBoolean(5, model.isGender()); // Gender
+            stm_update.setNString(6, model.getPhonenumber()); // Phone number
+            stm_update.setNString(7, model.getCitizenId()); // Citizen ID
+            stm_update.setNString(8, model.getAddress()); // Address
+            stm_update.setInt(9, model.getId()); // Primary key (staff_id)
+
+            int rowsUpdated = stm_update.executeUpdate();
+            System.out.println("Rows updated: " + rowsUpdated); // Log rows affected
+            return rowsUpdated > 0;
+        } catch (SQLException ex) {
+            System.err.println("SQL error: " + ex.getMessage());
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
+    public Staff getById(int id) {
+        String sql_select = "SELECT staff_id, fullname, email, dob, gender, phonenumber, citizen_identification_card, address, department_id "
+                + "FROM [dbo].[Staff] WHERE staff_id = ?";
+
+        PreparedStatement stm_select = null;
+        ResultSet rs = null;
+        Staff staff = null;
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql_select);
+            ps.setInt(1, id);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                staff = new Staff();
+                staff.setId(rs.getInt("staff_id"));
+                staff.setFullname(rs.getNString("fullname"));
+                staff.setEmail(rs.getString("email"));
+                staff.setDob(rs.getDate("dob"));
+                staff.setGender(rs.getBoolean("gender"));
+                staff.setPhonenumber(rs.getString("phonenumber"));
+                staff.setCitizenId(rs.getString("citizen_identification_card"));
+                staff.setAddress(rs.getNString("address"));
+
+                // Lấy department từ ID
+                Department dept = new Department();
+                dept.setId(rs.getInt("department_id"));
+                staff.setDept(dept); // Gán Department vào Staff
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return staff;
+    }
+
     public ArrayList<Staff> search(Integer sid, String name, Boolean gender, String dob,
             String address, Integer did, String phonenumber, String email, String citizenID) {
         String sql = "SELECT s.staff_id, d.department_id, d.department_name, s.fullname, s.email, s.dob, "
@@ -109,6 +176,7 @@ public class StaffDAO extends DBContext<Staff> {
 
                 s.setDept(d);
                 staffs.add(s);
+
             }
         } catch (SQLException ex) {
             Logger.getLogger(StaffDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -119,6 +187,7 @@ public class StaffDAO extends DBContext<Staff> {
                 }
                 if (connection != null) {
                     connection.close();
+
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(StaffDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -179,21 +248,25 @@ public class StaffDAO extends DBContext<Staff> {
                 model.setId(rs.getInt("staff_id"));
             }
             connection.commit();
+
         } catch (SQLException ex) {
-            Logger.getLogger(StaffDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(StaffDAO.class
+                    .getName()).log(Level.SEVERE, null, ex);
             try {
                 connection.rollback();
+
             } catch (SQLException ex1) {
-                Logger.getLogger(StaffDAO.class.getName()).log(Level.SEVERE, null, ex1);
+                Logger.getLogger(StaffDAO.class
+                        .getName()).log(Level.SEVERE, null, ex1);
             }
         } finally {
             try {
                 connection.setAutoCommit(true);
+
             } catch (SQLException ex) {
-                Logger.getLogger(StaffDAO.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(StaffDAO.class
+                        .getName()).log(Level.SEVERE, null, ex);
             }
-            // ❌ Không đóng connection ở đây!
-            // ❌ Không đóng connection ở đây!
         }
 
     }
@@ -201,46 +274,35 @@ public class StaffDAO extends DBContext<Staff> {
     @Override
     public void update(Staff model) {
         String sql_update = "UPDATE [dbo].[Staff]\n"
-                + "SET \n"
-                + "    [fullname] = ?,\n"
-                + "    [email] = ?,\n"
-                + "    [dob] = ?,  \n"
-                + "    [gender] = ?,           \n"
-                + "    [phonenumber] = ?, \n"
-                + "    [citizen_identification_card] = ?,\n"
-                + "    [address] = ?\n"
-                + "WHERE staff_id = ?;";
-        PreparedStatement stm_update = null;
-        try {
-            stm_update = connection.prepareStatement(sql_update);
-            stm_update.setNString(1, model.getFullname());
-            stm_update.setNString(2, model.getEmail());
-            stm_update.setDate(3, model.getDob());
-            stm_update.setBoolean(4, model.isGender());
-            stm_update.setNString(5, model.getPhonenumber());
-            stm_update.setNString(6, model.getCitizenId());
-            stm_update.setNString(7, model.getAddress());
-            stm_update.setInt(8, model.getId()); // khóa chính
-            stm_update.executeUpdate();
+                + "   SET [department_id] = ?\n"
+                + "      ,[fullname] = ?\n"
+                + "      ,[username] = ?\n"
+                + "      ,[password] = ?\n"
+                + "      ,[active] = ?\n"
+                + "      ,[email] = ?\n"
+                + "      ,[dob] = ?\n"
+                + "      ,[gender] = ?\n"
+                + "      ,[phonenumber] = ?\n"
+                + "      ,[citizen_identification_card] = ?\n"
+                + "      ,[address] = ?\n"
+                + " WHERE staff_id =?";
+        try (PreparedStatement stm_update = connection.prepareStatement(sql_update)) {
+            // Set parameters...
+            stm_update.setInt(1, model.getDept().getId()); // Department ID
+            stm_update.setNString(2, model.getFullname()); // Full name
+            stm_update.setNString(3, model.getEmail()); // Email
+            stm_update.setDate(4, model.getDob()); // Date of birth
+            stm_update.setBoolean(5, model.isGender()); // Gender
+            stm_update.setNString(6, model.getPhonenumber()); // Phone number
+            stm_update.setNString(7, model.getCitizenId()); // Citizen ID
+            stm_update.setNString(8, model.getAddress()); // Address
+            stm_update.setInt(9, model.getId()); // Primary key (staff_id)
 
+            int rowsUpdated = stm_update.executeUpdate();
+            System.out.println("Rows updated: " + rowsUpdated); // Log rows affected
         } catch (SQLException ex) {
-            Logger.getLogger(StaffDAO.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            // Close the prepared statement and database connection
-            if (stm_update != null) {
-                try {
-                    stm_update.close();
-                } catch (SQLException ex) {
-                    Logger.getLogger(StaffDAO.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException ex) {
-                    Logger.getLogger(StaffDAO.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
+            System.err.println("SQL error: " + ex.getMessage());
+            ex.printStackTrace();
         }
     }
 
@@ -261,6 +323,7 @@ public class StaffDAO extends DBContext<Staff> {
         } finally {
             try {
                 connection.close();
+
             } catch (SQLException ex) {
                 Logger.getLogger(StaffDAO.class
                         .getName()).log(Level.SEVERE, null, ex);
