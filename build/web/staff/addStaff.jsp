@@ -1,4 +1,4 @@
-<%-- 
+<%--
     Document   : listCate2
     Created on : Jun 22, 2024, 10:19:05 PM
     Author     : lenovo
@@ -133,6 +133,7 @@
         </div>
         <!-- End of Page Wrapper -->
 
+<<<<<<< Updated upstream
         <script>
             document.getElementById('registerStaffForm').addEventListener('submit', function (event) {
                 event.preventDefault(); // Ngăn chặn gửi form nếu có lỗi
