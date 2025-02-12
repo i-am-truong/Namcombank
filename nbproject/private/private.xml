@@ -1,36 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
-    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="1">
+        <file>
+            <url>src/java/context/ValidateOtp.java</url>
+            <bookmark id="1">
+                <name/>
+                <line>23</line>
+                <key/>
+            </bookmark>
+        </file>
+    </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-<<<<<<< HEAD
-            <file>file:/C:/Users/duong/OneDrive/Documents/GitHub/Namcombank/src/java/context/ValidateOtp.java</file>
-            <file>file:/C:/Users/duong/OneDrive/Documents/GitHub/Namcombank/src/java/Utils/ResendEmail.java</file>
-            <file>file:/C:/Users/duong/OneDrive/Documents/GitHub/Namcombank/src/java/Utils/Email.java</file>
-            <file>file:/C:/Users/duong/OneDrive/Documents/GitHub/Namcombank/src/java/context/ForgotPassword.java</file>
-            <file>file:/C:/Users/duong/OneDrive/Documents/GitHub/Namcombank/src/java/context/RefreshCaptcha.java</file>
-            <file>file:/C:/Users/duong/OneDrive/Documents/GitHub/Namcombank/src/java/context/StaffDAO.java</file>
-            <file>file:/C:/Users/duong/OneDrive/Documents/GitHub/Namcombank/src/java/context/DBContext.java</file>
-            <file>file:/C:/Users/duong/OneDrive/Documents/GitHub/Namcombank/src/java/controller/auth/LoginController.java</file>
-            <file>file:/C:/Users/duong/OneDrive/Documents/GitHub/Namcombank/src/java/Utils/CaptchaUtils.java</file>
             <file>file:/C:/Users/duong/OneDrive/Documents/GitHub/Namcombank/src/java/Utils/EmailUtil.java</file>
-            <file>file:/C:/Users/duong/OneDrive/Documents/GitHub/Namcombank/src/java/Utils/EmailAlertThread.java</file>
-            <file>file:/C:/Users/duong/OneDrive/Documents/GitHub/Namcombank/src/java/Utils/ValidateOtp.java</file>
-            <file>file:/C:/Users/duong/OneDrive/Documents/GitHub/Namcombank/src/java/context/NewPassword.java</file>
-            <file>file:/C:/Users/duong/OneDrive/Documents/GitHub/Namcombank/src/java/context/EditProfileController.java</file>
-            <file>file:/C:/Users/duong/OneDrive/Documents/GitHub/Namcombank/src/java/Utils/EmailSenderThread.java</file>
-            <file>file:/C:/Users/duong/OneDrive/Documents/GitHub/Namcombank/src/java/Utils/ResendEmailUtil.java</file>
-=======
-            <file>file:/D:/FPT%20University/Semester%205/SWP/Namcombank/src/java/context/StaffAccountDBContext.java</file>
-            <file>file:/D:/FPT%20University/Semester%205/SWP/Namcombank/src/java/controller/auth/LoginController.java</file>
-            <file>file:/D:/FPT%20University/Semester%205/SWP/Namcombank/src/java/controller/User/managerUser.java</file>
-            <file>file:/D:/FPT%20University/Semester%205/SWP/Namcombank/src/java/controller/customer/viewCustomer.java</file>
-            <file>file:/D:/FPT%20University/Semester%205/SWP/Namcombank/src/java/controller/User/lockUser.java</file>
-            <file>file:/D:/FPT%20University/Semester%205/SWP/Namcombank/src/java/context/DBContext.java</file>
-            <file>file:/D:/FPT%20University/Semester%205/SWP/Namcombank/src/java/context/CustomerDAO.java</file>
-            <file>file:/D:/FPT%20University/Semester%205/SWP/Namcombank/web/WEB-INF/web.xml</file>
-            <file>file:/D:/FPT%20University/Semester%205/SWP/Namcombank/web/user/managerUser.jsp</file>
->>>>>>> 9dcbdd6814afdf33060fa83c01bff43633fbb65b
+            <file>file:/C:/Users/duong/OneDrive/Documents/GitHub/Namcombank/src/java/context/CustomerDAO.java</file>
         </group>
     </open-files>
 </project-private>
