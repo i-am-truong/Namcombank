@@ -113,6 +113,10 @@
         <servlet-class>Dashboard</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>deleteFeedback</servlet-name>
+        <servlet-class>controller.feedback.deleteFeedback</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>StaffAddController</servlet-name>
         <servlet-class>controller.Staff.StaffAddController</servlet-class>
     </servlet>
@@ -152,7 +156,6 @@
         <servlet-name>manageCustomer</servlet-name>
         <servlet-class>controller.customer.manageCustomer</servlet-class>
     </servlet>
-    
     <servlet>
         <servlet-name>lockCustomer</servlet-name>
         <servlet-class>controller.customer.lockCustomer</servlet-class>
@@ -205,6 +208,14 @@
         <servlet-name>viewCustomerDetail</servlet-name>
         <servlet-class>controller.Admin.viewCustomerDetail</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>cusFeedback</servlet-name>
+        <servlet-class>controller.feedback.cusFeedback</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>editFeedback</servlet-name>
+        <servlet-class>controller.feedback.editFeedback</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>viewFeedback</servlet-name>
         <url-pattern>/viewFeedback</url-pattern>
@@ -220,6 +231,10 @@
     <servlet-mapping>
         <servlet-name>AddContractController</servlet-name>
         <url-pattern>/addContract</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>deleteFeedback</servlet-name>
+        <url-pattern>/deleteFeedback</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>EditContractController</servlet-name>
@@ -404,6 +419,14 @@
     <servlet-mapping>
         <servlet-name>viewCustomer</servlet-name>
         <url-pattern>/viewCustomer</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>cusFeedback</servlet-name>
+        <url-pattern>/cusFeedback</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>editFeedback</servlet-name>
+        <url-pattern>/editFeedback</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
