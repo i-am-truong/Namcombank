@@ -400,31 +400,31 @@ public class CustomerDAO extends DBContext {
         return true;
     }
 
-    public boolean checkCustomer(String cid, String phonenumber, String email){
+    public boolean checkCustomer(String cid, String phonenumber, String email) {
         String sql = " select citizen_identification_card from Customer where citizen_identification_card = ? or phonenumber = ? or email = ?";
-        try{
+        try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, cid);
             ps.setString(2, phonenumber);
             ps.setString(3, email);
             ResultSet rs = ps.executeQuery();
 
-            if(rs.next()){
+            if (rs.next()) {
                 // CID already exists in the database
                 return false;
             }
 
-        } catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return true;
     }
 
     public boolean checkCustomerUpdate(String cid, String phonenumber, String email, int customerId) {
-        String sql = "SELECT customer_id FROM Customer WHERE " +
-                    "(citizen_identification_card = ? AND customer_id != ?) OR " +
-                    "(phonenumber = ? AND customer_id != ?) OR " +
-                    "(email = ? AND customer_id != ?)";
+        String sql = "SELECT customer_id FROM Customer WHERE "
+                + "(citizen_identification_card = ? AND customer_id != ?) OR "
+                + "(phonenumber = ? AND customer_id != ?) OR "
+                + "(email = ? AND customer_id != ?)";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, cid);
@@ -442,6 +442,247 @@ public class CustomerDAO extends DBContext {
             e.printStackTrace();
         }
         return true; // No duplicates found
+    }
+
+    public int getTotalCustomersPage() {
+        String sql = "SELECT COUNT(*) FROM Customer";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+
+        }
+        return 0;
+    }
+
+    public ArrayList<Customer> getCustomerPage(int index) {
+        ArrayList<Customer> listCustomer = new ArrayList<>();
+        String sql = "SELECT [customer_id]\n"
+                + "      ,[fullname]\n"
+                + "      ,[username]\n"
+                + "      ,[password]\n"
+                + "      ,[active]\n"
+                + "      ,[email]\n"
+                + "      ,[dob]\n"
+                + "      ,[gender]\n"
+                + "      ,[phonenumber]\n"
+                + "      ,[balance]\n"
+                + "      ,[citizen_identification_card]\n"
+                + "      ,[address]\n"
+                + "  FROM [dbo].[Customer]\n"
+                + "ORDER BY customer_id\n"
+                + "OFFSET ? ROWS\n"
+                + "FETCH NEXT 5 ROWS ONLY";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, (index - 1) * 5);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Customer customer = new Customer();
+                customer.setCustomerId(rs.getInt("customer_id"));
+                customer.setFullname(rs.getString("fullname"));
+                customer.setUsername(rs.getString("username"));
+                customer.setPassword(rs.getString("password"));
+                customer.setActive(rs.getInt("active"));
+                customer.setEmail(rs.getString("email"));
+                customer.setDob(rs.getDate("dob"));
+                customer.setGender(rs.getInt("gender"));
+                customer.setPhonenumber(rs.getString("phonenumber"));
+                customer.setBalance(rs.getFloat("balance"));
+                customer.setCid(rs.getString("citizen_identification_card"));
+                customer.setAddress(rs.getString("address"));
+                listCustomer.add(customer);
+            }
+        } catch (SQLException e) {
+
+        }
+        return listCustomer;
+    }
+
+    public ArrayList<Customer> advancedSearch(String fullname, String username, int active, String email, int gender, String phonenumber, String cid, String address, int page) {
+
+        ArrayList<Customer> listCustomer = new ArrayList<>();
+        String searchFullName = "%" + fullname.trim().replaceAll("\\s+", "%") + "%";
+        String searchUserName = "%" + username.trim().replaceAll("\\s+", "%") + "%";
+        String searchEmail = "%" + email.trim().replaceAll("\\s+", "%") + "%";
+        String searchPhoneNumber = "%" + phonenumber.trim().replaceAll("\\s+", "%") + "%";
+        String searchCid = "%" + cid.trim().replaceAll("\\s+", "%") + "%";
+        String searchAddress = "%" + address.trim().replaceAll("\\s+", "%") + "%";
+        String sql = "SELECT [customer_id]\n"
+                + "      ,[fullname]\n"
+                + "      ,[username]\n"
+                + "      ,[password]\n"
+                + "      ,[active]\n"
+                + "      ,[email]\n"
+                + "      ,[dob]\n"
+                + "      ,[gender]\n"
+                + "      ,[phonenumber]\n"
+                + "      ,[balance]\n"
+                + "      ,[citizen_identification_card]\n"
+                + "      ,[address]\n"
+                + "  FROM [dbo].[Customer]\n"
+                + "  WHERE 1=1";
+        if (searchFullName != null && !searchFullName.isEmpty()) {
+            sql += " AND fullname like ?";
+        }
+        if (searchUserName != null && !searchUserName.isEmpty()) {
+            sql += " AND username like ?";
+        }
+        if (active != -1) {
+            sql += " AND active = ?";
+        }
+        if (searchEmail != null && !searchEmail.isEmpty()) {
+            sql += " AND email like ?";
+        }
+        if (gender != -1) {
+            sql += " AND gender = ?";
+        }
+        if (searchPhoneNumber != null && !searchPhoneNumber.isEmpty()) {
+            sql += " AND phonenumber like ?";
+        }
+        if (searchCid != null && !searchCid.isEmpty()) {
+            sql += " AND citizen_identification_card like ?";
+        }
+        if (searchAddress != null && !searchAddress.isEmpty()) {
+            sql += " AND address like ?";
+        }
+
+        sql += " ORDER BY customer_id\n"
+                + " OFFSET ? ROWS\n"
+                + " FETCH FIRST 5 ROWS ONLY";
+        try {
+            int index = 1;
+            PreparedStatement ps = connection.prepareStatement(sql);
+            if (searchFullName != null && !searchFullName.isEmpty()) {
+                ps.setString(index++, searchFullName);
+            }
+            if (searchUserName != null && !searchUserName.isEmpty()) {
+                ps.setString(index++, searchUserName);
+            }
+            if (active != -1) {
+                ps.setInt(index++, active);
+            }
+            if (searchEmail != null && !searchEmail.isEmpty()) {
+                ps.setString(index++, searchEmail);
+            }
+            if (gender != -1) {
+                ps.setInt(index++, gender);
+            }
+            if (searchPhoneNumber != null && !searchPhoneNumber.isEmpty()) {
+                ps.setString(index++, searchPhoneNumber);
+            }
+            if (searchCid != null && !searchCid.isEmpty()) {
+                ps.setString(index++, searchCid);
+            }
+            if (searchAddress != null && !searchAddress.isEmpty()) {
+                ps.setString(index++, searchAddress);
+            }
+            ps.setInt(index++, (page - 1) * 5);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                Customer customer = new Customer();
+                customer.setCustomerId(rs.getInt("customer_id"));
+                customer.setFullname(rs.getString("fullname"));
+                customer.setUsername(rs.getString("username"));
+                customer.setPassword(rs.getString("password"));
+                customer.setActive(rs.getInt("active"));
+                customer.setEmail(rs.getString("email"));
+                customer.setDob(rs.getDate("dob"));
+                customer.setGender(rs.getInt("gender"));
+                customer.setPhonenumber(rs.getString("phonenumber"));
+                customer.setBalance(rs.getFloat("balance"));
+                customer.setCid(rs.getString("citizen_identification_card"));
+                customer.setAddress(rs.getString("address"));
+                listCustomer.add(customer);
+            }
+        } catch (SQLException e){
+            System.out.println(e);
+        }
+        return listCustomer;
+    }
+
+    public int getCustomerAdvancedSearchPage(String fullname, String username, int active, String email, int gender, String phonenumber, String cid, String address) {
+
+        String searchFullName = "%" + fullname.trim().replaceAll("\\s+", "%") + "%";
+        String searchUserName = "%" + username.trim().replaceAll("\\s+", "%") + "%";
+        String searchEmail = "%" + email.trim().replaceAll("\\s+", "%") + "%";
+        String searchPhoneNumber = "%" + phonenumber.trim().replaceAll("\\s+", "%") + "%";
+        String searchCid = "%" + cid.trim().replaceAll("\\s+", "%") + "%";
+        String searchAddress = "%" + address.trim().replaceAll("\\s+", "%") + "%";
+        String sql = "SELECT COUNT(*) FROM Customer WHERE 1 = 1";
+        if (searchFullName != null && !searchFullName.isEmpty()) {
+            sql += " AND fullname like ?";
+        }
+        if (searchUserName != null && !searchUserName.isEmpty()) {
+            sql += " AND username like ?";
+        }
+        if (active != -1) {
+            sql += " AND active = ?";
+        }
+        if (searchEmail != null && !searchEmail.isEmpty()) {
+            sql += " AND email like ?";
+        }
+        if (gender != -1) {
+            sql += " AND gender = ?";
+        }
+        if (searchPhoneNumber != null && !searchPhoneNumber.isEmpty()) {
+            sql += " AND phonenumber like ?";
+        }
+        if (searchCid != null && !searchCid.isEmpty()) {
+            sql += " AND citizen_identification_card like ?";
+        }
+        if (searchAddress != null && !searchAddress.isEmpty()) {
+            sql += " AND address like ?";
+        }
+
+        try {
+            int index = 1;
+            PreparedStatement ps = connection.prepareStatement(sql);
+            if (searchFullName != null && !searchFullName.isEmpty()) {
+                ps.setString(index++, searchFullName);
+            }
+            if (searchUserName != null && !searchUserName.isEmpty()) {
+                ps.setString(index++, searchUserName);
+            }
+            if (active != -1) {
+                ps.setInt(index++, active);
+            }
+            if (searchEmail != null && !searchEmail.isEmpty()) {
+                ps.setString(index++, searchEmail);
+            }
+            if (gender != -1) {
+                ps.setInt(index++, gender);
+            }
+            if (searchPhoneNumber != null && !searchPhoneNumber.isEmpty()) {
+                ps.setString(index++, searchPhoneNumber);
+            }
+            if (searchCid != null && !searchCid.isEmpty()) {
+                ps.setString(index++, searchCid);
+            }
+            if (searchAddress != null && !searchAddress.isEmpty()) {
+                ps.setString(index++, searchAddress);
+            }
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return 0;
+    }
+    
+    
+
+    public static void main(String[] args) {
+//        CustomerDAO customerDAO = new CustomerDAO();
+//        ArrayList<Customer> listC = customerDAO.getCustomerPage(1);
+//        for (Customer customer : listC) {
+//            System.out.println(customer.toString());
+//        }
     }
 
     //sent code to email
@@ -544,6 +785,7 @@ public class CustomerDAO extends DBContext {
             Logger.getLogger(CustomerDAO.class.getName()).log(Level.SEVERE, "SQL Error: " + e.getMessage(), e);
         }
     }
+
     public void addAcc(String fullname, String username, String password, String email, Date dob, int gender, String phonenumber, String cic, String address) {
         String sql = "INSERT INTO [dbo].[Customer] "
                 + "([fullname], [username], [password], [email], [dob], [gender], [phonenumber], [citizen_identification_card], [address], [active], [balance]) "
@@ -680,134 +922,6 @@ public class CustomerDAO extends DBContext {
         return 0;
     }
 
-    public static void main(String[] args) {
-//        CustomerDAO cdao = new CustomerDAO();
-//        boolean flag = cdao.checkCustomer("123456789", "0912345678", "ann@gmail.com");
-//        System.out.println("Customer exist: " + !flag);
-//        CustomerDAO cdao = new CustomerDAO();
-//        Customer customer = cdao.getCustomerById(1);
-//        System.out.println(customer.toString());
-//        CustomerDAO cdao = new CustomerDAO();
-//        List<Customer> customers = cdao.getAllCustomers();
-//        for(Customer customer : customers){
-    }
-    //search user
-//Name Phone Email Username
-//    public List<Customer> searchU(String key, int active, int index, int quantity, String sortField, String sortOrder) {
-//        List<Customer> listU = new ArrayList<>();
-//        String sql = "SELECT [customer_id], [fullname], [phonenumber], [address], [email], [username], [password], [dob], [gender], [active] "
-//                + "FROM [dbo].[Customer] c "
-//                + "WHERE (c.fullname LIKE ? OR c.phonenumber LIKE ? OR c.email LIKE ? OR c.username LIKE ?) ";
-//
-//        if (active != -1) {
-//            sql += "AND u.active = ? ";
-//        }
-//
-//        // Add sorting
-//        if (sortField != null && sortOrder != null) {
-//            sql += "ORDER BY c." + sortField + " " + sortOrder + " ";
-//        } else {
-//            sql += "ORDER BY c.customer_id "; // Default sorting
-//        }
-//
-//        sql += "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY;";
-//
-//        try {
-//            PreparedStatement stm = connection.prepareStatement(sql);
-//            stm.setString(1, "%" + key + "%");
-//            stm.setString(2, "%" + key + "%");
-//            stm.setString(3, "%" + key + "%");
-//            stm.setString(4, "%" + key + "%");
-//            int paramIndex = 5;
-//
-//            if (active != -1) {
-//                stm.setInt(paramIndex++, active);
-//            }
-//            int offset = Math.max(0, (index - 1) * quantity); // Ensure offset is non-negative
-//            stm.setInt(paramIndex++, offset);
-//            stm.setInt(paramIndex, quantity);
-//
-//            ResultSet rs = stm.executeQuery();
-//            while (rs.next()) {
-//                listU.add(new Customer(rs.getInt("customer_id"),
-//                        rs.getString("fullname"),
-//                        rs.getString("phonenumber"),
-//                        rs.getString("address"),
-//                        rs.getString("email"),
-//                        rs.getString("username"),
-//                        rs.getString("password"),
-//                        rs.getString("dob"),
-//                        rs.getInt("gender"),
-//                        rs.getInt("rid"),
-//                        rs.getInt("active")));
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace(); // Handle or log the exception properly
-//        }
-//
-//        return listU;
-//    }
-    //search user
-//Name Phone Email Username
-//    public List<Customer> searchU(String key, int rid, int active, int index, int quantity, String sortField, String sortOrder) {
-//        List<Customer> listU = new ArrayList<>();
-//        String sql = "SELECT [uid], [fullName], [phone], [address], [email], [username], [password], [dob], [gender], [rid], [active] "
-//                + "FROM [dbo].[User] u "
-//                + "WHERE (u.fullName LIKE ? OR u.phone LIKE ? OR u.email LIKE ? OR u.username LIKE ?) ";
-//        if (rid != -1) {
-//            sql += "AND u.rid = ? ";
-//        }
-//        if (active != -1) {
-//            sql += "AND u.active = ? ";
-//        }
-//
-//        // Add sorting
-//        if (sortField != null && sortOrder != null) {
-//            sql += "ORDER BY u." + sortField + " " + sortOrder + " ";
-//        } else {
-//            sql += "ORDER BY u.uid "; // Default sorting
-//        }
-//
-//        sql += "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY;";
-//
-//        try {
-//            PreparedStatement stm = connection.prepareStatement(sql);
-//            stm.setString(1, "%" + key + "%");
-//            stm.setString(2, "%" + key + "%");
-//            stm.setString(3, "%" + key + "%");
-//            stm.setString(4, "%" + key + "%");
-//            int paramIndex = 5;
-//            if (rid != -1) {
-//                stm.setInt(paramIndex++, rid);
-//            }
-//            if (active != -1) {
-//                stm.setInt(paramIndex++, active);
-//            }
-//            int offset = Math.max(0, (index - 1) * quantity); // Ensure offset is non-negative
-//            stm.setInt(paramIndex++, offset);
-//            stm.setInt(paramIndex, quantity);
-//
-//            ResultSet rs = stm.executeQuery();
-//            while (rs.next()) {
-//                listU.add(new Customer(rs.getInt("uid"),
-//                        rs.getString("fullName"),
-//                        rs.getString("phone"),
-//                        rs.getString("address"),
-//                        rs.getString("email"),
-//                        rs.getString("username"),
-//                        rs.getString("password"),
-//                        rs.getString("dob"),
-//                        rs.getInt("gender"),
-//                        rs.getInt("rid"),
-//                        rs.getInt("active")));
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace(); // Handle or log the exception properly
-//        }
-//
-//        return listU;
-//    }
-
     public void deleteCustomer(int cid) throws SQLException {
         String sql = "DELETE FROM [dbo].[Customer] WHERE customer_id = ?";
 
@@ -881,7 +995,6 @@ public class CustomerDAO extends DBContext {
         }
         return customer;
     }
-
 
     @Override
     public void insert(Object model) {
