@@ -12,12 +12,14 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.util.List;
+import model.Feedback;
 
 /**
  *
  * @author admin
  */
-public class deleteFeedback extends HttpServlet {
+public class cusFeedback extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -36,10 +38,10 @@ public class deleteFeedback extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet deleteFeedback</title>");
+            out.println("<title>Servlet cusFeedback</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet deleteFeedback at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet cusFeedback at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -63,17 +65,15 @@ public class deleteFeedback extends HttpServlet {
             return;
         }
 
+        String cus_id = request.getParameter("customer_id");
+        int customer_id = Integer.parseInt(cus_id);
         FeedbackDao dao = new FeedbackDao();
 
-        int customer_id = (int) session.getAttribute("customer_id");
+        List<Feedback> list = dao.getCusFeedback(customer_id);
 
-        String ratingStr = request.getParameter("rating");
-        int rating = Integer.parseInt(ratingStr);
-        String content = request.getParameter("content");
-        String submit_at = request.getParameter("submitted_at");
+        request.setAttribute("list", list);
+        request.getRequestDispatcher("feedback/myFeedback.jsp").forward(request, response);
 
-        dao.deleteFeedback(content, submit_at, rating);
-        response.sendRedirect("cusFeedback?customer_id=" + customer_id);
     }
 
     /**

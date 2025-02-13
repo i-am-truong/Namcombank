@@ -60,17 +60,50 @@ public class viewFeedback extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         HttpSession session = request.getSession();
         if (session.getAttribute("customer") == null) {
             response.sendRedirect("login");
             return;
         }
-        
+
         FeedbackDao dao = new FeedbackDao();
         List<Feedback> list = new ArrayList<>();
-        list = dao.getAllFeedback();
-        request.setAttribute("list", list);
+        String ratingStr = request.getParameter("rating");
+        String indexStr = request.getParameter("index");
+
+        int index = 1; // Mặc định trang đầu tiên
+        if (indexStr != null && !indexStr.isEmpty()) {
+            try {
+                index = Integer.parseInt(indexStr);
+            } catch (NumberFormatException e) {
+                index = 1; // Nếu lỗi, quay về trang đầu
+            }
+        }
+
+        int rating = 0; 
+        if (ratingStr != null && !ratingStr.isEmpty()) {
+            try {
+                rating = Integer.parseInt(ratingStr);
+            } catch (NumberFormatException e) {
+                rating = 0;
+            }
+        }
+
+        int count;
+        if (rating > 0) {
+            count = dao.getTotalFeedbackByRating(rating);
+            list = dao.pagingFeedbackByRating(index, rating);
+        } else {
+            count = dao.getTotalFeedback();
+            list = dao.pagingFeedback(index);
+        }
+
+        int endPage = (count % 4 == 0) ? count / 4 : (count / 4) + 1;
+
+        request.setAttribute("listPaging", list);
+        request.setAttribute("endP", endPage);
+        request.setAttribute("selectedRating", rating); // Giữ lại giá trị rating
         request.getRequestDispatcher("feedback/viewFeedback.jsp").forward(request, response);
     }
 
@@ -85,42 +118,55 @@ public class viewFeedback extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         HttpSession session = request.getSession();
         if (session.getAttribute("customer") == null) {
             response.sendRedirect("login");
             return;
         }
-        
-        FeedbackDao dao = new FeedbackDao();
-        List<Feedback> list = new ArrayList<>();
-        String ratingStr = request.getParameter("rating");
 
-        if (ratingStr == null || ratingStr.isEmpty()) {
-            list = dao.getAllFeedback();
-        } else {
+        String indexStr = request.getParameter("index");
+        int index = 1;
+
+        if (indexStr != null && !indexStr.isEmpty()) {
             try {
-                int rating = Integer.parseInt(ratingStr);
-
-                if (rating == 1) {
-                    list = dao.getAllFeedback1();
-                } else if (rating == 2) {
-                    list = dao.getAllFeedback2();
-                } else if (rating == 3) {
-                    list = dao.getAllFeedback3();
-                } else if (rating == 4) {
-                    list = dao.getAllFeedback4();
-                } else if (rating == 5) {
-                    list = dao.getAllFeedback5();
-                } else {
-                    list = dao.getAllFeedback();
-                }
+                index = Integer.parseInt(indexStr);
             } catch (NumberFormatException e) {
-                e.printStackTrace();
-                list = dao.getAllFeedback();
+                index = 1;
             }
         }
-        request.setAttribute("list", list);
+
+        String ratingStr = request.getParameter("rating");
+        int rating = 0;
+        if (ratingStr != null && !ratingStr.isEmpty()) {
+            try {
+                rating = Integer.parseInt(ratingStr);
+            } catch (NumberFormatException e) {
+                rating = 0;
+            }
+        }
+
+        FeedbackDao dao = new FeedbackDao();
+        int count;
+        List<Feedback> listPaging;
+
+        if (rating > 0) {
+            count = dao.getTotalFeedbackByRating(rating);
+            listPaging = dao.pagingFeedbackByRating(index, rating);
+        } else {
+            count = dao.getTotalFeedback();
+            listPaging = dao.pagingFeedback(index);
+        }
+
+        int endPage = count / 4;
+        if (count % 4 != 0) {
+            endPage++;
+        }
+
+        request.setAttribute("listPaging", listPaging);
+        request.setAttribute("endP", endPage);
+        request.setAttribute("selectedRating", rating);
+        request.setAttribute("currentPage", index);
         request.getRequestDispatcher("feedback/viewFeedback.jsp").forward(request, response);
     }
 

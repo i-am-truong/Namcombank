@@ -86,20 +86,30 @@
                 <th>Rating</th>
                 <th>Content</th>
                 <th>Submitted At</th>
-                
+
             </tr>
-            <c:forEach var="feedback" items="${list}">
+            <c:forEach var="feedback" items="${listPaging}">
                 <tr>
                     <!--<td>$/{feedback.customer_id}</td>-->
                     <td>${feedback.rating} Sao</td>
                     <td>${feedback.content}</td>
                     <td>${feedback.submitted_at}</td>
-                    
+
                 </tr>
             </c:forEach>
         </table>
 
-
+        <c:forEach begin="1" end="${endP}" var="i">
+            <a href="viewFeedback?index=${i}&rating=${selectedRating}">${i}</a>
+        </c:forEach>
 
     </body>
+    <div style="position: absolute; top: 20px; right: 20px;">
+        <button onclick="window.location.href = 'cusFeedback?customer_id=${sessionScope.customer_id}'" 
+                style="padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">
+            Your Feedback
+        </button>
+    </div>
+
+
 </html>

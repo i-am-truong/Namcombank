@@ -78,10 +78,6 @@ class EmailUtil {
         return Integer.parseInt(otp.toString());
     }
     public static void main(String[] args) throws MessagingException {
-        
-             CustomerDAO ud = new CustomerDAO();
-        String code = ud.getCode();
-        boolean test = ud.verifyCode("duongkoi0504@gmail.com", code);
-        
+        sendOTPMail("duongkoi0504@gmail.com");
     }
 }
