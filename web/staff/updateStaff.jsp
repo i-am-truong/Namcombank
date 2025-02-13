@@ -12,7 +12,7 @@
     <body>
         <div class="container mt-5">
             <h2 class="text-center text-success">Edit Staff Info</h2>
-            <a href="manageStaff" class="btn btn-primary mb-3">Back to Staff List</a>
+            <a href="staffFilter" class="btn btn-primary mb-3">Back to Staff List</a>
 
             <form id="updateStaff" action="updateStaff" method="POST">
 
