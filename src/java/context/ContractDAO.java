@@ -17,10 +17,10 @@ public class ContractDAO extends DBContext<Contract> {
 
     @Override
     public void insert(Contract contract) {
-        String sql = "INSERT INTO Contracts (customer_name, type, amount, status) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO Contracts (customer_id, loan_id, amount, status) VALUES (?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, contract.getCustomerName());
-            stmt.setString(2, contract.getType());
+            stmt.setString(1, contract.getCustomerName()); 
+            stmt.setString(2, contract.getLoanName()); 
             stmt.setDouble(3, contract.getAmount());
             stmt.setString(4, contract.getStatus());
             stmt.executeUpdate();
@@ -31,10 +31,10 @@ public class ContractDAO extends DBContext<Contract> {
 
     @Override
     public void update(Contract contract) {
-        String sql = "UPDATE Contracts SET customer_name = ?, type = ?, amount = ?, status = ? WHERE id = ?";
+        String sql = "UPDATE Contracts SET customer_id = ?, loan_id = ?, amount = ?, status = ? WHERE id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, contract.getCustomerName());
-            stmt.setString(2, contract.getType());
+            stmt.setString(2, contract.getLoanName());
             stmt.setDouble(3, contract.getAmount());
             stmt.setString(4, contract.getStatus());
             stmt.setInt(5, contract.getId());
@@ -58,13 +58,20 @@ public class ContractDAO extends DBContext<Contract> {
     @Override
     public ArrayList<Contract> list() {
         ArrayList<Contract> contracts = new ArrayList<>();
-        String sql = "SELECT * FROM Contracts";
+        String sql = """
+        SELECT c.id, cu.name AS customer_name, l.loan_name, lp.package_name, c.amount, c.status
+        FROM Contracts c
+        JOIN Customers cu ON c.customer_id = cu.id
+        JOIN Loans l ON c.loan_id = l.id
+        JOIN LoanPackages lp ON l.package_id = lp.id""";
+
         try (PreparedStatement stmt = connection.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 contracts.add(new Contract(
                         rs.getInt("id"),
                         rs.getString("customer_name"),
-                        rs.getString("type"),
+                        rs.getString("loan_name"),
+                        rs.getString("package_name"),
                         rs.getDouble("amount"),
                         rs.getString("status")
                 ));
@@ -77,7 +84,14 @@ public class ContractDAO extends DBContext<Contract> {
 
     @Override
     public Contract get(int id) {
-        String sql = "SELECT * FROM Contracts WHERE id = ?";
+        String sql = """
+        SELECT c.id, cu.name AS customer_name, l.loan_name, lp.package_name, c.amount, c.status
+        FROM Contracts c
+        JOIN Customers cu ON c.customer_id = cu.id
+        JOIN Loans l ON c.loan_id = l.id
+        JOIN LoanPackages lp ON l.package_id = lp.id
+        WHERE c.id = ?""";
+
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -85,7 +99,8 @@ public class ContractDAO extends DBContext<Contract> {
                     return new Contract(
                             rs.getInt("id"),
                             rs.getString("customer_name"),
-                            rs.getString("type"),
+                            rs.getString("loan_name"),
+                            rs.getString("package_name"),
                             rs.getDouble("amount"),
                             rs.getString("status")
                     );
@@ -99,7 +114,13 @@ public class ContractDAO extends DBContext<Contract> {
 
     public List<Contract> getContractsByStatus(String status) {
         List<Contract> contracts = new ArrayList<>();
-        String sql = "SELECT * FROM Contracts WHERE status = ?";
+        String sql = """
+        SELECT c.id, cu.name AS customer_name, l.loan_name, lp.package_name, c.amount, c.status
+        FROM Contracts c
+        JOIN Customers cu ON c.customer_id = cu.id
+        JOIN Loans l ON c.loan_id = l.id
+        JOIN LoanPackages lp ON l.package_id = lp.id
+        WHERE c.status = ?""";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, status);
@@ -109,7 +130,8 @@ public class ContractDAO extends DBContext<Contract> {
                 contracts.add(new Contract(
                         rs.getInt("id"),
                         rs.getString("customer_name"),
-                        rs.getString("type"),
+                        rs.getString("loan_name"),
+                        rs.getString("package_name"),
                         rs.getDouble("amount"),
                         rs.getString("status")
                 ));
@@ -120,4 +142,47 @@ public class ContractDAO extends DBContext<Contract> {
         return contracts;
     }
 
+    public List<Contract> filterContracts(String status, String search, String sort) {
+        List<Contract> contracts = new ArrayList<>();
+        String sql = """
+        SELECT c.id, cu.name AS customer_name, l.loan_name, lp.package_name, c.amount, c.status
+        FROM Contracts c
+        JOIN Customers cu ON c.customer_id = cu.id
+        JOIN Loans l ON c.loan_id = l.id
+        JOIN LoanPackages lp ON l.package_id = lp.id
+        WHERE 1=1""";
+
+        if (status != null && !status.equals("all")) {
+            sql += " AND c.status = ?";
+        }
+        if (search != null && !search.trim().isEmpty()) {
+            sql += " AND cu.name LIKE ?";
+        }
+        sql += " ORDER BY c.amount " + ("desc".equals(sort) ? "DESC" : "ASC");
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            int index = 1;
+            if (status != null && !status.equals("all")) {
+                stmt.setString(index++, status);
+            }
+            if (search != null && !search.trim().isEmpty()) {
+                stmt.setString(index++, "%" + search + "%");
+            }
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                contracts.add(new Contract(
+                        rs.getInt("id"),
+                        rs.getString("customer_name"),
+                        rs.getString("loan_name"),
+                        rs.getString("package_name"),
+                        rs.getDouble("amount"),
+                        rs.getString("status")
+                ));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return contracts;
+    }
 }
