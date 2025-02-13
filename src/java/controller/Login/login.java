@@ -6,13 +6,16 @@ package controller.Login;
 
 import context.CustomerDAO;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.io.PrintWriter;
 import model.Customer;
 
 /**
@@ -20,6 +23,12 @@ import model.Customer;
  * @author lenovo
  */
 public class login extends HttpServlet {
+
+    private static final int MAX_ATTEMPTS = 3; // Số lần nhập sai tối đa
+    private static final int LOCK_TIME_SECONDS = 60; // Thời gian khóa tài khoản (1 phút)
+
+    // Lưu danh sách tài khoản bị khóa tạm thời (có thể thay thế bằng database)
+    private static final Map<String, Instant> lockedAccounts = new HashMap<>();
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -89,41 +98,70 @@ public class login extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String param_user = request.getParameter("username");//lấy username và password từ form
+        String param_user = request.getParameter("username");
         String param_pass = request.getParameter("password");
-        String remember = request.getParameter("rem");       // ktra checkbox remember me
+        String remember = request.getParameter("rem");
         CustomerDAO cdao = new CustomerDAO();
-        String pass = cdao.toSHA1(param_pass); // mã hóa mk bằng SHA-1
+        String pass = cdao.toSHA1(param_pass);
         HttpSession session = request.getSession();
-        Customer customer = cdao.checkUser(param_user, pass); // check ttin người dùng
+
+        // Kiểm tra nếu tài khoản đang bị khóa
+        if (lockedAccounts.containsKey(param_user)) {
+            Instant lockTime = lockedAccounts.get(param_user);
+            Instant now = Instant.now();
+            if (now.isBefore(lockTime.plusSeconds(LOCK_TIME_SECONDS))) {
+                request.setAttribute("err", "Your account is locked. Please try again later.");
+                request.getRequestDispatcher("login/login.jsp").forward(request, response);
+                return;
+            } else {
+                lockedAccounts.remove(param_user); // Hết thời gian khóa thì mở lại
+            }
+        }
+
+        Customer customer = cdao.checkUser(param_user, pass);
         if (customer == null) {
-            request.setAttribute("err", "Invalid username or password!");
+            // Tăng số lần nhập sai
+            Integer attempts = (Integer) session.getAttribute("loginAttempts");
+            attempts = (attempts == null) ? 1 : attempts + 1;
+            session.setAttribute("loginAttempts", attempts);
+
+            if (attempts >= MAX_ATTEMPTS) {
+                lockedAccounts.put(param_user, Instant.now());
+                request.setAttribute("err", "Too many failed attempts. Your account is locked for 1 minute.");
+            } else {
+                request.setAttribute("err", "Invalid username or password. Attempts left: " + (MAX_ATTEMPTS - attempts));
+            }
             request.getRequestDispatcher("login/login.jsp").forward(request, response);
             return;
-        } else if (customer.getActive() == 0) {
+        }
+
+        // Nếu đăng nhập thành công, reset số lần nhập sai
+        session.removeAttribute("loginAttempts");
+
+        if (customer.getActive() == 0) {
             request.setAttribute("err", "Your account has been blocked!");
             request.getRequestDispatcher("login/login.jsp").forward(request, response);
             return;
-        } else {
-            double balance = cdao.getBalanceByCId(customer);
-            session.setAttribute("balance", balance); // lưu số dư tài khoảng vào session
-            session.setAttribute("customer", customer); // lưu customer vào session để tái sử dụng
-            session.setAttribute("customer_id", cdao.getCustomerId(param_user, pass));
-            
-            Cookie username = new Cookie("username", param_user);
-            Cookie password = new Cookie("password", param_pass);
-            Cookie remem = new Cookie("rem", remember);
-            int cookieAge = (remember != null) ? (24 * 60 * 60 * 7) : 0; // lưu Cookie trong vòng 7 ngày
-            username.setMaxAge(cookieAge);
-            password.setMaxAge(cookieAge);
-            remem.setMaxAge(cookieAge);
-
-            response.addCookie(username);
-            response.addCookie(password);
-            response.addCookie(remem);
-
-            response.sendRedirect("Home");
         }
+
+        double balance = cdao.getBalanceByCId(customer);
+        session.setAttribute("balance", balance);
+        session.setAttribute("customer", customer);
+        session.setAttribute("customer_id", cdao.getCustomerId(param_user, pass));
+
+        Cookie username = new Cookie("username", param_user);
+        Cookie password = new Cookie("password", param_pass);
+        Cookie remem = new Cookie("rem", remember);
+        int cookieAge = (remember != null) ? (24 * 60 * 60 * 7) : 0;
+        username.setMaxAge(cookieAge);
+        password.setMaxAge(cookieAge);
+        remem.setMaxAge(cookieAge);
+
+        response.addCookie(username);
+        response.addCookie(password);
+        response.addCookie(remem);
+
+        response.sendRedirect("Home");
     }
 
     /**
