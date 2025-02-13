@@ -234,6 +234,90 @@ public class FeedbackDao extends DBContext {
         return list;
     }
 
+    public List<Feedback> getCusFeedback(int customer_id) {
+        List<Feedback> list = new ArrayList<>();
+        String sql = "select * from Feedback where customer_id=?";
+        try (PreparedStatement stm = connection.prepareStatement(sql)) {
+            stm.setInt(1, customer_id);
+            try (ResultSet rs = stm.executeQuery()) {
+                while (rs.next()) {
+                    Feedback feedback = new Feedback();
+                    feedback.setCustomer_id(rs.getInt("customer_id"));
+                    feedback.setContent(rs.getString("content"));
+                    feedback.setSubmitted_at(rs.getString("submitted_at"));
+                    feedback.setRating(rs.getInt("rating"));
+                    list.add(feedback);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public void deleteFeedback(String content, String submitted_at, int rating) {
+
+        String sql = "delete from feedback WHERE  content=? and submitted_at=? and rating=?";
+
+        try (PreparedStatement stm = connection.prepareStatement(sql)) {
+            stm.setString(1, content);
+            stm.setString(2, submitted_at);
+            stm.setInt(3, rating);
+            stm.executeQuery();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public int getFeedbackId(String content, String submitted_at, int rating) {
+        String sql = "select feedback_id from Feedback where content=? and submitted_at=? and rating=?";
+
+        try (PreparedStatement stm = connection.prepareStatement(sql)) {
+            stm.setString(1, content);
+            stm.setString(2, submitted_at);
+            stm.setInt(3, rating);
+            stm.executeQuery();
+            try (ResultSet rs = stm.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("feedback_id");
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    public void updateFeedback(String content, String submitted_at, int rating, int feedback_id) {
+        String sql = "UPDATE Feedback\n"
+                + "SET\n"
+                + "content = ?,\n"
+                + "    [submitted_at] = ?,\n"
+                + "    [rating] = ?\n"
+                + "WHERE \n"
+                + "    [feedback_id] = ?\n";
+
+        try (PreparedStatement stm = connection.prepareStatement(sql)) {
+
+            stm.setString(1, content);
+            stm.setString(2, submitted_at);
+            stm.setInt(3, rating);
+            stm.setInt(4, feedback_id);
+            try (ResultSet rs = stm.executeQuery()) {
+                if (rs.next()) {
+                    return;
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
     public static void main(String[] args) {
 
         FeedbackDao dao = new FeedbackDao();

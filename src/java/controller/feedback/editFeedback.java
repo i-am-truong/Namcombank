@@ -17,7 +17,7 @@ import jakarta.servlet.http.HttpSession;
  *
  * @author admin
  */
-public class deleteFeedback extends HttpServlet {
+public class editFeedback extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -36,10 +36,10 @@ public class deleteFeedback extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet deleteFeedback</title>");
+            out.println("<title>Servlet editFeedback</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet deleteFeedback at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet editFeedback at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -63,17 +63,19 @@ public class deleteFeedback extends HttpServlet {
             return;
         }
 
-        FeedbackDao dao = new FeedbackDao();
-
-        int customer_id = (int) session.getAttribute("customer_id");
-
+        String content = request.getParameter("content");
+        String submitted_at = request.getParameter("submitted_at");
         String ratingStr = request.getParameter("rating");
         int rating = Integer.parseInt(ratingStr);
-        String content = request.getParameter("content");
-        String submit_at = request.getParameter("submitted_at");
 
-        dao.deleteFeedback(content, submit_at, rating);
-        response.sendRedirect("cusFeedback?customer_id=" + customer_id);
+        FeedbackDao dao = new FeedbackDao();
+        int feedback_id = dao.getFeedbackId(content, submitted_at, rating);
+        request.setAttribute("content", content);
+        request.setAttribute("feedback_id", feedback_id);
+        request.setAttribute("submitted_at", submitted_at);
+        request.setAttribute("rating", rating);
+        request.getRequestDispatcher("feedback/editFeedback.jsp").forward(request, response);
+
     }
 
     /**
@@ -87,7 +89,22 @@ public class deleteFeedback extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        HttpSession session = request.getSession();
+        if (session.getAttribute("customer") == null) {
+            response.sendRedirect("login");
+            return;
+        }
+        FeedbackDao dao = new FeedbackDao();
+        int customer_id = (int) session.getAttribute("customer_id");
+        String content = request.getParameter("content");
+        String submitted_at = request.getParameter("submitted_at");
+        String ratingStr = request.getParameter("rating");
+        int rating = Integer.parseInt(ratingStr);
+
+        String feedbackStr = request.getParameter("feedback_id");
+        int feedback_id = Integer.parseInt(feedbackStr);
+        dao.updateFeedback(content, submitted_at, rating, feedback_id);
+        response.sendRedirect("viewFeedback?customer_id=" + customer_id);
     }
 
     /**

@@ -113,6 +113,10 @@
         <servlet-class>controller.feedback.viewFeedback</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>deleteFeedback</servlet-name>
+        <servlet-class>controller.feedback.deleteFeedback</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>StaffAddController</servlet-name>
         <servlet-class>controller.Staff.StaffAddController</servlet-class>
     </servlet>
@@ -208,6 +212,14 @@
         <servlet-name>StaffUpdateController</servlet-name>
         <servlet-class>controller.Staff.StaffUpdateController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>cusFeedback</servlet-name>
+        <servlet-class>controller.feedback.cusFeedback</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>editFeedback</servlet-name>
+        <servlet-class>controller.feedback.editFeedback</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>viewCustomerDetail</servlet-name>
         <url-pattern>/viewCustomerDetail</url-pattern>
@@ -223,6 +235,10 @@
     <servlet-mapping>
         <servlet-name>EditContractController</servlet-name>
         <url-pattern>/editContract</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>deleteFeedback</servlet-name>
+        <url-pattern>/deleteFeedback</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ListContractsController</servlet-name>
@@ -411,6 +427,14 @@
     <servlet-mapping>
         <servlet-name>StaffUpdateController</servlet-name>
         <url-pattern>/updateStaff</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>cusFeedback</servlet-name>
+        <url-pattern>/cusFeedback</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>editFeedback</servlet-name>
+        <url-pattern>/editFeedback</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
