@@ -69,7 +69,6 @@
             }
 
         </style>
-
     </head>
 
     <body id="page-top">
@@ -144,6 +143,7 @@
                         "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Tất cả"]]
                     });
                 }
+
             });
 
             function checkBan(sid) {
@@ -167,7 +167,9 @@
 
         <!-- Bootstrap core JavaScript -->
         <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
-        <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
 
 
         <!-- Core plugin JavaScript -->
@@ -185,7 +187,7 @@
         <!-- Page level custom scripts -->
         <script src="adminassets/js/demo/datatables-demo.js"></script>
 
-        
+
     </body>
 
 </html>
