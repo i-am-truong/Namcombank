@@ -88,7 +88,7 @@ public class userProfile extends HttpServlet {
             return; // Ensure the method returns to avoid further execution
         } else {
 
-            String errorPhoneNumber = "Please enter the first letter is 0!";
+            String errorPhoneNumber = "Please enter the first letter is 09 or 03!";
 
             // lấy dữ liệu từ form
             String fullName = formatName(request.getParameter("fullName"));
@@ -146,7 +146,7 @@ public class userProfile extends HttpServlet {
     }
 
     private boolean formatPhoneNumber(String phone) {
-        return phone != null && phone.startsWith("0");
+        return phone != null && phone.startsWith("09") || phone.startsWith("03");
     }
 
 }
