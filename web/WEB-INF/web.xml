@@ -220,6 +220,14 @@
         <servlet-name>editFeedback</servlet-name>
         <servlet-class>controller.feedback.editFeedback</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>manageCustomerVer2</servlet-name>
+        <servlet-class>controller.customer.manageCustomerVer2</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AdvanceSearchCustomer</servlet-name>
+        <servlet-class>controller.customer.AdvanceSearchCustomer</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>viewCustomerDetail</servlet-name>
         <url-pattern>/viewCustomerDetail</url-pattern>
@@ -435,6 +443,14 @@
     <servlet-mapping>
         <servlet-name>editFeedback</servlet-name>
         <url-pattern>/editFeedback</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>manageCustomerVer2</servlet-name>
+        <url-pattern>/manageCustomerVer2</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AdvanceSearchCustomer</servlet-name>
+        <url-pattern>/manageCustomerVer2/Search</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

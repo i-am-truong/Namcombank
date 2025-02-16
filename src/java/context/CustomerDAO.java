@@ -23,7 +23,9 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Properties;
 import java.util.Random;
-import java.sql.Date;
+
+import model.Active;
+import model.Gender;
 
 /**
  *
@@ -582,7 +584,7 @@ public class CustomerDAO extends DBContext {
             }
             ps.setInt(index++, (page - 1) * 5);
             ResultSet rs = ps.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 Customer customer = new Customer();
                 customer.setCustomerId(rs.getInt("customer_id"));
                 customer.setFullname(rs.getString("fullname"));
@@ -598,7 +600,7 @@ public class CustomerDAO extends DBContext {
                 customer.setAddress(rs.getString("address"));
                 listCustomer.add(customer);
             }
-        } catch (SQLException e){
+        } catch (SQLException e) {
             System.out.println(e);
         }
         return listCustomer;
@@ -673,16 +675,6 @@ public class CustomerDAO extends DBContext {
             System.out.println(e);
         }
         return 0;
-    }
-    
-    
-
-    public static void main(String[] args) {
-//        CustomerDAO customerDAO = new CustomerDAO();
-//        ArrayList<Customer> listC = customerDAO.getCustomerPage(1);
-//        for (Customer customer : listC) {
-//            System.out.println(customer.toString());
-//        }
     }
 
     //sent code to email
@@ -996,6 +988,252 @@ public class CustomerDAO extends DBContext {
         return customer;
     }
 
+    public int getTotalSearchCustomers(String keyword) {
+        String query = "SELECT COUNT(*) FROM Customer "
+                + "WHERE fullname LIKE ? OR "
+                + "username LIKE ? OR "
+                + "email LIKE ? OR "
+                + "address LIKE ?";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            String searchKeyword = "%" + keyword + "%";
+
+            for (int i = 1; i <= 4; i++) {
+                preparedStatement.setString(i, searchKeyword);
+            }
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public List<Customer> getCustomersByPage(int page, int pageSize) {
+        List<Customer> customers = new ArrayList<>();
+        String query = "SELECT customer_id, fullname, username, email, "
+                + "password, dob, gender, balance, address "
+                + "FROM Customer "
+                + "ORDER BY customer_id "
+                + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            int offset = (page - 1) * pageSize;
+            statement.setInt(1, offset);
+            statement.setInt(2, pageSize);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    Customer customer = new Customer();
+                    customer.setCustomerId(resultSet.getInt("customer_id"));
+                    customer.setFullname(resultSet.getString("fullname"));
+                    customer.setUsername(resultSet.getString("username"));
+                    customer.setEmail(resultSet.getString("email"));
+                    customer.setPassword(resultSet.getString("password"));
+                    customer.setDob(resultSet.getDate("dob"));
+                    customer.setGender(resultSet.getInt("gender"));
+                    customer.setBalance(resultSet.getFloat("balance"));
+                    customer.setAddress(resultSet.getString("address"));
+                    customers.add(customer);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return customers;
+    }
+
+    public List<Customer> getCustomersByPageSorted(int page, int pageSize, String sort, String order) {
+        String query = "SELECT customer_id, fullname, username, password, "
+                + "active, email, dob, gender, phonenumber, "
+                + "balance, citizen_identification_card, address "
+                + "FROM Customer "
+                + "ORDER BY " + sort + " " + order + " "
+                + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+
+        List<Customer> customers = new ArrayList<>();
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, (page - 1) * pageSize);
+            ps.setInt(2, pageSize);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Customer customer = new Customer(
+                        rs.getInt("customer_id"),
+                        rs.getString("fullname"),
+                        rs.getString("username"),
+                        rs.getString("password"),
+                        rs.getInt("active"),
+                        rs.getString("email"),
+                        rs.getDate("dob"),
+                        rs.getInt("gender"),
+                        rs.getString("phonenumber"),
+                        rs.getFloat("balance"),
+                        rs.getString("citizen_identification_card"),
+                        rs.getString("address")
+                );
+                customers.add(customer);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return customers;
+    }
+
+    public List<Customer> searchCustomersByPageSorted(String search, int page, int pageSize, String sort, String order) {
+        String query = "SELECT customer_id, fullname, username, password, active, email, dob, gender, phonenumber, balance, citizen_identification_card, address "
+                + "FROM Customer "
+                + "WHERE fullname LIKE ? OR email LIKE ? OR username LIKE ? OR address LIKE ? "
+                + "ORDER BY " + sort + " " + order + " "
+                + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+
+        List<Customer> customers = new ArrayList<>();
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            String searchKeyword = "%" + search + "%";
+            for (int i = 1; i <= 4; i++) {
+                ps.setString(i, searchKeyword);
+            }
+            ps.setInt(5, (page - 1) * pageSize);
+            ps.setInt(6, pageSize);
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Customer customer = new Customer(
+                        rs.getInt("customer_id"),
+                        rs.getString("fullname"),
+                        rs.getString("username"),
+                        rs.getString("password"),
+                        rs.getInt("active"),
+                        rs.getString("email"),
+                        rs.getDate("dob"),
+                        rs.getInt("gender"),
+                        rs.getString("phonenumber"),
+                        rs.getFloat("balance"),
+                        rs.getString("citizen_identification_card"),
+                        rs.getString("address")
+                );
+                customers.add(customer);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return customers;
+    }
+
+    public List<Customer> searchCustomersByPage(String paraSearch, int page, Integer pageSize) {
+        List<Customer> customers = new ArrayList<>();
+        String query = "SELECT customer_id, fullname, username, password, active, email, dob, gender, phonenumber, balance, citizen_identification_card, address "
+                + "FROM Customer "
+                + "WHERE fullname LIKE ? OR email LIKE ? OR username LIKE ? OR address LIKE ? "
+                + "ORDER BY customer_id "
+                + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            String searchKeyword = "%" + paraSearch + "%";
+            for (int i = 1; i <= 4; i++) {
+                ps.setString(i, searchKeyword);
+            }
+            ps.setInt(5, (page - 1) * pageSize);
+            ps.setInt(6, pageSize);
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Customer customer = new Customer(
+                        rs.getInt("customer_id"),
+                        rs.getString("fullname"),
+                        rs.getString("username"),
+                        rs.getString("password"),
+                        rs.getInt("active"),
+                        rs.getString("email"),
+                        rs.getDate("dob"),
+                        rs.getInt("gender"),
+                        rs.getString("phonenumber"),
+                        rs.getFloat("balance"),
+                        rs.getString("citizen_identification_card"),
+                        rs.getString("address")
+                );
+                customers.add(customer);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return customers;
+    }
+
+    public Integer getGenderID(String gendername) {
+        String query = "SELECT [gender] FROM [Gender] WHERE [gendername] = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, gendername);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("gender");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public Integer getActiveID(String activename) {
+        String query = "SELECT [active] FROM [Active] WHERE [activename] = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, activename);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("active");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /*
+     * Still error, fixing
+     */
+    public int getTotalSearchCustomersByFields(String paraSearchUserName, String paraSearchFullName, Integer genderID, Integer activeID) {
+        StringBuilder query = new StringBuilder("SELECT COUNT(*) FROM Customer c "
+                + "JOIN Gender g ON c.gender = g.gender "
+                + "JOIN Active a ON c.active = a.active "
+                + "WHERE c.username LIKE ? AND "
+                + "c.fullname LIKE ? ");
+
+        List<Object> parameters = new ArrayList<>();
+        parameters.add("%" + paraSearchUserName + "%");
+        parameters.add("%" + paraSearchFullName + "%");
+
+        // Add gender condition if specified
+        if (genderID != null) {
+            query.append(" AND c.gender = ?");
+            parameters.add(genderID);
+        }
+
+        // Add active status condition if specified
+        if (activeID != null) {
+            query.append(" AND c.active = ?");
+            parameters.add(activeID);
+        }
+
+        try (PreparedStatement ps = connection.prepareStatement(query.toString())) {
+            // Set parameters
+            for (int i = 0; i < parameters.size(); i++) {
+                ps.setObject(i + 1, parameters.get(i));
+            }
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1); // Get the count value
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
     @Override
     public void insert(Object model) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
@@ -1047,6 +1285,222 @@ public class CustomerDAO extends DBContext {
 
     String getEmail() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    /*
+     * Still error, fixing
+     */
+    public List<Customer> searchCustomersByFieldsPageSorted(String paraSearchUserName, String paraSearchFullName, int page, Integer pageSize, String sortSQL, String order, Integer genderID, Integer activeID) {
+        StringBuilder query = new StringBuilder("SELECT c.customer_id, c.fullname, c.username, c.password, "
+                + "c.email, c.dob, c.phonenumber, c.balance, c.citizen_identification_card, "
+                + "c.address, g.gendername, a.activename "
+                + "FROM Customer c "
+                + "JOIN Gender g ON c.gender = g.gender "
+                + "JOIN Active a ON c.active = a.active "
+                + "WHERE c.username LIKE ? AND "
+                + "c.fullname LIKE ? ");
+
+        List<Object> parameters = new ArrayList<>();
+        parameters.add("%" + paraSearchUserName + "%");
+        parameters.add("%" + paraSearchFullName + "%");
+
+        // Add gender condition if specified
+        if (genderID != null) {
+            query.append(" AND c.gender = ?");
+            parameters.add(genderID);
+        }
+
+        // Add active status condition if specified
+        if (activeID != null) {
+            query.append(" AND c.active = ?");
+            parameters.add(activeID);
+        }
+
+        // Add sorting and pagination
+        query.append(" ORDER BY ").append(sortSQL).append(" ").append(order)
+                .append(" OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+        parameters.add((page - 1) * pageSize);
+        parameters.add(pageSize);
+
+        List<Customer> customers = new ArrayList<>();
+        try (PreparedStatement ps = connection.prepareStatement(query.toString())) {
+            // Set parameters
+            for (int i = 0; i < parameters.size(); i++) {
+                ps.setObject(i + 1, parameters.get(i));
+            }
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Customer customer = new Customer(
+                        rs.getInt("customer_id"),
+                        rs.getString("fullname"),
+                        rs.getString("username"),
+                        rs.getString("password"),
+                        rs.getInt("active"),
+                        rs.getString("email"),
+                        rs.getDate("dob"),
+                        rs.getInt("gender"),
+                        rs.getString("phonenumber"),
+                        rs.getFloat("balance"),
+                        rs.getString("citizen_identification_card"),
+                        rs.getString("address")
+                );
+                customers.add(customer);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return customers;
+    }
+
+    /*
+     * Still error, fixing
+     */
+    public List<Customer> searchCustomersByFieldsPage(String paraSearchUserName, String paraSearchFullName, int page, Integer pageSize, Integer genderID, Integer activeID) {
+        StringBuilder query = new StringBuilder("SELECT c.customer_id, c.fullname, c.username, "
+                + "c.password, c.active, c.email, c.dob, c.gender, "
+                + "c.phonenumber, c.balance, c.citizen_identification_card, "
+                + "c.address "
+                + "FROM Customer c "
+                + "JOIN Gender g ON c.gender = g.gender "
+                + "JOIN Active a ON c.active = a.active "
+                + "WHERE c.username LIKE ? AND "
+                + "c.fullname LIKE ? ");
+
+        List<Object> parameters = new ArrayList<>();
+        parameters.add("%" + paraSearchUserName + "%");
+        parameters.add("%" + paraSearchFullName + "%");
+
+        // Add gender condition if specified
+        if (genderID != null) {
+            query.append(" AND c.gender = ?");
+            parameters.add(genderID);
+        }
+
+        // Add active status condition if specified
+        if (activeID != null) {
+            query.append(" AND c.active = ?");
+            parameters.add(activeID);
+        }
+
+        // Add pagination
+        query.append(" ORDER BY c.customer_id OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+        parameters.add((page - 1) * pageSize);
+        parameters.add(pageSize);
+
+        List<Customer> customers = new ArrayList<>();
+        try (PreparedStatement ps = connection.prepareStatement(query.toString())) {
+            // Set parameters
+            for (int i = 0; i < parameters.size(); i++) {
+                ps.setObject(i + 1, parameters.get(i));
+            }
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Customer customer = new Customer(
+                        rs.getInt("customer_id"),
+                        rs.getString("fullname"),
+                        rs.getString("username"),
+                        rs.getString("password"),
+                        rs.getInt("active"),
+                        rs.getString("email"),
+                        rs.getDate("dob"),
+                        rs.getInt("gender"),
+                        rs.getString("phonenumber"),
+                        rs.getFloat("balance"),
+                        rs.getString("citizen_identification_card"),
+                        rs.getString("address")
+                );
+                customers.add(customer);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return customers;
+    }
+
+    public List<Gender> getListGender() {
+        List<Gender> genderList = new ArrayList<>();
+        String query = "SELECT [gender], [gendername] FROM [Gender]";
+
+        try (PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet rs = statement.executeQuery()) {
+            while (rs.next()) {
+                Gender gender = new Gender(
+                    rs.getInt("gender"),
+                    rs.getString("gendername")
+                );
+                genderList.add(gender);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return genderList;
+    }
+
+    public List<Active> getListActive() {
+        List<Active> activeList = new ArrayList<>();
+        String query = "SELECT [active], [activename] FROM [Active]";
+
+        try (PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet rs = statement.executeQuery()) {
+            while (rs.next()) {
+                Active active = new Active(
+                    rs.getInt("active"),
+                    rs.getString("activename")
+                );
+                activeList.add(active);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return activeList;
+    }
+
+    public static void main(String[] args) {
+    //    CustomerDAO cdao = new CustomerDAO();
+    //    List<Gender> genders = cdao.getListGender();
+    //     for (Gender gender : genders) {
+    //         System.out.println(gender.getGendername());
+    // //     }
+    // String username = "annv";
+    // String fullname = "Nguyen Van An";
+    // int page = 1;
+    // int pageSize = 10;
+    // String sortField = "fullname";
+    // String sortOrder = "ASC";
+    // Integer genderID = 1; // 1 for Male
+    // Integer activeID = 1; // 1 for Active
+
+    // try {
+    //     // Test Case 1: Normal search with all parameters
+    //     List<Customer> results1 = cdao.searchCustomersByFieldsPageSorted(
+    //         username, fullname, page, pageSize, sortField, sortOrder, genderID, activeID
+    //     );
+    //     System.out.println("Test Case 1 - Search with all parameters:");
+    //     printResults(results1);
+    // } catch (Exception e) {
+    //     System.err.println("Error during testing: " + e.getMessage());
+    //     e.printStackTrace();
+    // }
+    // }
+
+    // private static void printResults(List<Customer> customers) {
+    //     if (customers.isEmpty()) {
+    //         System.out.println("No customers found");
+    //         return;
+    //     }
+
+    //     System.out.println("Found " + customers.size() + " customers:");
+    //     for (Customer c : customers) {
+    //         System.out.printf("ID: %d, Name: %s, Username: %s, Gender: %d, Active: %d%n",
+    //             c.getCustomerId(),
+    //             c.getFullname(),
+    //             c.getUsername(),
+    //             c.getGender(),
+    //             c.getActive()
+    //         );
+    //     }
     }
 
 }
