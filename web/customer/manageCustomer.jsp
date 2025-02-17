@@ -19,8 +19,10 @@
     </head>
     <body data-theme="default" data-layout="fluid" data-sidebar-position="left" data-sidebar-layout="default">
         <div class="wrapper">
+            <jsp:include page="../homepage/sidebar_admin.jsp" />
 
             <div class="main">
+                <jsp:include page="../homepage/header_admin.jsp" />
 
                 <main class="content">
                     <div class="container-fluid p-0">
@@ -33,9 +35,9 @@
                                         <table id="datatables-column-search-text-inputs" class="table table-striped"
                                                style="width:100%">
                                             <div class="d-flex align-items-center justify-content-between mb-3" style="position: relative;">
-<!--                                                <a href="addCustomer" class="btn btn-primary">
+                                                <a href="addCustomer" class="btn btn-primary">
                                                     Add New Customer
-                                                </a>-->
+                                                </a>
                                                 <h1>List Customers</h1>
                                                 <a href="managerUser" class="btn btn-outline-secondary">
                                                     Back to Admin Page

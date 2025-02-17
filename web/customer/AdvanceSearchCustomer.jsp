@@ -51,10 +51,12 @@
 
     <body>
         <div class="wrapper">
-            <%--<jsp:include page="../../includes/navbar-left.jsp" />--%>
+            <jsp:include page="../homepage/sidebar_admin.jsp" />
+
 
             <div class="main">
-                <%--<jsp:include page="../../includes/navbar-top.jsp" />--%>
+                <jsp:include page="../homepage/header_admin.jsp" />
+
                 <main class="content">
                     <a href="manageCustomerVer2" class="btn btn-primary  d-flex align-items-center justify-content-center" style="transform:translate(-30%,-60%); height: 2.5rem; width: 5.2rem"><i class="fas fa-arrow-left fa-4"></i> <span class="ms-2">Back</span> </a>
                     <h2>Advanced Search</h2>
@@ -63,7 +65,7 @@
                         <input type="hidden" name="sort" value="${pagination.sort}" />
                         <input type="hidden" name="order" value="${pagination.order}" />
                         <div class="col-md-3 input-group d-flex justify-content-end">
-                            <input type="search" style="flex: 1 1 auto" class="form-control form-control-md" placeholder="Username" name="searchUserName" value="${pagination.searchValues[1]}" />
+                            <input type="search" style="flex: 1 1 auto" class="form-control form-control-md" placeholder="Username" name="searchUsername" value="${pagination.searchValues[1]}" />
                             <select name="searchGender" class="form-select form-select-md" style="flex: 1 1 auto;">
                                 <option value="">Gender</option>
                                 <c:forEach var="gender" items="${genderList}">
@@ -71,14 +73,13 @@
                                 </c:forEach>
                             </select>
 
-                            <!-- Thêm trường chọn cho Brand -->
                             <select name="searchAccountStatus" class="form-select form-select-md" style="flex: 1 1 auto;">
                                 <option value="">Account Status</option>
                                 <c:forEach var="active" items="${activeList}">
                                     <option value="${active.activename}" ${pagination.searchValues[3]  eq active.activename ? "selected" : ""}>${active.activename}</option>
                                 </c:forEach>
                             </select>
-                            <input type="search" style="flex: 1 1 auto" class="form-control form-control-md" placeholder="Fullname" name="searchFullName" value="${pagination.searchValues[0]}" />
+                            <input type="search" style="flex: 1 1 auto" class="form-control form-control-md" placeholder="Fullname" name="searchFullname" value="${pagination.searchValues[0]}" />
                             <button type="submit" class="btn btn-primary">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search align-middle"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                             </button>

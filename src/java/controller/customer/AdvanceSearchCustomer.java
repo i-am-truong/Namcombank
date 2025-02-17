@@ -46,8 +46,8 @@ public class AdvanceSearchCustomer extends HttpServlet {
         }
         //
         String pageParam = request.getParameter("page");
-        String paraSearchUserName = SearchUtils.preprocessSearchQuery(request.getParameter("searchUserName"));
-        String paraSearchFullName = SearchUtils.preprocessSearchQuery(request.getParameter("searchFullName"));
+        String paraSearchUserName = SearchUtils.preprocessSearchQuery(request.getParameter("searchUsername"));
+        String paraSearchFullName = SearchUtils.preprocessSearchQuery(request.getParameter("searchFullname"));
         int page = (FormatUtils.tryParseInt(pageParam) != null) ? FormatUtils.tryParseInt(pageParam) : 1;
         // Lấy page-size từ request, mặc định là PAGE_SIZE
         String pageSizeParam = request.getParameter("page-size");
@@ -103,8 +103,8 @@ public class AdvanceSearchCustomer extends HttpServlet {
         pagination.setSort(sort);
         pagination.setOrder(order);
         pagination.setUrlPattern("/manageCustomerVer2/Search");
-        pagination.setSearchFields(new String[] {"searchUserName","searchFullName","searchGender","searchAccountStatus"});
-        pagination.setSearchValues(new String[] {paraSearchUserName, paraSearchFullName, gender, accountStatus});
+        pagination.setSearchFields(new String[] {"searchFullname","searchUsername","searchGender","searchAccountStatus"});
+        pagination.setSearchValues(new String[] {paraSearchFullName, paraSearchUserName, gender, accountStatus});
 //        pagination.setRangeFields(new String[] {"searchPriceMin","searchPriceMax","searchQuantityMin","searchQuantityMax"});
 //        pagination.setRangeValues(new Object[]{searchPriceMin, searchPriceMax, searchQuantityMin, searchQuantityMax});
         request.setAttribute("pagination", pagination);

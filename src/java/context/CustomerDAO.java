@@ -1192,9 +1192,6 @@ public class CustomerDAO extends DBContext {
         return null;
     }
 
-    /*
-     * Still error, fixing
-     */
     public int getTotalSearchCustomersByFields(String paraSearchUserName, String paraSearchFullName, Integer genderID, Integer activeID) {
         StringBuilder query = new StringBuilder("SELECT COUNT(*) FROM Customer c "
                 + "JOIN Gender g ON c.gender = g.gender "
@@ -1287,13 +1284,12 @@ public class CustomerDAO extends DBContext {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    /*
-     * Still error, fixing
-     */
-    public List<Customer> searchCustomersByFieldsPageSorted(String paraSearchUserName, String paraSearchFullName, int page, Integer pageSize, String sortSQL, String order, Integer genderID, Integer activeID) {
+    
+    public List<Customer> searchCustomersByFieldsPageSorted(String paraSearchUserName, String paraSearchFullName,
+            int page, Integer pageSize, String sortSQL, String order, Integer genderID, Integer activeID) {
         StringBuilder query = new StringBuilder("SELECT c.customer_id, c.fullname, c.username, c.password, "
-                + "c.email, c.dob, c.phonenumber, c.balance, c.citizen_identification_card, "
-                + "c.address, g.gendername, a.activename "
+                + "c.email, c.dob, c.gender, c.phonenumber, c.balance, c.citizen_identification_card, "
+                + "c.address, c.active, g.gendername, a.activename " // Added c.gender and c.active
                 + "FROM Customer c "
                 + "JOIN Gender g ON c.gender = g.gender "
                 + "JOIN Active a ON c.active = a.active "
@@ -1329,23 +1325,24 @@ public class CustomerDAO extends DBContext {
                 ps.setObject(i + 1, parameters.get(i));
             }
 
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                Customer customer = new Customer(
-                        rs.getInt("customer_id"),
-                        rs.getString("fullname"),
-                        rs.getString("username"),
-                        rs.getString("password"),
-                        rs.getInt("active"),
-                        rs.getString("email"),
-                        rs.getDate("dob"),
-                        rs.getInt("gender"),
-                        rs.getString("phonenumber"),
-                        rs.getFloat("balance"),
-                        rs.getString("citizen_identification_card"),
-                        rs.getString("address")
-                );
-                customers.add(customer);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Customer customer = new Customer(
+                            rs.getInt("customer_id"),
+                            rs.getString("fullname"),
+                            rs.getString("username"),
+                            rs.getString("password"),
+                            rs.getInt("active"), // Now correctly getting from Customer table
+                            rs.getString("email"),
+                            rs.getDate("dob"),
+                            rs.getInt("gender"), // Now correctly getting from Customer table
+                            rs.getString("phonenumber"),
+                            rs.getFloat("balance"),
+                            rs.getString("citizen_identification_card"),
+                            rs.getString("address")
+                    );
+                    customers.add(customer);
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -1353,9 +1350,7 @@ public class CustomerDAO extends DBContext {
         return customers;
     }
 
-    /*
-     * Still error, fixing
-     */
+    
     public List<Customer> searchCustomersByFieldsPage(String paraSearchUserName, String paraSearchFullName, int page, Integer pageSize, Integer genderID, Integer activeID) {
         StringBuilder query = new StringBuilder("SELECT c.customer_id, c.fullname, c.username, "
                 + "c.password, c.active, c.email, c.dob, c.gender, "
@@ -1423,12 +1418,11 @@ public class CustomerDAO extends DBContext {
         List<Gender> genderList = new ArrayList<>();
         String query = "SELECT [gender], [gendername] FROM [Gender]";
 
-        try (PreparedStatement statement = connection.prepareStatement(query);
-             ResultSet rs = statement.executeQuery()) {
+        try (PreparedStatement statement = connection.prepareStatement(query); ResultSet rs = statement.executeQuery()) {
             while (rs.next()) {
                 Gender gender = new Gender(
-                    rs.getInt("gender"),
-                    rs.getString("gendername")
+                        rs.getInt("gender"),
+                        rs.getString("gendername")
                 );
                 genderList.add(gender);
             }
@@ -1442,12 +1436,11 @@ public class CustomerDAO extends DBContext {
         List<Active> activeList = new ArrayList<>();
         String query = "SELECT [active], [activename] FROM [Active]";
 
-        try (PreparedStatement statement = connection.prepareStatement(query);
-             ResultSet rs = statement.executeQuery()) {
+        try (PreparedStatement statement = connection.prepareStatement(query); ResultSet rs = statement.executeQuery()) {
             while (rs.next()) {
                 Active active = new Active(
-                    rs.getInt("active"),
-                    rs.getString("activename")
+                        rs.getInt("active"),
+                        rs.getString("activename")
                 );
                 activeList.add(active);
             }
@@ -1458,49 +1451,47 @@ public class CustomerDAO extends DBContext {
     }
 
     public static void main(String[] args) {
-    //    CustomerDAO cdao = new CustomerDAO();
-    //    List<Gender> genders = cdao.getListGender();
-    //     for (Gender gender : genders) {
-    //         System.out.println(gender.getGendername());
-    // //     }
-    // String username = "annv";
-    // String fullname = "Nguyen Van An";
-    // int page = 1;
-    // int pageSize = 10;
-    // String sortField = "fullname";
-    // String sortOrder = "ASC";
-    // Integer genderID = 1; // 1 for Male
-    // Integer activeID = 1; // 1 for Active
+        //    CustomerDAO cdao = new CustomerDAO();
+        //    List<Gender> genders = cdao.getListGender();
+        //     for (Gender gender : genders) {
+        //         System.out.println(gender.getGendername());
+        // //     }
+        // String username = "annv";
+        // String fullname = "Nguyen Van An";
+        // int page = 1;
+        // int pageSize = 10;
+        // String sortField = "fullname";
+        // String sortOrder = "ASC";
+        // Integer genderID = 1; // 1 for Male
+        // Integer activeID = 1; // 1 for Active
 
-    // try {
-    //     // Test Case 1: Normal search with all parameters
-    //     List<Customer> results1 = cdao.searchCustomersByFieldsPageSorted(
-    //         username, fullname, page, pageSize, sortField, sortOrder, genderID, activeID
-    //     );
-    //     System.out.println("Test Case 1 - Search with all parameters:");
-    //     printResults(results1);
-    // } catch (Exception e) {
-    //     System.err.println("Error during testing: " + e.getMessage());
-    //     e.printStackTrace();
-    // }
-    // }
-
-    // private static void printResults(List<Customer> customers) {
-    //     if (customers.isEmpty()) {
-    //         System.out.println("No customers found");
-    //         return;
-    //     }
-
-    //     System.out.println("Found " + customers.size() + " customers:");
-    //     for (Customer c : customers) {
-    //         System.out.printf("ID: %d, Name: %s, Username: %s, Gender: %d, Active: %d%n",
-    //             c.getCustomerId(),
-    //             c.getFullname(),
-    //             c.getUsername(),
-    //             c.getGender(),
-    //             c.getActive()
-    //         );
-    //     }
+        // try {
+        //     // Test Case 1: Normal search with all parameters
+        //     List<Customer> results1 = cdao.searchCustomersByFieldsPageSorted(
+        //         username, fullname, page, pageSize, sortField, sortOrder, genderID, activeID
+        //     );
+        //     System.out.println("Test Case 1 - Search with all parameters:");
+        //     printResults(results1);
+        // } catch (Exception e) {
+        //     System.err.println("Error during testing: " + e.getMessage());
+        //     e.printStackTrace();
+        // }
+        // }
+        // private static void printResults(List<Customer> customers) {
+        //     if (customers.isEmpty()) {
+        //         System.out.println("No customers found");
+        //         return;
+        //     }
+        //     System.out.println("Found " + customers.size() + " customers:");
+        //     for (Customer c : customers) {
+        //         System.out.printf("ID: %d, Name: %s, Username: %s, Gender: %d, Active: %d%n",
+        //             c.getCustomerId(),
+        //             c.getFullname(),
+        //             c.getUsername(),
+        //             c.getGender(),
+        //             c.getActive()
+        //         );
+        //     }
     }
 
 }

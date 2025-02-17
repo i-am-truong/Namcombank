@@ -50,17 +50,17 @@
 
     <body>
         <div class="wrapper">
-            <%--<jsp:include page="../../includes/navbar-left.jsp" />--%>
+            <jsp:include page="../homepage/sidebar_admin.jsp" />
 
             <div class="main">
 
-                <%--<jsp:include page="../../includes/navbar-top.jsp" />--%>
+                <jsp:include page="../homepage/header_admin.jsp" />
                 <main class="content">
                     <h2>List Customers</h2>
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <!--                        <form action="ComponentWarehouse/Add" method="POST" enctype="multipart/form-data" style="display: inline;">
-                                                    <button type="submit" class="btn btn-success"><i class="fas fa-add"></i> Add Component</button>
-                                                </form>-->
+                        <form action="addCustomer" method="POST" enctype="multipart/form-data" style="display: inline;">
+                            <button type="submit" class="btn btn-success"><i class="fas fa-add"></i> Add New Customer</button>
+                        </form>
                         <form action="${pageContext.request.contextPath}/manageCustomerVer2/Search" method="get" style="display: inline;">
                             <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Advanced Search</button>
                         </form>
