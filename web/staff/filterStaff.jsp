@@ -1,7 +1,8 @@
+
 <%-- 
-    Document   : listCate2
+    Document   : filterStaff
     Created on : Jun 22, 2024, 10:19:05 PM
-    Author     : lenovo
+    Author     : Asus
 --%>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -165,12 +166,12 @@
             }
         </script>
 
+        <!-- jQuery -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
         <!-- Bootstrap core JavaScript -->
-        <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
-        <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-
-
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"> -->
 
         <!-- Core plugin JavaScript -->
         <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
@@ -186,7 +187,6 @@
 
         <!-- Page level custom scripts -->
         <script src="adminassets/js/demo/datatables-demo.js"></script>
-
 
     </body>
 
