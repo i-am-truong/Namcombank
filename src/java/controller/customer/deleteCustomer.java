@@ -71,7 +71,7 @@ public class deleteCustomer extends BaseRBACControlller {
             int customerId = Integer.parseInt(cidString);
             CustomerDAO cdao = new CustomerDAO();
             cdao.deleteCustomer(customerId);
-            response.sendRedirect("manageCustomer");
+            response.sendRedirect("manageCustomerVer2/Search");
         } catch (NumberFormatException e) {
             request.setAttribute("error", "Invalid customer ID.");
             request.getRequestDispatcher("error.jsp").forward(request, response);

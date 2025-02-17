@@ -65,7 +65,11 @@
                         <input type="hidden" name="sort" value="${pagination.sort}" />
                         <input type="hidden" name="order" value="${pagination.order}" />
                         <div class="col-md-3 input-group d-flex justify-content-end">
-                            <input type="search" style="flex: 1 1 auto" class="form-control form-control-md" placeholder="Username" name="searchUsername" value="${pagination.searchValues[1]}" />
+                            <input type="search" style="flex: 1 1 auto"
+                                   class="form-control form-control-md"
+                                   placeholder="Username"
+                                   name="searchUserName"
+                                   value="${pagination.searchValues[1]}" />
                             <select name="searchGender" class="form-select form-select-md" style="flex: 1 1 auto;">
                                 <option value="">Gender</option>
                                 <c:forEach var="gender" items="${genderList}">
@@ -79,7 +83,11 @@
                                     <option value="${active.activename}" ${pagination.searchValues[3]  eq active.activename ? "selected" : ""}>${active.activename}</option>
                                 </c:forEach>
                             </select>
-                            <input type="search" style="flex: 1 1 auto" class="form-control form-control-md" placeholder="Fullname" name="searchFullname" value="${pagination.searchValues[0]}" />
+                            <input type="search" style="flex: 1 1 auto"
+                                   class="form-control form-control-md"
+                                   placeholder="Fullname"
+                                   name="searchFullName"
+                                   value="${pagination.searchValues[0]}" />
                             <button type="submit" class="btn btn-primary">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search align-middle"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                             </button>
@@ -201,6 +209,8 @@
                                     </form>
                                 </th>
 
+                                <th>Status</th>
+
                                 <th style="width:15%">
                                     <form action="manageCustomerVer2/Search" method="get">
                                         <input type="hidden" name="page" value="${pagination.currentPage}" />
@@ -260,7 +270,7 @@
                         <!--                        varStatus để lấy trạng thái của vòng lặp-->
                         <c:forEach var="customer" items="${customers}" varStatus="status">
                             <tr class="${status.index % 2 == 0 ? 'table-primary' : ''}">
-                                <td>${status.index+1+(pagination.currentPage-1)*pagination.pageSize}</td>
+                                <td><a href="viewCustomer?customerId=${customer.customerId}">${status.index+1+(pagination.currentPage-1)*pagination.pageSize}</a></td>
                                 <td>${customer.fullname}</td>
                                 <td>
                                     <c:choose>
@@ -274,14 +284,34 @@
                                 </td>
                                 <td>${customer.dob}</td>
                                 <td>${customer.email}</td>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${customer.active == 0}">
+                                            <span class="badge bg-danger">Closed</span>
+                                            <a href="javascript:void(0)" onclick="return checkUnBan('${customer.customerId}')">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-unlock" viewBox="0 0 16 16">
+                                                <path d="M11 1a2 2 0 0 0-2 2v4a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h5V3a3 3 0 0 1 6 0v4a.5.5 0 0 1-1 0V3a2 2 0 0 0-2-2M3 8a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1z"/>
+                                                </svg>
+                                            </a>
+                                        </c:when>
+                                        <c:when test="${customer.active == 1}">
+                                            <span class="badge bg-success">Opening</span>
+                                            <a href="javascript:void(0)" onclick="return checkBan('${customer.customerId}')">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lock" viewBox="0 0 16 16">
+                                                <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2M5 8h6a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1"/>
+                                                </svg>
+                                            </a>
+                                        </c:when>
+                                    </c:choose>
+                                </td>
                                 <td>${customer.username}</td>
                                 <td>${customer.address}</td>
                                 <td class="table-action">
-                                    <a href="ComponentWarehouse/Detail?ID=${component.componentID}&from=search"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2 align-middle"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg></a>
-                                    <a data-bs-toggle="modal" data-bs-target="#centeredModalPrimary_${component.componentID}"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash align-middle"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></a>
+                                    <a href="editCustomer?customerId=${customer.customerId}"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2 align-middle"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg></a>
+                                    <a href="javascript:void(0)" onclick="return checkDeleteCustomer('${customer.customerId}')"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash align-middle"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></a>
                                 </td>
                             </tr>
-                            <div class="modal fade" id="centeredModalPrimary_${component.componentID}" tabindex="-1" style="display: none;" aria-hidden="true">
+<!--                            <div class="modal fade" id="centeredModalPrimary_${component.componentID}" tabindex="-1" style="display: none;" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
@@ -297,7 +327,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div>-->
                         </c:forEach>
                         <tbody>
 
@@ -331,6 +361,28 @@
 <script src="js/app.js"></script>
 <script src="js/range-slider.js"></script>
 <script src="js/format-input.js"></script>
+
+<script>
+                                                function checkBan(cid) {
+                                                    // Thêm mã kiểm tra hợp lệ của form nếu cần
+                                                    if (confirm("Ban customer with customerId = " + cid + "?")) {
+                                                        window.location = 'lockCustomer?type=lock&cid=' + cid;
+                                                    }
+                                                }
+
+                                                function checkUnBan(cid) {
+                                                    // Thêm mã kiểm tra hợp lệ của form nếu cần
+                                                    if (confirm("Unban customer with customerId = " + cid + "?")) {
+                                                        window.location = 'lockCustomer?type=unlock&cid=' + cid;
+                                                    }
+                                                }
+
+                                                function checkDeleteCustomer(cid) {
+                                                    if (confirm('Are you sure you want to delete this customer?')) {
+                                                        window.location = 'deleteCustomer?cid=' + cid;
+                                                    }
+                                                }
+</script>
 
 
 

@@ -130,6 +130,8 @@
                                     </form>
                                 </th>
 
+                                <th>Account Status</th>
+
                                 <th style="width:15%">
                                     <form action="manageCustomerVer2" method="get">
                                         <input type="hidden" name="page" value="${pagination.currentPage}" />
@@ -169,7 +171,7 @@
                             <!--                        varStatus để lấy trạng thái của vòng lặp-->
                             <c:forEach var="customer" items="${customers}" varStatus="status">
                                 <tr class="${status.index % 2 == 0 ? 'table-primary' : ''}">
-                                    <td><a href="viewCustomer?customerId=${customer.customerId}">${status.index + 1 + (pagination.currentPage - 1) * pagination.pageSize}</a></td>
+                                    <td>${status.index + 1 + (pagination.currentPage - 1) * pagination.pageSize}</td>
                                     <td>${customer.fullname}</td>
                                     <td>
                                         <c:choose>
@@ -183,10 +185,20 @@
                                     </td>
                                     <td>${customer.dob}</td>
                                     <td>${customer.email}</td>
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${customer.active == 0}">
+                                                <span class="badge bg-danger">Closed</span>
+                                            </c:when>
+                                            <c:when test="${customer.active == 1}">
+                                                <span class="badge bg-success">Opening</span>
+                                            </c:when>
+                                        </c:choose>
+                                    </td>
                                     <td>${customer.username}</td>
                                     <td>${customer.address}</td>
                                     <td class="table-action">
-                                        <a href="ComponentWarehouse/Detail?ID=${customer.customerId}&from=warehouse">
+<!--                                        <a href="ComponentWarehouse/Detail?ID=${customer.customerId}&from=warehouse">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2 align-middle">
                                             <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
                                             </svg>
@@ -196,7 +208,7 @@
                                             <polyline points="3 6 5 6 21 6"></polyline>
                                             <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
                                             </svg>
-                                        </a>
+                                        </a>-->
                                     </td>
                                 </tr>
 
@@ -212,7 +224,7 @@
                                             <p class="mb-0">Confirm your action. Really want to delete?</p>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" disabled>Close</button>
                                             <a href="ComponentWarehouse/Delete?ID=${customer.customerId}&page=${pagination.currentPage}&page-size=${pagination.pageSize}&search=${pagination.searchValues[0]}&sort=${pagination.sort}&order=${pagination.order}" class="btn btn-primary">Delete</a>
                                         </div>
                                     </div>
@@ -251,6 +263,7 @@
 
 <script src="${pageContext.request.contextPath}/adminassets/js/app.js"></script>
 <script src="${pageContext.request.contextPath}/adminassets/js/format-input.js"></script>
+
 
 </body>
 
