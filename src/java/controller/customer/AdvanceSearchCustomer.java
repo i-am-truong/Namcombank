@@ -46,8 +46,10 @@ public class AdvanceSearchCustomer extends HttpServlet {
         }
         //
         String pageParam = request.getParameter("page");
-        String paraSearchUserName = SearchUtils.preprocessSearchQuery(request.getParameter("searchUsername"));
-        String paraSearchFullName = SearchUtils.preprocessSearchQuery(request.getParameter("searchFullname"));
+        String paraSearchUserName = SearchUtils.preprocessSearchQuery(request.getParameter("searchUserName"));
+        String paraSearchFullName = SearchUtils.preprocessSearchQuery(request.getParameter("searchFullName"));
+        if (paraSearchUserName == null) paraSearchUserName = "";
+        if (paraSearchFullName == null) paraSearchFullName = "";
         int page = (FormatUtils.tryParseInt(pageParam) != null) ? FormatUtils.tryParseInt(pageParam) : 1;
         // Lấy page-size từ request, mặc định là PAGE_SIZE
         String pageSizeParam = request.getParameter("page-size");

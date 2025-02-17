@@ -83,7 +83,7 @@
                             <h2>Edit Customer Info</h2>
                             <div class="col-12">
                                 <div class="d-grid">
-                                    <a href="manageCustomer"><button class="btn btn-primary btn-lg">Back to List Customers</button></a>
+                                    <a href="manageCustomerVer2/Search"><button class="btn btn-primary btn-lg">Back to List Customers</button></a>
                                 </div>
                             </div>
                         </div>

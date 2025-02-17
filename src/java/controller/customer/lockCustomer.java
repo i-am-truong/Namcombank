@@ -69,12 +69,12 @@ public class lockCustomer extends BaseRBACControlller {
         
         if(type.equals("lock")){
             cdao.changeActive(Integer.parseInt(cid), 0);
-            response.sendRedirect("manageCustomer");
+            response.sendRedirect("manageCustomerVer2/Search");
         }
         
         if(type.equals("unlock")){
             cdao.changeActive(Integer.parseInt(cid), 1);
-            response.sendRedirect("manageCustomer");
+            response.sendRedirect("manageCustomerVer2/Search");
         }
     }
 

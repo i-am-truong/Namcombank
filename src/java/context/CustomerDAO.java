@@ -1013,10 +1013,13 @@ public class CustomerDAO extends DBContext {
 
     public List<Customer> getCustomersByPage(int page, int pageSize) {
         List<Customer> customers = new ArrayList<>();
-        String query = "SELECT customer_id, fullname, username, email, "
-                + "password, dob, gender, balance, address "
-                + "FROM Customer "
-                + "ORDER BY customer_id "
+        String query = "SELECT c.customer_id, c.fullname, c.username, c.email, "
+                + "c.password, c.dob, c.gender, c.balance, c.address, "
+                + "c.active, c.phonenumber, c.citizen_identification_card, " // Added active and other missing fields
+                + "a.activename " // Added activename from Active table
+                + "FROM Customer c "
+                + "LEFT JOIN Active a ON c.active = a.active " // Join with Active table
+                + "ORDER BY c.customer_id "
                 + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
@@ -1026,16 +1029,20 @@ public class CustomerDAO extends DBContext {
 
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
-                    Customer customer = new Customer();
-                    customer.setCustomerId(resultSet.getInt("customer_id"));
-                    customer.setFullname(resultSet.getString("fullname"));
-                    customer.setUsername(resultSet.getString("username"));
-                    customer.setEmail(resultSet.getString("email"));
-                    customer.setPassword(resultSet.getString("password"));
-                    customer.setDob(resultSet.getDate("dob"));
-                    customer.setGender(resultSet.getInt("gender"));
-                    customer.setBalance(resultSet.getFloat("balance"));
-                    customer.setAddress(resultSet.getString("address"));
+                    Customer customer = new Customer(
+                            resultSet.getInt("customer_id"),
+                            resultSet.getString("fullname"),
+                            resultSet.getString("username"),
+                            resultSet.getString("password"),
+                            resultSet.getInt("active"),
+                            resultSet.getString("email"),
+                            resultSet.getDate("dob"),
+                            resultSet.getInt("gender"),
+                            resultSet.getString("phonenumber"),
+                            resultSet.getFloat("balance"),
+                            resultSet.getString("citizen_identification_card"),
+                            resultSet.getString("address")
+                    );
                     customers.add(customer);
                 }
             }
@@ -1284,7 +1291,6 @@ public class CustomerDAO extends DBContext {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    
     public List<Customer> searchCustomersByFieldsPageSorted(String paraSearchUserName, String paraSearchFullName,
             int page, Integer pageSize, String sortSQL, String order, Integer genderID, Integer activeID) {
         StringBuilder query = new StringBuilder("SELECT c.customer_id, c.fullname, c.username, c.password, "
@@ -1350,7 +1356,6 @@ public class CustomerDAO extends DBContext {
         return customers;
     }
 
-    
     public List<Customer> searchCustomersByFieldsPage(String paraSearchUserName, String paraSearchFullName, int page, Integer pageSize, Integer genderID, Integer activeID) {
         StringBuilder query = new StringBuilder("SELECT c.customer_id, c.fullname, c.username, "
                 + "c.password, c.active, c.email, c.dob, c.gender, "
