@@ -61,46 +61,53 @@ public class addCustomer extends BaseRBACControlller {
 
     @Override
     protected void doAuthorizedPost(HttpServletRequest request, HttpServletResponse response, Staff account) throws ServletException, IOException {
-       String fullname = request.getParameter("fullnameC");
-        String phonenumber = request.getParameter("phonenumberC");
-        String email = request.getParameter("emailC");
-        String address = request.getParameter("addressC");
-        String dob = request.getParameter("dobC");
-        String gender = request.getParameter("genderC");
-        String username = request.getParameter("usernameC");
-        String password = request.getParameter("passwordC");
-        String cic = request.getParameter("cicC");
+        // Only validate if form was actually submitted
+        if (request.getParameter("fullnameC") != null) {
+            String fullname = request.getParameter("fullnameC");
+            String phonenumber = request.getParameter("phonenumberC");
+            String email = request.getParameter("emailC");
+            String address = request.getParameter("addressC");
+            String dob = request.getParameter("dobC");
+            String gender = request.getParameter("genderC");
+            String username = request.getParameter("usernameC");
+            String password = request.getParameter("passwordC");
+            String cic = request.getParameter("cicC");
 
-        // Check if any required field is empty (not just null)
-        if (password == null || password.trim().isEmpty() ||
-            fullname == null || fullname.trim().isEmpty() ||
-            dob == null || dob.trim().isEmpty() ||
-            username == null || username.trim().isEmpty() ||
-            email == null || email.trim().isEmpty() ||
-            phonenumber == null || phonenumber.trim().isEmpty() ||
-            address == null || address.trim().isEmpty() ||
-            gender == null || gender.trim().isEmpty() ||
-            cic == null || cic.trim().isEmpty()) {
-            request.setAttribute("error", "All fields cannot be empty!");
-            request.getRequestDispatcher("customer/addCustomer.jsp").forward(request, response);
-            return;
-        }
+            // Check if any required field is empty (not just null)
+            if (password == null || password.trim().isEmpty() ||
+                fullname == null || fullname.trim().isEmpty() ||
+                dob == null || dob.trim().isEmpty() ||
+                username == null || username.trim().isEmpty() ||
+                email == null || email.trim().isEmpty() ||
+                phonenumber == null || phonenumber.trim().isEmpty() ||
+                address == null || address.trim().isEmpty() ||
+                gender == null || gender.trim().isEmpty() ||
+                cic == null || cic.trim().isEmpty()) {
+                request.setAttribute("error", "All fields cannot be empty!");
+                request.getRequestDispatcher("customer/addCustomer.jsp").forward(request, response);
+                return;
+            }
 
-        CustomerDAO cd = new CustomerDAO();
-        // check xem username or email or phonenumber đã tồn tại hay chưa
-        if (cd.checkUsername(username, email, phonenumber)) {
-            password = cd.toSHA1(password);
-            cd.registerAcc(fullname, username, password, email, dob, Integer.parseInt(gender), phonenumber, cic, address);
-            request.setAttribute("suc", "Create account successfully!");
-            request.getRequestDispatcher("customer/addCustomer.jsp").forward(request, response);
+            CustomerDAO cd = new CustomerDAO();
+            // check xem username or email or phonenumber đã tồn tại hay chưa
+            if (cd.checkUsernameAdded(username, email, phonenumber, cic)) {
+                password = cd.toSHA1(password);
+                cd.registerAcc(fullname, username, password, email, dob, Integer.parseInt(gender), phonenumber, cic, address);
+                request.setAttribute("suc", "Create account successfully!");
+                request.getRequestDispatcher("customer/addCustomer.jsp").forward(request, response);
+            } else {
+                request.setAttribute("error", "Username or email or phonenumber or CCCD already exist!");
+                request.getRequestDispatcher("customer/addCustomer.jsp").forward(request, response);
+            }
         } else {
-            request.setAttribute("error", "Username or email or phonenumber already exist!");
+            // Initial form load - just show the form without validation
             request.getRequestDispatcher("customer/addCustomer.jsp").forward(request, response);
         }
     }
 
     @Override
     protected void doAuthorizedGet(HttpServletRequest request, HttpServletResponse response, Staff account) throws ServletException, IOException {
+        // Just show the form without validation
         request.getRequestDispatcher("customer/addCustomer.jsp").forward(request, response);
     }
 

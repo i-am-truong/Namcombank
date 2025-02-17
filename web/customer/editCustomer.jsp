@@ -136,7 +136,7 @@
                                 <div class="form-group">
                                     <label for="dobC">Date of Birth</label>
                                     <input type="date" class="form-control" id="dobC" name="dobC"
-                                           value="${customer.dob}" required pattern="^0[0-9]{}$" title="CIC must be 12 digits.">
+                                           value="${customer.dob}">
                                 </div>
 
                                 <div class="form-group">
