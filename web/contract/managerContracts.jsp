@@ -87,7 +87,8 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Customer Name</th>
-                                    <th>Type</th>
+                                    <th>Loan</th>
+                                    <th>Loan Package</th>
                                     <th>Amount</th>
                                     <th>Status</th>
                                     <th>Actions</th>
@@ -103,7 +104,8 @@
                                 <tr>
                                     <td><%= contract.getId() %></td>
                                     <td><%= contract.getCustomerName() %></td>
-                                    <td><%= contract.getType() %></td>
+                                    <td><%= contract.getLoanName() %></td>
+                                    <td><%= contract.getPackageName() %></td>
                                     <td>$<%= String.format("%.2f", contract.getAmount()) %></td>
                                     <td><%= contract.getStatus() %></td>
                                     <td>
