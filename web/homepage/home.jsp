@@ -207,7 +207,7 @@
                                 <div class="hero-slider-single-content">
                                     <h2>Banking <span>Service System</span></h2>
                                     <p>Explore our range of loan options with flexible repayment plans.</p>
-                                    <a class="button-1" href="/Namcombank/login">Experience Now</a>
+                                    <a class="button-1" href="javascript:void(0)">Experience Now</a>
                                 </div>
                             </div>
                         </div>
@@ -220,7 +220,7 @@
                                 <div class="hero-slider-single-content">
                                     <h2>Banking <span>Service System</span></h2>
                                     <p>Looking for a credit card? Let us help you find the best one for your lifestyle</p>
-                                    <a class="button-1" href="/Namcombank/login">Experience Now</a>
+                                    <a class="button-1" href="javascript:void(0)">Experience Now</a>
                                 </div>
                             </div>
                         </div>
@@ -271,7 +271,7 @@
                         </p>
                         <div class="row">
                             <div class="col-md-6 mb-5">
-                                <a href="register"><button class="btn btn-primary border-0 bank-btn">Register now</button></a>
+                                <a href="javascript:void(0)"><button class="btn btn-primary border-0 bank-btn">Register now</button></a>
                             </div>
                             <ul class="list-inline">
                                 <li class="list-inline-item bank-phone"> <img src="./assets/img/home-call.png"
