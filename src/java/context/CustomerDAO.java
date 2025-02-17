@@ -402,6 +402,26 @@ public class CustomerDAO extends DBContext {
         return true;
     }
 
+    public boolean checkUsernameAdded(String username, String email, String phonenumber, String cid) {
+        String sql = "SELECT [username] FROM Customer WHERE [username] = ? or [email] = ? or [phonenumber] = ? or [citizen_identification_card] = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, username);
+            ps.setString(2, email);
+            ps.setString(3, phonenumber);
+            ps.setString(4, cid);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                // Username already exists in the database
+                return false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();  // Print the stack trace for debugging
+        }
+        return true;
+    }
+
     public boolean checkCustomer(String cid, String phonenumber, String email) {
         String sql = " select citizen_identification_card from Customer where citizen_identification_card = ? or phonenumber = ? or email = ?";
         try {
