@@ -99,7 +99,6 @@ public class userProfile extends HttpServlet {
                 return;
             }
             String email = request.getParameter("email");
-
             String address = request.getParameter("address");
             String gender = request.getParameter("gender");
             String dob = request.getParameter("dateOfBirth");

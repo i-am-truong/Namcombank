@@ -293,6 +293,7 @@
                     emailError.style.display = 'none';
                 }
             });
+            
         </script>
 
         <!-- Js File -->
