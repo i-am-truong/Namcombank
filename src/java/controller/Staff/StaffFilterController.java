@@ -66,7 +66,7 @@ public class StaffFilterController extends BaseRBACControlller {
         request.setAttribute("depts", depts);
         request.setAttribute("staff", staffs);
 
-        request.getRequestDispatcher("staff/filterStaff.jsp").forward(request, response);
+        request.getRequestDispatcher("staff/demofilter.jsp").forward(request, response);
     }
 
     @Override
