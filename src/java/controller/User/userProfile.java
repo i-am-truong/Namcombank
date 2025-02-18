@@ -133,15 +133,19 @@ public class userProfile extends HttpServlet {
     }// </editor-fold>
 
     private String formatName(String name) {
-        name = name.trim().replaceAll("\\s+", " ");// thay nhieu khoang trang bang 1
-        String[] words = name.split(" ");
-        StringBuilder formattedName = new StringBuilder();
+        name = name.trim().replaceAll("\\s+", " "); // Loại bỏ khoảng trắng thừa
+        String[] words = name.split(" "); // Chia thành mảng từ
+        StringBuilder formattedName = new StringBuilder(); // Sử dụng StringBuilder để tối ưu hiệu suất, 
+        // cho phép thay đổi nội dung mà không cần tạo đối tượng mới,
+        // giúp tăng hiệu suất khi thực hiện nhiều phép nối chuỗi (concatenation).
+
         for (String word : words) {
-            formattedName.append(Character.toUpperCase(word.charAt(0)))
-                    .append(word.substring(1).toLowerCase())
-                    .append(" ");
+            formattedName.append(Character.toUpperCase(word.charAt(0))) // Viết hoa chữ cái đầu
+                    .append(word.substring(1).toLowerCase()) // Viết thường các chữ còn lại
+                    .append(" "); // Thêm khoảng trắng sau mỗi từ
         }
-        return formattedName.toString().trim();
+
+        return formattedName.toString().trim(); // Loại bỏ khoảng trắng cuối cùng và trả về chuỗi kết quả
     }
 
     private boolean formatPhoneNumber(String phone) {
