@@ -11,10 +11,11 @@ import java.sql.Date;
  * @author lenovo
  */
 public class Customer {
+
     private int customerId;
     private String fullname;
     private String username;
-    private String password; 
+    private String password;
     private int active;
     private String email;
     private Date dob;
@@ -23,7 +24,7 @@ public class Customer {
     private float balance;
     private String cid;
     private String address;
-    
+
     public Customer() {
     }
 
@@ -41,8 +42,6 @@ public class Customer {
         this.cid = cid;
         this.address = address;
     }
-
-    
 
     public int getCustomerId() {
         return customerId;
@@ -140,11 +139,8 @@ public class Customer {
         this.address = address;
     }
 
-
     @Override
     public String toString() {
         return "Customer{" + "customerId=" + customerId + ", fullname=" + fullname + ", username=" + username + ", password=" + password + ", active=" + active + ", email=" + email + ", dob=" + dob + ", gender=" + gender + ", phonenumber=" + phonenumber + ", balance=" + balance + ", cid=" + cid + ", address=" + address + '}';
     }
-    
-    
 }

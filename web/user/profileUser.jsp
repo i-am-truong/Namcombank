@@ -160,7 +160,9 @@
                                 <c:if test="${not empty requestScope.errorPhoneNumber}">
                                     <span style="color: red;">${requestScope.errorPhoneNumber}</span>
                                 </c:if>
-
+                                <c:if test="${not empty requestScope.existPhoneNumber}">
+                                    <span style="color: red;">${requestScope.existPhoneNumber}</span>
+                                </c:if>
                             </div>
 
                             <div class="col-md-9">
@@ -233,7 +235,12 @@
                                     Date of Birth cannot be in the future.
                                 </div>
                             </div>
+                                    
 
+                            <div class="col-md-9">
+                                <label class="labels">Upload Profile Picture</label>
+                                <input type="file" name="profileImage" class="form-control" accept="image/*">
+                            </div>
                             <div class="mt-3 text-left" style="display: flex; justify-content: flex-start; align-items: center;">
                                 <button class="btn btn-primary profile-button" type="submit" style="margin-right: 10px;">Save Profile</button>
                                 <a href="changePass" style="margin-left: 100px" class="btn btn-primary profile-button" type="button">Change Password</a>
@@ -293,7 +300,7 @@
                     emailError.style.display = 'none';
                 }
             });
-            
+
         </script>
 
         <!-- Js File -->
