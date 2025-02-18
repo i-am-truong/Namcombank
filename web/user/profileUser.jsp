@@ -26,33 +26,33 @@
         <link rel="stylesheet" href="assets/css/normalize.css">
         <link rel="stylesheet" href="assets/css/style.css">
         <link rel="stylesheet" href="assets/css/responsive.css">
-<!--        <script type="text/javascript">
-            function removeProduct(pid) {
-                var result = confirm("Confirm remove this product?");
-                var totalAmountElement = document.querySelector('.total-amount');
-
-                var pId = pid;
-                var element = document.getElementById(pid);
-                if (result) {
-                    $.ajax({
-                        type: 'POST',
-                        data: {pId: pId},
-                        url: 'cartView',
-                        success: (result) => {
-                            element.remove();
-                            var totalPrice = result.totalPrice;
-                            var productInCart = result.productInCart;
-                            $('.counter').text(productInCart);
-                            totalAmountElement.textContent = totalPrice + "$";
-                        },
-                        error: function () {
-                            console.log('Remove fail something went wrong');
+        <!--        <script type="text/javascript">
+                    function removeProduct(pid) {
+                        var result = confirm("Confirm remove this product?");
+                        var totalAmountElement = document.querySelector('.total-amount');
+        
+                        var pId = pid;
+                        var element = document.getElementById(pid);
+                        if (result) {
+                            $.ajax({
+                                type: 'POST',
+                                data: {pId: pId},
+                                url: 'cartView',
+                                success: (result) => {
+                                    element.remove();
+                                    var totalPrice = result.totalPrice;
+                                    var productInCart = result.productInCart;
+                                    $('.counter').text(productInCart);
+                                    totalAmountElement.textContent = totalPrice + "$";
+                                },
+                                error: function () {
+                                    console.log('Remove fail something went wrong');
+                                }
+                            });
                         }
-                    });
-                }
-            }
-
-        </script>-->
+                    }
+        
+                </script>-->
     </head>
     <body>
         <div id="preloader" class="preeloader">
@@ -108,14 +108,14 @@
                             <div class="card-body">
                                 <div class="d-flex flex-column align-items-center text-center">
                                     <c:if test="${sessionScope.customer.gender == 0}">
-                                    <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="Admin" class="rounded-circle p-1 bg-primary" width="110">
+                                        <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="Admin" class="rounded-circle p-1 bg-primary" width="110">
                                     </c:if>
                                     <c:if test="${sessionScope.customer.gender == 1}">
-                                    <img src="https://bootdey.com/img/Content/avatar/avatar6.png" alt="Admin" class="rounded-circle p-1 bg-primary" width="110">
+                                        <img src="https://bootdey.com/img/Content/avatar/avatar6.png" alt="Admin" class="rounded-circle p-1 bg-primary" width="110">
                                     </c:if>
                                     <div class="mt-3">
                                         <h4>${sessionScope.customer.fullname}</h4>
-                                               <hr class="my-4">
+                                        <hr class="my-4">
                                         <button class="btn btn-primary">Follow</button>
                                         <button class="btn btn-outline-primary">Message</button>
                                     </div>
@@ -157,6 +157,10 @@
                                     title="Please enter a valid 10-digit phone number"
                                     value="${sessionScope.customer.phonenumber}"
                                     >
+                                <c:if test="${not empty requestScope.errorPhoneNumber}">
+                                    <span style="color: red;">${requestScope.errorPhoneNumber}</span>
+                                </c:if>
+
                             </div>
 
                             <div class="col-md-9">
@@ -215,16 +219,19 @@
                             </div>
 
                             <div class="col-md-9">
-                                <label class="labels">Date of birth</label>
+                                <label class="labels">Date of Birth</label>
                                 <input
                                     name="dateOfBirth"
                                     required
                                     type="date"
                                     class="form-control"
-                                    placeholder="enter date of birth"
-                                    max=""
+                                    id="dob-input"
+                                    placeholder="Enter date of birth"
                                     value="${sessionScope.customer.dob}"
                                     >
+                                <div id="dob-error" style="color: red; display: none;">
+                                    Date of Birth cannot be in the future.
+                                </div>
                             </div>
 
                             <div class="mt-3 text-left" style="display: flex; justify-content: flex-start; align-items: center;">
@@ -254,16 +261,39 @@
         </div>
         <script>
             document.addEventListener('DOMContentLoaded', function () {
-                // Lấy ngày hiện tại theo định dạng YYYY-MM-DD
                 var today = new Date().toISOString().split('T')[0];
+                var dobInput = document.getElementById('dob-input');
 
-                // Cập nhật thuộc tính max của input[type="date"]
-                document.querySelector('input[type="date"]').setAttribute('max', today);
-            });
-            document.getElementById('profile-form').addEventListener('submit', function (event) {
+                // Đặt max cho input date
+                dobInput.setAttribute('max', today);
 
-                this.submit();
+                // Kiểm tra khi người dùng thay đổi giá trị
+                dobInput.addEventListener('input', function () {
+                    var selectedDate = this.value;
+                    var dobError = document.getElementById('dob-error');
+
+                    if (selectedDate > today) {
+                        dobError.style.display = 'block';
+                        this.value = ''; // Reset input nếu chọn sai
+                    } else {
+                        dobError.style.display = 'none';
+                    }
+                });
             });
+            document.getElementById('email-input').addEventListener('input', function () {
+                var email = this.value;
+                var emailError = document.getElementById('email-error');
+
+                // Biểu thức chính quy kiểm tra email hợp lệ
+                var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+                if (!emailPattern.test(email)) {
+                    emailError.style.display = 'block';
+                } else {
+                    emailError.style.display = 'none';
+                }
+            });
+            
         </script>
 
         <!-- Js File -->

@@ -27,7 +27,7 @@ public class LoginController extends HttpServlet {
         String param_user = req.getParameter("username"); // User input
         String param_pass = req.getParameter("password");
         StaffAccountDBContext sdao = new StaffAccountDBContext();
-        String pass = sdao.toSHA1(param_pass); 
+        String pass = sdao.toSHA1(param_pass);
         StaffAccountDBContext db = new StaffAccountDBContext();
         model.auth.Staff account = db.get(param_user, pass); // Lấy tài khoản từ database
         StaffAccountDBContext dbContext = new StaffAccountDBContext();
@@ -47,7 +47,7 @@ public class LoginController extends HttpServlet {
                     break;
                 } else if (role.getId() == 1) {
                     roleId = role.getId();
-                    resp.sendRedirect("managerUser");
+                    resp.sendRedirect("staffFilter");
                     hasValidRole = true;
                     break;
                 } else if (role.getId() == 5) {
@@ -60,10 +60,12 @@ public class LoginController extends HttpServlet {
             req.getSession().setAttribute("roleId", roleId);
             req.getSession().setAttribute("staffRole", staffRole);
             if (!hasValidRole) {
-                resp.getWriter().println("Your account does not have valid roles!");
+                resp.sendRedirect("403.html");
             }
         } else {
-            resp.getWriter().println("Login failed!");
+            req.setAttribute("err", "Invalid username or password!");
+            req.getRequestDispatcher("admin.login/login.jsp").forward(req, resp);
+
         }
     }
 

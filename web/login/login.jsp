@@ -105,7 +105,12 @@
                 background-color: #064420;
                 color: #fff;
             }
-
+            .login-register-form {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 80vh;
+            }
 
         </style>
     </head>
@@ -139,19 +144,18 @@
                             <form action="login" method="post">
                                 <input type="text" class="form-control" id="username"  value="${username}" name="username" placeholder="Your Username" required>
                                 <div id="email-error" class="error"></div>
-                                <input type="password" class="form-control"  value="${password}" name="password" placeholder="Your Password" required>
+                                <input type="password" class="form-control" name="password" placeholder="Your Password" required>
                                 <div class="row">
                                     <div class="col-6">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" ${(cookie.remem eq 'ON')?"checked":""} name="rem" style="transform: scale(0.75);" value="" id="flexCheckDefault">
+                                            <input class="form-check-input" type="checkbox" ${cookie.rem ne null ? "checked" : ""} name="rem" style="transform: scale(0.75);" value="ON" id="flexCheckDefault">
                                             <label class="form-check-label" >Remember me</label></div>
-
                                     </div>
                                     <div class="col-6 text-right">
                                         <a href="resetPass">Forgot password?</a>
                                     </div>
                                 </div>
-                                <p style="color: red">${requestScope.err}</p>
+                                <p style="color: red">${not empty requestScope.err ? requestScope.err : ""}</p>
                                 <button class="button-1" type="submit">Log In</button>
                             </form>
                             <p>Don't Have an Account? <a href="register">Sign up now</a></p>
@@ -162,28 +166,11 @@
         </div>
         <!-- End Login Register Form -->
 
-
-
-
-
         <!-- Js File -->
 
         <script src="assets/js/jquery-3.5.1.min.js"></script>
 
         <script src="assets/js/script.js"></script>
-        <script>
-//            function checkEmailValidity() {
-//                const input = document.getElementById("email");
-//                const email = input.value.trim();
-//
-//                if (email === "") {
-//                    input.setCustomValidity("Please input your email!");
-//                } else if (!email.endsWith("@gmail.com")) {
-//                    input.setCustomValidity("Please enter an email ending with @gmail.com");
-//                } else {
-//                    input.setCustomValidity("");
-//                }
-//            }
-        </script>
+
     </body>
 </html>

@@ -28,7 +28,7 @@ public abstract class BaseRequiredAuthenticationController extends HttpServlet {
             Staff staff = (Staff) req.getSession().getAttribute("account");
             doPost(req, resp, staff);
         } else {
-            resp.getWriter().println("access denied!");
+            resp.sendRedirect("admin.login");
         }
     }
 
@@ -38,7 +38,7 @@ public abstract class BaseRequiredAuthenticationController extends HttpServlet {
             Staff user = (Staff) req.getSession().getAttribute("account");
             doGet(req, resp, user);
         } else {
-            resp.getWriter().println("access denied!");
+            resp.sendRedirect("admin.login");
         }
     }
 

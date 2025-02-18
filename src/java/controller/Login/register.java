@@ -81,7 +81,7 @@ public class register extends HttpServlet {
         String password = request.getParameter("passwordC");
         String confirmPassword = request.getParameter("confirmPasswordC");
         if (!password.equals(confirmPassword)) {
-            request.setAttribute("suc", "Passwords do not match!");
+            request.setAttribute("error", "Passwords do not match!");
             request.getRequestDispatcher("login/register.jsp").forward(request, response);
             return;
         }

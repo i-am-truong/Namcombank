@@ -53,11 +53,11 @@
             <span>Loan Packages Table</span></a>
     </li>
 
-    <li class="nav-item active">
+<!--    <li class="nav-item active">
         <a class="nav-link" href="managerUser">
             <i class="fas fa-fw fa-table"></i>
             <span>Manager Customer</span></a>
-    </li>
+    </li>-->
 
     <li class="nav-item active">
         <a class="nav-link" href="manageCustomer">
@@ -132,6 +132,12 @@
         <a class="nav-link" href="newsList">
             <i class="fas fa-fw fa-table"></i>
             <span> News</span></a>
+    </li>
+    
+    <li class="nav-item active">
+        <a class="nav-link" href="manageCustomerVer2">
+            <i class="fas fa-fw fa-table"></i>
+            <span> Manage Customer Ver 2</span></a>
     </li>
 
 

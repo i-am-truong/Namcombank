@@ -1,12 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package controller.contract;
 
 import context.ContractDAO;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,85 +10,46 @@ import java.util.List;
 import model.Contract;
 
 /**
- *
- * @author lenovo
+ * Servlet to handle contract approvals and filtering
  */
 public class ContractApprovalServlet extends HttpServlet {
 
-    private ContractDAO contractDAO = new ContractDAO();
+    private final ContractDAO contractDAO = new ContractDAO();
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet ContractApprovalServlet</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet ContractApprovalServlet at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
-    }
-
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        List<Contract> contracts = contractDAO.list();
+        String sort = request.getParameter("sort"); // "asc" or "desc"
+        String status = request.getParameter("status"); // "pending", "approved", "rejected", "all"
+        String search = request.getParameter("search"); // Tìm kiếm theo tên khách hàng
+        
+        List<Contract> contracts = contractDAO.filterContracts(status, search, sort);
+
         request.setAttribute("contracts", contracts);
-        request.getRequestDispatcher("contract/managerContracts.jsp").forward(request, response);
+        request.getRequestDispatcher("contract/managerContracts.jsp").forward(request, response); // Corrected JSP redirection
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        int contractId = Integer.parseInt(request.getParameter("contractId"));
-        String action = request.getParameter("action");
-        Contract contract = contractDAO.get(contractId);
-        if (contract != null) {
-            contract.setStatus(action.equals("approve") ? "approved" : "rejected");
-            contractDAO.update(contract);
+        try {
+            int contractId = Integer.parseInt(request.getParameter("contractId"));
+            String action = request.getParameter("action");
+
+            Contract contract = contractDAO.get(contractId);
+            if (contract != null) {
+                contract.setStatus("approve".equals(action) ? "approved" : "rejected");
+                contractDAO.update(contract);
+            }
+        } catch (NumberFormatException e) {
+            System.err.println("Invalid contract ID: " + e.getMessage());
         }
-        response.sendRedirect("contractApproval");
+
+        response.sendRedirect("contractApproval"); // Redirect back to contract list
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
     @Override
     public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
+        return "Handles contract approval and filtering";
+    }
 }

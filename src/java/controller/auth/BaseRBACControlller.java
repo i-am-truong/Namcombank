@@ -49,7 +49,7 @@ public abstract class BaseRBACControlller extends BaseRequiredAuthenticationCont
         if (isAuthorized(req, account)) {
             doAuthorizedPost(req, resp, account);
         } else {
-            resp.sendError(403, "You do not have right to access this feature!");
+            resp.sendRedirect("403.html");
         }
     }
 
@@ -58,7 +58,7 @@ public abstract class BaseRBACControlller extends BaseRequiredAuthenticationCont
         if (isAuthorized(req, account)) {
             doAuthorizedGet(req, resp, account);
         } else {
-            resp.sendError(403, "You do not have right to access this feature!");
+            resp.sendRedirect("403.html");
         }
     }
 }

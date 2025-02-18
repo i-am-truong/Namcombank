@@ -19,8 +19,10 @@
     </head>
     <body data-theme="default" data-layout="fluid" data-sidebar-position="left" data-sidebar-layout="default">
         <div class="wrapper">
+            <jsp:include page="../homepage/sidebar_admin.jsp" />
 
             <div class="main">
+                <jsp:include page="../homepage/header_admin.jsp" />
 
                 <main class="content">
                     <div class="container-fluid p-0">

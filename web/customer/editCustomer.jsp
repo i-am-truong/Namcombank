@@ -83,7 +83,7 @@
                             <h2>Edit Customer Info</h2>
                             <div class="col-12">
                                 <div class="d-grid">
-                                    <a href="manageCustomer"><button class="btn btn-primary btn-lg">Back to List Customers</button></a>
+                                    <a href="manageCustomerVer2/Search"><button class="btn btn-primary btn-lg">Back to List Customers</button></a>
                                 </div>
                             </div>
                         </div>
@@ -100,25 +100,31 @@
                     <div class="col-lg-6 offset-lg-3">
                         <div class="login-register-form-full">
 
-                            <form action="editCustomer" method="post">
+                            <form id="editCustomer" action="editCustomer" method="post">
                                 <input type="hidden" name="customerId" value="${customer.customerId}">
 
                                 <div class="form-group">
                                     <label for="fullnameC">Full Name</label>
                                     <input type="text" class="form-control" id="fullnameC" name="fullnameC"
-                                           value="${customer.fullname}" required>
+                                           value="${customer.fullname}" readonly>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="cidC">Citizen Identification Card</label>
+                                    <input type="text" class="form-control" id="cidC" name="citizenIdC"
+                                           value="${customer.cid}" required pattern="^0\d{11}$"  title="Citizen ID must be exactly 12 digits and start with 0" maxlength="12">
                                 </div>
 
                                 <div class="form-group">
                                     <label for="phonenumberC">Phone Number</label>
                                     <input type="tel" class="form-control" id="phonenumberC" name="phonenumberC"
-                                           value="${customer.phonenumber}" required>
+                                           value="${customer.phonenumber}" required pattern="^0[0-9]{9}$" title="Phone number must start with 0 and have exactly 10 digits." maxlength="10">
                                 </div>
 
                                 <div class="form-group">
                                     <label for="emailC">Email</label>
                                     <input type="email" class="form-control" id="emailC" name="emailC"
-                                           value="${customer.email}" required>
+                                           value="${customer.email}" required pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" title="Enter a valid email.">
                                 </div>
 
                                 <div class="form-group">
@@ -130,7 +136,7 @@
                                 <div class="form-group">
                                     <label for="dobC">Date of Birth</label>
                                     <input type="date" class="form-control" id="dobC" name="dobC"
-                                           value="${customer.dob}" required>
+                                           value="${customer.dob}">
                                 </div>
 
                                 <div class="form-group">
@@ -167,103 +173,68 @@
     <script src="assets/js/script.js"></script>
 
     <script>
-        document.getElementById('registerForm').addEventListener('submit', function (event) {
-            var fullname = document.getElementById('fullname').value.trim();
-            var phonenumber = document.getElementById('phonenumber').value.trim();
-            var email = document.getElementById('email').value.trim();
-            var address = document.getElementById('address').value.trim();
-            var dob = document.getElementById('dob').value.trim();
-            var username = document.getElementById('username').value.trim();
-            var password = document.getElementById('password').value.trim();
-            var confirmPassword = document.getElementById('confirmPassword').value.trim();
-            var cic = document.getElementById('citizenID').value.trim();
+        document.getElementById('editCustomer').addEventListener('submit', function (event) {
+            // Always prevent default form submission first
+            event.preventDefault();
 
-            // Regex Patterns
-            var phonenumberRegex = /^(09|03)[0-9]{8}$/; // Phone must start with 09 or 03 and have 10 digits
+            // Get form values
+            var phone = document.getElementById('phonenumberC').value.trim();
+            var email = document.getElementById('emailC').value.trim();
+            var cid = document.getElementById('cidC').value.trim();
+            var dob = document.getElementById('dobC').value.trim();
+
+            // Regular expressions for validation
+            var phoneRegex = /^(09|08|03)[0-9]{8}$/;
             var emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-            var addressRegex = /^[A-Za-z0-9\s,.'-]{3,}$/;
-            var usernameRegex = /^[A-Za-z0-9_\.]+$/;
-            var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z]).{8,}$/; // At least 1 uppercase, 1 lowercase, min 8 chars
-            var cicRegex = /^[0-9]{9,12}$/; // Chỉ cho phép số, 9 hoặc 12 chữ số
+            var cidRegex = /^0\d{11}$/;
 
-            var isValid = true;
-            var errorMessage = '';
-            if (!fullname) {
-                errorMessage += 'Name cannot be empty.\n';
-                isValid = false;
-            }
-            if (!phonenumber) {
-                errorMessage += 'Phone number cannot be empty.\n';
-                isValid = false;
-            } else if (!phonenumberRegex.test(phonenumber)) {
-                errorMessage += 'Phone number must start with 09 or 03 and have 10 digits.\n';
-                isValid = false;
-            }
-            if (!email) {
-                errorMessage += 'Email cannot be empty.\n';
-                isValid = false;
-            } else if (!emailRegex.test(email)) {
-                errorMessage += 'Invalid email format.\n';
-                isValid = false;
-            }
-            if (!address) {
-                errorMessage += 'Address cannot be empty.\n';
-                isValid = false;
-            } else if (!addressRegex.test(address)) {
-                errorMessage += 'Invalid address format.\n';
-                isValid = false;
-            }
-            if (!dob) {
-                errorMessage += 'Date of birth cannot be empty.\n';
-                isValid = false;
-            } else {
-                // Validate that DOB is not today's date
-                var today = new Date();
-                var dobDate = new Date(dob);
-                today.setHours(0, 0, 0, 0); // Reset time to compare only dates
+            var errors = [];
 
-                if (dobDate >= today) {
-                    errorMessage += 'Date of birth cannot be today or in the future.\n';
-                    isValid = false;
-                }
-            }
-            if (!username) {
-                errorMessage += 'Username cannot be empty.\n';
-                isValid = false;
-            } else if (!usernameRegex.test(username)) {
-                errorMessage += 'Username can only contain letters, numbers, dots, and underscores.\n';
-                isValid = false;
-            }
-            if (!password) {
-                errorMessage += 'Password cannot be empty.\n';
-                isValid = false;
-            } else if (!passwordRegex.test(password)) {
-                errorMessage += 'Password must have at least 8 characters, including an uppercase and lowercase letter.\n';
-                isValid = false;
-            }
-            if (!confirmPassword) {
-                errorMessage += 'Confirm password cannot be empty.\n';
-                isValid = false;
-            } else if (confirmPassword !== password) {
-                errorMessage += 'Confirm password does not match.\n';
-                isValid = false;
-            }
-            if (!cic) {
-                errorMessage += 'Citizen Identification Card cannot be empty\n';
-                isValid = false;
-            } else if (!cicRegex.test(cic)) {
-                errorMessage += 'Invalid Citizen Identification Card. It must be 9 or 12 digits.\n';
-                isValid = false;
+            // Validate phone number
+            if (!phoneRegex.test(phone)) {
+                errors.push('Phone number must start with 09 or 08 or 03 and have exactly 10 digits');
             }
 
-            if (!isValid) {
-                event.preventDefault(); // Prevent form submission
-                alert(errorMessage);
+            // Validate email
+            if (!emailRegex.test(email)) {
+                errors.push('Invalid email format');
             }
+
+            // Validate CIC
+            if (!cidRegex.test(cid)) {
+                errors.push('Citizen ID must start with 0 and have exactly 12 digits');
+            }
+
+            // Validate date of birth
+            var dobDate = new Date(dob);
+            var today = new Date();
+            today.setHours(0, 0, 0, 0); // Reset time portion
+
+            // Calculate age
+            var age = today.getFullYear() - dobDate.getFullYear();
+            var month = today.getMonth() - dobDate.getMonth();
+            if (month < 0 || (month === 0 && today.getDate() < dobDate.getDate())) {
+                age--;
+            }
+
+            if (dobDate >= today) {
+                errors.push('Date of birth cannot be today or in the future');
+            } else if (age < 18) {
+                errors.push('Customer must be at least 18 years old');
+            } else if (age > 100) {
+                errors.push('Invalid date of birth (age cannot exceed 100 years)');
+            }
+
+            // If there are any validation errors
+            if (errors.length > 0) {
+                alert(errors.join('\n'));
+                return false; // Prevent form submission
+            }
+
+            // If all validations pass, submit the form
+            this.submit();
         });
     </script>
-
-
 
 </body>
 </html>

@@ -84,7 +84,7 @@ public class AddContractController extends HttpServlet {
         double amount = Double.parseDouble(request.getParameter("amount"));
         String status = request.getParameter("status");
 
-        Contract contract = new Contract(id, customerName, type, amount, status);
+        Contract contract = new Contract(id, customerName, status, customerName, amount, status);
         contractDAO.insert(contract);
 
         response.sendRedirect("contract/listContracts.jsp");
