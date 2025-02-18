@@ -89,9 +89,17 @@ public class userProfile extends HttpServlet {
         } else {
 
             String errorPhoneNumber = "Please enter the first letter is 09 or 03!";
+            String errorName = "Please enter the only letter!";
 
-            // lấy dữ liệu từ form
+            String fullNameStr = request.getParameter("fullName");
+            if (checkName(fullNameStr) == false) {
+                request.setAttribute("errorName", errorName);
+                request.getRequestDispatcher("user/profileUser.jsp").forward(request, response);
+                return;
+            }
+
             String fullName = formatName(request.getParameter("fullName"));
+
             String phoneNumber = request.getParameter("phoneNumber");
             if (!formatPhoneNumber(phoneNumber)) {
                 request.setAttribute("errorPhoneNumber", errorPhoneNumber);
@@ -148,4 +156,7 @@ public class userProfile extends HttpServlet {
         return phone != null && phone.startsWith("09") || phone.startsWith("03");
     }
 
+    private boolean checkName(String name) {
+        return name != null && name.matches("^[\\p{L}\\s]+$");
+    }
 }
