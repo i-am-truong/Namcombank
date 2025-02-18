@@ -78,7 +78,7 @@ public class viewCustomer extends BaseRBACControlller {
             // Get customerId from request parameter
             String customerIdStr = request.getParameter("customerId");
             if (customerIdStr == null || customerIdStr.trim().isEmpty()) {
-                response.sendRedirect("manageCustomer");
+                response.sendRedirect("manageCustomerVer2/Search");
                 return;
             }
 
@@ -88,7 +88,7 @@ public class viewCustomer extends BaseRBACControlller {
 
             if (customer == null) {
                 // Customer not found
-                response.sendRedirect("manageCustomer");
+                response.sendRedirect("manageCustomerVer2/Search");
                 return;
             }
 

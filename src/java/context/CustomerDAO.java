@@ -717,7 +717,7 @@ public class CustomerDAO extends DBContext {
     //sent code to email
     public static boolean verifyCode(String mailTo, String code) {
         final String from = "duongkoi0504@gmail.com";
-        final String password = "ezig tkls qnql luym";
+        final String password = "qjew mxlv juli wgwr";
 
         Properties props = new Properties();
         props.setProperty("mail.smtp.host", "smtp.gmail.com"); // Use the correct SMTP server
