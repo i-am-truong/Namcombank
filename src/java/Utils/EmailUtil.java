@@ -26,7 +26,7 @@ import java.util.Random;
 class EmailUtil {
 
     public static final String USERNAME = "duongkoi0504@gmail.com";
-    public static final String PASSWORD = "ezig tkls qnql luym";
+    public static final String PASSWORD = "qjew mxlv juli wgwr";
 
     public static boolean sendMail(String to, String subject, String content) throws AddressException, MessagingException {
         Properties props = new Properties();
