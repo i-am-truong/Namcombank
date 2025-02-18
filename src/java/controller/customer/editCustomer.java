@@ -98,7 +98,7 @@ public class editCustomer extends BaseRBACControlller {
 
             if (customer == null) {
                 request.setAttribute("error", "Customer not found!");
-                response.sendRedirect("manageCustomer");
+                response.sendRedirect("manageCustomerVer2/Search");
                 return;
             }
 
@@ -134,7 +134,7 @@ public class editCustomer extends BaseRBACControlller {
         try {
             String customerId = request.getParameter("customerId");
             if (customerId == null || customerId.trim().isEmpty()) {
-                response.sendRedirect("manageCustomer");
+                response.sendRedirect("manageCustomerVer2/Search");
                 return;
             }
 
@@ -142,7 +142,7 @@ public class editCustomer extends BaseRBACControlller {
             Customer customer = cdao.getCustomerById(Integer.parseInt(customerId));
 
             if (customer == null) {
-                response.sendRedirect("manageCustomer");
+                response.sendRedirect("manageCustomerVer2/Search");
                 return;
             }
 
@@ -150,7 +150,7 @@ public class editCustomer extends BaseRBACControlller {
             request.getRequestDispatcher("customer/editCustomer.jsp").forward(request, response);
 
         } catch (NumberFormatException e) {
-            response.sendRedirect("manageCustomer");
+            response.sendRedirect("manageCustomerVer2/Search");
             return;
         }
     }
