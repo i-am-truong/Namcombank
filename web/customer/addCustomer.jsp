@@ -216,8 +216,8 @@
             if (!gender) errors.push('Please select a gender');
 
             // Format validations
-            if (phonenumber && !/^0[0-9]{9}$/.test(phonenumber)) {
-                errors.push('Phone number must start with 0 and have exactly 10 digits');
+            if (phonenumber && !/^(09|08|03)[0-9]{8}$/.test(phonenumber)) {
+                errors.push('Phone number must start with 09 or 08 or 03 and have exactly 10 digits');
             }
 
             if (email && !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {

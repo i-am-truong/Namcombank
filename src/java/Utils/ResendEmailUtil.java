@@ -111,7 +111,7 @@ public class ResendEmailUtil extends HttpServlet {
             Session mailSession = Session.getDefaultInstance(props, new jakarta.mail.Authenticator() {
                 @Override
                 protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication("duongkoi0504@gmail.com", "ezig tkls qnql luym");
+                    return new PasswordAuthentication("duongkoi0504@gmail.com", "qjew mxlv juli wgwr");
                 }
             });
 
