@@ -184,7 +184,7 @@
             var dob = document.getElementById('dobC').value.trim();
 
             // Regular expressions for validation
-            var phoneRegex = /^0\d{9}$/;
+            var phoneRegex = /^(09|08|03)[0-9]{8}$/;
             var emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
             var cidRegex = /^0\d{11}$/;
 
@@ -192,7 +192,7 @@
 
             // Validate phone number
             if (!phoneRegex.test(phone)) {
-                errors.push('Phone number must start with 0 and have exactly 10 digits');
+                errors.push('Phone number must start with 09 or 08 or 03 and have exactly 10 digits');
             }
 
             // Validate email
