@@ -91,8 +91,8 @@
                     <table class="table table-hover my-0">
                         <thead>
                             <tr>
-                                <th style="width:3%">ID</th>
-                                <th style="width:13%">
+                                <th>ID</th>
+                                <th>
                                     <form action="manageCustomerVer2" method="get">
                                         <input type="hidden" name="page" value="${pagination.currentPage}" />
                                         <input type="hidden" name="page-size" value="${pagination.pageSize}" />
@@ -114,7 +114,7 @@
                                     Date Of Birth
                                 </th>
 
-                                <th style="width:30%">
+                                <th>
                                     <form action="manageCustomerVer2" method="get">
                                         <input type="hidden" name="page" value="${pagination.currentPage}" />
                                         <input type="hidden" name="page-size" value="${pagination.pageSize}" />
@@ -130,9 +130,11 @@
                                     </form>
                                 </th>
 
+                                <th>CID</th>
+
                                 <th>Account Status</th>
 
-                                <th style="width:15%">
+                                <th>
                                     <form action="manageCustomerVer2" method="get">
                                         <input type="hidden" name="page" value="${pagination.currentPage}" />
                                         <input type="hidden" name="page-size" value="${pagination.pageSize}" />
@@ -148,7 +150,7 @@
                                     </form>
                                 </th>
 
-                                <th style="width:15%">
+                                <th>
                                     <form action="manageCustomerVer2" method="get">
                                         <input type="hidden" name="page" value="${pagination.currentPage}" />
                                         <input type="hidden" name="page-size" value="${pagination.pageSize}" />
@@ -164,7 +166,8 @@
                                     </form>
                                 </th>
 
-                                <th style="width:8%">Action<a href="manageCustomerVer2?page=${pagination.currentPage}&page-size=${pagination.pageSize}"><i class="fa fa-refresh ms-2"></i></a></th>
+                                <th>Balance</th>
+                                <th>Action<a href="manageCustomerVer2?page=${pagination.currentPage}&page-size=${pagination.pageSize}"><i class="fa fa-refresh ms-2"></i></a></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -185,6 +188,7 @@
                                     </td>
                                     <td>${customer.dob}</td>
                                     <td>${customer.email}</td>
+                                    <td>${customer.cid}</td>
                                     <td>
                                         <c:choose>
                                             <c:when test="${customer.active == 0}">
@@ -197,6 +201,7 @@
                                     </td>
                                     <td>${customer.username}</td>
                                     <td>${customer.address}</td>
+                                    <td>${customer.balance}</td>
                                     <td class="table-action">
 <!--                                        <a href="ComponentWarehouse/Detail?ID=${customer.customerId}&from=warehouse">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2 align-middle">
@@ -210,6 +215,7 @@
                                             </svg>
                                         </a>-->
                                     </td>
+
                                 </tr>
 
                                 <!-- Modal for each component -->

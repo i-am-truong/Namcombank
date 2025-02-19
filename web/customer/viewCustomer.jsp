@@ -115,12 +115,12 @@
                                             <label for="username" class="form-label">Username</label>
                                         </div>
                                     </div>
-                                    <div class="col-12">
+<!--                                    <div class="col-12">
                                         <div class="form-floating mb-3">
                                             <input type="text" class="form-control" name="passwordC" id="password" placeholder="Password" value="${customer.password}" disabled>
                                             <label for="password" class="form-label">Password</label>
                                         </div>
-                                    </div>
+                                    </div>-->
                                     <div class="col-12">
                                         <div class="form-floating mb-3">
                                             <input type="email" class="form-control" name="emailC" id="email" placeholder="name@example.com" value="${customer.email}" disabled>
