@@ -95,103 +95,71 @@ public class userProfile extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         Customer customer = (Customer) session.getAttribute("customer");
+
         if (customer == null) {
             response.sendRedirect("login");
-            return; // Ensure the method returns to avoid further execution
-        } else {
-
-            String errorPhoneNumber = "Please enter the first letter is 09 or 03!";
-            String errorName = "Please enter the only letter!";
-
-            String fullNameStr = request.getParameter("fullName");
-            if (checkName(fullNameStr) == false) {
-                request.setAttribute("errorName", errorName);
-                request.getRequestDispatcher("user/profileUser.jsp").forward(request, response);
-                return;
-            }
-
-            String fullName = formatName(request.getParameter("fullName"));
-
-            String phoneNumber = request.getParameter("phoneNumber");
-            if (!formatPhoneNumber(phoneNumber)) {
-                request.setAttribute("errorPhoneNumber", errorPhoneNumber);
-                request.getRequestDispatcher("user/profileUser.jsp").forward(request, response);
-                return;
-            }
-            String email = request.getParameter("email");
-            String address = request.getParameter("address");
-            String gender = request.getParameter("gender");
-            String dob = request.getParameter("dateOfBirth");
-
-            CustomerDAO cdao = new CustomerDAO();
-            // update ttin khách hàng
-            customer.setFullname(fullName);
-            customer.setPhonenumber(phoneNumber);
-            customer.setAddress(address);
-            customer.setEmail(email);
-            customer.setDob(Date.valueOf(dob));
-            if (gender.equals("male")) {
-                customer.setGender(1);
-            } else {
-                customer.setGender(0);
-            }
-            cdao.updateProfile(customer);
-
-            request.getRequestDispatcher("user/profileUser.jsp").forward(request, response);
             return;
         }
 
+        String errorPhoneNumber = "Please enter the first letter is 09 or 03!";
+        String errorName = "Please enter only letters!";
+
         // Lấy thông tin từ form
-        String fullName = formatName(request.getParameter("fullName"));
+        String fullNameStr = request.getParameter("fullName");
         String phoneNumber = request.getParameter("phoneNumber");
         String email = request.getParameter("email");
         String address = request.getParameter("address");
         String gender = request.getParameter("gender");
         String dob = request.getParameter("dateOfBirth");
 
-        // Kiểm tra số điện thoại
-        String errorPhoneNumber = "Please enter a valid phone number starting with 09 or 03!";
-        String existPhoneNumber = "This phone number is already in use!";
-        CustomerDAO cdao = new CustomerDAO();
+        // Kiểm tra hợp lệ tên
+        if (!checkName(fullNameStr)) {
+            request.setAttribute("errorName", errorName);
+            request.getRequestDispatcher("user/profileUser.jsp").forward(request, response);
+            return;
+        }
+
+        // Định dạng lại tên hợp lệ
+        String fullName = formatName(fullNameStr);
+
+        // Kiểm tra số điện thoại hợp lệ
         if (!formatPhoneNumber(phoneNumber)) {
             request.setAttribute("errorPhoneNumber", errorPhoneNumber);
             request.getRequestDispatcher("user/profileUser.jsp").forward(request, response);
             return;
         }
+
+        // Kiểm tra số điện thoại đã tồn tại chưa
+        CustomerDAO cdao = new CustomerDAO();
         if (cdao.isPhoneNumberExist(phoneNumber, customer.getCustomerId())) {
-            request.setAttribute("existPhoneNumber", existPhoneNumber);
+            request.setAttribute("existPhoneNumber", "This phone number is already in use!");
             request.getRequestDispatcher("user/profileUser.jsp").forward(request, response);
             return;
         }
 
-        // Xử lý upload avatar
-//        Part filePart = request.getPart("avatar");
-//        String avatarPath = customer.getAvatar(); // Giữ nguyên nếu không cập nhật ảnh mới
-//
-//        if (filePart != null && filePart.getSize() > 0) {
-//            String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
-//            String uploadPath = getServletContext().getRealPath("") + File.separator + UPLOAD_DIR;
-//            File uploadDir = new File(uploadPath);
-//            if (!uploadDir.exists()) {
-//                uploadDir.mkdirs();
-//            }
-//
-//            String filePath = uploadPath + File.separator + fileName;
-//            filePart.write(filePath);
-//            avatarPath = UPLOAD_DIR + "/" + fileName; // Lưu đường dẫn avatar mới
-//        }
         // Cập nhật thông tin khách hàng
         customer.setFullname(fullName);
         customer.setPhonenumber(phoneNumber);
         customer.setAddress(address);
         customer.setEmail(email);
-        customer.setDob(Date.valueOf(dob));
-        customer.setGender(gender.equals("male") ? 1 : 0);
-//        customer.setAvatar(avatarPath);
 
+        try {
+            customer.setDob(Date.valueOf(dob));
+        } catch (IllegalArgumentException e) {
+            request.setAttribute("errorDob", "Invalid date format!");
+            request.getRequestDispatcher("user/profileUser.jsp").forward(request, response);
+            return;
+        }
+
+        customer.setGender(gender.equals("male") ? 1 : 0);
+
+        // Cập nhật vào database
         cdao.updateProfile(customer);
 
-        session.setAttribute("customer", customer); // Cập nhật session
+        // Cập nhật lại session
+        session.setAttribute("customer", customer);
+
+        // Chuyển hướng về trang profile
         request.getRequestDispatcher("user/profileUser.jsp").forward(request, response);
     }
 
