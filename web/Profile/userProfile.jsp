@@ -64,6 +64,9 @@
                                         title="Full Name cannot be just spaces."
                                         value="${sessionScope.staff.fullname}"
                                         >
+                                    <c:if test="${not empty errorName}">
+                                        <p style="color: red;">${errorName}</p>
+                                    </c:if>
                                 </div>
 
                                 <div class="col-md-6">
@@ -78,6 +81,9 @@
                                         title="Please enter a valid 10-digit phone number"
                                         value="${sessionScope.staff.phonenumber}"
                                         >
+                                    <c:if test="${not empty errorPhoneNumber}">
+                                        <div style="color: red;">${errorPhoneNumber}</div>
+                                    </c:if>
                                 </div>
 
                                 <div class="col-md-6">
@@ -112,27 +118,27 @@
 
                                 <div class="col-md-6">
                                     <label class="labels">Gender</label>
-                                     <c:if test="${sessionScope.staff.gender == 1}">
-                                    <select name="gender" class="form-control" required>
-                                        <option value="" disabled selected>Select gender</option>
-                                        <option selected value="male">Male</option>
-                                        <option value="female">Female</option>
-                                    </select>
-                                         </c:if>
-                                     <c:if test="${sessionScope.staff.gender == 0}">
-                                         <select name="gender" class="form-control" required>
-                                        <option value="" disabled selected>Select gender</option>
-                                        <option  value="male">Male</option>
-                                        <option selected value="female">Female</option>
-                                    </select>
-                                         </c:if>
+                                    <c:if test="${sessionScope.staff.gender == 1}">
+                                        <select name="gender" class="form-control" required>
+                                            <option value="" disabled selected>Select gender</option>
+                                            <option selected value="male">Male</option>
+                                            <option value="female">Female</option>
+                                        </select>
+                                    </c:if>
+                                    <c:if test="${sessionScope.staff.gender == 0}">
+                                        <select name="gender" class="form-control" required>
+                                            <option value="" disabled selected>Select gender</option>
+                                            <option  value="male">Male</option>
+                                            <option selected value="female">Female</option>
+                                        </select>
+                                    </c:if>
                                     <c:if test="${sessionScope.staff.gender != 0 && sessionScope.customer.gender != 1} ">
-                                    <select name="gender" class="form-control" required>
-                                        <option value="" disabled selected>Select gender</option>
-                                        <option  value="male">Male</option>
-                                        <option  value="female">Female</option>
-                                    </select>
-                                         </c:if>
+                                        <select name="gender" class="form-control" required>
+                                            <option value="" disabled selected>Select gender</option>
+                                            <option  value="male">Male</option>
+                                            <option  value="female">Female</option>
+                                        </select>
+                                    </c:if>
                                 </div>
 
                                 <div class="col-md-6">
@@ -152,7 +158,7 @@
                                     <button class="btn btn-primary profile-button" type="submit" style="margin-right: 10px;">Save Profile</button>
                                 </div>
                             </form>
-                                        <a href="changePass" class="btn btn-primary profile-button" type="button">Change Password</a>
+                            <a href="changePass" class="btn btn-primary profile-button" type="button">Change Password</a>
                         </div>
                     </div>
                     <!-- /.container-fluid -->
@@ -174,18 +180,18 @@
         <script src="adminassets/vendor/datatables/dataTables.bootstrap4.min.js"></script>
         <!-- Page level custom scripts -->
         <script src="adminassets/js/demo/datatables-demo.js"></script>
-          <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Lấy ngày hiện tại theo định dạng YYYY-MM-DD
-            var today = new Date().toISOString().split('T')[0];
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                // Lấy ngày hiện tại theo định dạng YYYY-MM-DD
+                var today = new Date().toISOString().split('T')[0];
 
-            // Cập nhật thuộc tính max của input[type="date"]
-            document.querySelector('input[type="date"]').setAttribute('max', today);
-        });
-        document.getElementById('profile-form').addEventListener('submit', function(event) {
+                // Cập nhật thuộc tính max của input[type="date"]
+                document.querySelector('input[type="date"]').setAttribute('max', today);
+            });
+            document.getElementById('profile-form').addEventListener('submit', function (event) {
 
-    this.submit();
-});
-    </script>
+                this.submit();
+            });
+        </script>
     </body>
 </html>

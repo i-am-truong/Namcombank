@@ -97,6 +97,47 @@ public class userProfile extends HttpServlet {
         Customer customer = (Customer) session.getAttribute("customer");
         if (customer == null) {
             response.sendRedirect("login");
+            return; // Ensure the method returns to avoid further execution
+        } else {
+
+            String errorPhoneNumber = "Please enter the first letter is 09 or 03!";
+            String errorName = "Please enter the only letter!";
+
+            String fullNameStr = request.getParameter("fullName");
+            if (checkName(fullNameStr) == false) {
+                request.setAttribute("errorName", errorName);
+                request.getRequestDispatcher("user/profileUser.jsp").forward(request, response);
+                return;
+            }
+
+            String fullName = formatName(request.getParameter("fullName"));
+
+            String phoneNumber = request.getParameter("phoneNumber");
+            if (!formatPhoneNumber(phoneNumber)) {
+                request.setAttribute("errorPhoneNumber", errorPhoneNumber);
+                request.getRequestDispatcher("user/profileUser.jsp").forward(request, response);
+                return;
+            }
+            String email = request.getParameter("email");
+            String address = request.getParameter("address");
+            String gender = request.getParameter("gender");
+            String dob = request.getParameter("dateOfBirth");
+
+            CustomerDAO cdao = new CustomerDAO();
+            // update ttin khách hàng
+            customer.setFullname(fullName);
+            customer.setPhonenumber(phoneNumber);
+            customer.setAddress(address);
+            customer.setEmail(email);
+            customer.setDob(Date.valueOf(dob));
+            if (gender.equals("male")) {
+                customer.setGender(1);
+            } else {
+                customer.setGender(0);
+            }
+            cdao.updateProfile(customer);
+
+            request.getRequestDispatcher("user/profileUser.jsp").forward(request, response);
             return;
         }
 
@@ -168,5 +209,9 @@ public class userProfile extends HttpServlet {
 
     private boolean formatPhoneNumber(String phone) {
         return phone != null && (phone.startsWith("09") || phone.startsWith("03"));
+    }
+
+    private boolean checkName(String name) {
+        return name != null && name.matches("^[\\p{L}\\s]+$");
     }
 }
