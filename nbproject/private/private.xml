@@ -14,7 +14,12 @@
         <group>
             <file>file:/C:/Users/duong/OneDrive/Documents/GitHub/Namcombank/src/java/context/DBContext.java</file>
             <file>file:/C:/Users/duong/OneDrive/Documents/GitHub/Namcombank/src/java/Utils/EmailUtil.java</file>
+<<<<<<< Updated upstream
             <file>file:/C:/Users/duong/OneDrive/Documents/GitHub/Namcombank/src/java/context/ForgotPassword.java</file>
+=======
+            <file>file:/C:/Users/duong/OneDrive/Documents/GitHub/Namcombank/src/java/context/CustomerDAO.java</file>
+            <file>file:/C:/Users/duong/OneDrive/Documents/GitHub/Namcombank/src/java/context/DBContext.java</file>
+>>>>>>> Stashed changes
         </group>
     </open-files>
 </project-private>
