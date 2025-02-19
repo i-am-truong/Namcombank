@@ -32,8 +32,8 @@ import model.Gender;
  * @author lenovo
  */
 public class CustomerDAO extends DBContext {
-    
-    public int getBalanceMinMax(String order){
+
+    public int getBalanceMinMax(String order) {
         int balance = 0;
         String orderBy = order.equalsIgnoreCase("min") ? "ASC" : "DESC";
 
@@ -49,7 +49,7 @@ public class CustomerDAO extends DBContext {
         }
         return balance;
     }
-    
+
     public int getBalanceMin() {
         return getBalanceMinMax("min");
     }
@@ -1261,7 +1261,8 @@ public class CustomerDAO extends DBContext {
         return null;
     }
 
-    public int getTotalSearchCustomersByFields(String paraSearchUserName, String paraSearchFullName, Integer genderID, Integer activeID) {
+    public int getTotalSearchCustomersByFields(String paraSearchUserName, String paraSearchFullName, Integer genderID, Integer activeID, String cid, String address, String email, String phonenumber, Float minBalance, Float maxBalance) {
+
         StringBuilder query = new StringBuilder("SELECT COUNT(*) FROM Customer c "
                 + "JOIN Gender g ON c.gender = g.gender "
                 + "JOIN Active a ON c.active = a.active "
@@ -1274,14 +1275,50 @@ public class CustomerDAO extends DBContext {
 
         // Add gender condition if specified
         if (genderID != null) {
-            query.append(" AND c.gender = ?");
+            query.append("AND c.gender = ? ");
             parameters.add(genderID);
         }
 
         // Add active status condition if specified
         if (activeID != null) {
-            query.append(" AND c.active = ?");
+            query.append("AND c.active = ? ");
             parameters.add(activeID);
+        }
+
+        // Add citizen identification card condition if specified
+        if (cid != null && !cid.trim().isEmpty()) {
+            query.append("AND c.citizen_identification_card LIKE ? ");
+            parameters.add("%" + cid + "%");
+        }
+
+        // Add address condition if specified
+        if (address != null && !address.trim().isEmpty()) {
+            query.append("AND c.address LIKE ? ");
+            parameters.add("%" + address + "%");
+        }
+
+        // Add email condition if specified
+        if (email != null && !email.trim().isEmpty()) {
+            query.append("AND c.email LIKE ? ");
+            parameters.add("%" + email + "%");
+        }
+
+        // Add phone number condition if specified
+        if (phonenumber != null && !phonenumber.trim().isEmpty()) {
+            query.append("AND c.phonenumber LIKE ? ");
+            parameters.add("%" + phonenumber + "%");
+        }
+
+        if (minBalance != null && maxBalance != null) {
+            query.append(" AND c.balance BETWEEN ? AND ?");
+            parameters.add(minBalance);
+            parameters.add(maxBalance);
+        } else if (minBalance != null) {
+            query.append(" AND c.balance >= ?");
+            parameters.add(minBalance);
+        } else if (maxBalance != null) {
+            query.append(" AND c.balance <= ?");
+            parameters.add(maxBalance);
         }
 
         try (PreparedStatement ps = connection.prepareStatement(query.toString())) {
@@ -1297,6 +1334,7 @@ public class CustomerDAO extends DBContext {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         return 0;
     }
 
@@ -1353,72 +1391,8 @@ public class CustomerDAO extends DBContext {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    public List<Customer> searchCustomersByFieldsPageSorted(String paraSearchUserName, String paraSearchFullName,
-            int page, Integer pageSize, String sortSQL, String order, Integer genderID, Integer activeID) {
-        StringBuilder query = new StringBuilder("SELECT c.customer_id, c.fullname, c.username, c.password, "
-                + "c.email, c.dob, c.gender, c.phonenumber, c.balance, c.citizen_identification_card, "
-                + "c.address, c.active, g.gendername, a.activename " // Added c.gender and c.active
-                + "FROM Customer c "
-                + "JOIN Gender g ON c.gender = g.gender "
-                + "JOIN Active a ON c.active = a.active "
-                + "WHERE c.username LIKE ? AND "
-                + "c.fullname LIKE ? ");
+    public List<Customer> searchCustomersByFieldsPage(String paraSearchUserName, String paraSearchFullName, int page, Integer pageSize, Integer genderID, Integer activeID, String cid, String address, String email, String phonenumber, Float minBalance, Float maxBalance) {
 
-        List<Object> parameters = new ArrayList<>();
-        parameters.add("%" + paraSearchUserName + "%");
-        parameters.add("%" + paraSearchFullName + "%");
-
-        // Add gender condition if specified
-        if (genderID != null) {
-            query.append(" AND c.gender = ?");
-            parameters.add(genderID);
-        }
-
-        // Add active status condition if specified
-        if (activeID != null) {
-            query.append(" AND c.active = ?");
-            parameters.add(activeID);
-        }
-
-        // Add sorting and pagination
-        query.append(" ORDER BY ").append(sortSQL).append(" ").append(order)
-                .append(" OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
-        parameters.add((page - 1) * pageSize);
-        parameters.add(pageSize);
-
-        List<Customer> customers = new ArrayList<>();
-        try (PreparedStatement ps = connection.prepareStatement(query.toString())) {
-            // Set parameters
-            for (int i = 0; i < parameters.size(); i++) {
-                ps.setObject(i + 1, parameters.get(i));
-            }
-
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    Customer customer = new Customer(
-                            rs.getInt("customer_id"),
-                            rs.getString("fullname"),
-                            rs.getString("username"),
-                            rs.getString("password"),
-                            rs.getInt("active"), // Now correctly getting from Customer table
-                            rs.getString("email"),
-                            rs.getDate("dob"),
-                            rs.getInt("gender"), // Now correctly getting from Customer table
-                            rs.getString("phonenumber"),
-                            rs.getFloat("balance"),
-                            rs.getString("citizen_identification_card"),
-                            rs.getString("address")
-                    );
-                    customers.add(customer);
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return customers;
-    }
-
-    public List<Customer> searchCustomersByFieldsPage(String paraSearchUserName, String paraSearchFullName, int page, Integer pageSize, Integer genderID, Integer activeID) {
         StringBuilder query = new StringBuilder("SELECT c.customer_id, c.fullname, c.username, "
                 + "c.password, c.active, c.email, c.dob, c.gender, "
                 + "c.phonenumber, c.balance, c.citizen_identification_card, "
@@ -1435,18 +1409,55 @@ public class CustomerDAO extends DBContext {
 
         // Add gender condition if specified
         if (genderID != null) {
-            query.append(" AND c.gender = ?");
+            query.append("AND c.gender = ? ");
             parameters.add(genderID);
         }
 
         // Add active status condition if specified
         if (activeID != null) {
-            query.append(" AND c.active = ?");
+            query.append("AND c.active = ? ");
             parameters.add(activeID);
         }
 
+        // Add citizen identification card condition if specified
+        if (cid != null && !cid.trim().isEmpty()) {
+            query.append("AND c.citizen_identification_card LIKE ? ");
+            parameters.add("%" + cid + "%");
+        }
+
+        // Add address condition if specified
+        if (address != null && !address.trim().isEmpty()) {
+            query.append("AND c.address LIKE ? ");
+            parameters.add("%" + address + "%");
+        }
+
+        // Add email condition if specified
+        if (email != null && !email.trim().isEmpty()) {
+            query.append("AND c.email LIKE ? ");
+            parameters.add("%" + email + "%");
+        }
+
+        // Add phone number condition if specified
+        if (phonenumber != null && !phonenumber.trim().isEmpty()) {
+            query.append("AND c.phonenumber LIKE ? ");
+            parameters.add("%" + phonenumber + "%");
+        }
+
+        // Add balance range conditions if specified
+        if (minBalance != null && maxBalance != null) {
+            query.append("AND c.balance BETWEEN ? AND ? ");
+            parameters.add(minBalance);
+            parameters.add(maxBalance);
+        } else if (minBalance != null) {
+            query.append("AND c.balance >= ? ");
+            parameters.add(minBalance);
+        } else if (maxBalance != null) {
+            query.append("AND c.balance <= ? ");
+            parameters.add(maxBalance);
+        }
+
         // Add pagination
-        query.append(" ORDER BY c.customer_id OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+        query.append("ORDER BY c.customer_id OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
         parameters.add((page - 1) * pageSize);
         parameters.add(pageSize);
 
@@ -1474,6 +1485,108 @@ public class CustomerDAO extends DBContext {
                         rs.getString("address")
                 );
                 customers.add(customer);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return customers;
+    }
+
+    public List<Customer> searchCustomersByFieldsPageSorted(String paraSearchUserName, String paraSearchFullName, int page, Integer pageSize, String sortSQL, String order, Integer genderID, Integer activeID, String cid, String address, String email, String phonenumber, Float minBalance, Float maxBalance) {
+
+        StringBuilder query = new StringBuilder("SELECT c.customer_id, c.fullname, c.username, c.password, "
+                + "c.email, c.dob, c.gender, c.phonenumber, c.balance, c.citizen_identification_card, "
+                + "c.address, c.active, g.gendername, a.activename "
+                + "FROM Customer c "
+                + "JOIN Gender g ON c.gender = g.gender "
+                + "JOIN Active a ON c.active = a.active "
+                + "WHERE c.username LIKE ? AND "
+                + "c.fullname LIKE ? ");
+
+        List<Object> parameters = new ArrayList<>();
+        parameters.add("%" + paraSearchUserName + "%");
+        parameters.add("%" + paraSearchFullName + "%");
+
+        // Add gender condition if specified
+        if (genderID != null) {
+            query.append("AND c.gender = ? ");
+            parameters.add(genderID);
+        }
+
+        // Add active status condition if specified
+        if (activeID != null) {
+            query.append("AND c.active = ? ");
+            parameters.add(activeID);
+        }
+
+        // Add citizen identification card condition if specified
+        if (cid != null && !cid.trim().isEmpty()) {
+            query.append("AND c.citizen_identification_card LIKE ? ");
+            parameters.add("%" + cid + "%");
+        }
+
+        // Add address condition if specified
+        if (address != null && !address.trim().isEmpty()) {
+            query.append("AND c.address LIKE ? ");
+            parameters.add("%" + address + "%");
+        }
+
+        // Add email condition if specified
+        if (email != null && !email.trim().isEmpty()) {
+            query.append("AND c.email LIKE ? ");
+            parameters.add("%" + email + "%");
+        }
+
+        // Add phone number condition if specified
+        if (phonenumber != null && !phonenumber.trim().isEmpty()) {
+            query.append("AND c.phonenumber LIKE ? ");
+            parameters.add("%" + phonenumber + "%");
+        }
+
+        // Add balance range conditions if specified
+        if (minBalance != null && maxBalance != null) {
+            query.append("AND c.balance BETWEEN ? AND ? ");
+            parameters.add(minBalance);
+            parameters.add(maxBalance);
+        } else if (minBalance != null) {
+            query.append("AND c.balance >= ? ");
+            parameters.add(minBalance);
+        } else if (maxBalance != null) {
+            query.append("AND c.balance <= ? ");
+            parameters.add(maxBalance);
+        }
+
+        // Add sorting and pagination
+        query.append("ORDER BY ").append(sortSQL).append(" ").append(order)
+                .append(" OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+        parameters.add((page - 1) * pageSize);
+        parameters.add(pageSize);
+
+        List<Customer> customers = new ArrayList<>();
+        try (PreparedStatement ps = connection.prepareStatement(query.toString())) {
+            // Set parameters
+            for (int i = 0; i < parameters.size(); i++) {
+                ps.setObject(i + 1, parameters.get(i));
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Customer customer = new Customer(
+                            rs.getInt("customer_id"),
+                            rs.getString("fullname"),
+                            rs.getString("username"),
+                            rs.getString("password"),
+                            rs.getInt("active"),
+                            rs.getString("email"),
+                            rs.getDate("dob"),
+                            rs.getInt("gender"),
+                            rs.getString("phonenumber"),
+                            rs.getFloat("balance"),
+                            rs.getString("citizen_identification_card"),
+                            rs.getString("address")
+                    );
+                    customers.add(customer);
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
