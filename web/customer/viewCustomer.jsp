@@ -83,7 +83,7 @@
                             <h2>View Customer Info</h2>
                             <div class="col-12">
                                 <div class="d-grid">
-                                    <a href="manageCustomer"><button class="btn btn-primary btn-lg">Back to List Customers</button></a>
+                                    <a href="manageCustomerVer2/Search"><button class="btn btn-primary btn-lg">Back to List Customers</button></a>
                                 </div>
                             </div>
                         </div>
@@ -115,12 +115,12 @@
                                             <label for="username" class="form-label">Username</label>
                                         </div>
                                     </div>
-                                    <div class="col-12">
+<!--                                    <div class="col-12">
                                         <div class="form-floating mb-3">
                                             <input type="text" class="form-control" name="passwordC" id="password" placeholder="Password" value="${customer.password}" disabled>
                                             <label for="password" class="form-label">Password</label>
                                         </div>
-                                    </div>
+                                    </div>-->
                                     <div class="col-12">
                                         <div class="form-floating mb-3">
                                             <input type="email" class="form-control" name="emailC" id="email" placeholder="name@example.com" value="${customer.email}" disabled>

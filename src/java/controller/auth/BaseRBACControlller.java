@@ -37,11 +37,10 @@ public abstract class BaseRBACControlller extends BaseRequiredAuthenticationCont
                 }
             }
         }
-        return true;
+        return false;
     }
 
     protected abstract void doAuthorizedPost(HttpServletRequest req, HttpServletResponse resp, Staff account) throws ServletException, IOException;
-
     protected abstract void doAuthorizedGet(HttpServletRequest req, HttpServletResponse resp, Staff account) throws ServletException, IOException;
 
     @Override
@@ -49,7 +48,7 @@ public abstract class BaseRBACControlller extends BaseRequiredAuthenticationCont
         if (isAuthorized(req, account)) {
             doAuthorizedPost(req, resp, account);
         } else {
-            resp.sendError(403, "You do not have right to access this feature!");
+            resp.sendRedirect("403.html");
         }
     }
 
@@ -58,7 +57,7 @@ public abstract class BaseRBACControlller extends BaseRequiredAuthenticationCont
         if (isAuthorized(req, account)) {
             doAuthorizedGet(req, resp, account);
         } else {
-            resp.sendError(403, "You do not have right to access this feature!");
+            resp.sendRedirect("403.html");
         }
     }
 }

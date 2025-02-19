@@ -61,13 +61,6 @@ public class manageCustomer extends BaseRBACControlller {
 
     @Override
     protected void doAuthorizedGet(HttpServletRequest request, HttpServletResponse response, Staff account) throws ServletException, IOException {
-       HttpSession session = request.getSession();
-        Staff staff = (Staff) session.getAttribute("account");
-        if (staff == null) {
-            response.sendRedirect("admin.login");
-            return;
-        }
-        
         CustomerDAO cdao = new CustomerDAO();
         List<Customer> customers = cdao.getAllCustomers();
         request.setAttribute("customers", customers);

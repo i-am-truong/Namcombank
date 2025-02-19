@@ -3,14 +3,41 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/C:/Users/admin/OneDrive/Documents/GitHub/Namcombank/web/feedback/viewFeedback.jsp</file>
+            <file>file:/C:/Users/admin/OneDrive/Documents/GitHub/Namcombank/web/feedback/myFeedback.jsp</file>
+            <file>file:/C:/Users/admin/OneDrive/Documents/GitHub/Namcombank/web/feedback/feedback-create.jsp</file>
+            <file>file:/C:/Users/admin/OneDrive/Documents/GitHub/Namcombank/web/WEB-INF/web.xml</file>
+            <file>file:/C:/Users/admin/OneDrive/Documents/GitHub/Namcombank/src/java/context/DBContext.java</file>
+            <file>file:/C:/Users/admin/OneDrive/Documents/GitHub/Namcombank/src/java/controller/feedback/addFeedback.java</file>
+            <file>file:/C:/Users/admin/OneDrive/Documents/GitHub/Namcombank/web/user/profileUser.jsp</file>
+            <file>file:/C:/Users/admin/OneDrive/Documents/GitHub/Namcombank/src/java/controller/customer/editCustomer.java</file>
+            <file>file:/C:/Users/admin/OneDrive/Documents/GitHub/Namcombank/src/java/controller/customer/manageCustomer.java</file>
+            <file>file:/C:/Users/admin/OneDrive/Documents/GitHub/Namcombank/web/login/register.jsp</file>
+            <file>file:/C:/Users/admin/OneDrive/Documents/GitHub/Namcombank/src/java/controller/feedback/deleteFeedback.java</file>
             <file>file:/C:/Users/admin/OneDrive/Documents/GitHub/Namcombank/web/feedback/editFeedback.jsp</file>
             <file>file:/C:/Users/admin/OneDrive/Documents/GitHub/Namcombank/src/java/controller/feedback/cusFeedback.java</file>
-            <file>file:/C:/Users/admin/OneDrive/Documents/GitHub/Namcombank/web/feedback/myFeedback.jsp</file>
-            <file>file:/C:/Users/admin/OneDrive/Documents/GitHub/Namcombank/web/feedback/viewFeedback.jsp</file>
-            <file>file:/C:/Users/admin/OneDrive/Documents/GitHub/Namcombank/src/java/controller/feedback/editFeedback.java</file>
             <file>file:/C:/Users/admin/OneDrive/Documents/GitHub/Namcombank/src/java/context/FeedbackDao.java</file>
+            <file>file:/C:/Users/admin/OneDrive/Documents/GitHub/Namcombank/src/java/controller/Admin/viewCustomerFeedback.java</file>
+            <file>file:/C:/Users/admin/OneDrive/Documents/GitHub/Namcombank/web/homepage/header_admin.jsp</file>
+            <file>file:/C:/Users/admin/OneDrive/Documents/GitHub/Namcombank/web/homepage/header.jsp</file>
+            <file>file:/C:/Users/admin/OneDrive/Documents/GitHub/Namcombank/web/homepage/home.jsp</file>
+            <file>file:/C:/Users/admin/OneDrive/Documents/GitHub/Namcombank/src/java/controller/auth/BaseRequiredAuthenticationController.java</file>
+            <file>file:/C:/Users/admin/OneDrive/Documents/GitHub/Namcombank/src/java/controller/Login/register.java</file>
+            <file>file:/C:/Users/admin/OneDrive/Documents/GitHub/Namcombank/src/java/controller/User/userProfile.java</file>
+            <file>file:/C:/Users/admin/OneDrive/Documents/GitHub/Namcombank/src/java/controller/auth/BaseRBACControlller.java</file>
+            <file>file:/C:/Users/admin/OneDrive/Documents/GitHub/Namcombank/web/customer/manageCustomer.jsp</file>
+            <file>file:/C:/Users/admin/OneDrive/Documents/GitHub/Namcombank/web/homepage/sidebar_admin.jsp</file>
             <file>file:/C:/Users/admin/OneDrive/Documents/GitHub/Namcombank/src/java/controller/feedback/viewFeedback.java</file>
-            <file>file:/C:/Users/admin/OneDrive/Documents/GitHub/Namcombank/src/java/controller/feedback/deleteFeedback.java</file>
+            <file>file:/C:/Users/admin/OneDrive/Documents/GitHub/Namcombank/src/java/controller/feedback/editFeedback.java</file>
+            <file>file:/C:/Users/admin/OneDrive/Documents/GitHub/Namcombank/web/admin.login/register.jsp</file>
+            <file>file:/C:/Users/admin/OneDrive/Documents/GitHub/Namcombank/src/java/controller/Login/login.java</file>
+            <file>file:/C:/Users/admin/OneDrive/Documents/GitHub/Namcombank/src/java/controller/User/managerUser.java</file>
+            <file>file:/C:/Users/admin/OneDrive/Documents/GitHub/Namcombank/web/homepage/header_bottom.jsp</file>
+            <file>file:/C:/Users/admin/OneDrive/Documents/GitHub/Namcombank/web/Profile/userProfile.jsp</file>
+            <file>file:/C:/Users/admin/OneDrive/Documents/GitHub/Namcombank/web/customer/editCustomer.jsp</file>
+            <file>file:/C:/Users/admin/OneDrive/Documents/GitHub/Namcombank/src/java/controller/Staff/StaffAddController.java</file>
+            <file>file:/C:/Users/admin/OneDrive/Documents/GitHub/Namcombank/src/java/controller/Login/changePass.java</file>
+            <file>file:/C:/Users/admin/OneDrive/Documents/GitHub/Namcombank/web/dashboard/dashboard.jsp</file>
         </group>
     </open-files>
 </project-private>

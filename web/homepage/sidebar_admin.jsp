@@ -53,11 +53,11 @@
             <span>Loan Packages Table</span></a>
     </li>
 
-    <li class="nav-item active">
+<!--    <li class="nav-item active">
         <a class="nav-link" href="managerUser">
             <i class="fas fa-fw fa-table"></i>
             <span>Manager Customer</span></a>
-    </li>
+    </li>-->
 
     <li class="nav-item active">
         <a class="nav-link" href="manageCustomer">
@@ -74,6 +74,23 @@
         </a>
     </li>
 
+    <li class="nav-item">
+        <a class="nav-link" href="#" data-toggle="collapse" data-target="#staffMenu" aria-expanded="false">
+            <i class="fas fa-fw fa-table"></i>
+            <span>Tool & Extensions</span>
+        </a>
+        <div id="staffMenu" class="collapse">
+            <a class="nav-link sub-menu" href="repaymentSchedule">
+                <i class="fas fa-fw fa-table"></i> Repayment Schedule
+            </a>
+            <a class="nav-link sub-menu" href="savingInterest">
+                <i class="fas fa-fw fa-table"></i> Savings Interest Rate
+            </a>
+            <a class="nav-link sub-menu" href="loanPackage">
+                <i class="fas fa-fw fa-table"></i> Loan Interest Rate
+            </a>
+        </div>
+    </li>
     <li class="nav-item">
         <a class="nav-link" href="#" data-toggle="collapse" data-target="#staffMenu" aria-expanded="false">
             <i class="fas fa-fw fa-user"></i>
@@ -132,6 +149,12 @@
         <a class="nav-link" href="newsList">
             <i class="fas fa-fw fa-table"></i>
             <span> News</span></a>
+    </li>
+    
+    <li class="nav-item active">
+        <a class="nav-link" href="manageCustomerVer2">
+            <i class="fas fa-fw fa-table"></i>
+            <span> Manage Customer Ver 2</span></a>
     </li>
 
 

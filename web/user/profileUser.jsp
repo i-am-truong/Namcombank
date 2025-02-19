@@ -160,7 +160,9 @@
                                 <c:if test="${not empty requestScope.errorPhoneNumber}">
                                     <span style="color: red;">${requestScope.errorPhoneNumber}</span>
                                 </c:if>
-
+                                <c:if test="${not empty requestScope.existPhoneNumber}">
+                                    <span style="color: red;">${requestScope.existPhoneNumber}</span>
+                                </c:if>
                             </div>
 
                             <div class="col-md-9">
@@ -219,18 +221,26 @@
                             </div>
 
                             <div class="col-md-9">
-                                <label class="labels">Date of birth</label>
+                                <label class="labels">Date of Birth</label>
                                 <input
                                     name="dateOfBirth"
                                     required
                                     type="date"
                                     class="form-control"
-                                    placeholder="enter date of birth"
-                                    max=""
+                                    id="dob-input"
+                                    placeholder="Enter date of birth"
                                     value="${sessionScope.customer.dob}"
                                     >
+                                <div id="dob-error" style="color: red; display: none;">
+                                    Date of Birth cannot be in the future.
+                                </div>
                             </div>
+                                    
 
+                            <div class="col-md-9">
+                                <label class="labels">Upload Profile Picture</label>
+                                <input type="file" name="profileImage" class="form-control" accept="image/*">
+                            </div>
                             <div class="mt-3 text-left" style="display: flex; justify-content: flex-start; align-items: center;">
                                 <button class="btn btn-primary profile-button" type="submit" style="margin-right: 10px;">Save Profile</button>
                                 <a href="changePass" style="margin-left: 100px" class="btn btn-primary profile-button" type="button">Change Password</a>
@@ -258,16 +268,39 @@
         </div>
         <script>
             document.addEventListener('DOMContentLoaded', function () {
-                // Lấy ngày hiện tại theo định dạng YYYY-MM-DD
                 var today = new Date().toISOString().split('T')[0];
+                var dobInput = document.getElementById('dob-input');
 
-                // Cập nhật thuộc tính max của input[type="date"]
-                document.querySelector('input[type="date"]').setAttribute('max', today);
-            });
-            document.getElementById('profile-form').addEventListener('submit', function (event) {
+                // Đặt max cho input date
+                dobInput.setAttribute('max', today);
 
-                this.submit();
+                // Kiểm tra khi người dùng thay đổi giá trị
+                dobInput.addEventListener('input', function () {
+                    var selectedDate = this.value;
+                    var dobError = document.getElementById('dob-error');
+
+                    if (selectedDate > today) {
+                        dobError.style.display = 'block';
+                        this.value = ''; // Reset input nếu chọn sai
+                    } else {
+                        dobError.style.display = 'none';
+                    }
+                });
             });
+            document.getElementById('email-input').addEventListener('input', function () {
+                var email = this.value;
+                var emailError = document.getElementById('email-error');
+
+                // Biểu thức chính quy kiểm tra email hợp lệ
+                var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+                if (!emailPattern.test(email)) {
+                    emailError.style.display = 'block';
+                } else {
+                    emailError.style.display = 'none';
+                }
+            });
+
         </script>
 
         <!-- Js File -->

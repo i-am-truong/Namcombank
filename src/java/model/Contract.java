@@ -9,45 +9,27 @@ package model;
  * @author lenovo
  */
 public class Contract {
+
     private int id;
-    private String customerName;
-    private String type;
+    private String customerName; // Tên khách hàng (Customers)
+    private String loanName; // Tên khoản vay (Loans)
+    private String packageName; // Tên gói vay (LoanPackages)
     private double amount;
     private String status;
 
     public Contract() {
     }
 
-    public Contract(int id, String customerName, String type, double amount, String status) {
+    public Contract(int id, String customerName, String loanName, String packageName, double amount, String status) {
         this.id = id;
         this.customerName = customerName;
-        this.type = type;
+        this.loanName = loanName;
+        this.packageName = packageName;
         this.amount = amount;
         this.status = status;
     }
-    
-    
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public void setAmount(double amount) {
-        this.amount = amount;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
+    // Getters
     public int getId() {
         return id;
     }
@@ -56,8 +38,12 @@ public class Contract {
         return customerName;
     }
 
-    public String getType() {
-        return type;
+    public String getLoanName() {
+        return loanName;
+    }
+
+    public String getPackageName() {
+        return packageName;
     }
 
     public double getAmount() {
@@ -67,6 +53,29 @@ public class Contract {
     public String getStatus() {
         return status;
     }
-    
-    
+
+    // Setters
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public void setLoanName(String loanName) {
+        this.loanName = loanName;
+    }
+
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 }

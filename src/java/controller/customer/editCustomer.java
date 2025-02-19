@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Locale.Category;
 
 import context.CustomerDAO;
+import controller.auth.BaseRBACControlller;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,12 +19,13 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.sql.Date;
 import model.Customer;
+import model.auth.Staff;
 
 /**
  *
  * @author TQT
  */
-public class editCustomer extends HttpServlet {
+public class editCustomer extends BaseRBACControlller {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -51,55 +53,22 @@ public class editCustomer extends HttpServlet {
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method. Get Customer ID from request
-     * parameter and display edit form
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        try {
-            String customerId = request.getParameter("customerId");
-            if (customerId == null || customerId.trim().isEmpty()) {
-                response.sendRedirect("manageCustomer");
-                return;
-            }
-
-            CustomerDAO cdao = new CustomerDAO();
-            Customer customer = cdao.getCustomerById(Integer.parseInt(customerId));
-
-            if (customer == null) {
-                response.sendRedirect("manageCustomer");
-                return;
-            }
-
-            request.setAttribute("customer", customer);
-            request.getRequestDispatcher("customer/editCustomer.jsp").forward(request, response);
-
-        } catch (NumberFormatException e) {
-            response.sendRedirect("manageCustomer");
-            return;
-        }
+    private boolean isNullOrEmpty(String str) {
+        return str == null || str.trim().isEmpty();
     }
 
     /**
-     * Handles the HTTP <code>POST</code> method.
+     * Returns a short description of the servlet.
      *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @return a String containing servlet description
      */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    public String getServletInfo() {
+        return "Short description";
+    }// </editor-fold>
+
+    @Override
+    protected void doAuthorizedPost(HttpServletRequest request, HttpServletResponse response, Staff account) throws ServletException, IOException {
         try {
             // Get all parameters
             int customerId = Integer.parseInt(request.getParameter("customerId"));
@@ -111,7 +80,7 @@ public class editCustomer extends HttpServlet {
             String gender = request.getParameter("genderC");
 
             // Validate required fields
-            if (isNullOrEmpty(phonenumber)
+            if (isNullOrEmpty(citizenId) || isNullOrEmpty(phonenumber)
                     || isNullOrEmpty(email) || isNullOrEmpty(address)
                     || isNullOrEmpty(dobStr) || isNullOrEmpty(gender)) {
 
@@ -129,7 +98,7 @@ public class editCustomer extends HttpServlet {
 
             if (customer == null) {
                 request.setAttribute("error", "Customer not found!");
-                response.sendRedirect("manageCustomer");
+                response.sendRedirect("manageCustomerVer2/Search");
                 return;
             }
 
@@ -153,25 +122,37 @@ public class editCustomer extends HttpServlet {
 
         } catch (IllegalArgumentException e) {
             request.setAttribute("error", "Invalid date format!");
-            doGet(request, response);
+            doAuthorizedGet(request, response, account);
         } catch (Exception e) {
             request.setAttribute("error", "An error occurred while updating customer!");
-            doGet(request, response);
+            doAuthorizedGet(request, response, account);
         }
     }
 
-    private boolean isNullOrEmpty(String str) {
-        return str == null || str.trim().isEmpty();
-    }
-
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
     @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
+    protected void doAuthorizedGet(HttpServletRequest request, HttpServletResponse response, Staff account) throws ServletException, IOException {
+        try {
+            String customerId = request.getParameter("customerId");
+            if (customerId == null || customerId.trim().isEmpty()) {
+                response.sendRedirect("manageCustomerVer2/Search");
+                return;
+            }
+
+            CustomerDAO cdao = new CustomerDAO();
+            Customer customer = cdao.getCustomerById(Integer.parseInt(customerId));
+
+            if (customer == null) {
+                response.sendRedirect("manageCustomerVer2/Search");
+                return;
+            }
+
+            request.setAttribute("customer", customer);
+            request.getRequestDispatcher("customer/editCustomer.jsp").forward(request, response);
+
+        } catch (NumberFormatException e) {
+            response.sendRedirect("manageCustomerVer2/Search");
+            return;
+        }
+    }
 
 }

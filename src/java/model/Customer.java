@@ -11,10 +11,11 @@ import java.sql.Date;
  * @author lenovo
  */
 public class Customer {
+
     private int customerId;
     private String fullname;
     private String username;
-    private String password; 
+    private String password;
     private int active;
     private String email;
     private Date dob;
@@ -23,9 +24,18 @@ public class Customer {
     private float balance;
     private String cid;
     private String address;
-    
+
     public Customer() {
     }
+
+    public Customer(int customerId, String fullname, String email, String phonenumber) {
+        this.customerId = customerId;
+        this.fullname = fullname;
+        this.email = email;
+        this.phonenumber = phonenumber;
+    }
+    
+    
 
     public Customer(int customerId, String fullname, String username, String password, int active, String email, Date dob, int gender, String phonenumber, float balance, String cid, String address) {
         this.customerId = customerId;
@@ -41,8 +51,6 @@ public class Customer {
         this.cid = cid;
         this.address = address;
     }
-
-    
 
     public int getCustomerId() {
         return customerId;
@@ -140,11 +148,8 @@ public class Customer {
         this.address = address;
     }
 
-    // Test
-//    @Override
-//    public String toString() {
-//        return "Customer{" + "customerId=" + customerId + ", fullname=" + fullname + ", username=" + username + ", password=" + password + ", active=" + active + ", email=" + email + ", dob=" + dob + ", gender=" + gender + ", phonenumber=" + phonenumber + ", balance=" + balance + ", cid=" + cid + ", address=" + address + '}';
-//    }
-    
-    
+    @Override
+    public String toString() {
+        return "Customer{" + "customerId=" + customerId + ", fullname=" + fullname + ", username=" + username + ", password=" + password + ", active=" + active + ", email=" + email + ", dob=" + dob + ", gender=" + gender + ", phonenumber=" + phonenumber + ", balance=" + balance + ", cid=" + cid + ", address=" + address + '}';
+    }
 }

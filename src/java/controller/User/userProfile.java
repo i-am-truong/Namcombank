@@ -5,13 +5,17 @@
 package controller.User;
 
 import context.CustomerDAO;
+import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.nio.file.Paths;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Part;
+import java.io.PrintWriter;
 import java.sql.Date;
 import model.Customer;
 
@@ -19,7 +23,15 @@ import model.Customer;
  *
  * @author lenovo
  */
+@MultipartConfig(
+        fileSizeThreshold = 1024 * 1024 * 2, // 2MB
+        maxFileSize = 1024 * 1024 * 10, // 10MB
+        maxRequestSize = 1024 * 1024 * 50 // 50MB
+)
+
 public class userProfile extends HttpServlet {
+
+    private static final String UPLOAD_DIR = "uploads/avatars";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -83,58 +95,76 @@ public class userProfile extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         Customer customer = (Customer) session.getAttribute("customer");
+
         if (customer == null) {
             response.sendRedirect("login");
-            return; // Ensure the method returns to avoid further execution
-        } else {
-
-            String errorPhoneNumber = "Please enter the first letter is 0!";
-
-            // lấy dữ liệu từ form
-            String fullName = formatName(request.getParameter("fullName"));
-            String phoneNumber = request.getParameter("phoneNumber");
-            if (!formatPhoneNumber(phoneNumber)) {
-                request.setAttribute("errorPhoneNumber", errorPhoneNumber);
-                request.getRequestDispatcher("user/profileUser.jsp").forward(request, response);
-                return;
-            }
-            String email = request.getParameter("email");
-
-            String address = request.getParameter("address");
-            String gender = request.getParameter("gender");
-            String dob = request.getParameter("dateOfBirth");
-
-            CustomerDAO cdao = new CustomerDAO();
-            // update ttin khách hàng
-            customer.setFullname(fullName);
-            customer.setPhonenumber(phoneNumber);
-            customer.setAddress(address);
-            customer.setEmail(email);
-            customer.setDob(Date.valueOf(dob));
-            if (gender.equals("male")) {
-                customer.setGender(1);
-            } else {
-                customer.setGender(0);
-            }
-            cdao.updateProfile(customer);
-
-            request.getRequestDispatcher("user/profileUser.jsp").forward(request, response);
+            return;
         }
 
+        String errorPhoneNumber = "Please enter the first letter is 09 or 03!";
+        String errorName = "Please enter only letters!";
+
+        // Lấy thông tin từ form
+        String fullNameStr = request.getParameter("fullName");
+        String phoneNumber = request.getParameter("phoneNumber");
+        String email = request.getParameter("email");
+        String address = request.getParameter("address");
+        String gender = request.getParameter("gender");
+        String dob = request.getParameter("dateOfBirth");
+
+        // Kiểm tra hợp lệ tên
+        if (!checkName(fullNameStr)) {
+            request.setAttribute("errorName", errorName);
+            request.getRequestDispatcher("user/profileUser.jsp").forward(request, response);
+            return;
+        }
+
+        // Định dạng lại tên hợp lệ
+        String fullName = formatName(fullNameStr);
+
+        // Kiểm tra số điện thoại hợp lệ
+        if (!formatPhoneNumber(phoneNumber)) {
+            request.setAttribute("errorPhoneNumber", errorPhoneNumber);
+            request.getRequestDispatcher("user/profileUser.jsp").forward(request, response);
+            return;
+        }
+
+        // Kiểm tra số điện thoại đã tồn tại chưa
+        CustomerDAO cdao = new CustomerDAO();
+        if (cdao.isPhoneNumberExist(phoneNumber, customer.getCustomerId())) {
+            request.setAttribute("existPhoneNumber", "This phone number is already in use!");
+            request.getRequestDispatcher("user/profileUser.jsp").forward(request, response);
+            return;
+        }
+
+        // Cập nhật thông tin khách hàng
+        customer.setFullname(fullName);
+        customer.setPhonenumber(phoneNumber);
+        customer.setAddress(address);
+        customer.setEmail(email);
+
+        try {
+            customer.setDob(Date.valueOf(dob));
+        } catch (IllegalArgumentException e) {
+            request.setAttribute("errorDob", "Invalid date format!");
+            request.getRequestDispatcher("user/profileUser.jsp").forward(request, response);
+            return;
+        }
+
+        customer.setGender(gender.equals("male") ? 1 : 0);
+
+        // Cập nhật vào database
+        cdao.updateProfile(customer);
+
+        // Cập nhật lại session
+        session.setAttribute("customer", customer);
+
+        // Chuyển hướng về trang profile
+        request.getRequestDispatcher("user/profileUser.jsp").forward(request, response);
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
     private String formatName(String name) {
-        name = name.trim().replaceAll("\\s+", " ");// thay nhieu khoang trang bang 1
+        name = name.trim().replaceAll("\\s+", " ");
         String[] words = name.split(" ");
         StringBuilder formattedName = new StringBuilder();
         for (String word : words) {
@@ -146,7 +176,10 @@ public class userProfile extends HttpServlet {
     }
 
     private boolean formatPhoneNumber(String phone) {
-        return phone != null && phone.startsWith("0");
+        return phone != null && (phone.startsWith("09") || phone.startsWith("03"));
     }
 
+    private boolean checkName(String name) {
+        return name != null && name.matches("^[\\p{L}\\s]+$");
+    }
 }

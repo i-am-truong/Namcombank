@@ -83,7 +83,7 @@
                             <h2>Create New Customer </h2>
                             <div class="col-12">
                                 <div class="d-grid">
-                                    <a href="manageCustomer"><button class="btn btn-primary btn-lg">Back to List Customers</button></a>
+                                    <a href="manageCustomerVer2"><button class="btn btn-primary btn-lg">Back to List Customers</button></a>
                                 </div>
                             </div>
                         </div>
@@ -122,7 +122,7 @@
                                     </div>
                                     <div class="col-12">
                                         <div class="form-floating mb-3">
-                                            <input type="email" class="form-control" name="emailC" id="email" placeholder="name@example.com" value="${param.emailC != null ? param.emailC : ''}" >
+                                            <input type="email" class="form-control" name="emailC" id="email" placeholder="name@example.com" value="${param.emailC != null ? param.emailC : ''}" required pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" title="Enter a valid email.">
                                             <label for="email" class="form-label">Email</label>
                                         </div>
                                     </div>
@@ -145,7 +145,7 @@
                                     <div class="col-12">
                                         <div class="form-floating mb-3">
                                             <input type="tel" class="form-control" name="phonenumberC" id="phonenumber"
-                                                   value="${param.phonenumberC != null ? param.phonenumberC : ''}" >
+                                                   value="${param.phonenumberC != null ? param.phonenumberC : ''}" required pattern="^0[0-9]{9}$" title="Phone number must start with 0 and have exactly 10 digits." maxlength="10">
                                             <label for="phonenumber" class="form-label">Phone Number</label>
                                         </div>
                                     </div>
@@ -159,7 +159,7 @@
                                     <div class="col-12">
                                         <div class="form-floating mb-3">
                                             <input type="text" class="form-control" name="cicC" id="citizenID" placeholder="Citizen Identification Card"
-                                                   value="${param.cicC != null ? param.cicC : ''}">
+                                                   value="${param.cicC != null ? param.cicC : ''}" required pattern="^0\d{11}$"  title="Citizen ID must be exactly 12 digits and start with 0" maxlength="12">
                                             <label for="citizenID" class="form-label">Citizen Identification Card</label>
                                         </div>
                                     </div>
@@ -191,6 +191,9 @@
 
     <script>
         document.getElementById('registerForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // Temporarily prevent form submission
+
+            var errors = [];
             var fullname = document.getElementById('fullname').value.trim();
             var phonenumber = document.getElementById('phonenumber').value.trim();
             var email = document.getElementById('email').value.trim();
@@ -199,81 +202,63 @@
             var username = document.getElementById('username').value.trim();
             var password = document.getElementById('password').value.trim();
             var cic = document.getElementById('citizenID').value.trim();
+            var gender = document.getElementById('gender').value;
 
-            // Regex Patterns
-            var phonenumberRegex = /^(09|03)[0-9]{8}$/; // Phone must start with 09 or 03 and have 10 digits
-            var emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-            var addressRegex = /^[A-Za-z0-9\s,.'-]{3,}$/;
-            var usernameRegex = /^[A-Za-z0-9_\.]+$/;
-            var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z]).{8,}$/; // At least 1 uppercase, 1 lowercase, min 8 chars
-            var cicRegex = /^[0-9]{9,12}$/; // Chỉ cho phép số, 9 hoặc 12 chữ số
+            // Basic validations
+            if (!fullname) errors.push('Name cannot be empty');
+            if (!username) errors.push('Username cannot be empty');
+            if (!password) errors.push('Password cannot be empty');
+            if (!email) errors.push('Email cannot be empty');
+            if (!phonenumber) errors.push('Phone number cannot be empty');
+            if (!address) errors.push('Address cannot be empty');
+            if (!dob) errors.push('Date of birth cannot be empty');
+            if (!cic) errors.push('Citizen ID cannot be empty');
+            if (!gender) errors.push('Please select a gender');
 
-            var isValid = true;
-            var errorMessage = '';
-            if (!fullname) {
-                errorMessage += 'Name cannot be empty.\n';
-                isValid = false;
+            // Format validations
+            if (phonenumber && !/^(09|08|03)[0-9]{8}$/.test(phonenumber)) {
+                errors.push('Phone number must start with 09 or 08 or 03 and have exactly 10 digits');
             }
-            if (!phonenumber) {
-                errorMessage += 'Phone number cannot be empty.\n';
-                isValid = false;
-            } else if (!phonenumberRegex.test(phonenumber)) {
-                errorMessage += 'Phone number must start with 09 or 03 and have 10 digits.\n';
-                isValid = false;
+
+            if (email && !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
+                errors.push('Invalid email format');
             }
-            if (!email) {
-                errorMessage += 'Email cannot be empty.\n';
-                isValid = false;
-            } else if (!emailRegex.test(email)) {
-                errorMessage += 'Invalid email format.\n';
-                isValid = false;
+
+            if (password && !/^(?=.*[a-z])(?=.*[A-Z]).{8,}$/.test(password)) {
+                errors.push('Password must have at least 8 characters, including uppercase and lowercase letters');
             }
-            if (!address) {
-                errorMessage += 'Address cannot be empty.\n';
-                isValid = false;
-            } else if (!addressRegex.test(address)) {
-                errorMessage += 'Invalid address format.\n';
-                isValid = false;
+
+            if (cic && !/^0[0-9]{11}$/.test(cic)) {
+                errors.push('Citizen ID must be exactly 12 digits and start with 0');
             }
-            if (!dob) {
-                errorMessage += 'Date of birth cannot be empty.\n';
-                isValid = false;
-            } else {
-                // Validate that DOB is not today's date
-                var today = new Date();
+
+            // Date validation
+            if (dob) {
                 var dobDate = new Date(dob);
-                today.setHours(0, 0, 0, 0); // Reset time to compare only dates
+                var today = new Date();
+                today.setHours(0, 0, 0, 0);
+
+                var age = today.getFullYear() - dobDate.getFullYear();
+                var month = today.getMonth() - dobDate.getMonth();
+                if (month < 0 || (month === 0 && today.getDate() < dobDate.getDate())) {
+                    age--;
+                }
 
                 if (dobDate >= today) {
-                    errorMessage += 'Date of birth cannot be today or in the future.\n';
-                    isValid = false;
+                    errors.push('Date of birth cannot be today or in the future');
+                } else if (age < 18) {
+                    errors.push('Customer must be at least 18 years old');
+                } else if (age > 100) {
+                    errors.push('Invalid date of birth (age cannot exceed 100 years)');
                 }
             }
-            if (!username) {
-                errorMessage += 'Username cannot be empty.\n';
-                isValid = false;
-            } else if (!usernameRegex.test(username)) {
-                errorMessage += 'Username can only contain letters, numbers, dots, and underscores.\n';
-                isValid = false;
-            }
-            if (!password) {
-                errorMessage += 'Password cannot be empty.\n';
-                isValid = false;
-            } else if (!passwordRegex.test(password)) {
-                errorMessage += 'Password must have at least 8 characters, including an uppercase and lowercase letter.\n';
-                isValid = false;
-            }
-            if (!cic) {
-                errorMessage += 'Citizen Identification Card cannot be empty\n';
-                isValid = false;
-            } else if (!cicRegex.test(cic)) {
-                errorMessage += 'Invalid Citizen Identification Card. It must be 9 or 12 digits.\n';
-                isValid = false;
-            }
 
-            if (!isValid) {
-                event.preventDefault(); // Prevent form submission
-                alert(errorMessage);
+            if (errors.length > 0) {
+                // Show all validation errors
+                alert(errors.join('\n'));
+            } else {
+                // If validation passes, submit the form
+                this.submit();
             }
         });
     </script>
