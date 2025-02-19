@@ -5,13 +5,17 @@
 package controller.User;
 
 import context.CustomerDAO;
+import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.nio.file.Paths;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Part;
+import java.io.PrintWriter;
 import java.sql.Date;
 import model.Customer;
 
@@ -19,7 +23,15 @@ import model.Customer;
  *
  * @author lenovo
  */
+@MultipartConfig(
+        fileSizeThreshold = 1024 * 1024 * 2, // 2MB
+        maxFileSize = 1024 * 1024 * 10, // 10MB
+        maxRequestSize = 1024 * 1024 * 50 // 50MB
+)
+
 public class userProfile extends HttpServlet {
+
+    private static final String UPLOAD_DIR = "uploads/avatars";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -126,38 +138,77 @@ public class userProfile extends HttpServlet {
             cdao.updateProfile(customer);
 
             request.getRequestDispatcher("user/profileUser.jsp").forward(request, response);
+            return;
         }
 
+        // Lấy thông tin từ form
+        String fullName = formatName(request.getParameter("fullName"));
+        String phoneNumber = request.getParameter("phoneNumber");
+        String email = request.getParameter("email");
+        String address = request.getParameter("address");
+        String gender = request.getParameter("gender");
+        String dob = request.getParameter("dateOfBirth");
+
+        // Kiểm tra số điện thoại
+        String errorPhoneNumber = "Please enter a valid phone number starting with 09 or 03!";
+        String existPhoneNumber = "This phone number is already in use!";
+        CustomerDAO cdao = new CustomerDAO();
+        if (!formatPhoneNumber(phoneNumber)) {
+            request.setAttribute("errorPhoneNumber", errorPhoneNumber);
+            request.getRequestDispatcher("user/profileUser.jsp").forward(request, response);
+            return;
+        }
+        if (cdao.isPhoneNumberExist(phoneNumber, customer.getCustomerId())) {
+            request.setAttribute("existPhoneNumber", existPhoneNumber);
+            request.getRequestDispatcher("user/profileUser.jsp").forward(request, response);
+            return;
+        }
+
+        // Xử lý upload avatar
+//        Part filePart = request.getPart("avatar");
+//        String avatarPath = customer.getAvatar(); // Giữ nguyên nếu không cập nhật ảnh mới
+//
+//        if (filePart != null && filePart.getSize() > 0) {
+//            String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+//            String uploadPath = getServletContext().getRealPath("") + File.separator + UPLOAD_DIR;
+//            File uploadDir = new File(uploadPath);
+//            if (!uploadDir.exists()) {
+//                uploadDir.mkdirs();
+//            }
+//
+//            String filePath = uploadPath + File.separator + fileName;
+//            filePart.write(filePath);
+//            avatarPath = UPLOAD_DIR + "/" + fileName; // Lưu đường dẫn avatar mới
+//        }
+        // Cập nhật thông tin khách hàng
+        customer.setFullname(fullName);
+        customer.setPhonenumber(phoneNumber);
+        customer.setAddress(address);
+        customer.setEmail(email);
+        customer.setDob(Date.valueOf(dob));
+        customer.setGender(gender.equals("male") ? 1 : 0);
+//        customer.setAvatar(avatarPath);
+
+        cdao.updateProfile(customer);
+
+        session.setAttribute("customer", customer); // Cập nhật session
+        request.getRequestDispatcher("user/profileUser.jsp").forward(request, response);
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
     private String formatName(String name) {
-        name = name.trim().replaceAll("\\s+", " "); // Loại bỏ khoảng trắng thừa
-        String[] words = name.split(" "); // Chia thành mảng từ
-        StringBuilder formattedName = new StringBuilder(); // Sử dụng StringBuilder để tối ưu hiệu suất, 
-        // cho phép thay đổi nội dung mà không cần tạo đối tượng mới,
-        // giúp tăng hiệu suất khi thực hiện nhiều phép nối chuỗi (concatenation).
-
+        name = name.trim().replaceAll("\\s+", " ");
+        String[] words = name.split(" ");
+        StringBuilder formattedName = new StringBuilder();
         for (String word : words) {
-            formattedName.append(Character.toUpperCase(word.charAt(0))) // Viết hoa chữ cái đầu
-                    .append(word.substring(1).toLowerCase()) // Viết thường các chữ còn lại
-                    .append(" "); // Thêm khoảng trắng sau mỗi từ
+            formattedName.append(Character.toUpperCase(word.charAt(0)))
+                    .append(word.substring(1).toLowerCase())
+                    .append(" ");
         }
-
-        return formattedName.toString().trim(); // Loại bỏ khoảng trắng cuối cùng và trả về chuỗi kết quả
+        return formattedName.toString().trim();
     }
 
     private boolean formatPhoneNumber(String phone) {
-        return phone != null && phone.startsWith("09") || phone.startsWith("03");
+        return phone != null && (phone.startsWith("09") || phone.startsWith("03"));
     }
 
     private boolean checkName(String name) {

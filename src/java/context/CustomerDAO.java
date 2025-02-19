@@ -383,6 +383,23 @@ public class CustomerDAO extends DBContext {
 //        }
 //        return 0;
 //    }
+    public boolean isPhoneNumberExist(String phonenumber, int customerId) {
+        String sql = "SELECT COUNT(*) FROM Customer WHERE [phonenumber] = ? AND customer_id <> ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, phonenumber);
+            ps.setInt(2, customerId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1) > 0; // Nếu COUNT > 0, số điện thoại đã tồn tại
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false; // Mặc định trả về false nếu có lỗi hoặc không tìm thấy trùng
+    }
+
     public boolean checkUsername(String username, String email, String phonenumber) {
         String sql = "SELECT [username] FROM Customer WHERE [username] = ? or [email] = ? or [phonenumber] = ?";
         try {
