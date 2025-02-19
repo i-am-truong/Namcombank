@@ -47,6 +47,14 @@ public class FormatUtils {
         }
         return returnDate;
     }
+    
+    public static Float tryParseFloat(String str) {
+        try {
+            return Float.valueOf(str);
+        } catch (NumberFormatException | NullPointerException e) {
+            return null;
+        }
+    }
 // Assuming this is inside a method where you handle the request
 
 }

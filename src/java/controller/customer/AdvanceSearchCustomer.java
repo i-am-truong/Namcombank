@@ -59,8 +59,16 @@ public class AdvanceSearchCustomer extends HttpServlet {
         Integer genderID = cdao.getGenderID(gender);
         String accountStatus = request.getParameter("searchAccountStatus");
         Integer activeID = cdao.getActiveID(accountStatus);
+        String cid = request.getParameter("searchCID");
+        String address = request.getParameter("searchAddress");
+        String email = request.getParameter("searchEmail");
+        String phonenumber = request.getParameter("searchPhoneNumber");
         Integer pageSize;
         pageSize = (FormatUtils.tryParseInt(pageSizeParam) != null) ? FormatUtils.tryParseInt(pageSizeParam) : PAGE_SIZE;
+        String paraSearchBalanceMin = request.getParameter("searchBalanceMin");
+        Float searchBalanceMin = (FormatUtils.tryParseFloat(paraSearchBalanceMin) != null&&FormatUtils.tryParseFloat(paraSearchBalanceMin)< cdao.getBalanceMin()) ? FormatUtils.tryParseFloat(paraSearchBalanceMin) : 0;
+        String paraSearchBalanceMax = request.getParameter("searchBalanceMax");
+        Float searchBalanceMax = (FormatUtils.tryParseFloat(paraSearchBalanceMax) != null && FormatUtils.tryParseFloat(paraSearchBalanceMax)< cdao.getBalanceMax()) ? FormatUtils.tryParseFloat(paraSearchBalanceMax) : cdao.getBalanceMax();
         List<Customer> customers = new ArrayList<>();
         int totalCustomers = cdao.getTotalSearchCustomersByFields(paraSearchUserName, paraSearchFullName, genderID, activeID);
         // Tính tổng số trang

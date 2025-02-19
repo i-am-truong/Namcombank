@@ -102,7 +102,7 @@
                                 <input type="search" style="flex: 1 1 auto"
                                        class="form-control form-control-md"
                                        placeholder="Address"
-                                       name="searchUserName"
+                                       name="searchAddress"
                                        value="${pagination.searchValues[5]}" />
                                 <input type="search" style="flex: 1 1 auto"
                                        class="form-control form-control-md"
@@ -157,8 +157,8 @@
                                         <div class="progress"></div>
                                     </div>
                                     <div class="range-input">
-                                        <input type="range" class="range-min" min="0" max="${priceMax+0.01}" value="${pagination.rangeValues[0]}" step="0.01">
-                                        <input type="range" class="range-max" min="0" max="${priceMax+0.01}" value="${pagination.rangeValues[1]==priceMax?pagination.rangeValues[1]+0.01:pagination.rangeValues[1]}" step="0.01">
+                                        <input type="range" class="range-min" min="0" max="${balanceMax+0.01}" value="${pagination.rangeValues[0]}" step="0.01">
+                                        <input type="range" class="range-max" min="0" max="${balanceMax+0.01}" value="${pagination.rangeValues[1]==priceMax?pagination.rangeValues[1]+0.01:pagination.rangeValues[1]}" step="0.01">
                                     </div>
                                 </div>
                             </div>

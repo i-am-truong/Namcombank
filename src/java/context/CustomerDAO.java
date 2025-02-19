@@ -32,6 +32,31 @@ import model.Gender;
  * @author lenovo
  */
 public class CustomerDAO extends DBContext {
+    
+    public int getBalanceMinMax(String order){
+        int balance = 0;
+        String orderBy = order.equalsIgnoreCase("min") ? "ASC" : "DESC";
+
+        String query = "SELECT TOP 1 Balance FROM [dbo].[Customer] ORDER BY Balance " + orderBy;
+
+        try (PreparedStatement ps = connection.prepareStatement(query); ResultSet rs = ps.executeQuery()) {
+
+            if (rs.next()) {
+                balance = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Ghi log lỗi để dễ dàng kiểm tra
+        }
+        return balance;
+    }
+    
+    public int getBalanceMin() {
+        return getBalanceMinMax("min");
+    }
+
+    public int getBalanceMax() {
+        return getBalanceMinMax("max");
+    }
 
     static Customer getCustomerByEmail(String currentEmail) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
