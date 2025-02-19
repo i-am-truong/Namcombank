@@ -102,7 +102,7 @@
                                 <input type="search" style="flex: 1 1 auto"
                                        class="form-control form-control-md"
                                        placeholder="Address"
-                                       name="searchUserName"
+                                       name="searchAddress"
                                        value="${pagination.searchValues[5]}" />
                                 <input type="search" style="flex: 1 1 auto"
                                        class="form-control form-control-md"
@@ -139,26 +139,44 @@
                                                         </div>
                                                     </div>
 
-                        -->    
-                        <div class="row">
+                        -->
+                    <div class="row">
                             <div class="col-md-6">
-                                <div class="slider-container" data-type="price">
+                                <div class="slider-container" data-type="balance">
                                     <div class="price-input">
                                         <div class="field">
                                             <span>Balance</span>
-                                            <input type="text" class="input-min format-float" name="searchBalanceMin" value="${pagination.rangeValues[0]}" step="0.01">
+                                            <input type="text"
+                                                  class="input-min format-float"
+                                                  name="searchBalanceMin"
+                                                  value="${pagination.rangeValues[0]}"
+                                                  step="0.01">
                                         </div>
                                         <div class="separator">-</div>
                                         <div class="field">
-                                            <input type="text" class="input-max format-float" name="searchBalanceMax" value="${pagination.rangeValues[1]==priceMax?pagination.rangeValues[1]+0.01:pagination.rangeValues[1]}" step="0.01" >
+                                            <input type="text"
+                                                  class="input-max format-float"
+                                                  name="searchBalanceMax"
+                                                  value="${pagination.rangeValues[1]==balanceMax?pagination.rangeValues[1]+0.01:pagination.rangeValues[1]}"
+                                                  step="0.01">
                                         </div>
                                     </div>
                                     <div class="slider">
                                         <div class="progress"></div>
                                     </div>
                                     <div class="range-input">
-                                        <input type="range" class="range-min" min="0" max="${priceMax+0.01}" value="${pagination.rangeValues[0]}" step="0.01">
-                                        <input type="range" class="range-max" min="0" max="${priceMax+0.01}" value="${pagination.rangeValues[1]==priceMax?pagination.rangeValues[1]+0.01:pagination.rangeValues[1]}" step="0.01">
+                                        <input type="range"
+                                              class="range-min"
+                                              min="0"
+                                              max="${balanceMax + 0.01}"
+                                              value="${pagination.rangeValues[0]}"
+                                              step="0.01">
+                                        <input type="range"
+                                              class="range-max"
+                                              min="0"
+                                              max="${balanceMax + 0.01}"
+                                              value="${pagination.rangeValues[1]==balanceMax?pagination.rangeValues[1]+0.01:pagination.rangeValues[1]}"
+                                              step="0.01">
                                     </div>
                                 </div>
                             </div>
@@ -392,9 +410,9 @@
 
 </div>
 
-<script src="js/app.js"></script>
-<script src="js/range-slider.js"></script>
-<script src="js/format-input.js"></script>
+<script src="${pageContext.request.contextPath}/adminassets/js/app.js"></script>
+<script src="${pageContext.request.contextPath}/adminassets/js/range-slider.js"></script>
+<script src="${pageContext.request.contextPath}/adminassets/js/format-input.js"></script>
 
 <script>
                                         function checkBan(cid) {
