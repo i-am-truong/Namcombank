@@ -28,6 +28,15 @@ public class Customer {
     public Customer() {
     }
 
+    public Customer(int customerId, String fullname, String email, String phonenumber) {
+        this.customerId = customerId;
+        this.fullname = fullname;
+        this.email = email;
+        this.phonenumber = phonenumber;
+    }
+    
+    
+
     public Customer(int customerId, String fullname, String username, String password, int active, String email, Date dob, int gender, String phonenumber, float balance, String cid, String address) {
         this.customerId = customerId;
         this.fullname = fullname;

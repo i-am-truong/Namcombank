@@ -232,6 +232,10 @@
         <servlet-name>LoanPackageServlet</servlet-name>
         <servlet-class>controller.Staff.LoanPackageServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>RepaymentSchedule</servlet-name>
+        <servlet-class>controller.repayment_schedule.RepaymentSchedule</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>viewCustomerDetail</servlet-name>
         <url-pattern>/viewCustomerDetail</url-pattern>
@@ -459,6 +463,10 @@
     <servlet-mapping>
         <servlet-name>LoanPackageServlet</servlet-name>
         <url-pattern>/loanPackage</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RepaymentSchedule</servlet-name>
+        <url-pattern>/repaymentSchedule</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

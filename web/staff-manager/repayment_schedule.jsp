@@ -86,29 +86,27 @@
                             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                 <thead>
                                     <tr>
-                                        <th>Name</th>
-                                        <th>Type</th>
-                                        <th>Description</th>
-                                        <th>Interest Rate</th>
-                                        <th>Min</th>
-                                        <th>Max</th>
-                                        <th>Term (Month)</th>
+                                        <th>Package Name</th>
+                                        <th>Customer</th>
+                                        <th>Phone</th>
+                                        <th>Amount</th>
+                                        <th>Status</th>
+                                        <th>Due Date</th>
 <!--                                        <th>Action</th>-->
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <c:forEach items="${loanPackages}" var="s">
+                                    <c:forEach items="${schedules}" var="s">
                                         <tr>
                                             <td>${s.packageName}</td>
-                                            <td>${s.loanType}</td>
-                                            <td>${s.description}</td>
-                                            <td>${s.interestRate}</td>
-                                            <td>${s.minAmount}</td>
-                                            <td>${s.maxAmount}</td>
-                                            <td>${s.loanTerm}</td>
+                                            <td>${s.customer.fullname}</td>
+                                            <td>${s.customer.phonenumber}</td>
+                                            <td>${s.amountDue}</td>
+                                            <td>${s.status}</td>
+                                            <td>${s.dueDate}</td>
 <!--                                            <td>
-                                                <a href="updateStaff?id=${s.packageId}">Edit</a>
-                                                <a onclick="checkDeleteCustomer('${s.packageId}')" class="btn btn-danger btn-sm">
+                                                <a href="updateStaff?id=${s.id}">Edit</a>
+                                                <a onclick="checkDeleteCustomer('${s.id}')" class="btn btn-danger btn-sm">
                                                     Delete
                                                 </a>
                                             </td>                                                    -->
