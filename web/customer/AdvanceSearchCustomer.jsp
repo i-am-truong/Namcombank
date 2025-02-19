@@ -92,6 +92,30 @@
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search align-middle"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                             </button>
                         </div>
+                        <div class="row">
+                            <div class="col-md-3 input-group d-flex justify-content-end">
+                                <input type="search" style="flex: 1 1 auto"
+                                       class="form-control form-control-md"
+                                       placeholder="Citizen Identification Card"
+                                       name="searchCID"
+                                       value="${pagination.searchValues[4]}" />
+                                <input type="search" style="flex: 1 1 auto"
+                                       class="form-control form-control-md"
+                                       placeholder="Address"
+                                       name="searchUserName"
+                                       value="${pagination.searchValues[5]}" />
+                                <input type="search" style="flex: 1 1 auto"
+                                       class="form-control form-control-md"
+                                       placeholder="Email"
+                                       name="searchEmail"
+                                       value="${pagination.searchValues[6]}" />
+                                <input type="search" style="flex: 1 1 auto"
+                                       class="form-control form-control-md"
+                                       placeholder="Phone Number"
+                                       name="searchPhoneNumber"
+                                       value="${pagination.searchValues[7]}" />
+                            </div>
+                        </div>
                         <!--                        <div class="row">
                                                     <div class="col-md-6">
                                                         <div class="slider-container" data-type="quantity">
@@ -115,27 +139,31 @@
                                                         </div>
                                                     </div>
 
-                                                    <div class="col-md-6">
-                                                        <div class="slider-container" data-type="price">
-                                                            <div class="price-input">
-                                                                <div class="field">
-                                                                    <span>Price</span>
-                                                                    <input type="text" class="input-min format-float" name="searchPriceMin" value="${pagination.rangeValues[0]}" step="0.01">
-                                                                </div>
-                                                                <div class="separator">-</div>
-                                                                <div class="field">
-                                                                    <input type="text" class="input-max format-float" name="searchPriceMax" value="${pagination.rangeValues[1]==priceMax?pagination.rangeValues[1]+0.01:pagination.rangeValues[1]}" step="0.01" >
-                                                                </div>
-                                                            </div>
-                                                            <div class="slider">
-                                                                <div class="progress"></div>
-                                                            </div>
-                                                            <div class="range-input">
-                                                                <input type="range" class="range-min" min="0" max="${priceMax+0.01}" value="${pagination.rangeValues[0]}" step="0.01">
-                                                                <input type="range" class="range-max" min="0" max="${priceMax+0.01}" value="${pagination.rangeValues[1]==priceMax?pagination.rangeValues[1]+0.01:pagination.rangeValues[1]}" step="0.01">
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                        -->    
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="slider-container" data-type="price">
+                                    <div class="price-input">
+                                        <div class="field">
+                                            <span>Balance</span>
+                                            <input type="text" class="input-min format-float" name="searchBalanceMin" value="${pagination.rangeValues[0]}" step="0.01">
+                                        </div>
+                                        <div class="separator">-</div>
+                                        <div class="field">
+                                            <input type="text" class="input-max format-float" name="searchBalanceMax" value="${pagination.rangeValues[1]==priceMax?pagination.rangeValues[1]+0.01:pagination.rangeValues[1]}" step="0.01" >
+                                        </div>
+                                    </div>
+                                    <div class="slider">
+                                        <div class="progress"></div>
+                                    </div>
+                                    <div class="range-input">
+                                        <input type="range" class="range-min" min="0" max="${priceMax+0.01}" value="${pagination.rangeValues[0]}" step="0.01">
+                                        <input type="range" class="range-max" min="0" max="${priceMax+0.01}" value="${pagination.rangeValues[1]==priceMax?pagination.rangeValues[1]+0.01:pagination.rangeValues[1]}" step="0.01">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--
                                                 </div>-->
 
 
@@ -155,8 +183,8 @@
                     <table class="table table-hover my-0">
                         <thead>
                             <tr>
-                                <th style="width:3%">ID</th>
-                                <th style="width:13%">
+                                <th>ID</th>
+                                <th>
                                     <form action="manageCustomerVer2/Search" method="get">
                                         <input type="hidden" name="page" value="${pagination.currentPage}" />
                                         <input type="hidden" name="page-size" value="${pagination.pageSize}" />
@@ -183,7 +211,7 @@
                                 </th>
                                 <th>Gender</th>
                                 <th>Date of Birth</th>
-                                <th style="width:30%">
+                                <th>
                                     <form action="manageCustomerVer2/Search" method="get">
                                         <input type="hidden" name="page" value="${pagination.currentPage}" />
                                         <input type="hidden" name="page-size" value="${pagination.pageSize}" />
@@ -209,9 +237,11 @@
                                     </form>
                                 </th>
 
+                                <th>CID</th>
+
                                 <th>Status</th>
 
-                                <th style="width:15%">
+                                <th>
                                     <form action="manageCustomerVer2/Search" method="get">
                                         <input type="hidden" name="page" value="${pagination.currentPage}" />
                                         <input type="hidden" name="page-size" value="${pagination.pageSize}" />
@@ -237,7 +267,7 @@
                                     </form>
                                 </th>
 
-                                <th style="width:15%">
+                                <th>
                                     <form action="manageCustomerVer2/Search" method="get">
                                         <input type="hidden" name="page" value="${pagination.currentPage}" />
                                         <input type="hidden" name="page-size" value="${pagination.pageSize}" />
@@ -263,8 +293,10 @@
                                     </form>
                                 </th>
 
+                                <th>Balance</th>
 
-                                <th style="width:8%">Action<a href="manageCustomerVer2/Search?page=${pagination.currentPage}&page-size=${pagination.pageSize}"><i class="fa fa-refresh ms-2"></i></a></th>
+
+                                <th>Action<a href="manageCustomerVer2/Search?page=${pagination.currentPage}&page-size=${pagination.pageSize}"><i class="fa fa-refresh ms-2"></i></a></th>
                             </tr>
                         </thead>
                         <!--                        varStatus để lấy trạng thái của vòng lặp-->
@@ -284,6 +316,7 @@
                                 </td>
                                 <td>${customer.dob}</td>
                                 <td>${customer.email}</td>
+                                <td>${customer.cid}</td>
                                 <td>
                                     <c:choose>
                                         <c:when test="${customer.active == 0}">
@@ -306,6 +339,7 @@
                                 </td>
                                 <td>${customer.username}</td>
                                 <td>${customer.address}</td>
+                                <td>${customer.balance}</td>
                                 <td class="table-action">
                                     <a href="editCustomer?customerId=${customer.customerId}"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2 align-middle"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg></a>
                                     <a href="javascript:void(0)" onclick="return checkDeleteCustomer('${customer.customerId}')"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash align-middle"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></a>
@@ -363,25 +397,25 @@
 <script src="js/format-input.js"></script>
 
 <script>
-                                                function checkBan(cid) {
-                                                    // Thêm mã kiểm tra hợp lệ của form nếu cần
-                                                    if (confirm("Ban customer with customerId = " + cid + "?")) {
-                                                        window.location = 'lockCustomer?type=lock&cid=' + cid;
-                                                    }
-                                                }
+                                        function checkBan(cid) {
+                                            // Thêm mã kiểm tra hợp lệ của form nếu cần
+                                            if (confirm("Ban customer with customerId = " + cid + "?")) {
+                                                window.location = 'lockCustomer?type=lock&cid=' + cid;
+                                            }
+                                        }
 
-                                                function checkUnBan(cid) {
-                                                    // Thêm mã kiểm tra hợp lệ của form nếu cần
-                                                    if (confirm("Unban customer with customerId = " + cid + "?")) {
-                                                        window.location = 'lockCustomer?type=unlock&cid=' + cid;
-                                                    }
-                                                }
+                                        function checkUnBan(cid) {
+                                            // Thêm mã kiểm tra hợp lệ của form nếu cần
+                                            if (confirm("Unban customer with customerId = " + cid + "?")) {
+                                                window.location = 'lockCustomer?type=unlock&cid=' + cid;
+                                            }
+                                        }
 
-                                                function checkDeleteCustomer(cid) {
-                                                    if (confirm('Are you sure you want to delete this customer?')) {
-                                                        window.location = 'deleteCustomer?cid=' + cid;
-                                                    }
-                                                }
+                                        function checkDeleteCustomer(cid) {
+                                            if (confirm('Are you sure you want to delete this customer?')) {
+                                                window.location = 'deleteCustomer?cid=' + cid;
+                                            }
+                                        }
 </script>
 
 
