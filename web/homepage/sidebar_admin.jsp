@@ -83,7 +83,7 @@
             <a class="nav-link sub-menu" href="repaymentSchedule">
                 <i class="fas fa-fw fa-table"></i> Repayment Schedule
             </a>
-            <a class="nav-link sub-menu" href="savingInterestRate">
+            <a class="nav-link sub-menu" href="savingInterest">
                 <i class="fas fa-fw fa-table"></i> Savings Interest Rate
             </a>
             <a class="nav-link sub-menu" href="loanPackage">

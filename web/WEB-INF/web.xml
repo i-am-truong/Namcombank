@@ -382,7 +382,7 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ListSavingController</servlet-name>
-        <url-pattern>/saving/list</url-pattern>
+        <url-pattern>savingInterest</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>CreateSavingController</servlet-name>
