@@ -132,6 +132,8 @@
                                         Email
                                     </form>
                                 </th>
+                                
+                                <th>Phone Number</th>
 
                                 <th>CID</th>
 
@@ -170,7 +172,7 @@
                                 </th>
 
                                 <th>Balance</th>
-                                <th>Action<a href="manageCustomerVer2?page=${pagination.currentPage}&page-size=${pagination.pageSize}"><i class="fa fa-refresh ms-2"></i></a></th>
+                                <th>Reload<a href="manageCustomerVer2?page=${pagination.currentPage}&page-size=${pagination.pageSize}"><i class="fa fa-refresh ms-2"></i></a></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -191,6 +193,7 @@
                                     </td>
                                     <td>${customer.dob}</td>
                                     <td>${customer.email}</td>
+                                    <td>${customer.phonenumber}</td>
                                     <td>${customer.cid}</td>
                                     <td>
                                         <c:choose>

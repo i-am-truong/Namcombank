@@ -253,6 +253,7 @@
                                     </form>
                                 </th>
 
+                                <th>Phone Number</th>
                                 <th>CID</th>
 
                                 <th>Status</th>
@@ -332,6 +333,7 @@
                                 </td>
                                 <td>${customer.dob}</td>
                                 <td>${customer.email}</td>
+                                <td>${customer.phonenumber}</td>
                                 <td>${customer.cid}</td>
                                 <td>
                                     <c:choose>
