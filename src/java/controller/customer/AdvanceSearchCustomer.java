@@ -39,11 +39,13 @@ public class AdvanceSearchCustomer extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        //Xu ly nut back quay ve
-        HttpSession session = request.getSession();
-        if (session.getAttribute("detailComponentFrom") != null) {
-            session.removeAttribute("from");
+        
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("roleId") == null || (int) session.getAttribute("roleId") != 1) {
+            response.sendRedirect("admin.login");
+            return;
         }
+       
         //
         String pageParam = request.getParameter("page");
         String paraSearchUserName = SearchUtils.preprocessSearchQuery(request.getParameter("searchUserName"));
@@ -127,7 +129,7 @@ public class AdvanceSearchCustomer extends HttpServlet {
 //        request.setAttribute("priceMax", componentDAO.getPriceMax());
         request.setAttribute("balanceMin", cdao.getBalanceMin());
         request.setAttribute("balanceMax", cdao.getBalanceMax());
-        request.setAttribute("totalComponents", totalCustomers);
+        request.setAttribute("totalCustomers", totalCustomers);
         request.setAttribute("genderList", cdao.getListGender());
         request.setAttribute("activeList", cdao.getListActive());
         request.setAttribute("customers", customers);

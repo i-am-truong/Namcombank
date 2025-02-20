@@ -69,6 +69,13 @@ public class editCustomer extends BaseRBACControlller {
 
     @Override
     protected void doAuthorizedPost(HttpServletRequest request, HttpServletResponse response, Staff account) throws ServletException, IOException {
+        
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("roleId") == null || (int) session.getAttribute("roleId") != 1) {
+            response.sendRedirect("admin.login");
+            return;
+        }
+        
         try {
             // Get all parameters
             int customerId = Integer.parseInt(request.getParameter("customerId"));

@@ -13,6 +13,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 //import java.util.Date;
 import java.sql.Date;
 import model.auth.Staff;
@@ -61,6 +62,12 @@ public class addCustomer extends BaseRBACControlller {
 
     @Override
     protected void doAuthorizedPost(HttpServletRequest request, HttpServletResponse response, Staff account) throws ServletException, IOException {
+        
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("roleId") == null || (int) session.getAttribute("roleId") != 1) {
+            response.sendRedirect("admin.login");
+            return;
+        }
         // Only validate if form was actually submitted
         if (request.getParameter("fullnameC") != null) {
             String fullname = request.getParameter("fullnameC");

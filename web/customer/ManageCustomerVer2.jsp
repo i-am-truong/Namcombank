@@ -50,7 +50,6 @@
 
     <body>
         <div class="wrapper">
-            <jsp:include page="../homepage/sidebar_admin.jsp" />
 
             <div class="main">
 
@@ -58,12 +57,16 @@
                 <main class="content">
                     <h2>List Customers</h2>
                     <div class="d-flex justify-content-between align-items-center mb-3">
+                        <a href="staffFilter" class="btn btn-outline-secondary">
+                            Back to Admin Page
+                        </a>
                         <form action="addCustomer" method="POST" enctype="multipart/form-data" style="display: inline;">
                             <button type="submit" class="btn btn-success"><i class="fas fa-add"></i> Add New Customer</button>
                         </form>
                         <form action="${pageContext.request.contextPath}/manageCustomerVer2/Search" method="get" style="display: inline;">
                             <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Advanced Search</button>
                         </form>
+
                     </div>
                     <form action="manageCustomerVer2" method="get" class="row align-items-center">
                         <input type="hidden" name="page" value="${pagination.currentPage}">
@@ -244,7 +247,7 @@
                     <c:if test="${totalCustomers==0}">
                         <div class="alert alert-primary alert-dismissible" role="alert">
                             <div class="alert-message text-center">
-                                <strong style="font-size:1.6rem">No suitable card in the filter</strong>
+                                <strong style="font-size:1.6rem">No customer found in the filter</strong>
                             </div>
                         </div>
 

@@ -23,7 +23,7 @@
 
         <link rel="canonical" href="https://demo-basic.adminkit.io/" />
 
-        <title>Component Warehouse</title>
+        <title>Namcombank</title>
 
         <link href="${pageContext.request.contextPath}/adminassets/css/light.css" rel="stylesheet">
         <link href="${pageContext.request.contextPath}/adminassets/css/range-slider.css" rel="stylesheet">
@@ -51,8 +51,6 @@
 
     <body>
         <div class="wrapper">
-            <jsp:include page="../homepage/sidebar_admin.jsp" />
-
 
             <div class="main">
                 <jsp:include page="../homepage/header_admin.jsp" />
@@ -385,24 +383,24 @@
 
                         </tbody>
                     </table>
-                    <c:if test="${totalComponents==0}">
+                    <c:if test="${totalCustomers==0}">
                         <div class="alert alert-primary alert-dismissible" role="alert">
                             <div class="alert-message text-center">
-                                <strong style="font-size:1.6rem">No suitable card in the filter</strong>
+                                <strong style="font-size:1.6rem">No customer found in the filter</strong>
                             </div>
                         </div>
 
                     </c:if>
                     <jsp:include page="../homepage/pagination.jsp" />
 
-                    <c:if test="${not empty deleteStatus}">
+                    <!--<c:if test="${not empty deleteStatus}">
                         <div class="alert alert-warning alert-dismissible" role="alert">
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             <div class="alert-message">
                                 <strong>${deleteStatus}</strong>
                             </div>
                         </div>
-                    </c:if>
+                    </c:if> -->
             </div>
         </main>
         <%--<jsp:include page="../../includes/footer.jsp" />--%>
