@@ -147,7 +147,11 @@
                             <div style="position: relative; display: inline-block;">
 
                                 <!--                                <i class="fas fa-user" id="userIcon" style="font-size: 30px; color: black; cursor: pointer;"></i>-->
-                                <span class="logo" style="margin-left: 20px"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQuzZt1REzKbmypTgYKn0rAvtrwEIPnK6Kfnw&s" id="userIcon" style="border-radius: 50%; height: 50px; width: 50px;"></span>
+                                <span class="logo" style="margin-left: 20px">
+                                    <img src="${sessionScope.customer.avatar}" 
+                                         id="userIcon" 
+                                         style="border-radius: 50%; height: 50px; width: 50px;">
+                                </span>
 
                                 <span class="dropdown-menu" id="dropdownMenu">
                                     <a href="#">&nbsp;&nbsp;$${sessionScope.customer.balance}</a>
@@ -194,6 +198,12 @@
                 if (!isClickInside) {
                     document.getElementById('dropdownMenu').style.display = 'none';
                 }
+            });
+
+            document.addEventListener("DOMContentLoaded", function () {
+                var userIcon = document.getElementById("userIcon");
+                var avatarSrc = userIcon.src;
+                userIcon.src = avatarSrc + "?t=" + new Date().getTime();
             });
         </script>
     </body>

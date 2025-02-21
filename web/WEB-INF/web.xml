@@ -236,6 +236,7 @@
         <servlet-name>RepaymentSchedule</servlet-name>
         <servlet-class>controller.repayment_schedule.RepaymentSchedule</servlet-class>
     </servlet>
+    
     <servlet-mapping>
         <servlet-name>viewCustomerDetail</servlet-name>
         <url-pattern>/viewCustomerDetail</url-pattern>
@@ -473,4 +474,5 @@
             30
         </session-timeout>
     </session-config>
+    
 </web-app>

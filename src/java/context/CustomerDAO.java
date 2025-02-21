@@ -58,8 +58,61 @@ public class CustomerDAO extends DBContext {
         return getBalanceMinMax("max");
     }
 
-    static Customer getCustomerByEmail(String currentEmail) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public Customer getCustomerByEmail(String email) {
+        Customer customer = null;
+        try {
+            String sql = "SELECT * FROM Customer WHERE email = ?";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                customer = new Customer();
+                customer.setCustomerId(rs.getInt("customer_id"));
+                customer.setFullname(rs.getString("fullname"));
+                customer.setUsername(rs.getString("username"));
+                customer.setPassword(rs.getString("password"));
+                customer.setActive(rs.getInt("active"));
+                customer.setEmail(rs.getString("email"));
+                customer.setAddress(rs.getString("address"));
+                customer.setDob(rs.getDate("dob"));
+                customer.setGender(rs.getInt("gender"));
+                customer.setPhonenumber(rs.getString("phonenumber"));
+                customer.setBalance(rs.getFloat("balance"));
+                customer.setCid(rs.getString("cid"));  
+                customer.setAvatar(rs.getString("avatar"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        if (customer == null) {
+            System.out.println("No customer found with email: " + email);
+        }
+        return customer;
+    }
+
+    public Customer createCustomer(String fullname, String email, String address, String phonenumber, Boolean gender, String dob, String avatar) {
+        try {
+            String sql = "INSERT INTO Customer (fullname, email, address, phonenumber, gender, dob, avatar) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, fullname);
+            ps.setString(2, email);
+            ps.setString(3, address);
+            ps.setString(4, phonenumber);
+            ps.setBoolean(5, gender);
+            ps.setString(6, dob);
+            ps.setString(7, avatar);
+
+            int affectedRows = ps.executeUpdate();
+            if (affectedRows > 0) {
+                ResultSet generatedKeys = ps.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    return getCustomerByEmail(email); // Lấy lại thông tin user từ DB
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public Customer checkUser(String username, String password) {
@@ -75,6 +128,7 @@ public class CustomerDAO extends DBContext {
                 + "      ,[balance]\n"
                 + "      ,[citizen_identification_card]\n"
                 + "      ,[address]\n"
+                + "      ,[avatar]\n"
                 + "  FROM [dbo].[Customer]\n"
                 + "  where username = ? and password = ? ";
         try {
@@ -96,7 +150,8 @@ public class CustomerDAO extends DBContext {
                         rs.getString(9), // phone number
                         rs.getFloat(10), // balance
                         rs.getString(11), // citizen ID card
-                        rs.getNString("address") // address
+                        rs.getString(12), // address
+                        rs.getString(13) // avatar
                 );
             }
 
@@ -169,7 +224,8 @@ public class CustomerDAO extends DBContext {
                         rs.getString("phonenumber"),
                         rs.getFloat("balance"),
                         rs.getString("citizen_identification_card"),
-                        rs.getString("address")
+                        rs.getString("address"),
+                        rs.getString("avatar")
                 ));
             }
         } catch (SQLException e) {
@@ -211,7 +267,8 @@ public class CustomerDAO extends DBContext {
                         rs.getString("phonenumber"),
                         rs.getFloat("balance"),
                         rs.getString("citizen_identification_card"),
-                        rs.getString("address")
+                        rs.getString("address"),
+                        rs.getString("avatar")
                 );
             }
         } catch (SQLException e) {
@@ -261,7 +318,8 @@ public class CustomerDAO extends DBContext {
                         rs.getString("phonenumber"),
                         rs.getFloat("balance"),
                         rs.getString("citizen_identification_card"),
-                        rs.getString("address")
+                        rs.getString("address"),
+                        rs.getString("avatar")
                 ));
             }
         } catch (SQLException e) {
@@ -332,7 +390,8 @@ public class CustomerDAO extends DBContext {
                             rs.getString("phonenumber"),
                             rs.getFloat("balance"),
                             rs.getString("citizen_identification_card"),
-                            rs.getString("address")
+                            rs.getString("address"),
+                            rs.getString("avatar")
                     ));
                 }
             }
@@ -442,6 +501,18 @@ public class CustomerDAO extends DBContext {
             e.printStackTrace();  // Print the stack trace for debugging
         }
         return true;
+    }
+
+    public void updateAvatar(int customerId, String avatarPath) {
+        String sql = "UPDATE Customer SET avatar = ? WHERE customer_id = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, avatarPath);
+            ps.setInt(2, customerId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public boolean checkUsernameAdded(String username, String email, String phonenumber, String cid) {
@@ -912,6 +983,7 @@ public class CustomerDAO extends DBContext {
                 + "[dob] = ?, "
                 + "[gender] = ?, "
                 + "[citizen_identification_card] = ?"
+                + "[avatar] = ? "
                 + "WHERE [customer_id] = ?";
 
         try {
@@ -924,6 +996,7 @@ public class CustomerDAO extends DBContext {
                 stm.setDate(5, customer.getDob());
                 stm.setInt(6, customer.getGender());
                 stm.setString(7, customer.getCid());
+                stm.setString(8, customer.getAvatar());
                 stm.setInt(8, customer.getCustomerId());
 
                 int rowsUpdated = stm.executeUpdate();
@@ -1041,7 +1114,8 @@ public class CustomerDAO extends DBContext {
                         rs.getString("phonenumber"),
                         rs.getFloat("balance"),
                         rs.getString("citizen_identification_card"),
-                        rs.getString("address")
+                        rs.getString("address"),
+                        rs.getString("avatar")
                 );
             }
         } catch (SQLException e) {
@@ -1103,7 +1177,8 @@ public class CustomerDAO extends DBContext {
                             resultSet.getString("phonenumber"),
                             resultSet.getFloat("balance"),
                             resultSet.getString("citizen_identification_card"),
-                            resultSet.getString("address")
+                            resultSet.getString("address"),
+                            resultSet.getString("avatar")
                     );
                     customers.add(customer);
                 }
@@ -1141,7 +1216,8 @@ public class CustomerDAO extends DBContext {
                         rs.getString("phonenumber"),
                         rs.getFloat("balance"),
                         rs.getString("citizen_identification_card"),
-                        rs.getString("address")
+                        rs.getString("address"),
+                        rs.getString("avatar")
                 );
                 customers.add(customer);
             }
@@ -1181,7 +1257,8 @@ public class CustomerDAO extends DBContext {
                         rs.getString("phonenumber"),
                         rs.getFloat("balance"),
                         rs.getString("citizen_identification_card"),
-                        rs.getString("address")
+                        rs.getString("address"),
+                        rs.getString("avatar")
                 );
                 customers.add(customer);
             }
@@ -1221,7 +1298,8 @@ public class CustomerDAO extends DBContext {
                         rs.getString("phonenumber"),
                         rs.getFloat("balance"),
                         rs.getString("citizen_identification_card"),
-                        rs.getString("address")
+                        rs.getString("address"),
+                        rs.getString("avatar")
                 );
                 customers.add(customer);
             }
@@ -1482,7 +1560,8 @@ public class CustomerDAO extends DBContext {
                         rs.getString("phonenumber"),
                         rs.getFloat("balance"),
                         rs.getString("citizen_identification_card"),
-                        rs.getString("address")
+                        rs.getString("address"),
+                        rs.getString("avatar")
                 );
                 customers.add(customer);
             }
@@ -1583,7 +1662,8 @@ public class CustomerDAO extends DBContext {
                             rs.getString("phonenumber"),
                             rs.getFloat("balance"),
                             rs.getString("citizen_identification_card"),
-                            rs.getString("address")
+                            rs.getString("address"),
+                            rs.getString("avatar")
                     );
                     customers.add(customer);
                 }
