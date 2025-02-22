@@ -115,47 +115,33 @@ public class CustomerDAO extends DBContext {
         return null;
     }
 
-    public Customer checkUser(String username, String password) {
-        String sql = "SELECT [customer_id]\n"
-                + "      ,[fullname]\n"
-                + "      ,[username]\n"
-                + "      ,[password]\n"
-                + "      ,[active]\n"
-                + "      ,[email]\n"
-                + "      ,[dob]\n"
-                + "      ,[gender]\n"
-                + "      ,[phonenumber]\n"
-                + "      ,[balance]\n"
-                + "      ,[citizen_identification_card]\n"
-                + "      ,[address]\n"
-                + "      ,[avatar]\n"
-                + "  FROM [dbo].[Customer]\n"
-                + "  where username = ? and password = ? ";
+    public Customer checkUser(String username, String hashedPassword) {
+        String sql = "SELECT * FROM [dbo].[Customer] WHERE username = ? AND password = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setNString(1, username);
-            ps.setNString(2, password);
-            ResultSet rs = ps.executeQuery();
+            ps.setString(1, username);
+            ps.setString(2, hashedPassword); // Use the already hashed password
 
+            ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 return new Customer(
-                        rs.getInt(1), // customer_id
-                        rs.getString(2), // fullname
-                        rs.getString(3), // username
-                        rs.getString(4), // password
-                        rs.getInt(5), // active
-                        rs.getString(6), // email
-                        rs.getDate(7), // date of birth
-                        rs.getInt(8), // gender
-                        rs.getString(9), // phone number
-                        rs.getFloat(10), // balance
-                        rs.getString(11), // citizen ID card
-                        rs.getString(12), // address
-                        rs.getString(13) // avatar
+                    rs.getInt("customer_id"),
+                    rs.getString("fullname"),
+                    rs.getString("username"),
+                    rs.getString("password"),
+                    rs.getInt("active"),
+                    rs.getString("email"),
+                    rs.getDate("dob"),
+                    rs.getInt("gender"),
+                    rs.getString("phonenumber"),
+                    rs.getFloat("balance"),
+                    rs.getString("citizen_identification_card"),
+                    rs.getString("address"),
+                    rs.getString("avatar")
                 );
             }
-
         } catch (SQLException e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -536,6 +522,23 @@ public class CustomerDAO extends DBContext {
         return true;
     }
 
+    public boolean checkCustomerAdded(String email, String phonenumber) {
+        String sql = "select phonenumber from Customer where email = ? or phonenumber = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, email);
+            ps.setString(2, phonenumber);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
     public boolean checkCustomer(String cid, String phonenumber, String email) {
         String sql = " select citizen_identification_card from Customer where citizen_identification_card = ? or phonenumber = ? or email = ?";
         try {
@@ -886,6 +889,47 @@ public class CustomerDAO extends DBContext {
     }
 
     //_____________________________________Register Account______________________________
+    public Customer registerCustomer(String fullname, String email, String phonenumber, String address, String password) {
+        String sql = "INSERT INTO [dbo].[Customer] "
+                + "([fullname], [username], [password], [email], [phonenumber], [address], "
+                + "[active], [balance], [dob], [gender], [avatar], [citizen_identification_card]) "
+                + "VALUES (?, ?, ?, ?, ?, ?, 1, 0, ?, ?, NULL, ?);";
+
+        Customer newCustomer = null;
+
+        try (PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            String username = email.substring(0, email.indexOf("@"));
+            String hashedPassword = toSHA1("123456"); // Hash the default password
+            Date defaultDob = Date.valueOf("1970-01-01");
+            int defaultGender = 1;
+            String defaultCID = "012345678910";
+
+            ps.setString(1, fullname);
+            ps.setString(2, username);
+            ps.setString(3, hashedPassword); // Store the hashed password
+            ps.setString(4, email);
+            ps.setString(5, phonenumber);
+            ps.setString(6, address);
+            ps.setDate(7, defaultDob);
+            ps.setInt(8, defaultGender);
+            ps.setString(9, defaultCID);
+
+            ps.executeUpdate();
+
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if (rs.next()) {
+                    int generatedId = rs.getInt(1);
+                    newCustomer = new Customer(generatedId, fullname, username, hashedPassword, 1,
+                        email, defaultDob, defaultGender, phonenumber, 0, defaultCID, address, null);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            Logger.getLogger(CustomerDAO.class.getName()).log(Level.SEVERE, "SQL Error: " + e.getMessage(), e);
+        }
+        return newCustomer;
+    }
+
     //resgister with customer
     public void registerAcc(String fullname, String username, String password, String email, String dob, int gender, String phonenumber, String cic, String address) {
         String sql = "INSERT INTO [dbo].[Customer] "

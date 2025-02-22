@@ -17,6 +17,7 @@ import jakarta.servlet.http.HttpSession;
 //import java.util.Date;
 import java.sql.Date;
 import model.auth.Staff;
+import jakarta.mail.internet.InternetAddress;
 
 /**
  *
@@ -62,52 +63,104 @@ public class addCustomer extends BaseRBACControlller {
 
     @Override
     protected void doAuthorizedPost(HttpServletRequest request, HttpServletResponse response, Staff account) throws ServletException, IOException {
-        
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("roleId") == null || (int) session.getAttribute("roleId") != 1) {
             response.sendRedirect("admin.login");
             return;
         }
+
         // Only validate if form was actually submitted
         if (request.getParameter("fullnameC") != null) {
-            String fullname = request.getParameter("fullnameC");
-            String phonenumber = request.getParameter("phonenumberC");
-            String email = request.getParameter("emailC");
-            String address = request.getParameter("addressC");
-            String dob = request.getParameter("dobC");
-            String gender = request.getParameter("genderC");
-            String username = request.getParameter("usernameC");
-            String password = request.getParameter("passwordC");
-            String cic = request.getParameter("cicC");
+            String fullname = request.getParameter("fullnameC").trim();
+            String phonenumber = request.getParameter("phonenumberC").trim();
+            String email = request.getParameter("emailC").trim();
+            String address = request.getParameter("addressC").trim();
+            String defaultPassword = "123456".trim();
+            // Validation patterns
+            String regexFullName = "^[A-Z][a-z]+(\\s[A-Z][a-z]+)+$";
+            String regexEmail = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+            String regexPhoneNumber = "^(09|03|08|07|05)\\d{8}$";
 
-            // Check if any required field is empty (not just null)
-            if (password == null || password.trim().isEmpty() ||
-                fullname == null || fullname.trim().isEmpty() ||
-                dob == null || dob.trim().isEmpty() ||
-                username == null || username.trim().isEmpty() ||
-                email == null || email.trim().isEmpty() ||
-                phonenumber == null || phonenumber.trim().isEmpty() ||
-                address == null || address.trim().isEmpty() ||
-                gender == null || gender.trim().isEmpty() ||
-                cic == null || cic.trim().isEmpty()) {
-                request.setAttribute("error", "All fields cannot be empty!");
+            // Validate each field
+            StringBuilder errorMessage = new StringBuilder();
+
+            // Fullname validation
+            if (fullname.isEmpty()) {
+                errorMessage.append("Full name is required.<br>");
+            } else if (!fullname.matches(regexFullName)) {
+                errorMessage.append("Full name must start with uppercase letters and contain at least two words.<br>");
+            }
+
+            // Email validation
+            if (email.isEmpty()) {
+                errorMessage.append("Email is required.<br>");
+            } else if (!email.matches(regexEmail)) {
+                errorMessage.append("Invalid email format.<br>");
+            } else {
+                try {
+                    InternetAddress emailAddr = new InternetAddress(email);
+                    emailAddr.validate();
+                } catch (Exception ex) {
+                    errorMessage.append("Invalid email address.<br>");
+                }
+            }
+
+            // Phone number validation
+            if (phonenumber.isEmpty()) {
+                errorMessage.append("Phone number is required.<br>");
+            } else if (!phonenumber.matches(regexPhoneNumber)) {
+                errorMessage.append("Phone number must start with 09, 03, 08, 07, or 05 and have 10 digits.<br>");
+            }
+
+            // Address validation
+            if (address.isEmpty()) {
+                errorMessage.append("Address is required.<br>");
+            } else if (address.length() < 10 || address.length() > 200) {
+                errorMessage.append("Address must be between 10 and 200 characters.<br>");
+            }
+
+            if (errorMessage.length() > 0) {
+                // Set error message and preserve form data
+                request.setAttribute("error", errorMessage.toString());
+                request.setAttribute("fullnameC", fullname);
+                request.setAttribute("emailC", email);
+                request.setAttribute("phonenumberC", phonenumber);
+                request.setAttribute("addressC", address);
                 request.getRequestDispatcher("customer/addCustomer.jsp").forward(request, response);
                 return;
             }
 
+            // If validation passes, proceed with registration
             CustomerDAO cd = new CustomerDAO();
-            // check xem username or email or phonenumber đã tồn tại hay chưa
-            if (cd.checkUsernameAdded(username, email, phonenumber, cic)) {
-                password = cd.toSHA1(password);
-                cd.registerAcc(fullname, username, password, email, dob, Integer.parseInt(gender), phonenumber, cic, address);
-                request.setAttribute("suc", "Create account successfully!");
-                request.getRequestDispatcher("customer/addCustomer.jsp").forward(request, response);
+            if (cd.checkCustomerAdded(email, phonenumber)) {
+                try {
+                    String hashedPassword = cd.toSHA1(defaultPassword);
+                    cd.registerCustomer(fullname, email, phonenumber, address, hashedPassword);
+                    request.setAttribute("suc", "Customer account created successfully! Default password is: " + defaultPassword);
+                    // Clear form after successful submission
+                    request.removeAttribute("fullnameC");
+                    request.removeAttribute("emailC");
+                    request.removeAttribute("phonenumberC");
+                    request.removeAttribute("addressC");
+                } catch (Exception e) {
+                    request.setAttribute("error", "An error occurred while creating the account. Please try again.");
+                    // Preserve form data in case of error
+                    request.setAttribute("fullnameC", fullname);
+                    request.setAttribute("emailC", email);
+                    request.setAttribute("phonenumberC", phonenumber);
+                    request.setAttribute("addressC", address);
+                }
             } else {
-                request.setAttribute("error", "Username or email or phonenumber or CCCD already exist!");
-                request.getRequestDispatcher("customer/addCustomer.jsp").forward(request, response);
+                request.setAttribute("error", "Email or phone number is already registered!");
+                // Preserve form data
+                request.setAttribute("fullnameC", fullname);
+                request.setAttribute("emailC", email);
+                request.setAttribute("phonenumberC", phonenumber);
+                request.setAttribute("addressC", address);
             }
+            request.getRequestDispatcher("customer/addCustomer.jsp").forward(request, response);
         } else {
-            // Initial form load - just show the form without validation
+            // Initial form load
             request.getRequestDispatcher("customer/addCustomer.jsp").forward(request, response);
         }
     }
