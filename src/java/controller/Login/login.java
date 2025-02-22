@@ -25,8 +25,8 @@ public class login extends HttpServlet {
     private static final int MAX_ATTEMPTS = 3;
     private static final int LOCK_TIME_SECONDS = 60;
     private static final Map<String, Instant> lockedAccounts = new HashMap<>();
-    private static final String CLIENT_ID = System.getenv("GOOGLE_CLIENT_ID"); // nhớ thay client ID 
-    private static final String CLIENT_SECRET = System.getenv("GOOGLE_CLIENT_SECRET"); // nhớ thay Client Secret 
+    private static final String CLIENT_ID = System.getenv("GOOGLE_CLIENT_ID"); // nhớ thay client ID
+    private static final String CLIENT_SECRET = System.getenv("GOOGLE_CLIENT_SECRET"); // nhớ thay Client Secret
     private static final String REDIRECT_URI = "http://localhost:9999/Namcombank/login";
 
     @Override
@@ -170,7 +170,9 @@ public class login extends HttpServlet {
                 return;
             }
 
-            String pass = cdao.toSHA1(param_pass);
+            // Hash the password before checking
+            String hashedPassword = cdao.toSHA1(param_pass);
+            customer = cdao.checkUser(param_user, hashedPassword);
 
             // Kiểm tra nếu tài khoản bị khóa
             if (lockedAccounts.containsKey(param_user)) {
@@ -186,7 +188,7 @@ public class login extends HttpServlet {
             }
 
             // Kiểm tra thông tin đăng nhập
-            customer = cdao.checkUser(param_user, pass);
+            customer = cdao.checkUser(param_user, hashedPassword);
             if (customer == null) {
                 // Tăng số lần nhập sai
                 Integer attempts = (Integer) session.getAttribute("loginAttempts");
