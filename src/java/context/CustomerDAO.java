@@ -78,7 +78,7 @@ public class CustomerDAO extends DBContext {
                 customer.setGender(rs.getInt("gender"));
                 customer.setPhonenumber(rs.getString("phonenumber"));
                 customer.setBalance(rs.getFloat("balance"));
-                customer.setCid(rs.getString("cid"));  
+                customer.setCid(rs.getString("cid"));
                 customer.setAvatar(rs.getString("avatar"));
             }
         } catch (SQLException e) {
@@ -248,6 +248,7 @@ public class CustomerDAO extends DBContext {
                 + "      ,[balance]\n"
                 + "      ,[citizen_identification_card]\n"
                 + "      ,[address]\n"
+                + "      ,[avatar]\n"
                 + "  FROM [dbo].[Customer]\n"
                 + "  WHERE customer_id = ?";
         try {
@@ -1095,7 +1096,7 @@ public class CustomerDAO extends DBContext {
 
     public Customer getCustomerDetail(int customerId) {
         Customer customer = null;
-        String sql = "SELECT [customer_id], [fullname], [username], [password], [active], [email], [dob], [gender], [phonenumber], [balance], [citizen_identification_card], [address] "
+        String sql = "SELECT [customer_id], [fullname], [username], [password], [active], [email], [dob], [gender], [phonenumber], [balance], [citizen_identification_card], [address], [avatar]"
                 + "FROM [dbo].[Customer] "
                 + "WHERE [customer_id] = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -1151,10 +1152,10 @@ public class CustomerDAO extends DBContext {
         List<Customer> customers = new ArrayList<>();
         String query = "SELECT c.customer_id, c.fullname, c.username, c.email, "
                 + "c.password, c.dob, c.gender, c.balance, c.address, "
-                + "c.active, c.phonenumber, c.citizen_identification_card, " // Added active and other missing fields
+                + "c.active, c.phonenumber, c.citizen_identification_card, c.avatar, " // Added active and other missing fields
                 + "a.activename " // Added activename from Active table
                 + "FROM Customer c "
-                + "LEFT JOIN Active a ON c.active = a.active " // Join with Active table
+                + "JOIN Active a ON c.active = a.active " // Join with Active table
                 + "ORDER BY c.customer_id "
                 + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
 
@@ -1192,7 +1193,7 @@ public class CustomerDAO extends DBContext {
     public List<Customer> getCustomersByPageSorted(int page, int pageSize, String sort, String order) {
         String query = "SELECT customer_id, fullname, username, password, "
                 + "active, email, dob, gender, phonenumber, "
-                + "balance, citizen_identification_card, address "
+                + "balance, citizen_identification_card, address, avatar "
                 + "FROM Customer "
                 + "ORDER BY " + sort + " " + order + " "
                 + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
@@ -1228,7 +1229,7 @@ public class CustomerDAO extends DBContext {
     }
 
     public List<Customer> searchCustomersByPageSorted(String search, int page, int pageSize, String sort, String order) {
-        String query = "SELECT customer_id, fullname, username, password, active, email, dob, gender, phonenumber, balance, citizen_identification_card, address "
+        String query = "SELECT customer_id, fullname, username, password, active, email, dob, gender, phonenumber, balance, citizen_identification_card, address, avatar "
                 + "FROM Customer "
                 + "WHERE fullname LIKE ? OR email LIKE ? OR username LIKE ? OR address LIKE ? "
                 + "ORDER BY " + sort + " " + order + " "
@@ -1270,7 +1271,7 @@ public class CustomerDAO extends DBContext {
 
     public List<Customer> searchCustomersByPage(String paraSearch, int page, Integer pageSize) {
         List<Customer> customers = new ArrayList<>();
-        String query = "SELECT customer_id, fullname, username, password, active, email, dob, gender, phonenumber, balance, citizen_identification_card, address "
+        String query = "SELECT customer_id, fullname, username, password, active, email, dob, gender, phonenumber, balance, citizen_identification_card, address, avatar "
                 + "FROM Customer "
                 + "WHERE fullname LIKE ? OR email LIKE ? OR username LIKE ? OR address LIKE ? "
                 + "ORDER BY customer_id "
@@ -1474,7 +1475,7 @@ public class CustomerDAO extends DBContext {
         StringBuilder query = new StringBuilder("SELECT c.customer_id, c.fullname, c.username, "
                 + "c.password, c.active, c.email, c.dob, c.gender, "
                 + "c.phonenumber, c.balance, c.citizen_identification_card, "
-                + "c.address "
+                + "c.address, c.avatar "
                 + "FROM Customer c "
                 + "JOIN Gender g ON c.gender = g.gender "
                 + "JOIN Active a ON c.active = a.active "
@@ -1575,7 +1576,7 @@ public class CustomerDAO extends DBContext {
 
         StringBuilder query = new StringBuilder("SELECT c.customer_id, c.fullname, c.username, c.password, "
                 + "c.email, c.dob, c.gender, c.phonenumber, c.balance, c.citizen_identification_card, "
-                + "c.address, c.active, g.gendername, a.activename "
+                + "c.address, c.active, c.avatar, g.gendername, a.activename "
                 + "FROM Customer c "
                 + "JOIN Gender g ON c.gender = g.gender "
                 + "JOIN Active a ON c.active = a.active "

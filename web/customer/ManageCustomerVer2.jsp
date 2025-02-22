@@ -110,6 +110,7 @@
                                         Full Name
                                     </form>
                                 </th>
+                                <th>Image</th>
                                 <th>
                                     Gender
                                 </th>
@@ -181,6 +182,7 @@
                                 <tr class="${status.index % 2 == 0 ? 'table-primary' : ''}">
                                     <td>${status.index + 1 + (pagination.currentPage - 1) * pagination.pageSize}</td>
                                     <td>${customer.fullname}</td>
+                                    <td>${customer.avatar}</td>
                                     <td>
                                         <c:choose>
                                             <c:when test="${customer.gender == 0}">

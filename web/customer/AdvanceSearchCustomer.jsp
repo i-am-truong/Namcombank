@@ -225,6 +225,7 @@
                                         Full Name
                                     </form>
                                 </th>
+                                <th>Image</th>
                                 <th>Gender</th>
                                 <th>Date of Birth</th>
                                 <th>
@@ -321,6 +322,7 @@
                             <tr class="${status.index % 2 == 0 ? 'table-primary' : ''}">
                                 <td><a href="viewCustomer?customerId=${customer.customerId}">${status.index+1+(pagination.currentPage-1)*pagination.pageSize}</a></td>
                                 <td>${customer.fullname}</td>
+                                <td>${customer.avatar}</td>
                                 <td>
                                     <c:choose>
                                         <c:when test="${customer.gender == 0}">

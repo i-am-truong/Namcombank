@@ -62,7 +62,7 @@ public class viewCustomer extends BaseRBACControlller {
         try {
             int customerId = Integer.parseInt(request.getParameter("customerId"));
             CustomerDAO cdao = new CustomerDAO();
-            Customer customer = cdao.getCustomerById(customerId);
+            Customer customer = cdao.getCustomerDetail(customerId);
             request.setAttribute("customer", customer);
             request.getRequestDispatcher("customer/viewCustomer.jsp").forward(request, response);
         } catch (NumberFormatException e) {
