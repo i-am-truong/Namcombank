@@ -82,8 +82,10 @@ public class ImportCustomers extends HttpServlet {
                         customer.setCid(row.getCell(4) != null ? row.getCell(4).getStringCellValue().trim() : "");
                         customer.setAddress(row.getCell(5) != null ? row.getCell(5).getStringCellValue().trim() : "");
 
+
                         if (!customer.getFullname().isEmpty() && !customer.getEmail().isEmpty()
-                            && !customer.getPhonenumber().isEmpty() && !customer.getAddress().isEmpty()) {
+                            && !customer.getPhonenumber().isEmpty() && !customer.getAddress().isEmpty()
+                            && cdao.checkCustomer(customer.getCid(), customer.getPhonenumber(), customer.getEmail())) {
                             readCustomers.add(customer);
                         }
 
@@ -104,7 +106,7 @@ public class ImportCustomers extends HttpServlet {
         }
 
         if (readCustomers.isEmpty()) {
-            session.setAttribute("alertImportFail", "No valid data found in the Excel file");
+            session.setAttribute("alertImportFail", "No valid data found in the Excel file or all records are duplicates");
             response.sendRedirect("manageCustomerVer2");
             return;
         }
@@ -125,7 +127,8 @@ public class ImportCustomers extends HttpServlet {
         }
         if (!notAdded.isEmpty()) {
             session.setAttribute("errorCustomers", notAdded);
-            session.setAttribute("alertImportFail", notAdded.size() + " customers could not be imported");
+            session.setAttribute("alertImportFail", notAdded.size() +
+                " customers could not be imported due to duplicate information (phone, email, or CID)");
         }
 
         response.sendRedirect("manageCustomerVer2");
