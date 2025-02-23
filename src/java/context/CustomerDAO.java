@@ -1751,45 +1751,28 @@ public class CustomerDAO extends DBContext {
                 + "[address], [avatar]) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        try (PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            String hashedPassword = toSHA1("123456"); 
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            String username = customer.getEmail().substring(0, customer.getEmail().indexOf("@"));
 
             ps.setString(1, customer.getFullname());
-            ps.setString(2, customer.getUsername());
-            ps.setString(3, hashedPassword);
-            ps.setInt(4, 1); 
+            ps.setString(2, username);
+            ps.setString(3, toSHA1("123456"));
+            ps.setBoolean(4, true);
             ps.setString(5, customer.getEmail());
-            ps.setDate(6, customer.getDob() != null ? customer.getDob() : Date.valueOf("1970-01-01"));
-            ps.setInt(7, customer.getGender()); 
+            ps.setDate(6, new java.sql.Date(System.currentTimeMillis()));
+            ps.setBoolean(7, customer.getGender() == 1);
             ps.setString(8, customer.getPhonenumber());
-            ps.setFloat(9, 0.0f); 
-
-            if (customer.getCid() != null && !customer.getCid().isEmpty()) {
-                ps.setString(10, customer.getCid());
-            } else {
-                ps.setNull(10, java.sql.Types.NVARCHAR);
-            }
-
+            ps.setFloat(9, 0.0f);
+            ps.setString(10, customer.getCid());
             ps.setString(11, customer.getAddress());
-
-            if (customer.getAvatar() != null && !customer.getAvatar().isEmpty()) {
-                ps.setString(12, customer.getAvatar());
-            } else {
-                ps.setNull(12, java.sql.Types.NVARCHAR);
-            }
+            ps.setString(12, null);
 
             int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
 
-            if (rowsAffected > 0) {
-                try (ResultSet rs = ps.getGeneratedKeys()) {
-                    if (rs.next()) {
-                        customer.setCustomerId(rs.getInt(1));
-                        return true;
-                    }
-                }
-            }
-            return false;
         } catch (SQLException e) {
+            System.out.println("Error adding customer: " + e.getMessage());
             e.printStackTrace();
             return false;
         }
