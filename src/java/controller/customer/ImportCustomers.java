@@ -49,51 +49,85 @@ public class ImportCustomers extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        response.setHeader("Content-Disposition", "attachment; filename=customerscan'tadd.xlsx");
-
+        HttpSession session = request.getSession();
         Part filePart = request.getPart("file");
         List<Customer> readCustomers = new ArrayList<>();
+
         if (filePart != null) {
             String fileName = filePart.getSubmittedFileName();
+            if (!fileName.endsWith(".xlsx")) {
+                session.setAttribute("alertImportFail", "Please upload an Excel file (.xlsx)");
+                response.sendRedirect("manageCustomerVer2");
+                return;
+            }
+
             File file = new File(getServletContext().getRealPath("/") + fileName);
             filePart.write(file.getAbsolutePath());
 
-            try (FileInputStream fis = new FileInputStream(file); Workbook workbook = new XSSFWorkbook(fis);) {
+            try (FileInputStream fis = new FileInputStream(file);
+                 Workbook workbook = new XSSFWorkbook(fis)) {
                 Sheet sheet = workbook.getSheetAt(0);
+
+                // Skip header row
                 for (int i = 1; i <= sheet.getLastRowNum(); i++) {
                     Row row = sheet.getRow(i);
-                    Customer customer = new Customer();
-                    customer.setFullname(row.getCell(1).getStringCellValue());
-                    customer.setUsername(row.getCell(2).getStringCellValue());
-                    customer.setEmail(row.getCell(3).getStringCellValue());
-                    customer.setPhonenumber(row.getCell(4).getStringCellValue());
-                    customer.setAddress(row.getCell(5).getStringCellValue());
-                    customer.setCid(row.getCell(6).getStringCellValue());
-                    readCustomers.add(customer);
+                    if (row == null) continue;
+
+                    try {
+                        Customer customer = new Customer();
+                        customer.setFullname(row.getCell(0) != null ? row.getCell(0).getStringCellValue().trim() : "");
+                        customer.setEmail(row.getCell(1) != null ? row.getCell(1).getStringCellValue().trim() : "");
+                        customer.setGender(row.getCell(2) != null ? (int)row.getCell(2).getNumericCellValue() : 1);
+                        customer.setPhonenumber(row.getCell(3) != null ? row.getCell(3).getStringCellValue().trim() : "");
+                        customer.setCid(row.getCell(4) != null ? row.getCell(4).getStringCellValue().trim() : "");
+                        customer.setAddress(row.getCell(5) != null ? row.getCell(5).getStringCellValue().trim() : "");
+
+                        if (!customer.getFullname().isEmpty() && !customer.getEmail().isEmpty()
+                            && !customer.getPhonenumber().isEmpty() && !customer.getAddress().isEmpty()) {
+                            readCustomers.add(customer);
+                        }
+
+                    } catch (Exception e) {
+                        System.out.println("Error reading row " + i + ": " + e.getMessage());
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+                session.setAttribute("alertImportFail", "Error reading Excel file: " + e.getMessage());
+                response.sendRedirect("manageCustomerVer2");
+                return;
             } finally {
                 if (file.exists()) {
                     file.delete();
                 }
             }
         }
+
+        if (readCustomers.isEmpty()) {
+            session.setAttribute("alertImportFail", "No valid data found in the Excel file");
+            response.sendRedirect("manageCustomerVer2");
+            return;
+        }
+
         int countAdded = 0;
-        int countNotAdded = 0;
         List<Customer> notAdded = new ArrayList<>();
+
         for (Customer readCustomer : readCustomers) {
-            System.out.println("test");
             if (cdao.addImport(readCustomer)) {
                 countAdded++;
             } else {
-                countNotAdded++;
                 notAdded.add(readCustomer);
             }
         }
-             HttpSession session = request.getSession();
+
+        if (countAdded > 0) {
+            session.setAttribute("alertImportSuccess", countAdded + " customers imported successfully");
+        }
+        if (!notAdded.isEmpty()) {
             session.setAttribute("errorCustomers", notAdded);
+            session.setAttribute("alertImportFail", notAdded.size() + " customers could not be imported");
+        }
+
         response.sendRedirect("manageCustomerVer2");
     }
 
