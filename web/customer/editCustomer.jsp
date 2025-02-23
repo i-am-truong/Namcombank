@@ -111,20 +111,20 @@
 
                                 <div class="form-group">
                                     <label for="cidC">Citizen Identification Card</label>
-                                    <input type="text" class="form-control" id="cidC" name="citizenIdC"
-                                           value="${customer.cid}" required pattern="^0\d{11}$"  title="Citizen ID must be exactly 12 digits and start with 0" maxlength="12">
+                                    <input type="text" class="form-control" id="cidC" name="citizenIdC" maxlength="12"
+                                           value="${customer.cid}" required>
                                 </div>
 
                                 <div class="form-group">
                                     <label for="phonenumberC">Phone Number</label>
-                                    <input type="tel" class="form-control" id="phonenumberC" name="phonenumberC"
-                                           value="${customer.phonenumber}" required pattern="^0[0-9]{9}$" title="Phone number must start with 0 and have exactly 10 digits." maxlength="10">
+                                    <input type="tel" class="form-control" id="phonenumberC" name="phonenumberC" maxlength="10"
+                                           value="${customer.phonenumber}" required>
                                 </div>
 
                                 <div class="form-group">
                                     <label for="emailC">Email</label>
                                     <input type="email" class="form-control" id="emailC" name="emailC"
-                                           value="${customer.email}" required pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" title="Enter a valid email.">
+                                           value="${customer.email}" required>
                                 </div>
 
                                 <div class="form-group">
@@ -133,32 +133,22 @@
                                            value="${customer.address}" required>
                                 </div>
 
-                                <div class="form-group">
-                                    <label for="dobC">Date of Birth</label>
-                                    <input type="date" class="form-control" id="dobC" name="dobC"
-                                           value="${customer.dob}">
-                                </div>
 
-                                <div class="form-group">
-                                    <label for="genderC">Gender</label>
-                                    <select class="form-control" id="genderC" name="genderC" required>
-                                        <option value="1" ${customer.gender == 1 ? 'selected' : ''}>Male</option>
-                                        <option value="0" ${customer.gender == 0 ? 'selected' : ''}>Female</option>
-                                    </select>
-                                </div>
-                                <div class="col-12">
+                                <div class="col-12 mt-3">
                                     <div class="d-grid">
                                         <button type="submit" class="btn btn-success btn-lg">Update Customer</button>
                                     </div>
                                 </div>
+                                <!-- Add status messages -->
+                                <c:if test="${not empty error}">
+                                    <div class="alert alert-danger mt-3">${error}</div>
+                                </c:if>
+                                <c:if test="${not empty success}">
+                                    <div class="alert alert-success mt-3">${success}</div>
+                                </c:if>
+
                             </form>
 
-                            <c:if test="${not empty error}">
-                                <div class="alert alert-danger">${error}</div>
-                            </c:if>
-                            <c:if test="${not empty success}">
-                                <div class="alert alert-success">${success}</div>
-                            </c:if>
                         </div>
                     </div>
                 </div>
@@ -171,70 +161,7 @@
     <script src="assets/js/jquery-3.5.1.min.js"></script>
     <script src="assets/js/bootstrap.min.js"></script>
     <script src="assets/js/script.js"></script>
-
-    <script>
-        document.getElementById('editCustomer').addEventListener('submit', function (event) {
-            // Always prevent default form submission first
-            event.preventDefault();
-
-            // Get form values
-            var phone = document.getElementById('phonenumberC').value.trim();
-            var email = document.getElementById('emailC').value.trim();
-            var cid = document.getElementById('cidC').value.trim();
-            var dob = document.getElementById('dobC').value.trim();
-
-            // Regular expressions for validation
-            var phoneRegex = /^(09|08|03)[0-9]{8}$/;
-            var emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-            var cidRegex = /^0\d{11}$/;
-
-            var errors = [];
-
-            // Validate phone number
-            if (!phoneRegex.test(phone)) {
-                errors.push('Phone number must start with 09 or 08 or 03 and have exactly 10 digits');
-            }
-
-            // Validate email
-            if (!emailRegex.test(email)) {
-                errors.push('Invalid email format');
-            }
-
-            // Validate CIC
-            if (!cidRegex.test(cid)) {
-                errors.push('Citizen ID must start with 0 and have exactly 12 digits');
-            }
-
-            // Validate date of birth
-            var dobDate = new Date(dob);
-            var today = new Date();
-            today.setHours(0, 0, 0, 0); // Reset time portion
-
-            // Calculate age
-            var age = today.getFullYear() - dobDate.getFullYear();
-            var month = today.getMonth() - dobDate.getMonth();
-            if (month < 0 || (month === 0 && today.getDate() < dobDate.getDate())) {
-                age--;
-            }
-
-            if (dobDate >= today) {
-                errors.push('Date of birth cannot be today or in the future');
-            } else if (age < 18) {
-                errors.push('Customer must be at least 18 years old');
-            } else if (age > 100) {
-                errors.push('Invalid date of birth (age cannot exceed 100 years)');
-            }
-
-            // If there are any validation errors
-            if (errors.length > 0) {
-                alert(errors.join('\n'));
-                return false; // Prevent form submission
-            }
-
-            // If all validations pass, submit the form
-            this.submit();
-        });
-    </script>
+<!-- Add this JavaScript code before closing </body> tag -->
 
 </body>
-</html>
+<html>
