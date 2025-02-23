@@ -26,7 +26,18 @@ public class Staff {
     private String citizenId;
     private Department dept;
     private Department did;
+    private ArrayList<Role> roles;
+  
 
+    public ArrayList<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(ArrayList<Role> roles) {
+        this.roles = roles;
+    }
+    
+    
     public Department getDid() {
         return did;
     }
@@ -42,7 +53,7 @@ public class Staff {
     public void setDept(Department dept) {
         this.dept = dept;
     }
-    ArrayList<Role> roles = new ArrayList<>();
+
 
     public int getId() {
         return id;
@@ -52,13 +63,6 @@ public class Staff {
         this.id = id;
     }
 
-    public ArrayList<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(ArrayList<Role> roles) {
-        this.roles = roles;
-    }
 
     public String getFullname() {
         return fullname;
@@ -115,7 +119,6 @@ public class Staff {
     public void setGender(boolean gender) {
         this.gender = gender;
     }
-
 
 
     public String getPhonenumber() {

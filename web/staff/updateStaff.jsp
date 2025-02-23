@@ -69,13 +69,32 @@
                         </c:forEach>
                     </select>
                 </div>
-                    
+                <!-- Thêm phần chọn roles -->
+                <div class="form-group">
+                    <label>Roles:</label>
+                    <c:forEach var="role" items="${allRoles}">
+                        <div class="form-check">
+                            <input type="checkbox" 
+                                   name="roleIds" 
+                                   value="${role.id}" 
+                                   class="form-check-input"
+                                   <c:forEach var="staffRole" items="${staff.roles}">
+                                       <c:if test="${role.id eq staffRole.id}">checked</c:if>
+                                   </c:forEach>
+                                   />
+                            <label class="form-check-label">${role.name}</label>
+                        </div>
+                    </c:forEach>
+                </div>
+
+
+
                 <div class="col-12">
                     <div class="d-grid">
                         <button type="submit" class="btn btn-success btn-lg">Update Staff</button>
                     </div>
                 </div>
-                    
+
             </form>
 
             <script>
@@ -131,7 +150,7 @@
                         alert(errors.join('\n'));
                     }
                 });
-                
+
 
 
             </script>

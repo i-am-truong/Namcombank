@@ -152,6 +152,7 @@
                                             <th>Email</th>
                                             <th>Address</th>
                                             <th>Department</th>
+                                            <th>Role Name</th> <!-- Thêm cột Role Name -->
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -167,8 +168,17 @@
                                                 <td>${s.address}</td>
                                                 <td>${s.dept.name}</td>
                                                 <td>
-                                                    <a href="updateStaff?id=${s.id}" 
-                                                       class="btn btn-primary btn-sm action-btn">Edit</a>
+                                                    <c:choose>
+                                                        <c:when test="${not empty s.roles}">
+                                                            <c:forEach items="${s.roles}" var="r" varStatus="loop">
+                                                                ${r.name}<c:if test="${!loop.last}">, </c:if>
+                                                            </c:forEach>
+                                                        </c:when>
+                                                        <c:otherwise>None</c:otherwise>
+                                                    </c:choose>
+                                                </td>
+                                                <td>
+                                                    <a href="updateStaff?id=${s.id}" class="btn btn-primary btn-sm action-btn">Edit</a>
                                                     <button onclick="checkDeleteCustomer('${s.id}')" 
                                                             class="btn btn-danger btn-sm action-btn">Delete</button>
                                                 </td>
@@ -177,6 +187,7 @@
                                     </tbody>
                                 </table>
                             </div>
+
                             <nav aria-label="Table navigation">
                                 <ul class="pagination" id="pagination"></ul>
                             </nav>
