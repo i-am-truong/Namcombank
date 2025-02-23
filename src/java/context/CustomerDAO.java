@@ -1021,39 +1021,27 @@ public class CustomerDAO extends DBContext {
         }
 
         String sql = "UPDATE [Customer] "
-                + "SET [fullname] = ?, "
-                + "[phonenumber] = ?, "
+                + "SET [phonenumber] = ?, "
                 + "[address] = ?, "
                 + "[email] = ?, "
-                + "[dob] = ?, "
-                + "[gender] = ?, "
-                + "[citizen_identification_card] = ?"
-                + "[avatar] = ? "
+                + "[citizen_identification_card] = ? "
                 + "WHERE [customer_id] = ?";
 
         try {
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, customer.getPhonenumber());
+            stm.setString(2, customer.getAddress());
+            stm.setString(3, customer.getEmail());
+            stm.setString(4, customer.getCid());
+            stm.setInt(5, customer.getCustomerId());
 
-            try (PreparedStatement stm = connection.prepareStatement(sql)) {
-                stm.setNString(1, customer.getFullname());
-                stm.setNString(2, customer.getPhonenumber());
-                stm.setNString(3, customer.getAddress());
-                stm.setNString(4, customer.getEmail());
-                stm.setDate(5, customer.getDob());
-                stm.setInt(6, customer.getGender());
-                stm.setString(7, customer.getCid());
-                stm.setString(8, customer.getAvatar());
-                stm.setInt(8, customer.getCustomerId());
-
-                int rowsUpdated = stm.executeUpdate();
-                if (rowsUpdated == 0) {
-                    System.out.println("No user found with UID: " + customer.getCustomerId());
-                } else {
-                    System.out.println("User profile updated successfully.");
-                }
+            int rowsUpdated = stm.executeUpdate();
+            if (rowsUpdated == 0) {
+                throw new SQLException("Update failed, no rows affected.");
             }
         } catch (SQLException e) {
             System.err.println("SQL error: " + e.getMessage());
-            e.printStackTrace();
+            throw new RuntimeException("Failed to update customer profile", e);
         }
     }
 
