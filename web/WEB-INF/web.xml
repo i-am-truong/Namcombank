@@ -236,7 +236,14 @@
         <servlet-name>RepaymentSchedule</servlet-name>
         <servlet-class>controller.repayment_schedule.RepaymentSchedule</servlet-class>
     </servlet>
-    
+    <servlet>
+        <servlet-name>ImportCustomers</servlet-name>
+        <servlet-class>controller.customer.ImportCustomers</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ExportCustomers</servlet-name>
+        <servlet-class>controller.customer.ExportCustomers</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>viewCustomerDetail</servlet-name>
         <url-pattern>/viewCustomerDetail</url-pattern>
@@ -469,10 +476,17 @@
         <servlet-name>RepaymentSchedule</servlet-name>
         <url-pattern>/repaymentSchedule</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ImportCustomers</servlet-name>
+        <url-pattern>/ImportCustomers</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ExportCustomers</servlet-name>
+        <url-pattern>/ExportCustomers</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30
         </session-timeout>
     </session-config>
-    
 </web-app>

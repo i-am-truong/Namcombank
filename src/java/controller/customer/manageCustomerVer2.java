@@ -45,6 +45,16 @@ public class manageCustomerVer2 extends HttpServlet {
             return;
         }
         
+        List<Customer> errorCustomers = (List<Customer>) session.getAttribute("errorCustomers");
+        if(errorCustomers!=null){
+            if (errorCustomers.isEmpty()) {
+                request.setAttribute("alertImportSuccess", "Import Successfully ");
+                  session.removeAttribute("errorCustomers");
+            } else {
+                request.setAttribute("alertImportFail", "Some components can't add.");
+            }
+        }
+        
         String pageParam = request.getParameter("page");
         String paraSearch = SearchUtils.preprocessSearchQuery(request.getParameter("search"));
         int page = (FormatUtils.tryParseInt(pageParam) != null) ? FormatUtils.tryParseInt(pageParam) : 1;

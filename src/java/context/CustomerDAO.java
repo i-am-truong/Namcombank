@@ -125,19 +125,19 @@ public class CustomerDAO extends DBContext {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 return new Customer(
-                    rs.getInt("customer_id"),
-                    rs.getString("fullname"),
-                    rs.getString("username"),
-                    rs.getString("password"),
-                    rs.getInt("active"),
-                    rs.getString("email"),
-                    rs.getDate("dob"),
-                    rs.getInt("gender"),
-                    rs.getString("phonenumber"),
-                    rs.getFloat("balance"),
-                    rs.getString("citizen_identification_card"),
-                    rs.getString("address"),
-                    rs.getString("avatar")
+                        rs.getInt("customer_id"),
+                        rs.getString("fullname"),
+                        rs.getString("username"),
+                        rs.getString("password"),
+                        rs.getInt("active"),
+                        rs.getString("email"),
+                        rs.getDate("dob"),
+                        rs.getInt("gender"),
+                        rs.getString("phonenumber"),
+                        rs.getFloat("balance"),
+                        rs.getString("citizen_identification_card"),
+                        rs.getString("address"),
+                        rs.getString("avatar")
                 );
             }
         } catch (SQLException e) {
@@ -193,6 +193,7 @@ public class CustomerDAO extends DBContext {
                 + "      ,[balance]\n"
                 + "      ,[citizen_identification_card]\n"
                 + "      ,[address]\n"
+                + "      ,[avatar]\n"
                 + "  FROM [dbo].[Customer]\n";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
@@ -920,7 +921,7 @@ public class CustomerDAO extends DBContext {
                 if (rs.next()) {
                     int generatedId = rs.getInt(1);
                     newCustomer = new Customer(generatedId, fullname, username, hashedPassword, 1,
-                        email, defaultDob, defaultGender, phonenumber, 0, defaultCID, address, null);
+                            email, defaultDob, defaultGender, phonenumber, 0, defaultCID, address, null);
                 }
             }
         } catch (SQLException e) {
@@ -1741,6 +1742,57 @@ public class CustomerDAO extends DBContext {
             e.printStackTrace();
         }
         return activeList;
+    }
+
+    public boolean addImport(Customer customer) {
+        String sql = "INSERT INTO [dbo].[Customer] "
+                + "([fullname], [username], [password], [active], [email], "
+                + "[dob], [gender], [phonenumber], [balance], [citizen_identification_card], "
+                + "[address], [avatar]) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            String hashedPassword = toSHA1("123456"); 
+
+            ps.setString(1, customer.getFullname());
+            ps.setString(2, customer.getUsername());
+            ps.setString(3, hashedPassword);
+            ps.setInt(4, 1); 
+            ps.setString(5, customer.getEmail());
+            ps.setDate(6, customer.getDob() != null ? customer.getDob() : Date.valueOf("1970-01-01"));
+            ps.setInt(7, customer.getGender()); 
+            ps.setString(8, customer.getPhonenumber());
+            ps.setFloat(9, 0.0f); 
+
+            if (customer.getCid() != null && !customer.getCid().isEmpty()) {
+                ps.setString(10, customer.getCid());
+            } else {
+                ps.setNull(10, java.sql.Types.NVARCHAR);
+            }
+
+            ps.setString(11, customer.getAddress());
+
+            if (customer.getAvatar() != null && !customer.getAvatar().isEmpty()) {
+                ps.setString(12, customer.getAvatar());
+            } else {
+                ps.setNull(12, java.sql.Types.NVARCHAR);
+            }
+
+            int rowsAffected = ps.executeUpdate();
+
+            if (rowsAffected > 0) {
+                try (ResultSet rs = ps.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        customer.setCustomerId(rs.getInt(1));
+                        return true;
+                    }
+                }
+            }
+            return false;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public static void main(String[] args) {
