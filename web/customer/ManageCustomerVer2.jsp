@@ -97,7 +97,7 @@
                                         <input type="file" name="file" id="fileInput" style="display: none;" required>
                                         <button type="button" class="btn btn-success" id="uploadBtn">
                                             <i class="fas fa-file-import"></i>
-                                        </button>                                
+                                        </button>
                                     </form>
                                 </div>
                             </div>
@@ -213,7 +213,22 @@
                                     <tr class="${status.index % 2 == 0 ? 'table-success' : ''}">
                                         <td>${status.index + 1 + (pagination.currentPage - 1) * pagination.pageSize}</td>
                                         <td>${customer.fullname}</td>
-                                        <td>${customer.avatar}</td>
+                                        <td>
+                                            <c:choose>
+                                                <c:when test="${empty customer.avatar}">
+                                                    <img src="${pageContext.request.contextPath}/assets/img/profile/default-avatar.png"
+                                                         alt="Default Avatar"
+                                                         width="120"
+                                                         height="150">
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <img src="${pageContext.request.contextPath}/${customer.avatar}"
+                                                         alt="${customer.fullname}'s avatar"
+                                                         width="120"
+                                                         height="150">
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </td>
                                         <td>
                                             <c:choose>
                                                 <c:when test="${customer.gender == 0}">
