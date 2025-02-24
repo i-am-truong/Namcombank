@@ -47,7 +47,7 @@ input[type='number']::-webkit-inner-spin-button {
 .slider {
     height: 5px;
     position: relative;
-    background: #ddd;
+    background: green;
     border-radius: 5px;
 }
 .slider .progress {
@@ -56,7 +56,7 @@ input[type='number']::-webkit-inner-spin-button {
     right: 25%;
     position: absolute;
     border-radius: 5px;
-    background: #3b7ddd;
+    background: green;
 }
 .range-input {
     position: relative;
@@ -75,7 +75,7 @@ input[type='range']::-webkit-slider-thumb {
     height: 17px;
     width: 17px;
     border-radius: 50%;
-    background: #3b7ddd;
+    background: green;
     pointer-events: auto;
     -webkit-appearance: none;
     box-shadow: 0 0 6px rgba(0, 0, 0, 0.05);

@@ -50,7 +50,7 @@
 
     <body>
         <div class="wrapper">
-
+            <%--<jsp:include page="../homepage/sidebar_admin.jsp" />--%>
             <div class="main">
 
                 <jsp:include page="../homepage/header_admin.jsp" />
@@ -64,7 +64,7 @@
                             <button type="submit" class="btn btn-success"><i class="fas fa-add"></i> Add New Customer</button>
                         </form>
                         <form action="${pageContext.request.contextPath}/manageCustomerVer2/Search" method="get" style="display: inline;">
-                            <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Advanced Search</button>
+                            <button type="submit" class="btn btn-success"><i class="fas fa-search"></i> Advanced Search</button>
                         </form>
 
                     </div>
@@ -86,16 +86,16 @@
                             <div class="col-sm-6 col-md-6 text-end">
                                 <div class="col-md-3 input-group d-flex justify-content-end">
                                     <input type="search" style="flex: 0.5 1 auto" name="search" class="form-control form-control-md" placeholder="Search" value="${pagination.searchValues[0]}" aria-controls="datatables-column-search-text-inputs">
-                                    <button type="submit" class="btn btn-primary">
+                                    <button type="submit" class="btn btn-success">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search align-middle"><circle cx="11" cx="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                                     </button>
                                     </form>
                                     <form action="ExportCustomers" method="get" class="ms-1">
-                                        <button type="submit" class="btn btn-primary"><i class="fas fa-print"></i></button>
+                                        <button type="submit" class="btn btn-success"><i class="fas fa-print"></i></button>
                                     </form>
                                     <form action="ImportCustomers" class="ms-1" id="importForm" method="post" enctype="multipart/form-data" >
                                         <input type="file" name="file" id="fileInput" style="display: none;" required>
-                                        <button type="button" class="btn btn-primary" id="uploadBtn">
+                                        <button type="button" class="btn btn-success" id="uploadBtn">
                                             <i class="fas fa-file-import"></i>
                                         </button>                                
                                     </form>
@@ -210,7 +210,7 @@
                             <tbody>
                                 <!--                        varStatus để lấy trạng thái của vòng lặp-->
                                 <c:forEach var="customer" items="${customers}" varStatus="status">
-                                    <tr class="${status.index % 2 == 0 ? 'table-primary' : ''}">
+                                    <tr class="${status.index % 2 == 0 ? 'table-success' : ''}">
                                         <td>${status.index + 1 + (pagination.currentPage - 1) * pagination.pageSize}</td>
                                         <td>${customer.fullname}</td>
                                         <td>${customer.avatar}</td>
@@ -270,7 +270,7 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" disabled>Close</button>
-                                                <a href="ComponentWarehouse/Delete?ID=${customer.customerId}&page=${pagination.currentPage}&page-size=${pagination.pageSize}&search=${pagination.searchValues[0]}&sort=${pagination.sort}&order=${pagination.order}" class="btn btn-primary">Delete</a>
+                                                <a href="ComponentWarehouse/Delete?ID=${customer.customerId}&page=${pagination.currentPage}&page-size=${pagination.pageSize}&search=${pagination.searchValues[0]}&sort=${pagination.sort}&order=${pagination.order}" class="btn btn-success">Delete</a>
                                             </div>
                                         </div>
                                     </div>
