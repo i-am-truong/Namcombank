@@ -12,6 +12,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Part;
+import java.io.InputStream;
 
 /**
  *
@@ -57,24 +59,24 @@ public class editFeedback extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        if (session.getAttribute("customer") == null) {
-            response.sendRedirect("login");
-            return;
-        }
-
-        String content = request.getParameter("content");
-        String submitted_at = request.getParameter("submitted_at");
-        String ratingStr = request.getParameter("rating");
-        int rating = Integer.parseInt(ratingStr);
-
-        FeedbackDao dao = new FeedbackDao();
-        int feedback_id = dao.getFeedbackId(content, submitted_at, rating);
-        request.setAttribute("content", content);
-        request.setAttribute("feedback_id", feedback_id);
-        request.setAttribute("submitted_at", submitted_at);
-        request.setAttribute("rating", rating);
-        request.getRequestDispatcher("feedback/editFeedback.jsp").forward(request, response);
+//        HttpSession session = request.getSession();
+//        if (session.getAttribute("customer") == null) {
+//            response.sendRedirect("login");
+//            return;
+//        }
+//
+//        String content = request.getParameter("content");
+//        String submitted_at = request.getParameter("submitted_at");
+//        String ratingStr = request.getParameter("rating");
+//        int rating = Integer.parseInt(ratingStr);
+//
+//        FeedbackDao dao = new FeedbackDao();
+//        int feedback_id = dao.getFeedbackId(content, submitted_at, rating);
+//        request.setAttribute("content", content);
+//        request.setAttribute("feedback_id", feedback_id);
+//        request.setAttribute("submitted_at", submitted_at);
+//        request.setAttribute("rating", rating);
+//        request.getRequestDispatcher("feedback/editFeedback.jsp").forward(request, response);
 
     }
 
@@ -94,17 +96,32 @@ public class editFeedback extends HttpServlet {
             response.sendRedirect("login");
             return;
         }
+        Part filePart = request.getPart("attachment");
+        byte[] attachment = null;
+        if (filePart != null && filePart.getSize() > 0) {
+            try (InputStream inputStream = filePart.getInputStream()) {
+                attachment = inputStream.readAllBytes();
+            }
+        }
+
         FeedbackDao dao = new FeedbackDao();
         int customer_id = (int) session.getAttribute("customer_id");
         String content = request.getParameter("content");
         String submitted_at = request.getParameter("submitted_at");
-        String ratingStr = request.getParameter("rating");
-        int rating = Integer.parseInt(ratingStr);
+        String feedback_type = request.getParameter("feedback_type");
 
-        String feedbackStr = request.getParameter("feedback_id");
-        int feedback_id = Integer.parseInt(feedbackStr);
-        dao.updateFeedback(content, submitted_at, rating, feedback_id);
-        response.sendRedirect("viewFeedback?customer_id=" + customer_id);
+        String ratingStr = request.getParameter("rating");
+        int rating = (ratingStr != null && !ratingStr.isEmpty()) ? Integer.parseInt(ratingStr) : 0;
+
+//        int feedback_id = dao.getFeedbackId(content, submitted_at, rating, feedback_type);
+        int feedback_id = Integer.parseInt(request.getParameter("feedback_id"));
+
+        if (attachment == null || attachment.length==0) {
+            dao.updateFeedback2(content, submitted_at, rating, feedback_id, feedback_type);
+        } else {
+            dao.updateFeedback(content, submitted_at, rating, feedback_id, feedback_type, attachment);
+        }
+        response.sendRedirect("cusFeedback?customer_id=" + customer_id);
     }
 
     /**

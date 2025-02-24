@@ -63,7 +63,15 @@
 
         <div class="container">
             <h2>Submit Feedback</h2>
-            <form action="addFeedback" method="post">
+            <form action="addFeedback" method="post" enctype="multipart/form-data">
+
+                <div class="form-group">
+                    <label for="feedback_type">Feedback Type:</label><br>
+                    <select id="feedback_type" name="feedback_type" required>
+                        <option value="human">Nhân viên</option>
+                        <option value="system">Hệ thống</option>
+                    </select><br>
+                </div>
 
                 <div class="form-group">
                     <label for="customer_id"></label>
@@ -91,8 +99,16 @@
                         <option value="5">5</option>
                     </select><br>
                 </div>
+
+                <!-- Mục chọn file -->
+                <div class="form-group">
+                    <label for="attachment">Upload Image (optional):</label>
+                    <input type="file" id="attachment" name="attachment" accept="image/*"><br>
+                </div>
+
                 <button type="submit">Submit Feedback</button>
             </form>
+
             <button onclick="window.location.href = 'viewFeedback'" style="padding: 10px 20px; background-color: #6c757d; color: white; border: none; border-radius: 5px; cursor: pointer;">
                 Back
             </button>   

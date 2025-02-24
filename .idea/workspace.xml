@@ -4,7 +4,24 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="05d31456-58c9-4b8c-9dfc-39c0d7a707da" name="Changes" comment="" />
+    <list default="true" id="05d31456-58c9-4b8c-9dfc-39c0d7a707da" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/build/web/WEB-INF/classes/context/CustomerDAO.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/web/WEB-INF/classes/context/CustomerDAO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/web/WEB-INF/classes/context/DBContext.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/web/WEB-INF/classes/context/DBContext.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/web/WEB-INF/classes/context/DepartmentDAO.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/web/WEB-INF/classes/context/DepartmentDAO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/web/WEB-INF/classes/context/FeedbackDao.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/web/WEB-INF/classes/context/FeedbackDao.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/web/WEB-INF/classes/controller/Admin/viewCustomerDetail.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/web/WEB-INF/classes/controller/Admin/viewCustomerDetail.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/web/WEB-INF/classes/controller/User/userProfile.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/web/WEB-INF/classes/controller/User/userProfile.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/web/WEB-INF/classes/controller/feedback/deleteFeedback.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/web/WEB-INF/classes/controller/feedback/deleteFeedback.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/web/WEB-INF/classes/controller/feedback/viewFeedback.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/web/WEB-INF/classes/controller/feedback/viewFeedback.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/context/FeedbackDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/context/FeedbackDao.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/controller/feedback/addFeedback.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/controller/feedback/addFeedback.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/controller/feedback/cusFeedback.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/controller/feedback/cusFeedback.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/controller/feedback/editFeedback.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/controller/feedback/editFeedback.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/model/Feedback.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/model/Feedback.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/feedback/editFeedback.jsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/feedback/feedback-create.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/web/feedback/feedback-create.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/feedback/myFeedback.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/web/feedback/myFeedback.jsp" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -43,6 +60,7 @@
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "duylinh2",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/admin/OneDrive/Documents/GitHub/Namcombank"
   }
