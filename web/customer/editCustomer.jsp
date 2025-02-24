@@ -102,6 +102,31 @@
 
                             <form id="editCustomer" action="editCustomer" method="post">
                                 <input type="hidden" name="customerId" value="${customer.customerId}">
+                                <input type="hidden" name="avatar" value="${customer.avatar}">
+                                <div class="col-12">
+                                    <div class="form-floating mb-3">
+                                        <div class="text-center">
+                                            <c:choose>
+                                                <c:when test="${empty customer.avatar}">
+                                                    <img src="${pageContext.request.contextPath}/assets/img/profile/default-avatar.png"
+                                                         alt="Default Avatar"
+                                                         width="120"
+                                                         height="150"
+                                                         style="object-fit: cover;"
+                                                         class="mt-2">
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <img src="${pageContext.request.contextPath}/${customer.avatar}"
+                                                         alt="${customer.fullname}'s avatar"
+                                                         width="120"
+                                                         height="150"
+                                                         style="object-fit: cover;"
+                                                         class="mt-2">
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </div>
+                                    </div>
+                                </div>
 
                                 <div class="form-group">
                                     <label for="fullnameC">Full Name</label>
