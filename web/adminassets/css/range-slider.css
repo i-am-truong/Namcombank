@@ -47,7 +47,7 @@ input[type='number']::-webkit-inner-spin-button {
 .slider {
     height: 5px;
     position: relative;
-    background: green;
+    background: #ddd;
     border-radius: 5px;
 }
 .slider .progress {
