@@ -1021,28 +1021,21 @@ public class CustomerDAO extends DBContext {
             throw new IllegalArgumentException("Customer object cannot be null.");
         }
 
-        String sql = "UPDATE [Customer] "
-                + "SET [phonenumber] = ?, "
-                + "[address] = ?, "
-                + "[email] = ?, "
-                + "[citizen_identification_card] = ? "
-                + "WHERE [customer_id] = ?";
+        String sql = "UPDATE Customer SET fullname = ?, phonenumber = ?, email = ?, address = ?, gender = ?, dob = ?, avatar = ? WHERE customer_id = ?";
 
-        try {
-            PreparedStatement stm = connection.prepareStatement(sql);
-            stm.setString(1, customer.getPhonenumber());
-            stm.setString(2, customer.getAddress());
-            stm.setString(3, customer.getEmail());
-            stm.setString(4, customer.getCid());
-            stm.setInt(5, customer.getCustomerId());
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, customer.getFullname());
+            stmt.setString(2, customer.getPhonenumber());
+            stmt.setString(3, customer.getEmail());
+            stmt.setString(4, customer.getAddress());
+            stmt.setInt(5, customer.getGender());
+            stmt.setDate(6, customer.getDob()); // Định dạng yyyy-MM-dd
+            stmt.setString(7, customer.getAvatar()); // Avatar path
+            stmt.setInt(8, customer.getCustomerId());
 
-            int rowsUpdated = stm.executeUpdate();
-            if (rowsUpdated == 0) {
-                throw new SQLException("Update failed, no rows affected.");
-            }
+            stmt.executeUpdate();
         } catch (SQLException e) {
-            System.err.println("SQL error: " + e.getMessage());
-            throw new RuntimeException("Failed to update customer profile", e);
+            e.printStackTrace();
         }
     }
 
