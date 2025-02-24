@@ -15,8 +15,12 @@ public abstract class DBContext<T> {
         try {
             String user = "sa";
             String pass = "123";
+<<<<<<< Updated upstream
             String url = "jdbc:sqlserver://localhost\\SQLEXPRESS:1433;databaseName=swp391_p1;trustServerCertificate=true;";
             
+=======
+            String url = "jdbc:sqlserver://Admin\\SQLEXPRESS:1433;databaseName=swp391_p1;trustServerCertificate=true;";
+>>>>>>> Stashed changes
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             connection = DriverManager.getConnection(url, user, pass);
         } catch (ClassNotFoundException ex) {
