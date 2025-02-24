@@ -70,8 +70,8 @@ public class viewFeedback extends HttpServlet {
         FeedbackDao dao = new FeedbackDao();
         List<Feedback> list = new ArrayList<>();
         String ratingStr = request.getParameter("rating");
+        String typeStr = request.getParameter("feedback_type");
         String indexStr = request.getParameter("index");
-
         int index = 1; // Mặc định trang đầu tiên
         if (indexStr != null && !indexStr.isEmpty()) {
             try {
@@ -81,7 +81,7 @@ public class viewFeedback extends HttpServlet {
             }
         }
 
-        int rating = 0; 
+        int rating = 0;
         if (ratingStr != null && !ratingStr.isEmpty()) {
             try {
                 rating = Integer.parseInt(ratingStr);
@@ -90,6 +90,11 @@ public class viewFeedback extends HttpServlet {
             }
         }
 
+       
+        if(typeStr.isEmpty()||typeStr.isEmpty()){
+            String feedback_type=null; 
+        }
+        
         int count;
         if (rating > 0) {
             count = dao.getTotalFeedbackByRating(rating);

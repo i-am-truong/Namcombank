@@ -79,6 +79,8 @@
                 <th>Content</th>
                 <th>Submitted At</th>
                 <th>Rating</th>
+                <th>Type</th>
+                <th>hinh anh</th>
             </tr>
             <c:forEach var="feedback" items="${listPaging}">
                 <tr>
@@ -86,6 +88,12 @@
                     <td>${feedback.content}</td>
                     <td>${feedback.submitted_at}</td>
                     <td>${feedback.rating} Sao</td>
+                    <td>${feedback.feedback_type}</td>
+                    <td>
+                        <c:if test="${not empty feedback.attachment}">
+                            <img src="ImageServlet?rating=${feedback.rating}&content=${feedback.content}&submitted_at=${feedback.submitted_at}&feedback_type=${feedback.feedback_type}" alt="Feedback Image" width="200">
+                        </c:if>
+                    </td>
                 </tr>
             </c:forEach>
         </table>
