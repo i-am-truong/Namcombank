@@ -104,6 +104,11 @@
                                 <div class="row gy-3 overflow-hidden">
                                     <input type="hidden" name="customerId" value="${customer.customerId}">
                                     <div class="col-12">
+                                        <div class="form-floating mb-3 text-center">
+                                            <img src="${customer.avatar}" alt="Customer Avatar" class="img-fluid" style="width: 150px; height: 150px; object-fit: cover;">
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
                                         <div class="form-floating mb-3">
                                             <input type="text" class="form-control" name="fullnameC" id="fullname" placeholder="Full Name" value="${customer.fullname}" disabled>
                                             <label for="fullname" class="form-label">Full Name</label>
@@ -115,12 +120,12 @@
                                             <label for="username" class="form-label">Username</label>
                                         </div>
                                     </div>
-<!--                                    <div class="col-12">
-                                        <div class="form-floating mb-3">
-                                            <input type="text" class="form-control" name="passwordC" id="password" placeholder="Password" value="${customer.password}" disabled>
-                                            <label for="password" class="form-label">Password</label>
-                                        </div>
-                                    </div>-->
+                                    <!--                                    <div class="col-12">
+                                                                            <div class="form-floating mb-3">
+                                                                                <input type="text" class="form-control" name="passwordC" id="password" placeholder="Password" value="${customer.password}" disabled>
+                                                                                <label for="password" class="form-label">Password</label>
+                                                                            </div>
+                                                                        </div>-->
                                     <div class="col-12">
                                         <div class="form-floating mb-3">
                                             <input type="email" class="form-control" name="emailC" id="email" placeholder="name@example.com" value="${customer.email}" disabled>

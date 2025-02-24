@@ -23,7 +23,7 @@
 
         <link rel="canonical" href="https://demo-basic.adminkit.io/" />
 
-        <title>Component Warehouse</title>
+        <title>Namcombank</title>
 
         <link href="${pageContext.request.contextPath}/adminassets/css/light.css" rel="stylesheet">
         <link href="${pageContext.request.contextPath}/adminassets/css/range-slider.css" rel="stylesheet">
@@ -51,14 +51,12 @@
 
     <body>
         <div class="wrapper">
-            <jsp:include page="../homepage/sidebar_admin.jsp" />
-
 
             <div class="main">
                 <jsp:include page="../homepage/header_admin.jsp" />
 
                 <main class="content">
-                    <a href="manageCustomerVer2" class="btn btn-primary  d-flex align-items-center justify-content-center" style="transform:translate(-30%,-60%); height: 2.5rem; width: 5.2rem"><i class="fas fa-arrow-left fa-4"></i> <span class="ms-2">Back</span> </a>
+                    <a href="manageCustomerVer2" class="btn btn-success  d-flex align-items-center justify-content-center" style="transform:translate(-30%,-60%); height: 2.5rem; width: 5.2rem"><i class="fas fa-arrow-left fa-4"></i> <span class="ms-2">Back</span> </a>
                     <h2>Advanced Search</h2>
                     <form action="manageCustomerVer2/Search" method="get" class="row align-items-center">
                         <input type="hidden" name="page" value="${pagination.currentPage}" />
@@ -88,7 +86,7 @@
                                    placeholder="Fullname"
                                    name="searchFullName"
                                    value="${pagination.searchValues[0]}" />
-                            <button type="submit" class="btn btn-primary">
+                            <button type="submit" class="btn btn-success">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search align-middle"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                             </button>
                         </div>
@@ -227,6 +225,7 @@
                                         Full Name
                                     </form>
                                 </th>
+                                <th>Image</th>
                                 <th>Gender</th>
                                 <th>Date of Birth</th>
                                 <th>
@@ -255,6 +254,7 @@
                                     </form>
                                 </th>
 
+                                <th>Phone Number</th>
                                 <th>CID</th>
 
                                 <th>Status</th>
@@ -319,9 +319,10 @@
                         </thead>
                         <!--                        varStatus để lấy trạng thái của vòng lặp-->
                         <c:forEach var="customer" items="${customers}" varStatus="status">
-                            <tr class="${status.index % 2 == 0 ? 'table-primary' : ''}">
+                            <tr class="${status.index % 2 == 0 ? 'table-success' : ''}">
                                 <td><a href="viewCustomer?customerId=${customer.customerId}">${status.index+1+(pagination.currentPage-1)*pagination.pageSize}</a></td>
                                 <td>${customer.fullname}</td>
+                                <td>${customer.avatar}</td>
                                 <td>
                                     <c:choose>
                                         <c:when test="${customer.gender == 0}">
@@ -334,6 +335,7 @@
                                 </td>
                                 <td>${customer.dob}</td>
                                 <td>${customer.email}</td>
+                                <td>${customer.phonenumber}</td>
                                 <td>${customer.cid}</td>
                                 <td>
                                     <c:choose>
@@ -375,7 +377,7 @@
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                            <a href="ComponentWarehouse/Delete?ID=${component.componentID}&page=${pagination.currentPage}&page-size=${pagination.pageSize}&searchCode=${pagination.searchValues[1]}&searchName=${pagination.searchValues[0]}&sort=${sort}&order=${order}&searchType=${pagination.searchValues[2]}&searchBrand=${pagination.searchValues[3]}&searchQuantityMin=${pagination.rangeValues[2]}&searchQuantityMax=${pagination.rangeValues[3]}&searchPriceMin=${pagination.rangeValues[0]}&searchPriceMax=${pagination.rangeValues[1]}" type="button" class="btn btn-primary">Delete</a>
+                                            <a href="ComponentWarehouse/Delete?ID=${component.componentID}&page=${pagination.currentPage}&page-size=${pagination.pageSize}&searchCode=${pagination.searchValues[1]}&searchName=${pagination.searchValues[0]}&sort=${sort}&order=${order}&searchType=${pagination.searchValues[2]}&searchBrand=${pagination.searchValues[3]}&searchQuantityMin=${pagination.rangeValues[2]}&searchQuantityMax=${pagination.rangeValues[3]}&searchPriceMin=${pagination.rangeValues[0]}&searchPriceMax=${pagination.rangeValues[1]}" type="button" class="btn btn-success">Delete</a>
                                         </div>
                                     </div>
                                 </div>
@@ -385,24 +387,24 @@
 
                         </tbody>
                     </table>
-                    <c:if test="${totalComponents==0}">
+                    <c:if test="${totalCustomers==0}">
                         <div class="alert alert-primary alert-dismissible" role="alert">
                             <div class="alert-message text-center">
-                                <strong style="font-size:1.6rem">No suitable card in the filter</strong>
+                                <strong style="font-size:1.6rem">No customer found in the filter</strong>
                             </div>
                         </div>
 
                     </c:if>
                     <jsp:include page="../homepage/pagination.jsp" />
 
-                    <c:if test="${not empty deleteStatus}">
+                    <!--<c:if test="${not empty deleteStatus}">
                         <div class="alert alert-warning alert-dismissible" role="alert">
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             <div class="alert-message">
                                 <strong>${deleteStatus}</strong>
                             </div>
                         </div>
-                    </c:if>
+                    </c:if> -->
             </div>
         </main>
         <%--<jsp:include page="../../includes/footer.jsp" />--%>

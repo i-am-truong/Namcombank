@@ -25,8 +25,8 @@
             <input type="hidden" name="order" value="${pagination.order}">
 
             <!-- N?t ?i?u h??ng -->
-            <button type="button" class="btn btn-primary ${pagination.currentPage <= 1 ? 'disabled' : ''} btn-pagination" onclick="setPage(1)">&lt;&lt;</button>
-            <button type="button" class="btn btn-primary ${pagination.currentPage <= 1 ? 'disabled' : ''} btn-pagination" onclick="setPage(${pagination.currentPage - 1})">&lt;</button>
+            <button type="button" class="btn btn-success ${pagination.currentPage <= 1 ? 'disabled' : ''} btn-pagination" onclick="setPage(1)">&lt;&lt;</button>
+            <button type="button" class="btn btn-success ${pagination.currentPage <= 1 ? 'disabled' : ''} btn-pagination" onclick="setPage(${pagination.currentPage - 1})">&lt;</button>
 
             <!-- C?c s? trang -->
             <c:set var="startPage" value="${pagination.currentPage - (pagination.totalPagesToShow / 2) + 1}" />
@@ -42,12 +42,12 @@
             </c:if>
 
             <c:forEach var="i" begin="${startPage}" end="${endPage}">
-                <button type="button" class="btn btn-primary ${i == pagination.currentPage ? 'active' : ''} btn-pagination" onclick="setPage(${i})">${i}</button>
+                <button type="button" class="btn btn-success ${i == pagination.currentPage ? 'active' : ''} btn-pagination" onclick="setPage(${i})">${i}</button>
             </c:forEach>
 
             <!-- N?t ?i?u h??ng -->
-            <button type="button" class="btn btn-primary ${pagination.currentPage >= pagination.totalPages ? 'disabled' : ''} btn-pagination" onclick="setPage(${pagination.currentPage + 1})">&gt;</button>
-            <button type="button" class="btn btn-primary ${pagination.currentPage >= pagination.totalPages ? 'disabled' : ''} btn-pagination" onclick="setPage(${pagination.totalPages})">&gt;&gt;</button>
+            <button type="button" class="btn btn-success ${pagination.currentPage >= pagination.totalPages ? 'disabled' : ''} btn-pagination" onclick="setPage(${pagination.currentPage + 1})">&gt;</button>
+            <button type="button" class="btn btn-success ${pagination.currentPage >= pagination.totalPages ? 'disabled' : ''} btn-pagination" onclick="setPage(${pagination.totalPages})">&gt;&gt;</button>
         </div>
     </form>
     <!-- ? nh?p trang -->
@@ -64,7 +64,7 @@
             </c:if>
                 <input type="hidden" name="sort" value="${pagination.sort}">
                 <input type="hidden" name="order" value="${pagination.order}">
-                <button type="submit" style="width:3rem" class="btn btn-primary mb-2">Go</button>
+                <button type="submit" style="width:3rem" class="btn btn-success mb-2">Go</button>
             </form>
         </div>
     </div>

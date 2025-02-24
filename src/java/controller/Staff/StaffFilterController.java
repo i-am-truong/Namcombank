@@ -5,6 +5,7 @@
 package controller.Staff;
 
 import context.DepartmentDAO;
+import context.RoleDAO;
 import context.StaffDAO;
 import controller.auth.BaseRBACControlller;
 import jakarta.servlet.ServletException;
@@ -14,6 +15,7 @@ import java.io.IOException;
 import java.sql.Date;
 import java.util.ArrayList;
 import model.Department;
+import model.auth.Role;
 import model.auth.Staff;
 
 /**
@@ -35,35 +37,35 @@ public class StaffFilterController extends BaseRBACControlller {
         String raw_phonenumber = request.getParameter("phonenumber");
         String raw_cic = request.getParameter("citizen_identification_card");
         String raw_dob = request.getParameter("dob");
+        String raw_rid = request.getParameter("roleid");
 
-        // Xử lý dữ liệu từ request, bao gồm việc chuyển đổi các giá trị null, blank
-        Integer sid = (raw_sid != null) && (!raw_sid.isBlank())
-                ? Integer.parseInt(raw_sid) : null;
+        // Xử lý dữ liệu từ request
+        Integer sid = (raw_sid != null && !raw_sid.isBlank()) ? Integer.parseInt(raw_sid) : null;
+        Integer did = (raw_did != null && !raw_did.equals("-1")) ? Integer.parseInt(raw_did) : null;
+        Integer rid = (raw_rid != null && !raw_rid.equals("-1")) ? Integer.parseInt(raw_rid) : null;  // 🔹 Chuyển role thành Integer
 
         String sname = raw_sname;
-
-        Boolean gender = (raw_gender != null) && (!raw_gender.equals("-1"))
-                ? Boolean.getBoolean(raw_gender) : null;
-
+        Boolean gender = (raw_gender != null && !raw_gender.equals("-1")) ? Boolean.parseBoolean(raw_gender) : null;
         String dob = raw_dob;
-
         String address = raw_address;
         String email = raw_email;
-
         String phonenumber = raw_phonenumber;
-
         String cic = raw_cic;
 
-        Integer did = (raw_did != null) && (!raw_did.equals("-1"))
-                ? Integer.parseInt(raw_did) : null;
-
+        // Lấy danh sách nhân viên theo điều kiện tìm kiếm
         StaffDAO dbStaff = new StaffDAO();
-        ArrayList<Staff> staffs = dbStaff.search(sid, sname, gender, dob, address, did, phonenumber, email, cic);
+        ArrayList<Staff> staffs = dbStaff.search(sid, sname, gender, dob, address, did, phonenumber, email, cic, rid);  // 🔹 Truyền role vào search()
 
+        // Lấy danh sách phòng ban
         DepartmentDAO dbDept = new DepartmentDAO();
         ArrayList<Department> depts = dbDept.list();
 
+        // Lấy danh sách vai trò từ database
+        RoleDAO dbRole = new RoleDAO();
+        ArrayList<Role> roles = dbRole.list();  // 🔹 Thêm Role vào request
+
         request.setAttribute("depts", depts);
+        request.setAttribute("roles", roles);  // 🔹 Truyền danh sách roles vào request
         request.setAttribute("staff", staffs);
 
         request.getRequestDispatcher("staff/demofilter.jsp").forward(request, response);

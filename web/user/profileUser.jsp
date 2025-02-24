@@ -107,11 +107,11 @@
                         <div class="card">
                             <div class="card-body">
                                 <div class="d-flex flex-column align-items-center text-center">
-                                    <c:if test="${sessionScope.customer.gender == 0}">
-                                        <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="Admin" class="rounded-circle p-1 bg-primary" width="110">
-                                    </c:if>
-                                    <c:if test="${sessionScope.customer.gender == 1}">
-                                        <img src="https://bootdey.com/img/Content/avatar/avatar6.png" alt="Admin" class="rounded-circle p-1 bg-primary" width="110">
+                                    <c:if test="${not empty sessionScope.customerAvatar}">
+                                        <img src="${sessionScope.customerAvatar}?t=${pageContext.request.time}" 
+                                             alt="Avatar" 
+                                             class="rounded-circle p-1 bg-primary" 
+                                             width="110">
                                     </c:if>
                                     <div class="mt-3">
                                         <h4>${sessionScope.customer.fullname}</h4>
@@ -235,12 +235,32 @@
                                     Date of Birth cannot be in the future.
                                 </div>
                             </div>
-                                    
 
-                            <div class="col-md-9">
-                                <label class="labels">Upload Profile Picture</label>
-                                <input type="file" name="profileImage" class="form-control" accept="image/*">
-                            </div>
+
+                            <form class="edit-profile" action="userProfile" method="post" enctype="multipart/form-data">
+                                <div class="col-md-4 text-center">
+                                    <div class="user-profile-thumb" style="width: 150px; height: 150px;">
+                                        <img src="${sessionScope.customer.avatar}" id="avatarImage" alt="User Avatar" class="rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
+                                    </div>
+                                    <!-- Chỉnh sửa nút Choose File -->
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="avatarInput" name="avatar" style="display: none;" onchange="updateFileName()">
+                                        <button type="button" class="btn btn-light" onclick="document.getElementById('avatarInput').click()">Choose file</button>
+                                    </div>
+                                </div>
+                            </form>
+
+
+
+                            <!-- Hiển thị ảnh đại diện -->
+                            <c:if test="${not empty sessionScope.customerAvatar}">
+                                <img src="${sessionScope.customerAvatar}?t=${pageContext.request.time}" 
+                                     alt="Avatar" 
+                                     class="rounded-circle p-1 bg-primary" 
+                                     width="110">
+                            </c:if>
+
+
                             <div class="mt-3 text-left" style="display: flex; justify-content: flex-start; align-items: center;">
                                 <button class="btn btn-primary profile-button" type="submit" style="margin-right: 10px;">Save Profile</button>
                                 <a href="changePass" style="margin-left: 100px" class="btn btn-primary profile-button" type="button">Change Password</a>
@@ -300,8 +320,71 @@
                     emailError.style.display = 'none';
                 }
             });
-
         </script>
+
+        <script>
+            // JavaScript để thay đổi ảnh đại diện ngay khi người dùng chọn ảnh mới
+            const avatarInput = document.getElementById('avatarInput');
+            const avatarImage = document.getElementById('avatarImage');
+
+            avatarInput.addEventListener('change', function (event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        avatarImage.src = e.target.result; // Cập nhật ảnh đại diện ngay lập tức
+                    };
+                    reader.readAsDataURL(file); // Đọc ảnh dưới dạng URL và thay đổi ảnh
+                }
+            });
+        </script>
+
+        <script>
+            var originalAvatar = $("#avatarImage").attr("src");
+
+            $(".edit-profile").on("reset", function () {
+                setTimeout(function () {
+                    $("#avatarImage").attr("src", originalAvatar);
+                    $("#avatarInput").val("");
+                }, 10);
+            });
+        </script>
+
+        <script>
+            $(document).ready(function () {
+                $(".edit-profile").submit(function (event) {
+                    event.preventDefault();
+
+                    var formData = new FormData(this);
+
+                    $.ajax({
+                        url: "ajax-profile",
+                        type: "POST",
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function (response) {
+                            alert("Profile updated successfully!");
+
+                            if (formData.get("avatar").name) {
+                                const reader = new FileReader();
+                                reader.onload = function (e) {
+                                    $("#userAvatar").attr("src", e.target.result);
+                                };
+                                reader.readAsDataURL(formData.get("avatar"));
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            alert("Update failed: " + xhr.responseText);
+                        }
+                    });
+                });
+            });
+        </script>
+
+
+
+
 
         <!-- Js File -->
         <script src="assets/js/modernizr.min.js"></script>

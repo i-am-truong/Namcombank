@@ -104,35 +104,37 @@
                                 <div class="row gy-3 overflow-hidden">
                                     <div class="col-12">
                                         <div class="form-floating mb-3">
-                                            <input type="text" class="form-control" name="fullnameC" id="fullname" placeholder="Full Name" value="${param.fullnameC != null ? param.fullnameC : ''}" >
+                                            <input type="text" class="form-control"
+                                                   name="fullnameC" id="fullname" placeholder="Full Name"
+                                                   value="${param.fullnameC != null ? param.fullnameC : ''}" required>
                                             <label for="fullname" class="form-label">Full Name</label>
                                         </div>
                                     </div>
-                                    <div class="col-12">
+<!--                                    <div class="col-12">
                                         <div class="form-floating mb-3">
                                             <input type="text" class="form-control" name="usernameC" id="username" placeholder="Username" value="${param.usernameC != null ? param.usernameC : ''}" >
                                             <label for="username" class="form-label">Username</label>
                                         </div>
-                                    </div>
-                                    <div class="col-12">
+                                    </div>-->
+<!--                                    <div class="col-12">
                                         <div class="form-floating mb-3">
                                             <input type="password" class="form-control" name="passwordC" id="password" placeholder="Password" value="${param.passwordC != null ? param.passwordC : ''}" >
                                             <label for="password" class="form-label">Password</label>
                                         </div>
-                                    </div>
+                                    </div>-->
                                     <div class="col-12">
                                         <div class="form-floating mb-3">
                                             <input type="email" class="form-control" name="emailC" id="email" placeholder="name@example.com" value="${param.emailC != null ? param.emailC : ''}" required pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" title="Enter a valid email.">
                                             <label for="email" class="form-label">Email</label>
                                         </div>
                                     </div>
-                                    <div class="col-12">
+<!--                                    <div class="col-12">
                                         <div class="form-floating mb-3">
                                             <input type="date" class="form-control" name="dobC" id="dob" placeholder="Date of Birth" >
                                             <label for="dob" class="form-label">Date of Birth</label>
                                         </div>
-                                    </div>
-                                    <div class="col-12">
+                                    </div>-->
+<!--                                    <div class="col-12">
                                         <div class="form-floating mb-3">
                                             <select class="form-select" name="genderC" id="gender" required>
                                                 <option value="">Select Gender</option>
@@ -141,7 +143,7 @@
                                             </select>
                                             <label for="gender" class="form-label">Gender</label>
                                         </div>
-                                    </div>
+                                    </div>-->
                                     <div class="col-12">
                                         <div class="form-floating mb-3">
                                             <input type="tel" class="form-control" name="phonenumberC" id="phonenumber"
@@ -156,13 +158,13 @@
                                             <label for="address" class="form-label">Address</label>
                                         </div>
                                     </div>
-                                    <div class="col-12">
+<!--                                    <div class="col-12">
                                         <div class="form-floating mb-3">
                                             <input type="text" class="form-control" name="cicC" id="citizenID" placeholder="Citizen Identification Card"
                                                    value="${param.cicC != null ? param.cicC : ''}" required pattern="^0\d{11}$"  title="Citizen ID must be exactly 12 digits and start with 0" maxlength="12">
                                             <label for="citizenID" class="form-label">Citizen Identification Card</label>
                                         </div>
-                                    </div>
+                                    </div>-->
                                     <div class="col-12">
                                         <div class="d-grid">
                                             <button class="btn btn-success btn-lg" id="resetBtn" type="submit">Create New Customer</button>
@@ -188,81 +190,6 @@
     <script src="assets/js/jquery-3.5.1.min.js"></script>
     <script src="assets/js/bootstrap.min.js"></script>
     <script src="assets/js/script.js"></script>
-
-    <script>
-        document.getElementById('registerForm').addEventListener('submit', function (event) {
-            event.preventDefault(); // Temporarily prevent form submission
-
-            var errors = [];
-            var fullname = document.getElementById('fullname').value.trim();
-            var phonenumber = document.getElementById('phonenumber').value.trim();
-            var email = document.getElementById('email').value.trim();
-            var address = document.getElementById('address').value.trim();
-            var dob = document.getElementById('dob').value.trim();
-            var username = document.getElementById('username').value.trim();
-            var password = document.getElementById('password').value.trim();
-            var cic = document.getElementById('citizenID').value.trim();
-            var gender = document.getElementById('gender').value;
-
-            // Basic validations
-            if (!fullname) errors.push('Name cannot be empty');
-            if (!username) errors.push('Username cannot be empty');
-            if (!password) errors.push('Password cannot be empty');
-            if (!email) errors.push('Email cannot be empty');
-            if (!phonenumber) errors.push('Phone number cannot be empty');
-            if (!address) errors.push('Address cannot be empty');
-            if (!dob) errors.push('Date of birth cannot be empty');
-            if (!cic) errors.push('Citizen ID cannot be empty');
-            if (!gender) errors.push('Please select a gender');
-
-            // Format validations
-            if (phonenumber && !/^(09|08|03)[0-9]{8}$/.test(phonenumber)) {
-                errors.push('Phone number must start with 09 or 08 or 03 and have exactly 10 digits');
-            }
-
-            if (email && !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
-                errors.push('Invalid email format');
-            }
-
-            if (password && !/^(?=.*[a-z])(?=.*[A-Z]).{8,}$/.test(password)) {
-                errors.push('Password must have at least 8 characters, including uppercase and lowercase letters');
-            }
-
-            if (cic && !/^0[0-9]{11}$/.test(cic)) {
-                errors.push('Citizen ID must be exactly 12 digits and start with 0');
-            }
-
-            // Date validation
-            if (dob) {
-                var dobDate = new Date(dob);
-                var today = new Date();
-                today.setHours(0, 0, 0, 0);
-
-                var age = today.getFullYear() - dobDate.getFullYear();
-                var month = today.getMonth() - dobDate.getMonth();
-                if (month < 0 || (month === 0 && today.getDate() < dobDate.getDate())) {
-                    age--;
-                }
-
-                if (dobDate >= today) {
-                    errors.push('Date of birth cannot be today or in the future');
-                } else if (age < 18) {
-                    errors.push('Customer must be at least 18 years old');
-                } else if (age > 100) {
-                    errors.push('Invalid date of birth (age cannot exceed 100 years)');
-                }
-            }
-
-            if (errors.length > 0) {
-                // Show all validation errors
-                alert(errors.join('\n'));
-            } else {
-                // If validation passes, submit the form
-                this.submit();
-            }
-        });
-    </script>
-
 
 
 </body>

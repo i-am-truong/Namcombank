@@ -12,6 +12,7 @@ import java.util.Locale.Category;
 
 import context.CustomerDAO;
 import controller.auth.BaseRBACControlller;
+import jakarta.mail.internet.InternetAddress;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -69,63 +70,80 @@ public class editCustomer extends BaseRBACControlller {
 
     @Override
     protected void doAuthorizedPost(HttpServletRequest request, HttpServletResponse response, Staff account) throws ServletException, IOException {
+
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("roleId") == null || (int) session.getAttribute("roleId") != 1) {
+            response.sendRedirect("admin.login");
+            return;
+        }
         try {
-            // Get all parameters
+
+            // Get all parameters and trim whitespace
             int customerId = Integer.parseInt(request.getParameter("customerId"));
-            String citizenId = request.getParameter("citizenIdC");
-            String phonenumber = request.getParameter("phonenumberC");
-            String email = request.getParameter("emailC");
-            String address = request.getParameter("addressC");
-            String dobStr = request.getParameter("dobC");
-            String gender = request.getParameter("genderC");
+            String citizenId = request.getParameter("citizenIdC") != null
+                    ? request.getParameter("citizenIdC").trim().replaceAll("\\s+", "") : null;
+            String phonenumber = request.getParameter("phonenumberC") != null
+                    ? request.getParameter("phonenumberC").trim().replaceAll("\\s+", "") : null;
+            String email = request.getParameter("emailC") != null
+                    ? request.getParameter("emailC").trim().replaceAll("\\s+", "") : null;
+            String address = request.getParameter("addressC") != null
+                    ? request.getParameter("addressC").trim().replaceAll("\\s+", " ") : null;
 
-            // Validate required fields
-            if (isNullOrEmpty(citizenId) || isNullOrEmpty(phonenumber)
-                    || isNullOrEmpty(email) || isNullOrEmpty(address)
-                    || isNullOrEmpty(dobStr) || isNullOrEmpty(gender)) {
-
-                request.setAttribute("error", "All fields are required!");
-                doGet(request, response);
-                return;
-            }
-
-            // Convert date string to SQL Date
-            Date dob = Date.valueOf(dobStr);
-
-            // Get existing customer
             CustomerDAO cdao = new CustomerDAO();
             Customer customer = cdao.getCustomerById(customerId);
 
-            if (customer == null) {
-                request.setAttribute("error", "Customer not found!");
-                response.sendRedirect("manageCustomerVer2/Search");
+            try {
+                if (email.isEmpty()) {
+                    throw new Exception("Email is required.<br>");
+                } else if (!email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")) {
+                    throw new Exception("Invalid email format.<br>");
+                } else {
+                    try {
+                        InternetAddress emailAddr = new InternetAddress(email);
+                        emailAddr.validate();
+                    } catch (Exception ex) {
+                        throw new Exception("Invalid email address.<br>");
+                    }
+                }
+
+                if (phonenumber == null || !phonenumber.matches("^(09|03|08|07|05)\\d{8}$")) {
+                    throw new Exception("Invalid phone number format. Must be 10 digits starting with 09, 03, 08, 07, or 05");
+                }
+
+                if (citizenId == null || !citizenId.matches("^0\\d{11}$")) {
+                    throw new Exception("Invalid Citizen ID format. Must be 12 digits starting with 0");
+                }
+
+                if (address == null || address.trim().length() < 10 || address.trim().length() > 200) {
+                    throw new Exception("Address must be between 10 and 200 characters");
+                }
+
+            } catch (Exception e) {
+                preserveFormData(customer, citizenId, phonenumber, email, address);
+                request.setAttribute("customer", customer);
+                request.setAttribute("error", e.getMessage());
+                request.getRequestDispatcher("customer/editCustomer.jsp").forward(request, response);
                 return;
             }
 
-            // Update customer details
-            customer.setCid(citizenId);
-            customer.setPhonenumber(phonenumber);
-            customer.setEmail(email);
-            customer.setAddress(address);
-            customer.setDob(dob);
-            customer.setGender(Integer.parseInt(gender));
-
-            // Check for duplicates excluding current customer
             if (cdao.checkCustomerUpdate(citizenId, phonenumber, email, customerId)) {
+                preserveFormData(customer, citizenId, phonenumber, email, address);
                 cdao.updateProfile(customer);
+
+                customer = cdao.getCustomerById(customerId);
+                request.setAttribute("customer", customer);
                 request.setAttribute("success", "Customer updated successfully!");
-                doGet(request, response);
             } else {
-                request.setAttribute("error", "Citizen ID, phone number or email is already in use by another customer!");
-                doGet(request, response);
+                preserveFormData(customer, citizenId, phonenumber, email, address);
+                request.setAttribute("customer", customer);
+                request.setAttribute("error", "Email, phone number or Citizen ID is already in use by another customer!");
             }
 
-        } catch (IllegalArgumentException e) {
-            request.setAttribute("error", "Invalid date format!");
-            doAuthorizedGet(request, response, account);
+            request.getRequestDispatcher("customer/editCustomer.jsp").forward(request, response);
+
         } catch (Exception e) {
-            request.setAttribute("error", "An error occurred while updating customer!");
-            doAuthorizedGet(request, response, account);
+            request.setAttribute("error", "An error occurred: " + e.getMessage());
+            request.getRequestDispatcher("customer/editCustomer.jsp").forward(request, response);
         }
     }
 
@@ -153,6 +171,13 @@ public class editCustomer extends BaseRBACControlller {
             response.sendRedirect("manageCustomerVer2/Search");
             return;
         }
+    }
+
+    private void preserveFormData(Customer customer, String citizenId, String phonenumber, String email, String address) {
+        customer.setCid(citizenId);
+        customer.setPhonenumber(phonenumber);
+        customer.setEmail(email);
+        customer.setAddress(address);
     }
 
 }

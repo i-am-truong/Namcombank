@@ -137,6 +137,28 @@ public class userProfile extends HttpServlet {
             return;
         }
 
+        // Xử lý file upload avatar
+        Part filePart = request.getPart("avatar");
+        String avatarFileName = null;
+
+        if (filePart != null && filePart.getSize() > 0) {
+            String uploadPath = getServletContext().getRealPath("") + File.separator + UPLOAD_DIR;
+            File uploadDir = new File(uploadPath);
+            if (!uploadDir.exists()) {
+                uploadDir.mkdir();
+            }
+
+            // Lấy tên file gốc
+            avatarFileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+            String avatarPath = uploadPath + File.separator + avatarFileName;
+
+            // Lưu file avatar vào thư mục
+            filePart.write(avatarPath);
+
+            // Cập nhật avatar cho customer
+            customer.setAvatar("uploads/avatars/" + avatarFileName);
+        }
+
         // Cập nhật thông tin khách hàng
         customer.setFullname(fullName);
         customer.setPhonenumber(phoneNumber);
