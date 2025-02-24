@@ -18,6 +18,36 @@ import model.LoanPackage;
  */
 public class LoanPackageDAO extends DBContext {
 
+    public List<LoanPackage> getAllLoanPackageByStaffId(int staffId) {
+        List<LoanPackage> loanPackages = new ArrayList<>();
+        String query = "SELECT * FROM LoanPackages WHERE staff_id = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, staffId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    LoanPackage loanPackage = new LoanPackage(
+                            rs.getInt("package_id"),
+                            rs.getInt("staff_id"),
+                            rs.getString("package_name"),
+                            rs.getString("loan_type"),
+                            rs.getString("description"),
+                            rs.getDouble("interest_rate"),
+                            rs.getDouble("max_amount"),
+                            rs.getDouble("min_amount"),
+                            rs.getInt("loan_term"),
+                            rs.getDate("created_date")
+                    );
+                    loanPackages.add(loanPackage);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Log lỗi
+        }
+
+        return loanPackages;
+    }
+
     public LoanPackage getLoanPackageById(int packageId) {
         String query = "SELECT * FROM LoanPackages WHERE package_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {

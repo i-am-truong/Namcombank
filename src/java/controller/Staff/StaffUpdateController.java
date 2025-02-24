@@ -1,4 +1,3 @@
-
 package controller.Staff;
 
 import static context.CustomerDAO.toSHA1;
@@ -16,7 +15,9 @@ import model.Department;
 import model.auth.Staff;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-//@WebServlet(name = "StaffUpdateController", urlPatterns = {"/updateStaff"})
+import model.auth.Role;
+import context.RoleDAO;
+
 public class StaffUpdateController extends BaseRBACControlller {
 
     private static final Logger logger = Logger.getLogger(StaffUpdateController.class.getName());
@@ -43,7 +44,12 @@ public class StaffUpdateController extends BaseRBACControlller {
             DepartmentDAO dbDept = new DepartmentDAO();
             ArrayList<Department> depts = dbDept.list();
             request.setAttribute("depts", depts);
-            
+
+            // Thêm xử lý roles
+            RoleDAO roleDAO = new RoleDAO();
+            ArrayList<Role> roles = roleDAO.getAllRoles();
+            request.setAttribute("allRoles", roles); 
+
             request.setAttribute("staff", staff);
             request.getRequestDispatcher("staff/updateStaff.jsp").forward(request, response);
 
@@ -84,6 +90,19 @@ public class StaffUpdateController extends BaseRBACControlller {
             Department dept = new Department();
             dept.setId(did);
             staff.setDept(dept);
+            
+            
+            // Thêm xử lý roles
+            String[] roleIds = request.getParameterValues("roleIds");
+            ArrayList<Role> roles = new ArrayList<>();
+            if (roleIds != null) {
+                for (String roleId : roleIds) {
+                    Role role = new Role();
+                    role.setId(Integer.parseInt(roleId));
+                    roles.add(role);
+                }
+            }
+            staff.setRoles(roles);
 
             // Update staff information
             StaffDAO sdao = new StaffDAO();

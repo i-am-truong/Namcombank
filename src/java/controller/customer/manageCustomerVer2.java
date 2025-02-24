@@ -13,6 +13,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 import model.Customer;
@@ -37,6 +38,22 @@ public class manageCustomerVer2 extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("roleId") == null || (int) session.getAttribute("roleId") != 1) {
+            response.sendRedirect("admin.login");
+            return;
+        }
+        
+        List<Customer> errorCustomers = (List<Customer>) session.getAttribute("errorCustomers");
+        if(errorCustomers!=null){
+            if (errorCustomers.isEmpty()) {
+                request.setAttribute("alertImportSuccess", "Import Successfully ");
+                  session.removeAttribute("errorCustomers");
+            } else {
+                request.setAttribute("alertImportFail", "Some components can't add.");
+            }
+        }
         
         String pageParam = request.getParameter("page");
         String paraSearch = SearchUtils.preprocessSearchQuery(request.getParameter("search"));

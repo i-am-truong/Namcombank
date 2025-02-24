@@ -39,11 +39,13 @@ public class AdvanceSearchCustomer extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        //Xu ly nut back quay ve
-        HttpSession session = request.getSession();
-        if (session.getAttribute("detailComponentFrom") != null) {
-            session.removeAttribute("from");
+        
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("roleId") == null || (int) session.getAttribute("roleId") != 1) {
+            response.sendRedirect("admin.login");
+            return;
         }
+       
         //
         String pageParam = request.getParameter("page");
         String paraSearchUserName = SearchUtils.preprocessSearchQuery(request.getParameter("searchUserName"));
@@ -59,10 +61,18 @@ public class AdvanceSearchCustomer extends HttpServlet {
         Integer genderID = cdao.getGenderID(gender);
         String accountStatus = request.getParameter("searchAccountStatus");
         Integer activeID = cdao.getActiveID(accountStatus);
+        String cid = request.getParameter("searchCID");
+        String address = request.getParameter("searchAddress");
+        String email = request.getParameter("searchEmail");
+        String phonenumber = request.getParameter("searchPhoneNumber");
         Integer pageSize;
         pageSize = (FormatUtils.tryParseInt(pageSizeParam) != null) ? FormatUtils.tryParseInt(pageSizeParam) : PAGE_SIZE;
+        String paraSearchBalanceMin = request.getParameter("searchBalanceMin");
+        Float searchBalanceMin = (FormatUtils.tryParseFloat(paraSearchBalanceMin) != null&&FormatUtils.tryParseFloat(paraSearchBalanceMin)< cdao.getBalanceMax()) ? FormatUtils.tryParseFloat(paraSearchBalanceMin) : 0;
+        String paraSearchBalanceMax = request.getParameter("searchBalanceMax");
+        Float searchBalanceMax = (FormatUtils.tryParseFloat(paraSearchBalanceMax) != null && FormatUtils.tryParseFloat(paraSearchBalanceMax)< cdao.getBalanceMax()) ? FormatUtils.tryParseFloat(paraSearchBalanceMax) : cdao.getBalanceMax();
         List<Customer> customers = new ArrayList<>();
-        int totalCustomers = cdao.getTotalSearchCustomersByFields(paraSearchUserName, paraSearchFullName, genderID, activeID);
+        int totalCustomers = cdao.getTotalSearchCustomersByFields(paraSearchUserName, paraSearchFullName, genderID, activeID, cid, address, email, phonenumber, searchBalanceMin, searchBalanceMax);
         // Tính tổng số trang
         int totalPages = (int) Math.ceil((double) totalCustomers / pageSize);
         if (page > totalPages) {
@@ -85,14 +95,14 @@ public class AdvanceSearchCustomer extends HttpServlet {
                     default ->
                         "address";
                 };
-                customers = cdao.searchCustomersByFieldsPageSorted(paraSearchUserName, paraSearchFullName, page, pageSize, sortSQL, order, genderID, activeID);
+                customers = cdao.searchCustomersByFieldsPageSorted(paraSearchUserName, paraSearchFullName, page, pageSize, sortSQL, order, genderID, activeID, cid, address, email, phonenumber, searchBalanceMin, searchBalanceMax);
             } else {
 
-                customers = cdao.searchCustomersByFieldsPage(paraSearchUserName, paraSearchFullName, page, pageSize, genderID, activeID);
+                customers = cdao.searchCustomersByFieldsPage(paraSearchUserName, paraSearchFullName, page, pageSize, genderID, activeID, cid, address, email, phonenumber, searchBalanceMin, searchBalanceMax);
             }
         } else {
 
-            customers = cdao.searchCustomersByFieldsPage(paraSearchUserName, paraSearchFullName, page, pageSize, genderID, activeID);
+            customers = cdao.searchCustomersByFieldsPage(paraSearchUserName, paraSearchFullName, page, pageSize, genderID, activeID, cid, address, email, phonenumber, searchBalanceMin, searchBalanceMax);
         }
 
                 //Phan trang
@@ -105,19 +115,21 @@ public class AdvanceSearchCustomer extends HttpServlet {
         pagination.setSort(sort);
         pagination.setOrder(order);
         pagination.setUrlPattern("/manageCustomerVer2/Search");
-        pagination.setSearchFields(new String[] {"searchFullname","searchUsername","searchGender","searchAccountStatus"});
-        pagination.setSearchValues(new String[] {paraSearchFullName, paraSearchUserName, gender, accountStatus});
-//        pagination.setRangeFields(new String[] {"searchPriceMin","searchPriceMax","searchQuantityMin","searchQuantityMax"});
-//        pagination.setRangeValues(new Object[]{searchPriceMin, searchPriceMax, searchQuantityMin, searchQuantityMax});
+        pagination.setSearchFields(new String[] {"searchFullname","searchUsername","searchGender","searchAccountStatus", "searchCID", "searchAddress", "searchEmail", "searchPhoneNumber"});
+        pagination.setSearchValues(new String[] {paraSearchFullName, paraSearchUserName, gender, accountStatus, cid, address, email, phonenumber});
+        pagination.setRangeFields(new String[] {"searchBalanceMin","searchBalanceMax"});
+        pagination.setRangeValues(new Object[]{searchBalanceMin, searchBalanceMax});
         request.setAttribute("pagination", pagination);
 
                 // Đặt các thuộc tính cho request
 
-//        request.setAttribute("quantityMin", componentDAO.getQuantityMin());
+    //        request.setAttribute("quantityMin", componentDAO.getQuantityMin());
 //        request.setAttribute("quantityMax", componentDAO.getQuantityMax());
 //        request.setAttribute("priceMin", componentDAO.getPriceMin());
 //        request.setAttribute("priceMax", componentDAO.getPriceMax());
-        request.setAttribute("totalComponents", totalCustomers);
+        request.setAttribute("balanceMin", cdao.getBalanceMin());
+        request.setAttribute("balanceMax", cdao.getBalanceMax());
+        request.setAttribute("totalCustomers", totalCustomers);
         request.setAttribute("genderList", cdao.getListGender());
         request.setAttribute("activeList", cdao.getListActive());
         request.setAttribute("customers", customers);

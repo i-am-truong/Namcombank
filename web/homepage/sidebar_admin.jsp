@@ -76,6 +76,23 @@
 
     <li class="nav-item">
         <a class="nav-link" href="#" data-toggle="collapse" data-target="#staffMenu" aria-expanded="false">
+            <i class="fas fa-fw fa-table"></i>
+            <span>Tool & Extensions</span>
+        </a>
+        <div id="staffMenu" class="collapse">
+            <a class="nav-link sub-menu" href="repaymentSchedule">
+                <i class="fas fa-fw fa-table"></i> Repayment Schedule
+            </a>
+            <a class="nav-link sub-menu" href="savingInterest">
+                <i class="fas fa-fw fa-table"></i> Savings Interest Rate
+            </a>
+            <a class="nav-link sub-menu" href="loanPackage">
+                <i class="fas fa-fw fa-table"></i> Loan Interest Rate
+            </a>
+        </div>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#" data-toggle="collapse" data-target="#staffMenu" aria-expanded="false">
             <i class="fas fa-fw fa-user"></i>
             <span>Staff Manager</span>
         </a>

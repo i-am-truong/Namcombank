@@ -11,10 +11,11 @@ import java.sql.Date;
  * @author lenovo
  */
 public class Customer {
+
     private int customerId;
     private String fullname;
     private String username;
-    private String password; 
+    private String password;
     private int active;
     private String email;
     private Date dob;
@@ -23,11 +24,12 @@ public class Customer {
     private float balance;
     private String cid;
     private String address;
-    
+    private String avatar; 
+
     public Customer() {
     }
 
-    public Customer(int customerId, String fullname, String username, String password, int active, String email, Date dob, int gender, String phonenumber, float balance, String cid, String address) {
+    public Customer(int customerId, String fullname, String username, String password, int active, String email, Date dob, int gender, String phonenumber, float balance, String cid, String address, String avatar) {
         this.customerId = customerId;
         this.fullname = fullname;
         this.username = username;
@@ -40,9 +42,12 @@ public class Customer {
         this.balance = balance;
         this.cid = cid;
         this.address = address;
+        this.avatar = avatar;
     }
 
-    
+    public Customer(int aInt, String string, String string0, String string1) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 
     public int getCustomerId() {
         return customerId;
@@ -140,11 +145,14 @@ public class Customer {
         this.address = address;
     }
 
-
-    @Override
-    public String toString() {
-        return "Customer{" + "customerId=" + customerId + ", fullname=" + fullname + ", username=" + username + ", password=" + password + ", active=" + active + ", email=" + email + ", dob=" + dob + ", gender=" + gender + ", phonenumber=" + phonenumber + ", balance=" + balance + ", cid=" + cid + ", address=" + address + '}';
+    public String getAvatar() {
+        return avatar;
     }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+    
     
     
 }

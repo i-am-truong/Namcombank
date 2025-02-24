@@ -66,7 +66,7 @@ public class EditProfileController extends HttpServlet{
         boolean isUpdated = userDAO.updateUserProfile(currentUsername, gender, dob);
         if (isUpdated) {
             // Cập nhật phiên với thông tin người dùng mới
-            Customer updatedCustomer = CustomerDAO.getCustomerByEmail(currentEmail);
+            Customer updatedCustomer = userDAO.getCustomerByEmail(currentEmail);
             session.setAttribute("users", updatedCustomer);
             
             // Send success

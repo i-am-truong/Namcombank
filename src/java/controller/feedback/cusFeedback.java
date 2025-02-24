@@ -73,7 +73,7 @@ public class cusFeedback extends HttpServlet {
 
         request.setAttribute("list", list);
         request.getRequestDispatcher("feedback/myFeedback.jsp").forward(request, response);
-
+        
     }
 
     /**

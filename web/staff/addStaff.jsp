@@ -63,7 +63,50 @@
                 margin-bottom: 20px; /* Space below the button */
                 width: 250px;
             }
+            .role-wrapper {
+                margin: 15px 0;
+                padding: 10px;
+                border: 1px solid #e3e6f0;
+                border-radius: 4px;
+            }
 
+            .role-title {
+                display: block;
+                color: black;
+                margin-bottom: 10px;
+            }
+
+            .role-options {
+                display: flex;
+                gap: 10px;
+                flex-wrap: wrap;
+            }
+
+            .role-toggle {
+                margin: 0;
+                cursor: pointer;
+            }
+
+            .role-btn {
+                display: inline-block;
+                padding: 6px 12px;
+                background: #f8f9fc;
+                border: 1px solid #e3e6f0;
+                border-radius: 4px;
+                color: #666;
+                font-size: 14px;
+                transition: all 0.2s;
+            }
+
+            .role-toggle input:checked + .role-btn {
+                background: #4e73df;
+                color: white;
+                border-color: #4e73df;
+            }
+
+            .role-btn:hover {
+                background: #eaecf4;
+            }
         </style>
 
     </head>
@@ -111,6 +154,29 @@
                                     <option value="${dept.id}">${dept.name}</option>
                                 </c:forEach>
                             </select>
+
+
+                            <div class="role-wrapper">
+                                <label class="role-title">Select Roles</label>
+                                <div class="role-options">
+                                    <label class="role-toggle">
+                                        <input type="checkbox" name="roleId" value="1" hidden>
+                                        <span class="role-btn">Administrator</span>
+                                    </label>
+                                    <label class="role-toggle">
+                                        <input type="checkbox" name="roleId" value="2" hidden>
+                                        <span class="role-btn">Staff</span>
+                                    </label>
+                                    <label class="role-toggle">
+                                        <input type="checkbox" name="roleId" value="3" hidden>
+                                        <span class="role-btn">Head Of Staff</span>
+                                    </label>
+                                    <label class="role-toggle">
+                                        <input type="checkbox" name="roleId" value="4" hidden>
+                                        <span class="role-btn">Accountant</span>
+                                    </label>
+                                </div>
+                            </div>
                             <input type="text" class="form-control" name="usernameS" id="username" placeholder="Enter username" value="${param.usernameS != null ? param.usernameS : ''}">
                             <input type="password" class="form-control" name="passS" id="pass" placeholder="Enter password" value="${param.passS != null ? param.passS : ''}">
                             <input type="password" class="form-control" name="repassS" id="repass" placeholder="Confirm password" value="${param.repassS != null ? param.repassS : ''}">
@@ -122,7 +188,6 @@
                                 <c:if test="${not empty successMessage}">
                                     <div class="alert alert-success">${successMessage}</div>
                                 </c:if>
-
                         </form>
                     </div>
                     <!-- /.container-fluid -->
