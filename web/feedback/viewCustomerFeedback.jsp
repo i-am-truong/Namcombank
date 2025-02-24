@@ -71,6 +71,12 @@
                 <option value="4" ${param.rating == '4' ? 'selected' : ''}>4 Sao</option>
                 <option value="5" ${param.rating == '5' ? 'selected' : ''}>5 Sao</option>
             </select>
+            <label for="feedback_type">Lọc theo loại phản hồi:</label>
+            <select name="feedback_type" id="feedback_type" onchange="this.form.submit()">
+                <option value="" ${empty param.feedback_type ? 'selected' : ''}>Tất cả</option>
+                <option value="system" ${param.feedback_type == 'system' ? 'selected' : ''}>Hệ thống</option>
+                <option value="human" ${param.feedback_type == 'human' ? 'selected' : ''}>Nhân viên</option>
+            </select>
         </form>
 
         <table>
@@ -103,10 +109,9 @@
                 Quay lại
             </button>
         </div>
-            
-        <c:forEach begin="1" end="${endP}" var="i">
-             <a href="viewCustomerFeedback?index=${i}&rating=${selectedRating}">${i}</a>
-        </c:forEach>
 
+        <c:forEach begin="1" end="${endPage}" var="i">
+            <a href="viewCustomerFeedback?index=${i}&rating=${selectedRating}&feedback_type=${feedback_type_selected}">${i}</a>
+        </c:forEach>
     </body>
 </html>

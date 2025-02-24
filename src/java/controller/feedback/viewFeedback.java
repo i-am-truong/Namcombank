@@ -71,18 +71,21 @@ public class viewFeedback extends HttpServlet {
         List<Feedback> list = new ArrayList<>();
         String ratingStr = request.getParameter("rating");
         String typeStr = request.getParameter("feedback_type");
+        if (typeStr != null && typeStr.trim().isEmpty()) {
+            typeStr = null;
+        }
         String indexStr = request.getParameter("index");
-        int index = 1; // Mặc định trang đầu tiên
+        int index = 1;
         if (indexStr != null && !indexStr.isEmpty()) {
             try {
                 index = Integer.parseInt(indexStr);
             } catch (NumberFormatException e) {
-                index = 1; // Nếu lỗi, quay về trang đầu
+                index = 1;
             }
         }
 
         int rating = 0;
-        if (ratingStr != null && !ratingStr.isEmpty()) {
+        if (ratingStr != null && !ratingStr.isEmpty() && !"tất cả".equalsIgnoreCase(ratingStr)) {
             try {
                 rating = Integer.parseInt(ratingStr);
             } catch (NumberFormatException e) {
@@ -90,15 +93,16 @@ public class viewFeedback extends HttpServlet {
             }
         }
 
-       
-        if(typeStr.isEmpty()||typeStr.isEmpty()){
-            String feedback_type=null; 
-        }
-        
         int count;
-        if (rating > 0) {
+        if (rating > 0 && typeStr != null) {
+            count = dao.getTotalFeedbackByRating1(rating, typeStr);
+            list = dao.pagingFeedbackByRating1(index, rating, typeStr);
+        } else if (rating > 0) {
             count = dao.getTotalFeedbackByRating(rating);
             list = dao.pagingFeedbackByRating(index, rating);
+        } else if (typeStr != null) {
+            count = dao.getTotalFeedbackByType(typeStr);
+            list = dao.pagingFeedbackByType(index, typeStr);
         } else {
             count = dao.getTotalFeedback();
             list = dao.pagingFeedback(index);
@@ -107,9 +111,12 @@ public class viewFeedback extends HttpServlet {
         int endPage = (count % 4 == 0) ? count / 4 : (count / 4) + 1;
 
         request.setAttribute("listPaging", list);
-        request.setAttribute("endP", endPage);
-        request.setAttribute("selectedRating", rating); // Giữ lại giá trị rating
+        request.setAttribute("endPage", endPage);
+        request.setAttribute("selectedRating", ratingStr);
+        request.setAttribute("feedback_type_selected", typeStr);
+        request.setAttribute("currentPage", index);
         request.getRequestDispatcher("feedback/viewFeedback.jsp").forward(request, response);
+
     }
 
     /**
@@ -130,9 +137,15 @@ public class viewFeedback extends HttpServlet {
             return;
         }
 
+        FeedbackDao dao = new FeedbackDao();
+        List<Feedback> list = new ArrayList<>();
+        String ratingStr = request.getParameter("rating");
+        String typeStr = request.getParameter("feedback_type");
+        if (typeStr != null && typeStr.trim().isEmpty()) {
+            typeStr = null;
+        }
         String indexStr = request.getParameter("index");
         int index = 1;
-
         if (indexStr != null && !indexStr.isEmpty()) {
             try {
                 index = Integer.parseInt(indexStr);
@@ -141,9 +154,8 @@ public class viewFeedback extends HttpServlet {
             }
         }
 
-        String ratingStr = request.getParameter("rating");
         int rating = 0;
-        if (ratingStr != null && !ratingStr.isEmpty()) {
+        if (ratingStr != null && !ratingStr.isEmpty() && !"tất cả".equalsIgnoreCase(ratingStr)) {
             try {
                 rating = Integer.parseInt(ratingStr);
             } catch (NumberFormatException e) {
@@ -151,28 +163,30 @@ public class viewFeedback extends HttpServlet {
             }
         }
 
-        FeedbackDao dao = new FeedbackDao();
         int count;
-        List<Feedback> listPaging;
-
-        if (rating > 0) {
+        if (rating > 0 && typeStr != null) {
+            count = dao.getTotalFeedbackByRating1(rating, typeStr);
+            list = dao.pagingFeedbackByRating1(index, rating, typeStr);
+        } else if (rating > 0) {
             count = dao.getTotalFeedbackByRating(rating);
-            listPaging = dao.pagingFeedbackByRating(index, rating);
+            list = dao.pagingFeedbackByRating(index, rating);
+        } else if (typeStr != null) {
+            count = dao.getTotalFeedbackByType(typeStr);
+            list = dao.pagingFeedbackByType(index, typeStr);
         } else {
             count = dao.getTotalFeedback();
-            listPaging = dao.pagingFeedback(index);
+            list = dao.pagingFeedback(index);
         }
 
-        int endPage = count / 4;
-        if (count % 4 != 0) {
-            endPage++;
-        }
+        int endPage = (count % 4 == 0) ? count / 4 : (count / 4) + 1;
 
-        request.setAttribute("listPaging", listPaging);
-        request.setAttribute("endP", endPage);
-        request.setAttribute("selectedRating", rating);
+        request.setAttribute("listPaging", list);
+        request.setAttribute("endPage", endPage);
+        request.setAttribute("selectedRating", ratingStr);
+        request.setAttribute("feedback_type_selected", typeStr);
         request.setAttribute("currentPage", index);
         request.getRequestDispatcher("feedback/viewFeedback.jsp").forward(request, response);
+
     }
 
     /**

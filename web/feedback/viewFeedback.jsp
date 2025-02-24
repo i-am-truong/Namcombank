@@ -114,9 +114,10 @@
             </c:forEach>
         </table>
 
-        <c:forEach begin="1" end="${endP}" var="i">
+        <c:forEach begin="1" end="${endPage}" var="i">
             <a href="viewFeedback?index=${i}&rating=${selectedRating}&feedback_type=${feedback_type_selected}">${i}</a>
         </c:forEach>
+        <p>DEBUG: rating = ${selectedRating}, type = ${feedback_type_selected}</p>
 
     </body>
     <div style="position: absolute; top: 20px; right: 20px;">
