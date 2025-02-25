@@ -99,7 +99,7 @@
                 <th>Content</th>
                 <th>Submitted At</th>
                 <th>Type</th>
-                <th>hinh anh</th>
+                <th>Hình ảnh</th>
 
             </tr>
             <c:forEach var="feedback" items="${listPaging}">
