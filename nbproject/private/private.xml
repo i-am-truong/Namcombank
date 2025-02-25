@@ -3,10 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/admin/OneDrive/Documents/GitHub/Namcombank/web/customer/manageCustomer.jsp</file>
-            <file>file:/C:/Users/admin/OneDrive/Documents/GitHub/Namcombank/src/java/controller/User/managerUser.java</file>
             <file>file:/C:/Users/admin/OneDrive/Documents/GitHub/Namcombank/web/feedback/viewFeedback.jsp</file>
+            <file>file:/C:/Users/admin/OneDrive/Documents/GitHub/Namcombank/src/java/context/FeedbackDao.java</file>
+            <file>file:/C:/Users/admin/OneDrive/Documents/GitHub/Namcombank/src/java/controller/feedback/viewFeedback.java</file>
+            <file>file:/C:/Users/admin/OneDrive/Documents/GitHub/Namcombank/src/java/context/DBContext.java</file>
+            <file>file:/C:/Users/admin/OneDrive/Documents/GitHub/Namcombank/src/java/controller/Admin/viewCustomerFeedback.java</file>
             <file>file:/C:/Users/admin/OneDrive/Documents/GitHub/Namcombank/web/feedback/viewCustomerFeedback.jsp</file>
+            <file>file:/C:/Users/admin/OneDrive/Documents/GitHub/Namcombank/src/java/context/DepartmentDAO.java</file>
         </group>
     </open-files>
 </project-private>

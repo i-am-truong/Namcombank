@@ -93,16 +93,36 @@ public class viewFeedback extends HttpServlet {
             }
         }
 
+        String content_search = request.getParameter("content_search");
+
+        if (content_search != null && !content_search.isEmpty()) {
+            content_search = request.getParameter("content_search");
+        } else {
+            content_search = null;
+        }
+
         int count;
-        if (rating > 0 && typeStr != null) {
-            count = dao.getTotalFeedbackByRating1(rating, typeStr);
-            list = dao.pagingFeedbackByRating1(index, rating, typeStr);
+        if (rating > 0 && typeStr != null && content_search != null) {
+            count = dao.getTotalFeedbackByRatingAndTypeAndContent(rating, typeStr, content_search);
+            list = dao.pagingFeedbackByRatingAndTypeAndContent(index, rating, typeStr, content_search);
+        } else if (rating > 0 && typeStr != null) {
+            count = dao.getTotalFeedbackByRatingAndType(rating, typeStr);
+            list = dao.pagingFeedbackByRatingAndType(index, rating, typeStr);
+        } else if (rating > 0 && content_search != null) {
+            count = dao.getTotalFeedbackByRatingAndContent(rating, content_search);
+            list = dao.pagingFeedbackByRatingAndContent(index, rating, content_search);
+        } else if (typeStr != null && content_search != null) {
+            count = dao.getTotalFeedbackByTypeAndContent(typeStr, content_search);
+            list = dao.pagingFeedbackByTypeAndContent(index, typeStr, content_search);
         } else if (rating > 0) {
             count = dao.getTotalFeedbackByRating(rating);
             list = dao.pagingFeedbackByRating(index, rating);
         } else if (typeStr != null) {
             count = dao.getTotalFeedbackByType(typeStr);
             list = dao.pagingFeedbackByType(index, typeStr);
+        } else if (content_search != null) {
+            count = dao.getTotalFeedbackByContent(content_search);
+            list = dao.pagingFeedbackByContent(index, content_search);
         } else {
             count = dao.getTotalFeedback();
             list = dao.pagingFeedback(index);
@@ -114,6 +134,7 @@ public class viewFeedback extends HttpServlet {
         request.setAttribute("endPage", endPage);
         request.setAttribute("selectedRating", ratingStr);
         request.setAttribute("feedback_type_selected", typeStr);
+        request.setAttribute("content_search_selected", content_search);
         request.setAttribute("currentPage", index);
         request.getRequestDispatcher("feedback/viewFeedback.jsp").forward(request, response);
 
@@ -163,16 +184,36 @@ public class viewFeedback extends HttpServlet {
             }
         }
 
+        String content_search = request.getParameter("content_search");
+
+        if (content_search != null && !content_search.isEmpty()) {
+            content_search = request.getParameter("content_search");
+        } else {
+            content_search = null;
+        }
+
         int count;
-        if (rating > 0 && typeStr != null) {
-            count = dao.getTotalFeedbackByRating1(rating, typeStr);
-            list = dao.pagingFeedbackByRating1(index, rating, typeStr);
+        if (rating > 0 && typeStr != null && content_search != null) {
+            count = dao.getTotalFeedbackByRatingAndTypeAndContent(rating, typeStr, content_search);
+            list = dao.pagingFeedbackByRatingAndTypeAndContent(index, rating, typeStr, content_search);
+        } else if (rating > 0 && typeStr != null) {
+            count = dao.getTotalFeedbackByRatingAndType(rating, typeStr);
+            list = dao.pagingFeedbackByRatingAndType(index, rating, typeStr);
+        } else if (rating > 0 && content_search != null) {
+            count = dao.getTotalFeedbackByRatingAndContent(rating, content_search);
+            list = dao.pagingFeedbackByRatingAndContent(index, rating, content_search);
+        } else if (typeStr != null && content_search != null) {
+            count = dao.getTotalFeedbackByTypeAndContent(typeStr, content_search);
+            list = dao.pagingFeedbackByTypeAndContent(index, typeStr, content_search);
         } else if (rating > 0) {
             count = dao.getTotalFeedbackByRating(rating);
             list = dao.pagingFeedbackByRating(index, rating);
         } else if (typeStr != null) {
             count = dao.getTotalFeedbackByType(typeStr);
             list = dao.pagingFeedbackByType(index, typeStr);
+        } else if (content_search != null) {
+            count = dao.getTotalFeedbackByContent(content_search);
+            list = dao.pagingFeedbackByContent(index, content_search);
         } else {
             count = dao.getTotalFeedback();
             list = dao.pagingFeedback(index);
@@ -184,6 +225,7 @@ public class viewFeedback extends HttpServlet {
         request.setAttribute("endPage", endPage);
         request.setAttribute("selectedRating", ratingStr);
         request.setAttribute("feedback_type_selected", typeStr);
+        request.setAttribute("content_search_selected", content_search);
         request.setAttribute("currentPage", index);
         request.getRequestDispatcher("feedback/viewFeedback.jsp").forward(request, response);
 

@@ -61,7 +61,7 @@
 
         <h2>Customer Feedback</h2>
 
-        <form action="viewCustomerFeedback" method="post" onsubmit="return confirmSubmit()">
+        <form action="viewCustomerFeedback" method="post" ">
             <label for="rating">Lọc theo đánh giá:</label>
             <select name="rating" id="rating" onchange="this.form.submit()">
                 <option value="" ${empty param.rating ? 'selected' : ''}>Tất cả</option>
@@ -77,6 +77,9 @@
                 <option value="system" ${param.feedback_type == 'system' ? 'selected' : ''}>Hệ thống</option>
                 <option value="human" ${param.feedback_type == 'human' ? 'selected' : ''}>Nhân viên</option>
             </select>
+            <label for="content_search">Tìm theo mô tả:</label>
+            <input type="text" name="content_search" id="content_search" value="${param.content_search}" placeholder="Mô tả">
+            <button type="submit">Tìm kiếm</button>
         </form>
 
         <table>
@@ -111,7 +114,8 @@
         </div>
 
         <c:forEach begin="1" end="${endPage}" var="i">
-            <a href="viewCustomerFeedback?index=${i}&rating=${selectedRating}&feedback_type=${feedback_type_selected}">${i}</a>
+            <a href="viewCustomerFeedback?index=${i}&rating=${selectedRating}&feedback_type=${feedback_type_selected}&content_search=${content_search_selected}">${i}</a>
         </c:forEach>
+        <p>DEBUG: rating = ${selectedRating}, type = ${feedback_type_selected}, search=${content_search_selected}</p>
     </body>
 </html>

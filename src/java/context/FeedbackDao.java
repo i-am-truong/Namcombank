@@ -96,7 +96,23 @@ public class FeedbackDao extends DBContext {
         return total;
     }
     
-        public List<Feedback> pagingFeedbackByRating(int index, int rating) {
+    public int getTotalFeedbackByContent( String content) {
+        int total = 0;
+        String sql = "SELECT COUNT(*) FROM Feedback WHERE content like ?";
+        try (PreparedStatement stm = connection.prepareStatement(sql)) {
+            stm.setString(1, "%" + content + "%");
+            try (ResultSet rs = stm.executeQuery()) {
+                if (rs.next()) {
+                    total = rs.getInt(1);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return total;
+    }
+
+    public List<Feedback> pagingFeedbackByRating(int index, int rating) {
         List<Feedback> list = new ArrayList<>();
         String sql = "SELECT * FROM Feedback WHERE rating = ? ORDER BY submitted_at DESC OFFSET ? ROWS FETCH NEXT 4 ROWS ONLY";
         try (PreparedStatement stm = connection.prepareStatement(sql)) {
@@ -119,8 +135,8 @@ public class FeedbackDao extends DBContext {
         }
         return list;
     }
-    
-    public int getTotalFeedbackByRating1(int rating,String feedback_type) {
+
+    public int getTotalFeedbackByRatingAndType(int rating, String feedback_type) {
         int total = 0;
         String sql = "SELECT COUNT(*) FROM Feedback WHERE rating = ? AND feedback_type = ?";
         try (PreparedStatement stm = connection.prepareStatement(sql)) {
@@ -137,9 +153,9 @@ public class FeedbackDao extends DBContext {
         return total;
     }
 
-    public List<Feedback> pagingFeedbackByRating1(int index, int rating,String feedback_type ) {
+    public List<Feedback> pagingFeedbackByRatingAndType(int index, int rating, String feedback_type) {
         List<Feedback> list = new ArrayList<>();
-        String sql = "SELECT * FROM Feedback WHERE rating = ? AND feedback_type=? ORDER BY submitted_at DESC OFFSET ? ROWS FETCH NEXT 4 ROWS ONLY";
+        String sql = "SELECT * FROM Feedback WHERE rating = ? and feedback_type = ? ORDER BY submitted_at DESC OFFSET ? ROWS FETCH NEXT 4 ROWS ONLY";
         try (PreparedStatement stm = connection.prepareStatement(sql)) {
             stm.setInt(1, rating);
             stm.setString(2, feedback_type);
@@ -161,11 +177,75 @@ public class FeedbackDao extends DBContext {
         }
         return list;
     }
+
+    public int getTotalFeedbackByRatingAndTypeAndContent(int rating, String feedback_type, String content) {
+        int total = 0;
+        String sql = "SELECT COUNT(*) FROM Feedback WHERE rating = ? AND feedback_type = ? AND content like ?";
+        try (PreparedStatement stm = connection.prepareStatement(sql)) {
+            stm.setInt(1, rating);
+            stm.setString(2, feedback_type);
+            stm.setString(3, "%" + content + "%");
+            try (ResultSet rs = stm.executeQuery()) {
+                if (rs.next()) {
+                    total = rs.getInt(1);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return total;
+    }
+
+    public List<Feedback> pagingFeedbackByRatingAndTypeAndContent(int index, int rating, String feedback_type, String content) {
+        List<Feedback> list = new ArrayList<>();
+        String sql = "SELECT * FROM Feedback WHERE rating = ? AND feedback_type=? AND content like ? ORDER BY submitted_at DESC OFFSET ? ROWS FETCH NEXT 4 ROWS ONLY";
+        try (PreparedStatement stm = connection.prepareStatement(sql)) {
+            stm.setInt(1, rating);
+            stm.setString(2, feedback_type);
+            stm.setString(3, "%" + content + "%");
+            stm.setInt(4, (index - 1) * 4);
+
+            try (ResultSet rs = stm.executeQuery()) {
+                while (rs.next()) {
+                    list.add(new Feedback(rs.getInt("customer_id"),
+                            rs.getString("content"),
+                            rs.getString("submitted_at"),
+                            rs.getInt("rating"),
+                            rs.getString("feedback_type"),
+                            rs.getBytes("attachment")
+                    ));
+
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public int getTotalFeedbackByTypeAndContent(String feedback_type,String content) {
+        int total = 0;
+        String sql = "SELECT COUNT(*) FROM Feedback WHERE  feedback_type = ? AND content like ?";
+        try (PreparedStatement stm = connection.prepareStatement(sql)) {
+
+            stm.setString(1, feedback_type);
+            stm.setString(2, "%" + content + "%");
+            try (ResultSet rs = stm.executeQuery()) {
+                if (rs.next()) {
+                    total = rs.getInt(1);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return total;
+    }
+    
     public int getTotalFeedbackByType(String feedback_type) {
         int total = 0;
         String sql = "SELECT COUNT(*) FROM Feedback WHERE  feedback_type = ?";
         try (PreparedStatement stm = connection.prepareStatement(sql)) {
-            
+
             stm.setString(1, feedback_type);
             try (ResultSet rs = stm.executeQuery()) {
                 if (rs.next()) {
@@ -178,11 +258,106 @@ public class FeedbackDao extends DBContext {
         return total;
     }
 
-    public List<Feedback> pagingFeedbackByType(int index, String feedback_type ) {
+    public int getTotalFeedbackByRatingAndContent(int rating, String content) {
+        int total = 0;
+        String sql = "SELECT COUNT(*) FROM Feedback WHERE  rating = ? AND content like ?";
+        try (PreparedStatement stm = connection.prepareStatement(sql)) {
+
+            stm.setInt(1, rating);
+            stm.setString(2, "%" + content + "%");
+            try (ResultSet rs = stm.executeQuery()) {
+                if (rs.next()) {
+                    total = rs.getInt(1);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return total;
+    }
+    
+     public List<Feedback> pagingFeedbackByRatingAndContent(int index, int rating, String content) {
+        List<Feedback> list = new ArrayList<>();
+        String sql = "SELECT * FROM Feedback WHERE rating=? AND content like ? ORDER BY submitted_at DESC OFFSET ? ROWS FETCH NEXT 4 ROWS ONLY";
+        try (PreparedStatement stm = connection.prepareStatement(sql)) {
+
+            stm.setInt(1, rating);
+            stm.setString(2, "%" + content + "%");
+            stm.setInt(3, (index - 1) * 4);
+            try (ResultSet rs = stm.executeQuery()) {
+                while (rs.next()) {
+                    list.add(new Feedback(rs.getInt("customer_id"),
+                            rs.getString("content"),
+                            rs.getString("submitted_at"),
+                            rs.getInt("rating"),
+                            rs.getString("feedback_type"),
+                            rs.getBytes("attachment")
+                    ));
+
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+     public List<Feedback> pagingFeedbackByTypeAndContent(int index, String feedback_type, String content) {
+        List<Feedback> list = new ArrayList<>();
+        String sql = "SELECT * FROM Feedback WHERE feedback_type=?  AND content like ? ORDER BY submitted_at DESC OFFSET ? ROWS FETCH NEXT 4 ROWS ONLY";
+        try (PreparedStatement stm = connection.prepareStatement(sql)) {
+
+            stm.setString(1, feedback_type);
+            stm.setString(2, "%" + content + "%");
+            stm.setInt(3, (index - 1) * 4);
+            try (ResultSet rs = stm.executeQuery()) {
+                while (rs.next()) {
+                    list.add(new Feedback(rs.getInt("customer_id"),
+                            rs.getString("content"),
+                            rs.getString("submitted_at"),
+                            rs.getInt("rating"),
+                            rs.getString("feedback_type"),
+                            rs.getBytes("attachment")
+                    ));
+
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+     
+     public List<Feedback> pagingFeedbackByContent(int index, String content) {
+        List<Feedback> list = new ArrayList<>();
+        String sql = "SELECT * FROM Feedback WHERE content like ? ORDER BY submitted_at DESC OFFSET ? ROWS FETCH NEXT 4 ROWS ONLY";
+        try (PreparedStatement stm = connection.prepareStatement(sql)) {
+
+            stm.setString(1, "%" + content + "%");
+            stm.setInt(2, (index - 1) * 4);
+            try (ResultSet rs = stm.executeQuery()) {
+                while (rs.next()) {
+                    list.add(new Feedback(rs.getInt("customer_id"),
+                            rs.getString("content"),
+                            rs.getString("submitted_at"),
+                            rs.getInt("rating"),
+                            rs.getString("feedback_type"),
+                            rs.getBytes("attachment")
+                    ));
+
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+     
+    public List<Feedback> pagingFeedbackByType(int index, String feedback_type) {
         List<Feedback> list = new ArrayList<>();
         String sql = "SELECT * FROM Feedback WHERE feedback_type=? ORDER BY submitted_at DESC OFFSET ? ROWS FETCH NEXT 4 ROWS ONLY";
         try (PreparedStatement stm = connection.prepareStatement(sql)) {
-            
+
             stm.setString(1, feedback_type);
             stm.setInt(2, (index - 1) * 4);
             try (ResultSet rs = stm.executeQuery()) {
@@ -303,6 +478,7 @@ public class FeedbackDao extends DBContext {
             e.printStackTrace();
         }
     }
+
     public void updateFeedback2(String content, String submitted_at, int rating, int feedback_id, String feedback_type) {
         String sql = "UPDATE Feedback SET content = ?, submitted_at = ?, rating = ?, feedback_type = ? WHERE feedback_id = ?";
 
