@@ -48,7 +48,7 @@ public class StaffUpdateController extends BaseRBACControlller {
             // Thêm xử lý roles
             RoleDAO roleDAO = new RoleDAO();
             ArrayList<Role> roles = roleDAO.getAllRoles();
-            request.setAttribute("allRoles", roles); 
+            request.setAttribute("allRoles", roles);
 
             request.setAttribute("staff", staff);
             request.getRequestDispatcher("staff/updateStaff.jsp").forward(request, response);
@@ -90,8 +90,7 @@ public class StaffUpdateController extends BaseRBACControlller {
             Department dept = new Department();
             dept.setId(did);
             staff.setDept(dept);
-            
-            
+
             // Thêm xử lý roles
             String[] roleIds = request.getParameterValues("roleIds");
             ArrayList<Role> roles = new ArrayList<>();
@@ -109,8 +108,24 @@ public class StaffUpdateController extends BaseRBACControlller {
             boolean isUpdated = sdao.updateStaff(staff);
 
             if (isUpdated) {
+                // Lấy lại thông tin nhân viên sau khi cập nhật
+                staff = sdao.getById(id);
+
+                // Lấy danh sách phòng ban
+                DepartmentDAO dbDept = new DepartmentDAO();
+                ArrayList<Department> depts = dbDept.list();
+                request.setAttribute("depts", depts);
+
+                // Lấy danh sách vai trò
+                RoleDAO roleDAO = new RoleDAO();
+                ArrayList<Role> role = roleDAO.getAllRoles();
+                request.setAttribute("allRoles", role);
+
+                // Gán lại staff vào request
+                request.setAttribute("staff", staff);
                 request.setAttribute("successMessage", "Staff updated successfully!");
-                response.sendRedirect("staffFilter");
+
+                request.getRequestDispatcher("staff/updateStaff.jsp").forward(request, response);
             } else {
                 request.setAttribute("errorMessage", "Failed to update staff.");
                 request.getRequestDispatcher("staff/updateStaff.jsp").forward(request, response);

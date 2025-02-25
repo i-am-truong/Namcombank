@@ -17,36 +17,36 @@ public class RepaymentScheduleDAO extends DBContext<RepaymentSchedule> {
 
     public List<RepaymentSchedule> getAllRepaymentSchedules() {
         List<RepaymentSchedule> schedules = new ArrayList<>();
-        String query = "SELECT rs.schedule_id, lp.package_name, rs.status, rs.due_date, rs.amount_due, \n"
-                + "       c.customer_id, c.fullname, c.email, c.phonenumber\n"
-                + "FROM RepaymentSchedule rs\n"
-                + "JOIN Loans l ON rs.loan_id = l.loan_id\n"
-                + "JOIN LoanPackages lp ON lp.package_id = l.package_id\n"
-                + "JOIN Customer c ON l.customer_id = c.customer_id;";
-
-        try (PreparedStatement ps = connection.prepareStatement(query); ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                Customer customer = new Customer(
-                        rs.getInt(6),
-                        rs.getString(7),
-                        rs.getString(8),
-                        rs.getString(9)
-                );
-
-                RepaymentSchedule schedule = new RepaymentSchedule(
-                        rs.getInt(1),
-                        rs.getInt(1),
-                        rs.getString(3),
-                        rs.getString(4),
-                        rs.getFloat(5),
-                        customer,
-                        rs.getString(2)
-                );
-                schedules.add(schedule);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace(); // Ghi log lỗi nếu cần
-        }
+//        String query = "SELECT rs.schedule_id, lp.package_name, rs.status, rs.due_date, rs.amount_due, \n"
+//                + "       c.customer_id, c.fullname, c.email, c.phonenumber\n"
+//                + "FROM RepaymentSchedule rs\n"
+//                + "JOIN Loans l ON rs.loan_id = l.loan_id\n"
+//                + "JOIN LoanPackages lp ON lp.package_id = l.package_id\n"
+//                + "JOIN Customer c ON l.customer_id = c.customer_id;";
+//
+//        try (PreparedStatement ps = connection.prepareStatement(query); ResultSet rs = ps.executeQuery()) {
+//            while (rs.next()) {
+//                Customer customer = new Customer(
+//                        rs.getInt(6),
+//                        rs.getString(7),
+//                        rs.getString(8),
+//                        rs.getString(9)
+//                );
+//
+//                RepaymentSchedule schedule = new RepaymentSchedule(
+//                        rs.getInt(1),
+//                        rs.getInt(1),
+//                        rs.getString(3),
+//                        rs.getString(4),
+//                        rs.getFloat(5),
+//                        customer,
+//                        rs.getString(2)
+//                );
+//                schedules.add(schedule);
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace(); // Ghi log lỗi nếu cần
+//        }
         return schedules;
     }
 

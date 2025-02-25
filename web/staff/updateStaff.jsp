@@ -87,13 +87,14 @@
                     </c:forEach>
                 </div>
 
-
-
                 <div class="col-12">
                     <div class="d-grid">
                         <button type="submit" class="btn btn-success btn-lg">Update Staff</button>
                     </div>
                 </div>
+                <c:if test="${not empty successMessage}">
+                    <div class="alert alert-success">${successMessage}</div>
+                </c:if>
 
             </form>
 
