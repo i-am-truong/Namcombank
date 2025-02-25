@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -22,26 +23,18 @@
                 margin-top: 20px;
             }
 
-            .table-controls {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
+            .search-filters {
+                background: #f8f9fc;
+                padding: 15px;
+                border-radius: 8px;
                 margin-bottom: 20px;
             }
 
-            .entries-selector {
-                display: flex;
-                align-items: center;
+            .search-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
                 gap: 10px;
-            }
-
-            .search-box {
-                width: 300px;
-            }
-
-            .pagination {
-                margin-top: 20px;
-                justify-content: flex-end;
+                margin-bottom: 15px;
             }
 
             .action-btn {
@@ -49,48 +42,23 @@
                 margin: 0 2px;
                 border-radius: 4px;
             }
-            .search-filters {
-                background: #fff;
-                padding: 15px;
-                border-radius: 8px;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-                margin-bottom: 20px;
-            }
 
-            .filters-row {
+            .search-buttons {
                 display: flex;
                 justify-content: space-between;
-                align-items: center;
-                margin-bottom: 15px;
-            }
-
-            .entries-selector {
-                display: flex;
-                align-items: center;
-                gap: 10px;
-            }
-
-            .search-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-                gap: 10px;
+                margin-top: 15px;
             }
 
             @media (max-width: 768px) {
-                .filters-row {
+                .search-buttons {
                     flex-direction: column;
                     gap: 10px;
                 }
 
-                .entries-selector {
-                    width: 100%;
-                }
-
-                #clearFilters {
+                .search-buttons button {
                     width: 100%;
                 }
             }
-
         </style>
     </head>
 
@@ -102,44 +70,97 @@
                     <%@include file="../homepage/header_admin.jsp" %>
                     <div class="container-fluid">
                         <div class="table-wrapper">
-                            <!-- Search Filters Section -->
-                            <div class="search-filters">
-                                <div class="filters-row">
-                                    <div class="entries-selector">
-                                        <span>Show</span>
-                                        <select id="entriesPerPage" class="form-select">
-                                            <option value="5">5</option>
-                                            <option value="10" selected>10</option>
-                                            <option value="25">25</option>
-                                            <option value="50">50</option>
-                                        </select>
-                                        <span>entries</span>
+                            <!-- Search Filters Form -->
+                            <form action="${pageContext.request.contextPath}/staffFilter" method="POST" id="searchForm">
+                                <div class="search-filters">
+                                    <h4 class="mb-3">Staff Search</h4>
+
+                                    <div class="search-grid">
+                                        <div class="form-group">
+                                            <label for="staffid">Staff ID</label>
+                                            <input type="text" id="staffid" name="staffid" class="form-control" 
+                                                   value="${requestScope.staffid}" placeholder="Staff ID">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="fullname">Full Name</label>
+                                            <input type="text" id="fullname" name="fullname" class="form-control" 
+                                                   value="${requestScope.fullname}" placeholder="Full Name">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="gender">Gender</label>
+                                            <select id="gender" name="gender" class="form-control">
+                                                <option value="-1" ${requestScope.gender == null || requestScope.gender == '-1' ? 'selected' : ''}>All</option>
+                                                <option value="true" ${requestScope.gender == 'true' ? 'selected' : ''}>Male</option>
+                                                <option value="false" ${requestScope.gender == 'false' ? 'selected' : ''}>Female</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="dob">Date of Birth</label>
+                                            <input type="date" id="dob" name="dob" class="form-control" 
+                                                   value="${requestScope.dob}">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="phonenumber">Phone Number</label>
+                                            <input type="text" id="phonenumber" name="phonenumber" class="form-control" 
+                                                   value="${requestScope.phonenumber}" placeholder="Phone Number">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="citizen_identification_card">Citizen ID</label>
+                                            <input type="text" id="citizen_identification_card" name="citizen_identification_card" 
+                                                   class="form-control" value="${requestScope.citizen_identification_card}" 
+                                                   placeholder="Citizen ID">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="email">Email</label>
+                                            <input type="text" id="email" name="email" class="form-control" 
+                                                   value="${requestScope.email}" placeholder="Email">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="address">Address</label>
+                                            <input type="text" id="address" name="address" class="form-control" 
+                                                   value="${requestScope.address}" placeholder="Address">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="did">Department</label>
+                                            <select id="did" name="did" class="form-control">
+                                                <option value="-1">All Departments</option>
+                                                <c:forEach items="${requestScope.depts}" var="d">
+                                                    <option value="${d.id}" ${requestScope.did == d.id ? 'selected' : ''}>${d.name}</option>
+                                                </c:forEach>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="roleid">Role</label>
+                                            <select id="roleid" name="roleid" class="form-control">
+                                                <option value="-1">All Roles</option>
+                                                <c:forEach items="${requestScope.roles}" var="r">
+                                                    <option value="${r.id}" ${requestScope.roleid == r.id ? 'selected' : ''}>${r.name}</option>
+                                                </c:forEach>
+                                            </select>
+                                        </div>
                                     </div>
-                                    <button id="clearFilters" class="btn btn-secondary">Clear Filters</button>
-                                </div>
 
-                                <div class="search-grid">
-                                    <input type="text" id="searchName" class="form-control" placeholder="Search Name">
-                                    <select id="searchGender" class="form-control">
-                                        <option value="">All Gender</option>
-                                        <option value="male">Male</option>
-                                        <option value="female">Female</option>
-                                    </select>
-                                    <input type="text" id="searchPhone" class="form-control" placeholder="Search Phone">
-                                    <input type="text" id="searchCID" class="form-control" placeholder="Search CID">
-                                    <input type="text" id="searchEmail" class="form-control" placeholder="Search Email">
-                                    <input type="text" id="searchAddress" class="form-control" placeholder="Search Address">
-                                    <select id="searchDepartment" class="form-control">
-                                        <option value="">All Departments</option>
-                                        <option value="IT">IT</option>
-                                        <option value="Human Resources">Human Resources</option>
-                                        <option value="Finance">Finance</option>
-                                        <option value="Sales">Sales</option>
-                                        <option value="Customer Support">Customer Support</option>
-                                    </select>
+                                    <div class="search-buttons">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-search"></i> Search
+                                        </button>
+                                        <button type="button" id="clearFiltersBtn" class="btn btn-secondary">
+                                            <i class="fas fa-undo"></i> Clear Filters
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
+                            </form>
 
+                            <!-- Staff Table -->
                             <div class="table-responsive">
                                 <table class="table table-bordered" id="staffTable">
                                     <thead>
@@ -152,7 +173,7 @@
                                             <th>Email</th>
                                             <th>Address</th>
                                             <th>Department</th>
-                                            <th>Role Name</th> <!-- Thêm cột Role Name -->
+                                            <th>Role Name</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -178,201 +199,66 @@
                                                     </c:choose>
                                                 </td>
                                                 <td>
-                                                    <a href="updateStaff?id=${s.id}" class="btn btn-primary btn-sm action-btn">Edit</a>
-                                                    <button onclick="checkDeleteCustomer('${s.id}')" 
-                                                            class="btn btn-danger btn-sm action-btn">Delete</button>
+                                                    <a href="updateStaff?id=${s.id}" class="btn btn-primary btn-sm action-btn">
+                                                        <i class="fas fa-edit"></i> Edit
+                                                    </a>
+                                                    <button onclick="confirmDelete('${s.id}')" 
+                                                            class="btn btn-danger btn-sm action-btn">
+                                                        <i class="fas fa-trash"></i> Delete
+                                                    </button>
                                                 </td>
                                             </tr>
                                         </c:forEach>
+
+                                        <c:if test="${empty requestScope.staff}">
+                                            <tr>
+                                                <td colspan="10" class="text-center">No staff records found</td>
+                                            </tr>
+                                        </c:if>
                                     </tbody>
                                 </table>
                             </div>
-
-                            <nav aria-label="Table navigation">
-                                <ul class="pagination" id="pagination"></ul>
-                            </nav>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
+        <!-- Bootstrap core JavaScript-->
+        <script src="vendor/jquery/jquery.min.js"></script>
+        <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+        <!-- Core plugin JavaScript-->
+        <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+        <!-- Custom scripts for all pages-->
+        <script src="adminassets/js/sb-admin-2.min.js"></script>
+
         <script>
-            // Constants
-            const DEBOUNCE_DELAY = 300;
+                // Clear filters functionality
+                document.getElementById('clearFiltersBtn').addEventListener('click', function () {
+                    // Reset all form fields
+                    document.getElementById('staffid').value = '';
+                    document.getElementById('fullname').value = '';
+                    document.getElementById('gender').value = '-1';
+                    document.getElementById('dob').value = '';
+                    document.getElementById('phonenumber').value = '';
+                    document.getElementById('citizen_identification_card').value = '';
+                    document.getElementById('email').value = '';
+                    document.getElementById('address').value = '';
+                    document.getElementById('did').value = '-1';
+                    document.getElementById('roleid').value = '-1';
 
-            // Utility function for debouncing
-            function debounce(func, delay) {
-                let timeoutId;
-                return function (...args) {
-                    clearTimeout(timeoutId);
-                    timeoutId = setTimeout(() => func.apply(this, args), delay);
-                };
-            }
-
-            // Main search and pagination logic
-            let currentPage = 1;
-            let rowsPerPage = 10;
-            let tableRows = [];
-
-            function initializeTable() {
-                tableRows = Array.from(document.querySelectorAll('#staffTable tbody tr'));
-                setupEventListeners();
-                displayTableData();
-            }
-
-            function setupEventListeners() {
-                // Setup entries per page
-                document.getElementById('entriesPerPage').addEventListener('change', (e) => {
-                    rowsPerPage = parseInt(e.target.value);
-                    currentPage = 1;
-                    displayTableData();
+                    // Submit the form to reset the search
+                    document.getElementById('searchForm').submit();
                 });
 
-                // Setup search fields with validation
-                const searchFields = {
-                    name: 'searchName',
-                    gender: 'searchGender',
-                    phone: 'searchPhone',
-                    cid: 'searchCID',
-                    email: 'searchEmail',
-                    address: 'searchAddress',
-                    department: 'searchDepartment'
-                };
-
-                // Add event listeners for each search field
-                Object.entries(searchFields).forEach(([field, id]) => {
-                    const element = document.getElementById(id);
-                    if (element) {
-                        // Special validation for phone and CID
-                        if (field === 'phone' || field === 'cid') {
-                            element.addEventListener('input', (e) => {
-                                e.target.value = e.target.value.replace(/[^0-9]/g, '');
-                            });
-                        }
-
-                        // Email validation
-                        if (field === 'email') {
-                            element.addEventListener('input', (e) => {
-                                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                                if (e.target.value && !emailRegex.test(e.target.value)) {
-                                    element.classList.add('is-invalid');
-                                } else {
-                                    element.classList.remove('is-invalid');
-                                }
-                            });
-                        }
-
-                        // Add debounced search handler
-                        element.addEventListener('input', debounce(() => {
-                            currentPage = 1;
-                            displayTableData();
-                        }, DEBOUNCE_DELAY));
+                // Delete confirmation
+                function confirmDelete(staffId) {
+                    if (confirm('Are you sure you want to delete this staff member?')) {
+                        window.location.href = 'deleteStaff?id=' + staffId;
+                    }
                 }
-                });
-
-                // Setup clear filters
-                document.getElementById('clearFilters').addEventListener('click', clearFilters);
-            }
-
-            function displayTableData() {
-                const filteredRows = filterRows();
-                const startIndex = (currentPage - 1) * rowsPerPage;
-                const endIndex = startIndex + rowsPerPage;
-
-                // Hide all rows first
-                tableRows.forEach(row => row.style.display = 'none');
-
-                // Show filtered rows for current page
-                filteredRows.slice(startIndex, endIndex).forEach(row => {
-                    row.style.display = '';
-                });
-
-                updatePagination(filteredRows.length);
-            }
-
-            function filterRows() {
-                return tableRows.filter(row => {
-                    const name = row.cells[0].textContent.toLowerCase();
-                    const gender = row.cells[1].textContent.toLowerCase();
-                    const phone = row.cells[3].textContent;
-                    const cid = row.cells[4].textContent;
-                    const email = row.cells[5].textContent.toLowerCase();
-                    const address = row.cells[6].textContent.toLowerCase();
-                    const department = row.cells[7].textContent.toLowerCase();
-
-                    // Get search values
-                    const nameSearch = document.getElementById('searchName').value.toLowerCase();
-                    const genderSearch = document.getElementById('searchGender').value.toLowerCase();
-                    const phoneSearch = document.getElementById('searchPhone').value;
-                    const cidSearch = document.getElementById('searchCID').value;
-                    const emailSearch = document.getElementById('searchEmail').value.toLowerCase();
-                    const addressSearch = document.getElementById('searchAddress').value.toLowerCase();
-                    const departmentSearch = document.getElementById('searchDepartment').value.toLowerCase();
-
-                    // Check all conditions
-                    return (!nameSearch || name.includes(nameSearch)) &&
-                            (!genderSearch || gender === genderSearch) &&
-                            (!phoneSearch || phone.includes(phoneSearch)) &&
-                            (!cidSearch || cid.includes(cidSearch)) &&
-                            (!emailSearch || email.includes(emailSearch)) &&
-                            (!addressSearch || address.includes(addressSearch)) &&
-                            (!departmentSearch || department.includes(departmentSearch));
-                });
-            }
-
-            function clearFilters() {
-                // Clear all search inputs
-                const searchInputs = document.querySelectorAll('.search-grid input, .search-grid select');
-                searchInputs.forEach(input => {
-                    input.value = '';
-                    input.classList.remove('is-invalid');
-                });
-
-                currentPage = 1;
-                displayTableData();
-            }
-
-            function updatePagination(totalRows) {
-                const totalPages = Math.ceil(totalRows / rowsPerPage);
-                const pagination = document.getElementById('pagination');
-                let paginationHTML = '';
-
-                // Previous button
-                paginationHTML += '<li class="page-item ' + (currentPage === 1 ? 'disabled' : '') + '">' +
-                        '<a class="page-link" href="javascript:void(0)" onclick="changePage(' + (currentPage - 1) + ')">' +
-                        'Previous</a></li>';
-
-                // Page numbers
-                for (let i = 1; i <= totalPages; i++) {
-                    paginationHTML += '<li class="page-item ' + (currentPage === i ? 'active' : '') + '">' +
-                            '<a class="page-link" href="javascript:void(0)" onclick="changePage(' + i + ')">' +
-                            i + '</a></li>';
-                }
-
-                // Next button
-                paginationHTML += '<li class="page-item ' + (currentPage === totalPages ? 'disabled' : '') + '">' +
-                        '<a class="page-link" href="javascript:void(0)" onclick="changePage(' + (currentPage + 1) + ')">' +
-                        'Next</a></li>';
-
-                pagination.innerHTML = paginationHTML;
-            }
-
-            function changePage(page) {
-                if (page < 1)
-                    return;
-                currentPage = page;
-                displayTableData();
-            }
-
-            function checkDeleteCustomer(sid) {
-                if (confirm('Are you sure you want to delete this staff member?')) {
-                    window.location = 'staffDelete?id=' + sid;
-                }
-            }
-
-            // Initialize on page load
-            document.addEventListener('DOMContentLoaded', initializeTable);
         </script>
     </body>
 </html>

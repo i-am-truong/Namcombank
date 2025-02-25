@@ -175,6 +175,10 @@ public class StaffDAO extends DBContext<Staff> {
             sql += " AND d.department_id = ?";
             paramValues.add(did);
         }
+        if (gender != null) {
+            sql += " AND s.gender = ?";
+            paramValues.add(gender ? 1 : 0); // Assuming 1 for male, 0 for female in DB
+        }
 
         // Điều kiện tìm kiếm theo vai trò (Role ID)
         if (rid != null) {
@@ -260,13 +264,13 @@ public class StaffDAO extends DBContext<Staff> {
                     staffMap.put(staffId, s);
                 }
 
-                String roleName = rs.getString("role_name");
+                    String roleName = rs.getString("role_name");
                 if (roleName != null) {
-                    Role r = new Role();
-                    r.setName(roleName);
-                    s.getRoles().add(r);
+                        Role r = new Role();
+                        r.setName(roleName);
+                        s.getRoles().add(r);
+                    }
                 }
-            }
 
             staffs.addAll(staffMap.values());
 
@@ -276,9 +280,6 @@ public class StaffDAO extends DBContext<Staff> {
             try {
                 if (stm != null) {
                     stm.close();
-                }
-                if (connection != null) {
-                    connection.close();
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(StaffDAO.class.getName()).log(Level.SEVERE, null, ex);
