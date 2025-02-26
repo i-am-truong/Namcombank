@@ -76,11 +76,11 @@
                                     <h4 class="mb-3">Staff Search</h4>
 
                                     <div class="search-grid">
-                                        <div class="form-group">
-                                            <label for="staffid">Staff ID</label>
-                                            <input type="text" id="staffid" name="staffid" class="form-control" 
-                                                   value="${requestScope.staffid}" placeholder="Staff ID">
-                                        </div>
+                                        <!--                                        <div class="form-group">
+                                                                                    <label for="staffid">Staff ID</label>
+                                                                                    <input type="text" id="staffid" name="staffid" class="form-control" 
+                                                                                           value="${requestScope.staffid}" placeholder="Staff ID">
+                                                                                </div>-->
 
                                         <div class="form-group">
                                             <label for="fullname">Full Name</label>
@@ -235,30 +235,29 @@
         <script src="adminassets/js/sb-admin-2.min.js"></script>
 
         <script>
-                // Clear filters functionality
-                document.getElementById('clearFiltersBtn').addEventListener('click', function () {
-                    // Reset all form fields
-                    document.getElementById('staffid').value = '';
-                    document.getElementById('fullname').value = '';
-                    document.getElementById('gender').value = '-1';
-                    document.getElementById('dob').value = '';
-                    document.getElementById('phonenumber').value = '';
-                    document.getElementById('citizen_identification_card').value = '';
-                    document.getElementById('email').value = '';
-                    document.getElementById('address').value = '';
-                    document.getElementById('did').value = '-1';
-                    document.getElementById('roleid').value = '-1';
+                                                        // Clear filters functionality
+                                                        document.getElementById('clearFiltersBtn').addEventListener('click', function () {
+                                                            // Reset all form fields
+                                                            document.getElementById('fullname').value = '';
+                                                            document.getElementById('gender').value = '-1';
+                                                            document.getElementById('dob').value = '';
+                                                            document.getElementById('phonenumber').value = '';
+                                                            document.getElementById('citizen_identification_card').value = '';
+                                                            document.getElementById('email').value = '';
+                                                            document.getElementById('address').value = '';
+                                                            document.getElementById('did').value = '-1';
+                                                            document.getElementById('roleid').value = '-1';
 
-                    // Submit the form to reset the search
-                    document.getElementById('searchForm').submit();
-                });
+                                                            // Submit the form to reset the search
+                                                            document.getElementById('searchForm').submit();
+                                                        });
 
-                // Delete confirmation
-                function confirmDelete(staffId) {
-                    if (confirm('Are you sure you want to delete this staff member?')) {
-                        window.location.href = 'deleteStaff?id=' + staffId;
-                    }
-                }
+                                                        // Delete confirmation
+                                                        function confirmDelete(staffId) {
+                                                            if (confirm('Are you sure you want to delete this staff member?')) {
+                                                                window.location.href = 'staffDelete?id=' + staffId;
+                                                            }
+                                                        }
         </script>
     </body>
 </html>

@@ -4,13 +4,24 @@
  */
 package context;
 
+import jakarta.mail.Authenticator;
+import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
+import jakarta.mail.PasswordAuthentication;
+import jakarta.mail.Session;
+import jakarta.mail.Transport;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
+import java.security.SecureRandom;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.Department;
@@ -23,6 +34,108 @@ import model.auth.Staff;
  * @author Asus
  */
 public class StaffDAO extends DBContext<Staff> {
+
+    // Method to generate a random password
+    public String generateRandomPassword() {
+        SecureRandom random = new SecureRandom();
+        byte[] password = new byte[12]; // Password length
+        random.nextBytes(password);
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(password); // URL-safe encoding
+    }
+
+    // Method to send the password via email
+    public void sendEmail(String recipientEmail, String password, String username) {
+        String subject = "Your New Account Password";
+        String body = "Hello,\n\nYour account has been created successfully.Your username is: "+ username +"  Your password is: " + password + "\n\nPlease change it upon your first login.";
+
+        // Set up email properties
+        Properties properties = new Properties();
+        properties.put("mail.smtp.host", "smtp.gmail.com"); // Your SMTP host
+        properties.put("mail.smtp.port", "587"); // Your SMTP port
+        properties.put("mail.smtp.auth", "true");
+        properties.put("mail.smtp.starttls.enable", "true");
+
+        // Create email session
+        Session session = Session.getInstance(properties, new Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication("duongkoi0504@gmail.com", "qjew mxlv juli wgwr"); // Your email and password
+            }
+        });
+
+        try {
+            MimeMessage message = new MimeMessage(session);
+            message.setFrom(new InternetAddress("duongkoi0504@gmail.com")); // Sender email
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientEmail));
+            message.setSubject(subject);
+            message.setText(body);
+            Transport.send(message); // Send the email
+        } catch (MessagingException e) {
+            System.out.println("Error sending email: " + e.getMessage());
+        }
+    }
+
+    // Check if the Citizen ID exists
+    public boolean isCitizenIDExists(String citizenID) {
+        String query = "SELECT COUNT(*) FROM Staff WHERE citizen_identification_card = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, citizenID);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    // Kiểm tra username đã tồn tại chưa
+    public boolean isUsernameExists(String username) {
+        String sql = "SELECT COUNT(*) FROM Staff WHERE username = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, username);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            System.out.println("Error checking username: " + e.getMessage());
+        }
+        return false;
+    }
+
+    // Kiểm tra email đã tồn tại chưa
+    public boolean isEmailExists(String email) {
+        String sql = "SELECT COUNT(*) FROM Staff WHERE email = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            System.out.println("Error checking email: " + e.getMessage());
+        }
+        return false;
+    }
+
+    // Kiểm tra số điện thoại đã tồn tại chưa
+    public boolean isPhoneExists(String phone) {
+        String sql = "SELECT COUNT(*) FROM Staff WHERE phonenumber = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, phone);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            System.out.println("Error checking phone: " + e.getMessage());
+        }
+        return false;
+    }
 
     public boolean updateStaff(Staff model) {
         // SQL queries
@@ -152,7 +265,7 @@ public class StaffDAO extends DBContext<Staff> {
         return staff;
     }
 
-    public ArrayList<Staff> search(Integer sid, String name, Boolean gender, String dob,
+    public ArrayList<Staff> search(String name, Boolean gender, String dob,
             String address, Integer did, String phonenumber, String email, String citizenID, Integer rid) {
         String sql = "SELECT s.staff_id, s.fullname, s.email, s.dob, s.gender, s.phonenumber, "
                 + "s.citizen_identification_card, s.address, d.department_name, r.role_name "
@@ -164,12 +277,11 @@ public class StaffDAO extends DBContext<Staff> {
 
         ArrayList<Object> paramValues = new ArrayList<>();
 
-        // Điều kiện tìm kiếm theo Staff ID
-        if (sid != null) {
-            sql += " AND s.staff_id = ?";
-            paramValues.add(sid);
-        }
-
+//        // Điều kiện tìm kiếm theo Staff ID
+//        if (sid != null) {
+//            sql += " AND s.staff_id = ?";
+//            paramValues.add(sid);
+//        }
         // Điều kiện tìm kiếm theo mã phòng ban
         if (did != null) {
             sql += " AND d.department_id = ?";
@@ -264,25 +376,28 @@ public class StaffDAO extends DBContext<Staff> {
                     staffMap.put(staffId, s);
                 }
 
-                    String roleName = rs.getString("role_name");
+                String roleName = rs.getString("role_name");
                 if (roleName != null) {
-                        Role r = new Role();
-                        r.setName(roleName);
-                        s.getRoles().add(r);
-                    }
+                    Role r = new Role();
+                    r.setName(roleName);
+                    s.getRoles().add(r);
                 }
+            }
 
             staffs.addAll(staffMap.values());
 
         } catch (SQLException ex) {
-            Logger.getLogger(StaffDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(StaffDAO.class
+                    .getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 if (stm != null) {
                     stm.close();
+
                 }
             } catch (SQLException ex) {
-                Logger.getLogger(StaffDAO.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(StaffDAO.class
+                        .getName()).log(Level.SEVERE, null, ex);
             }
         }
 
@@ -336,17 +451,22 @@ public class StaffDAO extends DBContext<Staff> {
             connection.commit(); // Xác nhận transaction
 
         } catch (SQLException ex) {
-            Logger.getLogger(StaffDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(StaffDAO.class
+                    .getName()).log(Level.SEVERE, null, ex);
             try {
                 connection.rollback(); // Hoàn tác nếu có lỗi
+
             } catch (SQLException ex1) {
-                Logger.getLogger(StaffDAO.class.getName()).log(Level.SEVERE, null, ex1);
+                Logger.getLogger(StaffDAO.class
+                        .getName()).log(Level.SEVERE, null, ex1);
             }
         } finally {
             try {
                 connection.setAutoCommit(true); // Khôi phục chế độ tự động commit
+
             } catch (SQLException ex) {
-                Logger.getLogger(StaffDAO.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(StaffDAO.class
+                        .getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -468,7 +588,8 @@ public class StaffDAO extends DBContext<Staff> {
             staffs.addAll(staffMap.values());
 
         } catch (SQLException ex) {
-            Logger.getLogger(StaffDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(StaffDAO.class
+                    .getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 if (stm != null) {
@@ -476,9 +597,11 @@ public class StaffDAO extends DBContext<Staff> {
                 }
                 if (connection != null) {
                     connection.close();
+
                 }
             } catch (SQLException ex) {
-                Logger.getLogger(StaffDAO.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(StaffDAO.class
+                        .getName()).log(Level.SEVERE, null, ex);
             }
         }
         return staffs;
