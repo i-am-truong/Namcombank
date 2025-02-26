@@ -134,7 +134,7 @@
                                             <label for="dob" class="form-label">Date of Birth</label>
                                         </div>
                                     </div>-->
-<!--                                    <div class="col-12">
+                                    <div class="col-12">
                                         <div class="form-floating mb-3">
                                             <select class="form-select" name="genderC" id="gender" required>
                                                 <option value="">Select Gender</option>
@@ -143,7 +143,7 @@
                                             </select>
                                             <label for="gender" class="form-label">Gender</label>
                                         </div>
-                                    </div>-->
+                                    </div>
                                     <div class="col-12">
                                         <div class="form-floating mb-3">
                                             <input type="tel" class="form-control" name="phonenumberC" id="phonenumber"

@@ -325,10 +325,20 @@
                                 <td>
                                     <c:choose>
                                         <c:when test="${empty customer.avatar}">
-                                            <img src="${pageContext.request.contextPath}/assets/img/profile/default-avatar.png"
-                                                 alt="Default Avatar"
-                                                 width="120"
-                                                 height="150">
+                                            <c:choose>
+                                                <c:when test="${customer.gender == 1}">
+                                                    <img src="${pageContext.request.contextPath}/assets/img/profile/Male.jpg"
+                                                         alt="Male Avatar"
+                                                         width="120"
+                                                         height="150">
+                                                </c:when>
+                                                <c:when test="${customer.gender == 0}">
+                                                    <img src="${pageContext.request.contextPath}/assets/img/profile/Female.jpg"
+                                                         alt="Female Avatar"
+                                                         width="120"
+                                                         height="150">
+                                                </c:when>
+                                            </c:choose>
                                         </c:when>
                                         <c:otherwise>
                                             <img src="${pageContext.request.contextPath}/${customer.avatar}"
