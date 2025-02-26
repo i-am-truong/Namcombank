@@ -75,38 +75,44 @@
                 <th>Hinh Anh</th>
                 <th>Actions</th>
             </tr>
+            <c:if test="${not empty errorContent}">
+                <p style="color: red;">${errorContent}</p>
+            </c:if>
+            <c:if test="${not empty errorAttachment}">
+                <p style="color: red;">${errorAttachment}</p>
+            </c:if>
             <c:forEach var="feedback" items="${list}">
                 <form action="editFeedback" method="post" enctype="multipart/form-data">
                     <tr>
-                        <input type="hidden" name="feedback_id" value="${feedback.feedback_id}">
+                    <input type="hidden" name="feedback_id" value="${feedback.feedback_id}">
 
-                        <td>
-                            <input type="number" name="rating" value="${feedback.rating}" min="1" max="5" required>
-                        </td>
-                        <td>
-                            <input type="text" name="content" value="${feedback.content}" required>
-                        </td>
-                        <td>
-                            <input type="text" name="submitted_at" value="${feedback.submitted_at}" readonly>
-                        </td>
-                        <td>
-                            <select name="feedback_type" required>
-                                <option value="human" ${feedback.feedback_type == 'human' ? 'selected' : ''}>Human</option>
-                                <option value="system" ${feedback.feedback_type == 'system' ? 'selected' : ''}>System</option>
-                            </select>
-                        </td>
-                        <td>
-                            <c:if test="${not empty feedback.attachment}">
-                                <img src="ImageServlet?rating=${feedback.rating}&content=${feedback.content}&submitted_at=${feedback.submitted_at}&feedback_type=${feedback.feedback_type}" alt="Feedback Image" width="200">
-                            </c:if>
-                            <br>
-                            <label for="attachment">Upload Image (optional):</label>
-                            <input type="file" id="attachment" name="attachment" accept="image/*">
-                        </td>
-                        <td>
-                            <input type="hidden" name="original_submitted_at" value="${feedback.submitted_at}">
-                            <button type="submit">✔ Lưu</button>
-                        </td>
+                    <td>
+                        <input type="number" name="rating" value="${feedback.rating}" min="1" max="5">
+                    </td>
+                    <td>
+                        <input type="text" name="content" value="${feedback.content}">
+                    </td>
+                    <td>
+                        <input type="text" name="submitted_at" value="${feedback.submitted_at}" readonly>
+                    </td>
+                    <td>
+                        <select name="feedback_type" required>
+                            <option value="human" ${feedback.feedback_type == 'human' ? 'selected' : ''}>Human</option>
+                            <option value="system" ${feedback.feedback_type == 'system' ? 'selected' : ''}>System</option>
+                        </select>
+                    </td>
+                    <td>
+                        <c:if test="${not empty feedback.attachment}">
+                            <img src="ImageServlet?rating=${feedback.rating}&content=${feedback.content}&submitted_at=${feedback.submitted_at}&feedback_type=${feedback.feedback_type}" alt="Feedback Image" width="200">
+                        </c:if>
+                        <br>
+                        <label for="attachment">Upload Image (optional):</label>
+                        <input type="file" id="attachment" name="attachment" accept="image/*">
+                    </td>
+                    <td>
+                        <input type="hidden" name="original_submitted_at" value="${feedback.submitted_at}">
+                        <button type="submit">✔ Lưu</button>
+                    </td>
                     </tr>
                 </form>
                 <tr>
