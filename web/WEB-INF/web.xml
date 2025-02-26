@@ -248,6 +248,22 @@
         <servlet-name>ImageServlet</servlet-name>
         <servlet-class>controller.feedback.ImageServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ChatEndpoint</servlet-name>
+        <servlet-class>com.chat.websocket.ChatEndpoint</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GetOnlineUsersServlet</servlet-name>
+        <servlet-class>com.chat.websocket.GetOnlineUsersServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ChatListServlet</servlet-name>
+        <servlet-class>com.chat.websocket.ChatConfigurator</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ChatEndpoint</servlet-name>
+        <url-pattern>/chat/*</url-pattern>
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>viewCustomerDetail</servlet-name>
         <url-pattern>/viewCustomerDetail</url-pattern>
@@ -491,6 +507,14 @@
     <servlet-mapping>
         <servlet-name>ImageServlet</servlet-name>
         <url-pattern>/ImageServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GetOnlineUsersServlet</servlet-name>
+        <url-pattern>/GetOnlineUsersServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ChatListServlet</servlet-name>
+        <url-pattern>/ChatListServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

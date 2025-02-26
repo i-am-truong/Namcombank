@@ -61,7 +61,7 @@
                 display: none;
                 position: absolute;
                 width: 200px;
-/*                margin-left: 1480px;*/
+                /*                margin-left: 1480px;*/
                 margin-left: 85%;
                 top: 70px;
                 right: 0px;
@@ -138,6 +138,7 @@
         </nav>
         <div class="dropdown-menu" id="dropdownMenu">
             <a href="userProfile"><i class="fas fa-user"></i>&nbsp;&nbsp;Show profile </a>
+            <a href="ChatListServlet"><i class="fas fa-user"></i>&nbsp;&nbsp;Tin Nhan Dang Cho</a>
             <a href="#"><i class="fas fa-cog"></i>&nbsp;&nbsp;Setting</a>
             <a href="logOut"><i class="fas fa-sign-out-alt"></i>&nbsp;&nbsp;Logout</a>
         </div>
