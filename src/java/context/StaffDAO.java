@@ -46,7 +46,7 @@ public class StaffDAO extends DBContext<Staff> {
     // Method to send the password via email
     public void sendEmail(String recipientEmail, String password, String username) {
         String subject = "Your New Account Password";
-        String body = "Hello,\n\nYour account has been created successfully.Your username is: "+ username +"  Your password is: " + password + "\n\nPlease change it upon your first login.";
+        String body = "Hello,\n\nYour account has been created successfully.Your username is: " + username + "  Your password is: " + password + "\n\nPlease change it upon your first login.";
 
         // Set up email properties
         Properties properties = new Properties();
@@ -72,6 +72,57 @@ public class StaffDAO extends DBContext<Staff> {
         } catch (MessagingException e) {
             System.out.println("Error sending email: " + e.getMessage());
         }
+    }
+    
+    // Kiểm tra email đã tồn tại chưa (loại trừ nhân viên hiện tại)
+    public boolean isEmailExistsExcept(String email, int staffId) {
+        String sql = "SELECT COUNT(*) FROM Staff WHERE email = ? AND staff_id != ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, email);
+            ps.setInt(2, staffId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            System.out.println("Error checking email: " + e.getMessage());
+        }
+        return false;
+    }
+
+    // Kiểm tra số điện thoại đã tồn tại chưa (loại trừ nhân viên hiện tại)
+    public boolean isPhoneExistsExcept(String phone, int staffId) {
+        String sql = "SELECT COUNT(*) FROM Staff WHERE phonenumber = ? AND staff_id != ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, phone);
+            ps.setInt(2, staffId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            System.out.println("Error checking phone: " + e.getMessage());
+        }
+        return false;
+    }
+
+    // Kiểm tra CCCD đã tồn tại chưa (loại trừ nhân viên hiện tại)
+    public boolean isCitizenIDExistsExcept(String citizenId, int staffId) {
+        String sql = "SELECT COUNT(*) FROM Staff WHERE citizen_identification_card = ? AND staff_id != ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, citizenId);
+            ps.setInt(2, staffId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            System.out.println("Error checking citizen ID: " + e.getMessage());
+        }
+        return false;
     }
 
     // Check if the Citizen ID exists

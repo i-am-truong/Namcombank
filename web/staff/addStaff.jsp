@@ -105,7 +105,7 @@
                                 <div class="alert alert-success">${successMessage}</div>
                             </c:if>
                             <button type="submit" class="btn btn-primary">Add Staff</button>
-                            <a href="managerUser" class="btn btn-secondary">Back</a>
+                            <a href="staffFilter" class="btn btn-secondary">Back</a>
                         </form>
                     </div>
                 </div>

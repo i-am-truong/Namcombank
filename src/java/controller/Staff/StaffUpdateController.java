@@ -83,7 +83,8 @@ public class StaffUpdateController extends BaseRBACControlller {
 
             // Validate input data
             String errorMessage = null;
-
+            StaffDAO db = new StaffDAO();
+            
             if (raw_id == null || raw_id.trim().isEmpty()) {
                 errorMessage = "Staff ID is missing.";
             } else if (raw_sname == null || raw_sname.trim().isEmpty()) {
@@ -98,6 +99,17 @@ public class StaffUpdateController extends BaseRBACControlller {
                 errorMessage = "Citizen Identification must be 12 digits.";
             } else if (raw_address == null || !ADDRESS_REGEX.matcher(raw_address).matches()) {
                 errorMessage = "Invalid address format.";
+            } else {
+                int staffId = Integer.parseInt(raw_id);
+                // Only check for duplicates using the new methods that exclude the current staff
+                if (db.isPhoneExistsExcept(raw_phonenumber, staffId)){
+                    errorMessage = "Phone number already exists.";
+                } else if (db.isEmailExistsExcept(raw_email, staffId)) {
+                    errorMessage = "Email already exists.";
+                } else if (db.isCitizenIDExistsExcept(raw_cic, staffId)) {
+                    errorMessage = "Citizen ID already exists.";
+                }
+
             }
 
             // Load departments and roles for potential redisplay
@@ -111,11 +123,6 @@ public class StaffUpdateController extends BaseRBACControlller {
 
             int id = Integer.parseInt(raw_id);
             StaffDAO sdao = new StaffDAO();
-            Staff existingStaff = sdao.getById(id);
-
-            if (existingStaff == null) {
-                errorMessage = "Staff not found.";
-            }
 
             if (errorMessage != null) {
                 request.setAttribute("errorMessage", errorMessage);
@@ -170,11 +177,6 @@ public class StaffUpdateController extends BaseRBACControlller {
             staff.setEmail(raw_email);
             staff.setPhonenumber(raw_phonenumber);
             staff.setCitizenId(raw_cic);
-
-            // Preserve existing username and password
-            staff.setUsername(existingStaff.getUsername());
-            staff.setPassword(existingStaff.getPassword());
-            staff.setActive(existingStaff.isActive());
 
             // Set department
             Department dept = new Department();

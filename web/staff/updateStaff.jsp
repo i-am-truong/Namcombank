@@ -118,7 +118,7 @@
                             </c:if>
 
                             <button type="submit" class="btn btn-primary">Update Staff</button>
-                            <a href="managerUser" class="btn btn-secondary">Back</a>
+                            <a href="staffFilter" class="btn btn-secondary">Back</a>
                         </form>
                     </div>
                 </div>
