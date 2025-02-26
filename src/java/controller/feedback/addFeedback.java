@@ -8,16 +8,20 @@ import context.FeedbackDao;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Part;
+import java.io.InputStream;
 import model.Feedback;
 
 /**
  *
  * @author admin
  */
+@MultipartConfig
 public class addFeedback extends HttpServlet {
 
     /**
@@ -85,15 +89,29 @@ public class addFeedback extends HttpServlet {
             response.sendRedirect("login");
             return;
         } else {
+            Part filePart = request.getPart("attachment"); // Nhận file từ form
+            byte[] attachment = null;
+            if (filePart != null && filePart.getSize() > 0) {
+                InputStream inputStream = filePart.getInputStream();
+                attachment = inputStream.readAllBytes();
+            }
+
             Integer customerId = Integer.parseInt(request.getParameter("customer_id"));
             String content = request.getParameter("content");
             String submittedAt = request.getParameter("submitted_at");
+            String feedbackType = request.getParameter("feedback_type");
             int rating = Integer.parseInt(request.getParameter("rating"));
 
             FeedbackDao dao = new FeedbackDao();
+            Feedback feedback = new Feedback();
+            feedback.setCustomer_id(customerId);
+            feedback.setContent(content);
+            feedback.setRating(rating);
+            feedback.setFeedback_type(feedbackType);
+            feedback.setSubmitted_at(submittedAt);
+            feedback.setAttachment(attachment);
 
-            dao.insertFeedback(new Feedback(customerId, content, submittedAt, rating));
-
+            dao.insertFeedback(feedback);
             response.sendRedirect("feedback/thankYou.jsp");
 
         }
