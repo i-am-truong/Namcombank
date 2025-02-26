@@ -437,6 +437,10 @@
         <url-pattern>/staffFilter</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
+        <servlet-name>StaffDeleteController</servlet-name>
+        <url-pattern>/staffDelete</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
         <servlet-name>StaffAddController</servlet-name>
         <url-pattern>/addStaff</url-pattern>
     </servlet-mapping>
@@ -479,10 +483,6 @@
     <servlet-mapping>
         <servlet-name>ExportCustomers</servlet-name>
         <url-pattern>/ExportCustomers</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>StaffDeleteController</servlet-name>
-        <url-pattern>/staffDelete</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

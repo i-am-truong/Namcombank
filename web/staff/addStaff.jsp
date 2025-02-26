@@ -93,9 +93,18 @@
                                 </div>
                             </div>
 
+
                             <div class="form-group">
                                 <label for="username">Username:</label>
                                 <input type="text" class="form-control" name="usernameS" id="username" value="${param.usernameS}">
+                            </div>
+                            <div class="form-group">
+                                <label for="pass">Password:</label>
+                                <input type="password" class="form-control" name="passS" id="pass">
+                            </div>
+                            <div class="form-group">
+                                <label for="repass">Confirm Password:</label>
+                                <input type="password" class="form-control" name="repassS" id="repass">
                             </div>
 
                             <c:if test="${not empty errorMessage}">

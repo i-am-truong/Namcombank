@@ -32,7 +32,7 @@ public class StaffFilterController extends BaseRBACControlller {
         String raw_rid = request.getParameter("roleid");
 
         // Process parameters with proper null/empty checks
-//        Integer sid = (raw_sid != null && !raw_sid.isBlank()) ? Integer.parseInt(raw_sid) : null;
+        Integer sid = (raw_sid != null && !raw_sid.isBlank()) ? Integer.parseInt(raw_sid) : null;
         Integer did = (raw_did != null && !raw_did.equals("-1")) ? Integer.parseInt(raw_did) : null;
         Integer rid = (raw_rid != null && !raw_rid.equals("-1")) ? Integer.parseInt(raw_rid) : null;
 
@@ -49,7 +49,7 @@ public class StaffFilterController extends BaseRBACControlller {
 
         // Retrieve staff list based on search criteria
         StaffDAO dbStaff = new StaffDAO();
-        ArrayList<Staff> staffs = dbStaff.search( sname, gender, dob, address, did, phonenumber, email, cic, rid);
+        ArrayList<Staff> staffs = dbStaff.search(sid, sname, gender, dob, address, did, phonenumber, email, cic, rid);
 
         // Retrieve departments and roles for dropdowns
         DepartmentDAO dbDept = new DepartmentDAO();
