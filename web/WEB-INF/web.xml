@@ -267,6 +267,8 @@
     <servlet>
         <servlet-name>staffProfile</servlet-name>
         <servlet-class>controller.Staff.staffProfile</servlet-class>
+        <servlet-name>ImageServlet</servlet-name>
+        <servlet-class>controller.feedback.ImageServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>viewCustomerDetail</servlet-name>
@@ -531,6 +533,8 @@
     <servlet-mapping>
         <servlet-name>staffProfile</servlet-name>
         <url-pattern>/staffProfile</url-pattern>
+        <servlet-name>ImageServlet</servlet-name>
+        <url-pattern>/ImageServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

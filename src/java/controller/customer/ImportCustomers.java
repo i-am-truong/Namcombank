@@ -107,6 +107,8 @@ public class ImportCustomers extends HttpServlet {
 
         if (readCustomers.isEmpty()) {
             session.setAttribute("alertImportFail", "No valid data found in the Excel file or all records are duplicates");
+            session.removeAttribute("alertImportSuccess"); // Thêm dòng này
+            session.removeAttribute("errorCustomers"); // Thêm dòng này
             response.sendRedirect("manageCustomerVer2");
             return;
         }
@@ -124,11 +126,14 @@ public class ImportCustomers extends HttpServlet {
 
         if (countAdded > 0) {
             session.setAttribute("alertImportSuccess", countAdded + " customers imported successfully");
+            session.setAttribute("errorCustomers", new ArrayList<>());
+            session.removeAttribute("alertImportFail"); // Thêm dòng này
         }
         if (!notAdded.isEmpty()) {
             session.setAttribute("errorCustomers", notAdded);
             session.setAttribute("alertImportFail", notAdded.size() +
                 " customers could not be imported due to duplicate information (phone, email, or CID)");
+            session.removeAttribute("alertImportSuccess"); // Thêm dòng này
         }
 
         response.sendRedirect("manageCustomerVer2");
