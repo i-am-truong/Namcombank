@@ -17,8 +17,6 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 import java.io.PrintWriter;
 import java.sql.Date;
-import java.time.LocalDate;
-import java.time.Period;
 import model.Customer;
 
 /**
@@ -143,24 +141,10 @@ public class userProfile extends HttpServlet {
             return;
         }
 
-        // Kiểm tra address
-        if (!validateAddress(address)) {
-            request.setAttribute("errorAddress", "Invalid address! It must be at least 5 characters long and contain only letters, numbers, spaces, commas, or dashes.");
-            request.getRequestDispatcher("user/profileUser.jsp").forward(request, response);
-            return;
-        }
-
-        // Kiểm tra dob
-        if (!validateDob(dob)) {
-            request.setAttribute("errorDob", "Invalid dob! You must be at least 18 years old.");
-            request.getRequestDispatcher("user/profileUser.jsp").forward(request, response);
-            return;
-        }
-
         // Xử lý file upload avatar
         Part filePart = request.getPart("avatar");
 
-// Kiểm tra nếu người dùng có tải ảnh mới
+        // Kiểm tra nếu người dùng có tải ảnh mới
         if (filePart != null && filePart.getSize() > 0) {
             String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
 

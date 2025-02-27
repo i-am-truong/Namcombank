@@ -8,15 +8,22 @@ import context.FeedbackDao;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Part;
+import java.io.InputStream;
+import java.util.List;
+import model.Feedback;
+import model.Feedback_id;
 
 /**
  *
  * @author admin
  */
+@MultipartConfig
 public class editFeedback extends HttpServlet {
 
     /**
@@ -57,24 +64,24 @@ public class editFeedback extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        if (session.getAttribute("customer") == null) {
-            response.sendRedirect("login");
-            return;
-        }
-
-        String content = request.getParameter("content");
-        String submitted_at = request.getParameter("submitted_at");
-        String ratingStr = request.getParameter("rating");
-        int rating = Integer.parseInt(ratingStr);
-
-        FeedbackDao dao = new FeedbackDao();
-        int feedback_id = dao.getFeedbackId(content, submitted_at, rating);
-        request.setAttribute("content", content);
-        request.setAttribute("feedback_id", feedback_id);
-        request.setAttribute("submitted_at", submitted_at);
-        request.setAttribute("rating", rating);
-        request.getRequestDispatcher("feedback/editFeedback.jsp").forward(request, response);
+//        HttpSession session = request.getSession();
+//        if (session.getAttribute("customer") == null) {
+//            response.sendRedirect("login");
+//            return;
+//        }
+//
+//        String content = request.getParameter("content");
+//        String submitted_at = request.getParameter("submitted_at");
+//        String ratingStr = request.getParameter("rating");
+//        int rating = Integer.parseInt(ratingStr);
+//
+//        FeedbackDao dao = new FeedbackDao();
+//        int feedback_id = dao.getFeedbackId(content, submitted_at, rating);
+//        request.setAttribute("content", content);
+//        request.setAttribute("feedback_id", feedback_id);
+//        request.setAttribute("submitted_at", submitted_at);
+//        request.setAttribute("rating", rating);
+//        request.getRequestDispatcher("feedback/editFeedback.jsp").forward(request, response);
 
     }
 
@@ -94,17 +101,63 @@ public class editFeedback extends HttpServlet {
             response.sendRedirect("login");
             return;
         }
+        Part filePart = request.getPart("attachment");
+        byte[] attachment = null;
+        if (filePart != null && filePart.getSize() > 0) {
+            try (InputStream inputStream = filePart.getInputStream()) {
+                attachment = inputStream.readAllBytes();
+            }
+        }
+
         FeedbackDao dao = new FeedbackDao();
         int customer_id = (int) session.getAttribute("customer_id");
         String content = request.getParameter("content");
         String submitted_at = request.getParameter("submitted_at");
+        String feedback_type = request.getParameter("feedback_type");
         String ratingStr = request.getParameter("rating");
-        int rating = Integer.parseInt(ratingStr);
+        int rating = (ratingStr != null && !ratingStr.isEmpty()) ? Integer.parseInt(ratingStr) : 0;
+        int feedback_id = Integer.parseInt(request.getParameter("feedback_id"));
 
-        String feedbackStr = request.getParameter("feedback_id");
-        int feedback_id = Integer.parseInt(feedbackStr);
-        dao.updateFeedback(content, submitted_at, rating, feedback_id);
-        response.sendRedirect("viewFeedback?customer_id=" + customer_id);
+        if (rating == 5) {
+            if (!checkContent(content)) {
+                request.setAttribute("errorContent", "Content contains invalid characters.");
+                List<Feedback_id> list = dao.getCusFeedback(customer_id);
+                request.setAttribute("list", list);
+
+                request.getRequestDispatcher("feedback/myFeedback.jsp").forward(request, response);
+                return;
+            }
+            if (attachment == null) {
+                dao.updateFeedback2(content, submitted_at, rating, feedback_id, feedback_type);
+            } else {
+                dao.updateFeedback(content, submitted_at, rating, feedback_id, feedback_type, attachment);
+            }
+        } // Nếu rating < 5, kiểm tra cả content và attachment
+        else {
+            if (content == null || content.trim().isEmpty()) {
+                request.setAttribute("errorContent", "Please enter content for ratings below 5 stars.");
+                List<Feedback_id> list = dao.getCusFeedback(customer_id);
+                request.setAttribute("list", list);
+
+                request.getRequestDispatcher("feedback/myFeedback.jsp").forward(request, response);
+                return;
+            }
+            if (!checkContent(content)) {
+                request.setAttribute("errorContent", "Content contains invalid characters.");
+                List<Feedback_id> list = dao.getCusFeedback(customer_id);
+                request.setAttribute("list", list);
+
+                request.getRequestDispatcher("feedback/myFeedback.jsp").forward(request, response);
+                return;
+            }
+            if (attachment == null) {
+                dao.updateFeedback2(content, submitted_at, rating, feedback_id, feedback_type);
+            } else {
+                dao.updateFeedback(content, submitted_at, rating, feedback_id, feedback_type, attachment);
+            }
+        }
+
+        response.sendRedirect("cusFeedback?customer_id=" + customer_id);
     }
 
     /**
@@ -117,4 +170,12 @@ public class editFeedback extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
+    public boolean checkContent(String content) {
+        return content.matches("^[\\p{L}0-9\\s.,!?]+$");
+    }
+
+    private String formatContent(String content) {
+        content = content.trim().replaceAll("\\s+", " ");
+        return Character.toUpperCase(content.charAt(0)) + content.substring(1);
+    }
 }
