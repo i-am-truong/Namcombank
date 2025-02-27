@@ -36,7 +36,7 @@
     <div class="sidebar-heading">Interface</div>
 
     <li class="nav-item active">
-        <a class="nav-link" href="userProfile">
+        <a class="nav-link" href="staffProfile">
             <i class="fas fa-fw fa-table"></i>
             <span>Profile</span></a>
     </li>

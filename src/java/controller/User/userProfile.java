@@ -31,7 +31,7 @@ import model.Customer;
 
 public class userProfile extends HttpServlet {
 
-    private static final String UPLOAD_DIR = "assets/img/profile/";
+    private static final String UPLOAD_DIR = "web/assets/img/profile/";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -114,7 +114,7 @@ public class userProfile extends HttpServlet {
 
         // Kiểm tra hợp lệ tên
         if (!checkName(fullNameStr)) {
-            request.setAttribute("errorName", errorName);
+            request.setAttribute("errorName", "Invalid name!");
             request.getRequestDispatcher("user/profileUser.jsp").forward(request, response);
             return;
         }
