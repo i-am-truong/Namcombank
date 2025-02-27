@@ -72,6 +72,7 @@
     </head>
     <body>
 
+
         <!--offcanvas menu area end-->
         <!-- End Mobile Menu Area -->
         <!-- Start BreadCrumb Area -->
@@ -94,8 +95,10 @@
         <!-- End BreadCrumb Area -->
 
         <!-- Start Login Register Form -->
+
         <div class="login-register-form pt-70 pb-70">
             <div class="container">
+
                 <div class="row">
                     <div class="col-lg-6 offset-lg-3">
                         <div class="login-register-form-full">
@@ -106,24 +109,30 @@
                                 <div class="col-12">
                                     <div class="form-floating mb-3">
                                         <div class="text-center">
+                                           <c:choose>
+                                        <c:when test="${empty customer.avatar}">
                                             <c:choose>
-                                                <c:when test="${empty customer.avatar}">
-                                                    <img src="${pageContext.request.contextPath}/assets/img/profile/default-avatar.png"
-                                                         alt="Default Avatar"
+                                                <c:when test="${customer.gender == 1}">
+                                                    <img src="${pageContext.request.contextPath}/assets/img/Male.jpg"
+                                                         alt="Male Avatar"
                                                          width="120"
-                                                         height="150"
-                                                         style="object-fit: cover;"
-                                                         class="mt-2">
+                                                         height="150">
                                                 </c:when>
-                                                <c:otherwise>
-                                                    <img src="${pageContext.request.contextPath}/${customer.avatar}"
-                                                         alt="${customer.fullname}'s avatar"
+                                                <c:when test="${customer.gender == 0}">
+                                                    <img src="${pageContext.request.contextPath}/assets/img/Female.jpg"
+                                                         alt="Female Avatar"
                                                          width="120"
-                                                         height="150"
-                                                         style="object-fit: cover;"
-                                                         class="mt-2">
-                                                </c:otherwise>
+                                                         height="150">
+                                                </c:when>
                                             </c:choose>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <img src="${pageContext.request.contextPath}/${customer.avatar}"
+                                                 alt="${customer.fullname}'s avatar"
+                                                 width="120"
+                                                 height="150">
+                                        </c:otherwise>
+                                    </c:choose>
                                         </div>
                                     </div>
                                 </div>

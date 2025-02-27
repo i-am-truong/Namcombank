@@ -207,17 +207,6 @@
             return true;
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            let inputs = document.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"], input[type="address"]');
-
-            inputs.forEach(function(input) {
-                input.addEventListener('blur', function() {
-                    this.value = normalizeWhitespace(this.value);
-                });
-
-                input.value = normalizeWhitespace(input.value);
-            });
-        });
     </script>
 
 
