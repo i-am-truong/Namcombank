@@ -4,7 +4,7 @@ package model;
  *
  * @author admin
  */
-public class Feedback {
+public class Feedback_id {
 
     private int customer_id;
     private String content;
@@ -12,17 +12,19 @@ public class Feedback {
     private int rating;
     private String feedback_type;
     private byte[] attachment;
+    private int feedback_id;
 
-    public Feedback() {
+    public Feedback_id() {
     }
 
-    public Feedback(int customer_id, String content, String submitted_at, int rating, String feedback_type, byte[] attachment) {
+    public Feedback_id(int customer_id, String content, String submitted_at, int rating, String feedback_type, byte[] attachment, int feedback_id) {
         this.customer_id = customer_id;
         this.content = content;
         this.submitted_at = submitted_at;
         this.rating = rating;
         this.feedback_type = feedback_type;
         this.attachment = attachment;
+        this.feedback_id = feedback_id;
     }
 
     public int getCustomer_id() {
@@ -71,6 +73,14 @@ public class Feedback {
 
     public void setAttachment(byte[] attachment) {
         this.attachment = attachment;
+    }
+
+    public int getFeedback_id() {
+        return feedback_id;
+    }
+
+    public void setFeedback_id(int feedback_id) {
+        this.feedback_id = feedback_id;
     }
 
     @Override

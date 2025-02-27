@@ -63,7 +63,16 @@
 
         <div class="container">
             <h2>Submit Feedback</h2>
-            <form action="addFeedback" method="post">
+            <form action="addFeedback" method="post" enctype="multipart/form-data">
+
+                <div class="form-group">
+                    <label for="feedback_type">Feedback Type:</label><br>
+                    <select id="feedback_type" name="feedback_type" required>
+                        <option value="system" ${param.feedback_type == 'system' ? 'selected' : ''}>Hệ thống</option>
+                        <option value="human" ${param.feedback_type == 'human' ? 'selected' : ''}>Nhân viên</option>
+                    </select>
+
+                </div>
 
                 <div class="form-group">
                     <label for="customer_id"></label>
@@ -72,7 +81,14 @@
 
                 <div class="form-group">
                     <label for="content">Feedback Content:</label><br>
-                    <textarea id="content" name="content" rows="4" cols="50"></textarea><br>
+                    <textarea id="content" name="content" rows="4" cols="50">${param.content}</textarea><br>
+
+                    <c:if test="${not empty errorContent}">
+                        <p style="color: red;">${errorContent}</p>
+                    </c:if>
+                    <c:if test="${not empty errorContent2}">
+                        <p style="color: red;">${errorContent2}</p>
+                    </c:if>
                 </div>
 
                 <div class="form-group">
@@ -84,15 +100,27 @@
                 <div class="form-group">
                     <label for="rating">Rating:</label>
                     <select id="rating" name="rating" required>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                    </select><br>
+                        <option value="1" ${param.rating == '1' ? 'selected' : ''}>1</option>
+                        <option value="2" ${param.rating == '2' ? 'selected' : ''}>2</option>
+                        <option value="3" ${param.rating == '3' ? 'selected' : ''}>3</option>
+                        <option value="4" ${param.rating == '4' ? 'selected' : ''}>4</option>
+                        <option value="5" ${param.rating == '5' ? 'selected' : ''}>5</option>
+                    </select>
                 </div>
+
+                <!-- Mục chọn file -->
+                <div class="form-group">
+                    <label for="attachment">Upload Image (optional):</label>
+                    <input type="file" id="attachment" name="attachment" accept="image/*"><br>
+                    <c:if test="${not empty errorAttachment}">
+                        <p style="color: red;">${errorAttachment}</p>
+                    </c:if>
+
+                </div>
+
                 <button type="submit">Submit Feedback</button>
             </form>
+
             <button onclick="window.location.href = 'viewFeedback'" style="padding: 10px 20px; background-color: #6c757d; color: white; border: none; border-radius: 5px; cursor: pointer;">
                 Back
             </button>   
