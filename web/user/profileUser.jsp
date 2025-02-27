@@ -197,6 +197,9 @@
                                     title="Address cannot be just spaces."
                                     value="${sessionScope.customer.address}"
                                     >
+                                <c:if test="${not empty requestScope.errorAddress}">
+                                    <span style="color: red;">${requestScope.errorAddress}</span>
+                                </c:if>
                             </div>
 
                             <div class="col-md-9">
@@ -238,6 +241,9 @@
                                 <div id="dob-error" style="color: red; display: none;">
                                     Date of Birth cannot be in the future.
                                 </div>
+                                <c:if test="${not empty requestScope.errorDob}">
+                                    <span style="color: red;">${requestScope.errorDob}</span>
+                                </c:if>
                             </div>
 
 

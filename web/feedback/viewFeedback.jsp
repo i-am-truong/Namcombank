@@ -68,7 +68,7 @@
             </button>
         </div>
 
-        <form action="viewFeedback" method="post">
+        <form action="viewFeedback" method="post" onsubmit="return confirmSubmit()">
             <label for="rating">Lọc theo đánh giá:</label>
             <select name="rating" id="rating" onchange="this.form.submit()">
                 <option value="" ${empty param.rating ? 'selected' : ''}>Tất cả</option>
@@ -78,19 +78,7 @@
                 <option value="4" ${param.rating == '4' ? 'selected' : ''}>4 Sao</option>
                 <option value="5" ${param.rating == '5' ? 'selected' : ''}>5 Sao</option>
             </select>
-
-            <label for="feedback_type">Lọc theo loại phản hồi:</label>
-            <select name="feedback_type" id="feedback_type" onchange="this.form.submit()">
-                <option value="" ${empty param.feedback_type ? 'selected' : ''}>Tất cả</option>
-                <option value="system" ${param.feedback_type == 'system' ? 'selected' : ''}>Hệ thống</option>
-                <option value="human" ${param.feedback_type == 'human' ? 'selected' : ''}>Nhân viên</option>
-            </select>
-
-            <label for="content_search">Tìm theo mô tả:</label>
-            <input type="text" name="content_search" id="content_search" value="${param.content_search}" placeholder="Mô tả">
-            <button type="submit">Tìm kiếm</button>
         </form>
-
 
         <table>
             <tr>
@@ -98,8 +86,6 @@
                 <th>Rating</th>
                 <th>Content</th>
                 <th>Submitted At</th>
-                <th>Type</th>
-                <th>Hình ảnh</th>
 
             </tr>
             <c:forEach var="feedback" items="${listPaging}">
@@ -108,21 +94,14 @@
                     <td>${feedback.rating} Sao</td>
                     <td>${feedback.content}</td>
                     <td>${feedback.submitted_at}</td>
-                    <td>${feedback.feedback_type}</td>
-                    <td>
-                        <c:if test="${not empty feedback.attachment}">
-                            <img src="ImageServlet?rating=${feedback.rating}&content=${feedback.content}&submitted_at=${feedback.submitted_at}&feedback_type=${feedback.feedback_type}" alt="Feedback Image" width="200">
-                        </c:if>
-                    </td>
 
                 </tr>
             </c:forEach>
         </table>
 
-        <c:forEach begin="1" end="${endPage}" var="i">
-            <a href="viewFeedback?index=${i}&rating=${selectedRating}&feedback_type=${feedback_type_selected}&content_search=${content_search_selected}">${i}</a>
+        <c:forEach begin="1" end="${endP}" var="i">
+            <a href="viewFeedback?index=${i}&rating=${selectedRating}">${i}</a>
         </c:forEach>
-        <p>DEBUG: rating = ${selectedRating}, type = ${feedback_type_selected}, search=${content_search_selected}</p>
 
     </body>
     <div style="position: absolute; top: 20px; right: 20px;">

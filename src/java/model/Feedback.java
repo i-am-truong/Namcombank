@@ -1,4 +1,9 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package model;
+
 
 /**
  *
@@ -10,19 +15,15 @@ public class Feedback {
     private String content;
     private String submitted_at;
     private int rating;
-    private String feedback_type;
-    private byte[] attachment;
 
     public Feedback() {
     }
 
-    public Feedback(int customer_id, String content, String submitted_at, int rating, String feedback_type, byte[] attachment) {
+    public Feedback(int customer_id, String content, String submitted_at, int rating) {
         this.customer_id = customer_id;
         this.content = content;
         this.submitted_at = submitted_at;
         this.rating = rating;
-        this.feedback_type = feedback_type;
-        this.attachment = attachment;
     }
 
     public int getCustomer_id() {
@@ -57,25 +58,9 @@ public class Feedback {
         this.rating = rating;
     }
 
-    public String getFeedback_type() {
-        return feedback_type;
-    }
-
-    public void setFeedback_type(String feedback_type) {
-        this.feedback_type = feedback_type;
-    }
-
-    public byte[] getAttachment() {
-        return attachment;
-    }
-
-    public void setAttachment(byte[] attachment) {
-        this.attachment = attachment;
-    }
-
     @Override
     public String toString() {
-        return "Feedback{" + "customer_id=" + customer_id + ", content=" + content + ", submitted_at=" + submitted_at + ", rating=" + rating + ", feedback_type=" + feedback_type + ", attachment=" + attachment + '}';
+        return "Feedback{" + "customer_id=" + customer_id + ", content=" + content + ", submitted_at=" + submitted_at + ", rating=" + rating + '}';
     }
 
 }
