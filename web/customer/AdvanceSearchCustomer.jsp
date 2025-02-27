@@ -327,13 +327,13 @@
                                         <c:when test="${empty customer.avatar}">
                                             <c:choose>
                                                 <c:when test="${customer.gender == 1}">
-                                                    <img src="${pageContext.request.contextPath}/assets/img/profile/Male.jpg"
+                                                    <img src="${pageContext.request.contextPath}/assets/img/Male.jpg"
                                                          alt="Male Avatar"
                                                          width="120"
                                                          height="150">
                                                 </c:when>
                                                 <c:when test="${customer.gender == 0}">
-                                                    <img src="${pageContext.request.contextPath}/assets/img/profile/Female.jpg"
+                                                    <img src="${pageContext.request.contextPath}/assets/img/Female.jpg"
                                                          alt="Female Avatar"
                                                          width="120"
                                                          height="150">

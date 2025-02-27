@@ -107,11 +107,22 @@
                                         <div class="form-floating mb-3 text-center">
                                             <c:choose>
                                                 <c:when test="${empty customer.avatar}">
-                                                    <img src="${pageContext.request.contextPath}/assets/img/profile/default-avatar.png"
-                                                         alt="Default Avatar"
-                                                         width="120"
-                                                         height="150"
-                                                         style="object-fit: cover;">
+                                                    <c:choose>
+                                                        <c:when test="${customer.gender == 1}">
+                                                            <img src="${pageContext.request.contextPath}/assets/img/Male.jpg"
+                                                                 alt="Male Avatar"
+                                                                 width="120"
+                                                                 height="150"
+                                                                 style="object-fit: cover;">
+                                                        </c:when>
+                                                        <c:when test="${customer.gender == 0}">
+                                                            <img src="${pageContext.request.contextPath}/assets/img/Female.jpg"
+                                                                 alt="Female Avatar"
+                                                                 width="120"
+                                                                 height="150"
+                                                                 style="object-fit: cover;">
+                                                        </c:when>
+                                                    </c:choose>
                                                 </c:when>
                                                 <c:otherwise>
                                                     <img src="${pageContext.request.contextPath}/${customer.avatar}"
