@@ -472,6 +472,23 @@ public class CustomerDAO extends DBContext {
         }
         return false; // Mặc định trả về false nếu có lỗi hoặc không tìm thấy trùng
     }
+    
+    public boolean isEmailExist(String email, int customerId) {
+        String sql = "SELECT COUNT(*) FROM Customer WHERE [email] = ? AND customer_id <> ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, email);
+            ps.setInt(2, customerId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1) > 0; // Nếu COUNT > 0, email đã tồn tại
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false; // Mặc định trả về false nếu có lỗi hoặc không tìm thấy trùng
+    }
 
     public boolean checkUsername(String username, String email, String phonenumber) {
         String sql = "SELECT [username] FROM Customer WHERE [username] = ? or [email] = ? or [phonenumber] = ?";
