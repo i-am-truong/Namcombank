@@ -100,7 +100,7 @@
                     <div class="col-lg-6 offset-lg-3">
                         <div class="login-register-form-full">
 
-                            <form id="registerForm" action="addCustomer" method="post" onsubmit="return normalizeFormFields()">
+                            <form id="registerForm" action="addCustomer" method="post">
                                 <div class="row gy-3 overflow-hidden">
                                     <div class="col-12">
                                         <div class="form-floating mb-3">
@@ -190,35 +190,6 @@
     <script src="assets/js/jquery-3.5.1.min.js"></script>
     <script src="assets/js/bootstrap.min.js"></script>
     <script src="assets/js/script.js"></script>
-
-    <script>
-        function normalizeWhitespace(str) {
-            let trimmed = str.trim();
-            return trimmed.replace(/\s+/g, ' ');
-        }
-
-        function normalizeFormFields() {
-            let inputs = document.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"], input[type="address"]');
-
-            inputs.forEach(function(input) {
-                input.value = normalizeWhitespace(input.value);
-            });
-
-            return true;
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            let inputs = document.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"], input[type="address"]');
-
-            inputs.forEach(function(input) {
-                input.addEventListener('blur', function() {
-                    this.value = normalizeWhitespace(this.value);
-                });
-
-                input.value = normalizeWhitespace(input.value);
-            });
-        });
-    </script>
 
 
 </body>

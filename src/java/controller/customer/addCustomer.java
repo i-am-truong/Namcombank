@@ -4,7 +4,6 @@
  */
 package controller.customer;
 
-import Utils.SearchUtils;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -64,22 +63,6 @@ public class addCustomer extends BaseRBACControlller {
         return "Short description";
     }// </editor-fold>
 
-    private String normalizeWhitespace(String input) {
-        if (input == null) {
-            return "";
-        }
-        // First trim the string
-        String trimmed = input.trim();
-        // Then replace multiple consecutive spaces with a single space
-        return trimmed.replaceAll("\\s+", " ");
-    }
-
-    private boolean hasMinimumWords(String text, int minWords) {
-        if (text == null || text.trim().isEmpty()) return false;
-        String[] words = text.trim().split("\\s+");
-        return words.length >= minWords;
-    }
-
     @Override
     protected void doAuthorizedPost(HttpServletRequest request, HttpServletResponse response, Staff account) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
@@ -90,29 +73,25 @@ public class addCustomer extends BaseRBACControlller {
 
         // Only validate if form was actually submitted
         if (request.getParameter("fullnameC") != null) {
-            String fullname = normalizeWhitespace(request.getParameter("fullnameC"));
+            String fullname = request.getParameter("fullnameC").trim();
             String phonenumber = request.getParameter("phonenumberC").trim();
-            String email = normalizeWhitespace(request.getParameter("emailC"));
-            String address = normalizeWhitespace(request.getParameter("addressC"));
-            int gender = Integer.parseInt(request.getParameter("genderC"));
-
-            fullname = SearchUtils.preprocessFullname(fullname);
-            address = SearchUtils.preprocessFullname(address);
+            String email = request.getParameter("emailC").trim();
+            String address = request.getParameter("addressC").trim();
+            String defaultPassword = cdao.generateRandomPassword();
+            int gender = Integer.parseInt(request.getParameter("genderC"));  // Lấy giá trị gender từ form
             // Validation patterns
-            String regexFullName = "^[\\p{L}][\\p{L}\\s]+(\\s[\\p{L}][\\p{L}\\s]+)+$";
+            String regexFullName = "^[A-Z][a-z]+(\\s[A-Z][a-z]+)+$";
             String regexEmail = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
             String regexPhoneNumber = "^(09|03|08|07|05)\\d{8}$";
 
             // Validate each field
             StringBuilder errorMessage = new StringBuilder();
 
-            // Fullname validation - thêm kiểm tra số từ tối thiểu
+            // Fullname validation
             if (fullname.isEmpty()) {
                 errorMessage.append("Full name is required.<br>");
-            } else if (!hasMinimumWords(fullname, 2)) {
-                errorMessage.append("Full name must contain at least 2 words.<br>");
             } else if (!fullname.matches(regexFullName)) {
-                errorMessage.append("Full name must start with letters.<br>");
+                errorMessage.append("Full name must start with uppercase letters and contain at least two words.<br>");
             }
 
             // Email validation
@@ -136,7 +115,7 @@ public class addCustomer extends BaseRBACControlller {
                 errorMessage.append("Phone number must start with 09, 03, 08, 07, or 05 and have 10 digits.<br>");
             }
 
-            // Address validation - thêm kiểm tra độ dài
+            // Address validation
             if (address.isEmpty()) {
                 errorMessage.append("Address is required.<br>");
             } else if (address.length() < 10 || address.length() > 200) {
@@ -159,7 +138,7 @@ public class addCustomer extends BaseRBACControlller {
             if (cd.checkCustomerAdded(email, phonenumber)) {
                 try {
                     // Generate a random password
-                    String plainPassword = cdao.generateRandomPassword();
+                    String plainPassword = CustomerDAO.generateRandomPassword();
                     // Hash it once here
                     String hashedPassword = cd.toSHA1(plainPassword);
 
