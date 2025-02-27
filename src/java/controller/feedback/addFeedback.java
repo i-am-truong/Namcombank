@@ -104,7 +104,7 @@ public class addFeedback extends HttpServlet {
 
             if (content == null || content.trim().isEmpty()) {
                 if (rating < 5) {
-                    request.setAttribute("errorContent", "Please give your feedback ratings below 5.");
+                    request.setAttribute("errorContent", "Please give your feedback if ratings below 5.");
                     request.getRequestDispatcher("feedback/feedback-create.jsp").forward(request, response);
                     return;
                 }
@@ -118,7 +118,7 @@ public class addFeedback extends HttpServlet {
             }
 
             if (rating < 5 && (attachment == null || attachment.length == 0)) {
-                request.setAttribute("errorAttachment", "Attachment is required for ratings below 5.");
+                request.setAttribute("errorAttachment", "Please upload photo/picture for ratings below 5.");
                 request.setAttribute("content", content);
                 request.setAttribute("feedback_type", feedback_type);
                 request.setAttribute("rating", rating);
