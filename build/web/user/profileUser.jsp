@@ -107,17 +107,16 @@
                         <div class="card">
                             <div class="card-body">
                                 <div class="d-flex flex-column align-items-center text-center">
-                                    <c:if test="${not empty sessionScope.customerAvatar}">
-                                        <img src="${sessionScope.customerAvatar}?t=${pageContext.request.time}" 
-                                             alt="Avatar" 
-                                             class="rounded-circle p-1 bg-primary" 
-                                             width="110">
+                                    <c:if test="${not empty sessionScope.customer.avatar}">
+                                        <img src="${pageContext.request.contextPath}/${sessionScope.customer.avatar}" id="avatarImage"
+                                             alt="User Avatar" class="rounded-circle"
+                                             style="width: 150px; height: 150px; object-fit: cover;">
                                     </c:if>
                                     <div class="mt-3">
                                         <h4>${sessionScope.customer.fullname}</h4>
                                         <hr class="my-4">
-                                        <button class="btn btn-primary">Follow</button>
-                                        <button class="btn btn-outline-primary">Message</button>
+                                        <button class="btn btn-danger">Follow</button>
+                                        <button class="btn btn-outline-danger">Message</button>
                                     </div>
                                 </div>
 
@@ -129,7 +128,7 @@
 
 
 
-                        <form id="profile-form" action="userProfile" method="post">
+                        <form id="profile-form" action="userProfile" method="post" enctype="multipart/form-data">
                             <div class="col-md-9">
                                 <label class="labels">Full Name</label>
                                 <input
@@ -237,29 +236,25 @@
                             </div>
 
 
-                            <form class="edit-profile" action="userProfile" method="post" enctype="multipart/form-data">
-                                <div class="col-md-4 text-center">
-                                    <div class="user-profile-thumb" style="width: 150px; height: 150px;">
-                                        <img src="${sessionScope.customer.avatar}" id="avatarImage" alt="User Avatar" class="rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
-                                    </div>
-                                    <!-- Chỉnh sửa nút Choose File -->
-                                    <div class="custom-file">
-                                        <input type="file" class="custom-file-input" id="avatarInput" name="avatar" style="display: none;" onchange="updateFileName()">
-                                        <button type="button" class="btn btn-light" onclick="document.getElementById('avatarInput').click()">Choose file</button>
-                                    </div>
+                            <!-- Upload Avatar Section -->
+                            <div class="col-md-4 text-center">
+                                <div class="user-profile-thumb" style="width: 150px; height: 150px;">
+                                    <label class="labels">Avatar</label>
+                                    <img src="${pageContext.request.contextPath}/${sessionScope.customer.avatar}" id="avatarImage"
+                                             alt="User Avatar" class="rounded-circle"
+                                             style="width: 120px; height: 120px; object-fit: cover;">
                                 </div>
-                            </form>
 
+                                <div class="custom-file mt-2">
+                                    <input type="file" class="custom-file" id="avatarInput" name="avatar"
+                                           style="display: none;" onchange="previewAvatar(event)">
+                                    <button type="button" class="btn btn-dark mt-2" 
+                                            onclick="document.getElementById('avatarInput').click()">
+                                        Choose file
+                                    </button>
+                                </div>
 
-
-                            <!-- Hiển thị ảnh đại diện -->
-                            <c:if test="${not empty sessionScope.customerAvatar}">
-                                <img src="${sessionScope.customerAvatar}?t=${pageContext.request.time}" 
-                                     alt="Avatar" 
-                                     class="rounded-circle p-1 bg-primary" 
-                                     width="110">
-                            </c:if>
-
+                            </div>
 
                             <div class="mt-3 text-left" style="display: flex; justify-content: flex-start; align-items: center;">
                                 <button class="btn btn-primary profile-button" type="submit" style="margin-right: 10px;">Save Profile</button>
@@ -323,6 +318,23 @@
         </script>
 
         <script>
+            function previewAvatar(event) {
+                const input = event.target;
+                if (input.files && input.files[0]) {
+                    const reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        document.getElementById("avatarImage").src = e.target.result; // Cập nhật ảnh preview
+                    };
+
+                    reader.readAsDataURL(input.files[0]); // Đọc ảnh mới
+                }
+            }
+
+
+        </script>
+
+        <script>
             // JavaScript để thay đổi ảnh đại diện ngay khi người dùng chọn ảnh mới
             const avatarInput = document.getElementById('avatarInput');
             const avatarImage = document.getElementById('avatarImage');
@@ -338,52 +350,6 @@
                 }
             });
         </script>
-
-        <script>
-            var originalAvatar = $("#avatarImage").attr("src");
-
-            $(".edit-profile").on("reset", function () {
-                setTimeout(function () {
-                    $("#avatarImage").attr("src", originalAvatar);
-                    $("#avatarInput").val("");
-                }, 10);
-            });
-        </script>
-
-        <script>
-            $(document).ready(function () {
-                $(".edit-profile").submit(function (event) {
-                    event.preventDefault();
-
-                    var formData = new FormData(this);
-
-                    $.ajax({
-                        url: "ajax-profile",
-                        type: "POST",
-                        data: formData,
-                        processData: false,
-                        contentType: false,
-                        success: function (response) {
-                            alert("Profile updated successfully!");
-
-                            if (formData.get("avatar").name) {
-                                const reader = new FileReader();
-                                reader.onload = function (e) {
-                                    $("#userAvatar").attr("src", e.target.result);
-                                };
-                                reader.readAsDataURL(formData.get("avatar"));
-                            }
-                        },
-                        error: function (xhr, status, error) {
-                            alert("Update failed: " + xhr.responseText);
-                        }
-                    });
-                });
-            });
-        </script>
-
-
-
 
 
         <!-- Js File -->
