@@ -101,7 +101,7 @@
                     </tbody>
                 </table>
                 <div class="text-center mt-3">
-                    <button onclick="window.location.href = 'managerUser'" class="btn btn-secondary">Quay lại</button>
+                    <button onclick="window.location.href = 'staffFilter'" class="btn btn-secondary">Quay lại</button>
                 </div>
                 <div class="text-center mt-3">
                     <c:forEach begin="1" end="${endPage}" var="i">
