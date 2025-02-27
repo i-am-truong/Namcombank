@@ -35,7 +35,6 @@ public class LoginController extends HttpServlet {
         // Gọi hàm getRoles và nhận kết quả
         ArrayList<Role> roles = dbContext.getRoles(param_user);
         if (account != null) {
-            String fullname = account.getFullname();
             // Lưu tài khoản vào session
             req.getSession().setAttribute("account", account);
             boolean hasValidRole = false;

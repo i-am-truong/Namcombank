@@ -22,12 +22,8 @@ public class SearchUtils {
     // Loại bỏ dấu tiếng Việt (nếu có)
     public static String removeAccents(String input) {
         if(input==null) return "";
-        return input;
-    }
-
-    public static String normalizeNameString(String input) {
-        if(input==null) return "";
-        return input.trim().replaceAll("\\s+", " ");
+        return java.text.Normalizer.normalize(input, java.text.Normalizer.Form.NFD)
+                .replaceAll("\\p{M}", "");
     }
 
     // Chuẩn hóa trước khi tìm kiếm
@@ -39,12 +35,7 @@ public class SearchUtils {
         if(query==null) return "";
         return removeAccents(normalizeString2(query));
     }
-
-    public static String preprocessFullname(String query) {
-        if(query==null) return "";
-        return removeAccents(normalizeNameString(query));
-    }
-
+    
     //Advance, kho su dung
     public static int levenshteinDistance(String s1, String s2) {
         int[][] dp = new int[s1.length() + 1][s2.length() + 1];
@@ -127,7 +118,7 @@ public class SearchUtils {
     public static boolean islevenshteinDistanceSimilar(String input, String target, int threshold) {
         return levenshteinDistance(input.toLowerCase(), target.toLowerCase()) <= threshold ;
     }
-
+    
     public static boolean isSimilar(String input, String target) {
         return isPhoneticallySimilar(input, target)||islevenshteinDistanceSimilar(input, target, 1);
     }
