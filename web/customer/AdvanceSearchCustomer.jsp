@@ -322,7 +322,32 @@
                             <tr class="${status.index % 2 == 0 ? 'table-success' : ''}">
                                 <td><a href="viewCustomer?customerId=${customer.customerId}">${status.index+1+(pagination.currentPage-1)*pagination.pageSize}</a></td>
                                 <td>${customer.fullname}</td>
-                                <td>${customer.avatar}</td>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${empty customer.avatar}">
+                                            <c:choose>
+                                                <c:when test="${customer.gender == 1}">
+                                                    <img src="${pageContext.request.contextPath}/assets/img/Male.jpg"
+                                                         alt="Male Avatar"
+                                                         width="120"
+                                                         height="150">
+                                                </c:when>
+                                                <c:when test="${customer.gender == 0}">
+                                                    <img src="${pageContext.request.contextPath}/assets/img/Female.jpg"
+                                                         alt="Female Avatar"
+                                                         width="120"
+                                                         height="150">
+                                                </c:when>
+                                            </c:choose>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <img src="${pageContext.request.contextPath}/${customer.avatar}"
+                                                 alt="${customer.fullname}'s avatar"
+                                                 width="120"
+                                                 height="150">
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
                                 <td>
                                     <c:choose>
                                         <c:when test="${customer.gender == 0}">

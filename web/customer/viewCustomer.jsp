@@ -105,7 +105,33 @@
                                     <input type="hidden" name="customerId" value="${customer.customerId}">
                                     <div class="col-12">
                                         <div class="form-floating mb-3 text-center">
-                                            <img src="${customer.avatar}" alt="Customer Avatar" class="img-fluid" style="width: 150px; height: 150px; object-fit: cover;">
+                                            <c:choose>
+                                                <c:when test="${empty customer.avatar}">
+                                                    <c:choose>
+                                                        <c:when test="${customer.gender == 1}">
+                                                            <img src="${pageContext.request.contextPath}/assets/img/Male.jpg"
+                                                                 alt="Male Avatar"
+                                                                 width="120"
+                                                                 height="150"
+                                                                 style="object-fit: cover;">
+                                                        </c:when>
+                                                        <c:when test="${customer.gender == 0}">
+                                                            <img src="${pageContext.request.contextPath}/assets/img/Female.jpg"
+                                                                 alt="Female Avatar"
+                                                                 width="120"
+                                                                 height="150"
+                                                                 style="object-fit: cover;">
+                                                        </c:when>
+                                                    </c:choose>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <img src="${pageContext.request.contextPath}/${customer.avatar}"
+                                                         alt="${customer.fullname}'s avatar"
+                                                         width="120"
+                                                         height="150"
+                                                         style="object-fit: cover;">
+                                                </c:otherwise>
+                                            </c:choose>
                                         </div>
                                     </div>
                                     <div class="col-12">

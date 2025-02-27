@@ -27,7 +27,25 @@ public class Staff {
     private Department dept;
     private Department did;
     private ArrayList<Role> roles;
+
+    public Staff(int id, String fullname, String username, String password, boolean active, String email, Date dob, boolean gender, String phonenumber, String address, String citizenId, Department dept, Department did, ArrayList<Role> roles) {
+        this.id = id;
+        this.fullname = fullname;
+        this.username = username;
+        this.password = password;
+        this.active = active;
+        this.email = email;
+        this.dob = dob;
+        this.gender = gender;
+        this.phonenumber = phonenumber;
+        this.address = address;
+        this.citizenId = citizenId;
+        this.dept = dept;
+        this.did = did;
+        this.roles = roles;
+    }
   
+    
 
     public ArrayList<Role> getRoles() {
         return roles;

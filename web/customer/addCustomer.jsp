@@ -100,7 +100,7 @@
                     <div class="col-lg-6 offset-lg-3">
                         <div class="login-register-form-full">
 
-                            <form id="registerForm" action="addCustomer" method="post">
+                            <form id="registerForm" action="addCustomer" method="post" onsubmit="return normalizeFormFields()">
                                 <div class="row gy-3 overflow-hidden">
                                     <div class="col-12">
                                         <div class="form-floating mb-3">
@@ -134,7 +134,7 @@
                                             <label for="dob" class="form-label">Date of Birth</label>
                                         </div>
                                     </div>-->
-<!--                                    <div class="col-12">
+                                    <div class="col-12">
                                         <div class="form-floating mb-3">
                                             <select class="form-select" name="genderC" id="gender" required>
                                                 <option value="">Select Gender</option>
@@ -143,7 +143,7 @@
                                             </select>
                                             <label for="gender" class="form-label">Gender</label>
                                         </div>
-                                    </div>-->
+                                    </div>
                                     <div class="col-12">
                                         <div class="form-floating mb-3">
                                             <input type="tel" class="form-control" name="phonenumberC" id="phonenumber"
@@ -190,6 +190,24 @@
     <script src="assets/js/jquery-3.5.1.min.js"></script>
     <script src="assets/js/bootstrap.min.js"></script>
     <script src="assets/js/script.js"></script>
+
+    <script>
+        function normalizeWhitespace(str) {
+            let trimmed = str.trim();
+            return trimmed.replace(/\s+/g, ' ');
+        }
+
+        function normalizeFormFields() {
+            let inputs = document.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"], input[type="address"]');
+
+            inputs.forEach(function(input) {
+                input.value = normalizeWhitespace(input.value);
+            });
+
+            return true;
+        }
+
+    </script>
 
 
 </body>

@@ -95,7 +95,7 @@ public class StaffAccountDBContext extends DBContext<Staff> {
 
         PreparedStatement stm = null;
         try {
-            String sql = "SELECT staff_id, [username],[password] FROM [Staff]\n"
+            String sql = "SELECT staff_id, [fullname], [username],[password] FROM [Staff]\n"
                     + "WHERE [username] = ? AND [password] = ?";
             stm = connection.prepareStatement(sql);
             stm.setNString(1, username);
@@ -104,6 +104,7 @@ public class StaffAccountDBContext extends DBContext<Staff> {
             if (rs.next()) {
                 staff = new Staff();
                 staff.setUsername(username);
+                staff.setFullname(rs.getString("fullname"));
                 staff.setId(rs.getInt("staff_id"));
             }
         } catch (SQLException ex) {
