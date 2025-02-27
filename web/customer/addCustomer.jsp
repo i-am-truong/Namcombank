@@ -100,7 +100,7 @@
                     <div class="col-lg-6 offset-lg-3">
                         <div class="login-register-form-full">
 
-                            <form id="registerForm" action="addCustomer" method="post" onsubmit="return normalizeFormFields()">
+                            <form id="registerForm" action="addCustomer" method="post">
                                 <div class="row gy-3 overflow-hidden">
                                     <div class="col-12">
                                         <div class="form-floating mb-3">

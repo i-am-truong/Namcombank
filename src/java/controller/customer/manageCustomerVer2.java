@@ -38,27 +38,23 @@ public class manageCustomerVer2 extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("roleId") == null || (int) session.getAttribute("roleId") != 1) {
             response.sendRedirect("admin.login");
             return;
         }
-
+        
         List<Customer> errorCustomers = (List<Customer>) session.getAttribute("errorCustomers");
-        String alertImportSuccess = (String) session.getAttribute("alertImportSuccess");
-        String alertImportFail = (String) session.getAttribute("alertImportFail");
-
-        if (alertImportSuccess != null) {
-            request.setAttribute("alertImportSuccess", alertImportSuccess);
-            session.removeAttribute("alertImportSuccess");
-            session.removeAttribute("errorCustomers");
-        } else if (alertImportFail != null) {
-            request.setAttribute("alertImportFail", alertImportFail);
-            session.removeAttribute("alertImportFail");
-            session.removeAttribute("errorCustomers");
+        if(errorCustomers!=null){
+            if (errorCustomers.isEmpty()) {
+                request.setAttribute("alertImportSuccess", "Import Successfully ");
+                  session.removeAttribute("errorCustomers");
+            } else {
+                request.setAttribute("alertImportFail", "Some components can't add.");
+            }
         }
-
+        
         String pageParam = request.getParameter("page");
         String paraSearch = SearchUtils.preprocessSearchQuery(request.getParameter("search"));
         int page = (FormatUtils.tryParseInt(pageParam) != null) ? FormatUtils.tryParseInt(pageParam) : 1;
@@ -69,7 +65,7 @@ public class manageCustomerVer2 extends HttpServlet {
         Integer pageSize;
         pageSize = (FormatUtils.tryParseInt(pageSizeParam) != null) ? FormatUtils.tryParseInt(pageSizeParam) : PAGE_SIZE;
         //--------------------------------------------------------------------------
-
+       
         List<Customer> customers = new ArrayList<>();
         int totalCustomers = paraSearch == null || paraSearch.isBlank() ? cdao.getTotalCustomersPage() : cdao.getTotalSearchCustomers(paraSearch);
         int totalPages = (int) Math.ceil((double) totalCustomers / pageSize);
@@ -99,7 +95,7 @@ public class manageCustomerVer2 extends HttpServlet {
         } else {
             customers = paraSearch == null || paraSearch.isBlank() ? cdao.getCustomersByPage(page, pageSize) : cdao.searchCustomersByPage(paraSearch, page, pageSize);
         }
-
+         
          //Phan trang
         Pagination pagination = new Pagination();
         pagination.setListPageSize(totalCustomers);

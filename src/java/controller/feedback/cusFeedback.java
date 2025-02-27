@@ -14,7 +14,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import model.Feedback;
-import model.Feedback_id;
 
 /**
  *
@@ -70,7 +69,7 @@ public class cusFeedback extends HttpServlet {
         int customer_id = Integer.parseInt(cus_id);
         FeedbackDao dao = new FeedbackDao();
 
-        List<Feedback_id> list = dao.getCusFeedback(customer_id);
+        List<Feedback> list = dao.getCusFeedback(customer_id);
 
         request.setAttribute("list", list);
         request.getRequestDispatcher("feedback/myFeedback.jsp").forward(request, response);
