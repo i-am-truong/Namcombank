@@ -59,12 +59,12 @@
             <span>Manager Customer</span></a>
     </li>-->
 
-    <li class="nav-item active">
+<!--    <li class="nav-item active">
         <a class="nav-link" href="manageCustomer">
             <i class="fas fa-fw fa-table"></i>
             <span>Manage Customer</span>
         </a>
-    </li>
+    </li>-->
     
     <!-- manage contracts -->
     <li class="nav-item active">

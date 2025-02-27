@@ -23,11 +23,12 @@ public class StaffUpdateController extends BaseRBACControlller {
 
     private static final Logger logger = Logger.getLogger(StaffUpdateController.class.getName());
 
-    // Add the same regex patterns as in StaffAddController
+    // Add regex patterns
     private static final Pattern CIC_REGEX = Pattern.compile("^[0-9]{12}$");
     private static final Pattern PHONE_REGEX = Pattern.compile("^0[0-9]{9,10}$");
     private static final Pattern EMAIL_REGEX = Pattern.compile("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
-    private static final Pattern ADDRESS_REGEX = Pattern.compile("^[A-Za-z0-9\\s,.'-]{3,}$");
+    private static final Pattern ADDRESS_REGEX = Pattern.compile("^[\\p{L}0-9\\s,.\\-'/()]{3,}$");
+    private static final Pattern FULLNAME_REGEX = Pattern.compile("^\\p{L}+(?:\\s\\p{L}+)+$");
 
     @Override
     protected void doAuthorizedGet(HttpServletRequest request, HttpServletResponse response, Staff account)
@@ -87,8 +88,8 @@ public class StaffUpdateController extends BaseRBACControlller {
             
             if (raw_id == null || raw_id.trim().isEmpty()) {
                 errorMessage = "Staff ID is missing.";
-            } else if (raw_sname == null || raw_sname.trim().isEmpty()) {
-                errorMessage = "Name cannot be empty.";
+            } else if (raw_sname == null || raw_sname.trim().isEmpty() || !FULLNAME_REGEX.matcher(raw_sname).matches()) {
+                errorMessage = "Fullname must include at least the first and last names, separated by spaces, and contain only valid characters.";
             } else if (raw_dob == null || raw_dob.isEmpty()) {
                 errorMessage = "Date of birth cannot be empty.";
             } else if (raw_phonenumber == null || !PHONE_REGEX.matcher(raw_phonenumber).matches()) {
@@ -97,8 +98,8 @@ public class StaffUpdateController extends BaseRBACControlller {
                 errorMessage = "Invalid email format.";
             } else if (raw_cic == null || !CIC_REGEX.matcher(raw_cic).matches()) {
                 errorMessage = "Citizen Identification must be 12 digits.";
-            } else if (raw_address == null || !ADDRESS_REGEX.matcher(raw_address).matches()) {
-                errorMessage = "Invalid address format.";
+            } else if (raw_address == null || raw_address.trim().isEmpty() || !ADDRESS_REGEX.matcher(raw_address).matches()) {
+                errorMessage = "Invalid address. Must be at least 3 characters and only contain letters, numbers, and allowed special characters.";
             } else {
                 int staffId = Integer.parseInt(raw_id);
                 // Only check for duplicates using the new methods that exclude the current staff
@@ -109,7 +110,6 @@ public class StaffUpdateController extends BaseRBACControlller {
                 } else if (db.isCitizenIDExistsExcept(raw_cic, staffId)) {
                     errorMessage = "Citizen ID already exists.";
                 }
-
             }
 
             // Load departments and roles for potential redisplay
