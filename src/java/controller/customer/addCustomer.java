@@ -18,12 +18,14 @@ import jakarta.servlet.http.HttpSession;
 import java.sql.Date;
 import model.auth.Staff;
 import jakarta.mail.internet.InternetAddress;
+import context.CustomerDAO;
 
 /**
  *
  * @author TQT
  */
 public class addCustomer extends BaseRBACControlller {
+        private final CustomerDAO cdao = new CustomerDAO();
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -75,7 +77,8 @@ public class addCustomer extends BaseRBACControlller {
             String phonenumber = request.getParameter("phonenumberC").trim();
             String email = request.getParameter("emailC").trim();
             String address = request.getParameter("addressC").trim();
-            String defaultPassword = "123456".trim();
+            String defaultPassword = cdao.generateRandomPassword();
+            int gender = Integer.parseInt(request.getParameter("genderC"));  // Lấy giá trị gender từ form
             // Validation patterns
             String regexFullName = "^[A-Z][a-z]+(\\s[A-Z][a-z]+)+$";
             String regexEmail = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
@@ -134,9 +137,14 @@ public class addCustomer extends BaseRBACControlller {
             CustomerDAO cd = new CustomerDAO();
             if (cd.checkCustomerAdded(email, phonenumber)) {
                 try {
-                    String hashedPassword = cd.toSHA1(defaultPassword);
-                    cd.registerCustomer(fullname, email, phonenumber, address, hashedPassword);
-                    request.setAttribute("suc", "Customer account created successfully! Default password is: " + defaultPassword);
+                    // Generate a random password
+                    String plainPassword = CustomerDAO.generateRandomPassword();
+                    // Hash it once here
+                    String hashedPassword = cd.toSHA1(plainPassword);
+
+                    cd.registerCustomer(fullname, email, phonenumber, address, hashedPassword, gender);  // Thêm tham số gender
+                    request.setAttribute("suc", "Customer account created successfully! Default password is: " + plainPassword);
+
                     // Clear form after successful submission
                     request.removeAttribute("fullnameC");
                     request.removeAttribute("emailC");

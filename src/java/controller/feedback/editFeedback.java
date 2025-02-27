@@ -15,6 +15,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 import java.io.InputStream;
+import java.util.List;
+import model.Feedback;
+import model.Feedback_id;
 
 /**
  *
@@ -111,18 +114,49 @@ public class editFeedback extends HttpServlet {
         String content = request.getParameter("content");
         String submitted_at = request.getParameter("submitted_at");
         String feedback_type = request.getParameter("feedback_type");
-
         String ratingStr = request.getParameter("rating");
         int rating = (ratingStr != null && !ratingStr.isEmpty()) ? Integer.parseInt(ratingStr) : 0;
-
-//        int feedback_id = dao.getFeedbackId(content, submitted_at, rating, feedback_type);
         int feedback_id = Integer.parseInt(request.getParameter("feedback_id"));
 
-        if (attachment == null || attachment.length==0) {
-            dao.updateFeedback2(content, submitted_at, rating, feedback_id, feedback_type);
-        } else {
-            dao.updateFeedback(content, submitted_at, rating, feedback_id, feedback_type, attachment);
+        if (rating == 5) {
+            if (!checkContent(content)) {
+                request.setAttribute("errorContent", "Content contains invalid characters.");
+                List<Feedback_id> list = dao.getCusFeedback(customer_id);
+                request.setAttribute("list", list);
+
+                request.getRequestDispatcher("feedback/myFeedback.jsp").forward(request, response);
+                return;
+            }
+            if (attachment == null) {
+                dao.updateFeedback2(content, submitted_at, rating, feedback_id, feedback_type);
+            } else {
+                dao.updateFeedback(content, submitted_at, rating, feedback_id, feedback_type, attachment);
+            }
+        } // Nếu rating < 5, kiểm tra cả content và attachment
+        else {
+            if (content == null || content.trim().isEmpty()) {
+                request.setAttribute("errorContent", "Please enter content for ratings below 5 stars.");
+                List<Feedback_id> list = dao.getCusFeedback(customer_id);
+                request.setAttribute("list", list);
+
+                request.getRequestDispatcher("feedback/myFeedback.jsp").forward(request, response);
+                return;
+            }
+            if (!checkContent(content)) {
+                request.setAttribute("errorContent", "Content contains invalid characters.");
+                List<Feedback_id> list = dao.getCusFeedback(customer_id);
+                request.setAttribute("list", list);
+
+                request.getRequestDispatcher("feedback/myFeedback.jsp").forward(request, response);
+                return;
+            }
+            if (attachment == null) {
+                dao.updateFeedback2(content, submitted_at, rating, feedback_id, feedback_type);
+            } else {
+                dao.updateFeedback(content, submitted_at, rating, feedback_id, feedback_type, attachment);
+            }
         }
+
         response.sendRedirect("cusFeedback?customer_id=" + customer_id);
     }
 
@@ -136,4 +170,12 @@ public class editFeedback extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
+    public boolean checkContent(String content) {
+        return content.matches("^[\\p{L}0-9\\s.,!?]+$");
+    }
+
+    private String formatContent(String content) {
+        content = content.trim().replaceAll("\\s+", " ");
+        return Character.toUpperCase(content.charAt(0)) + content.substring(1);
+    }
 }

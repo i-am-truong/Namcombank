@@ -63,7 +63,7 @@ public class viewCustomerFeedback extends BaseRBACControlller {
             return;
         }
 
-FeedbackDao dao = new FeedbackDao();
+        FeedbackDao dao = new FeedbackDao();
         List<Feedback> list = new ArrayList<>();
         String ratingStr = request.getParameter("rating");
         String typeStr = request.getParameter("feedback_type");
@@ -132,7 +132,7 @@ FeedbackDao dao = new FeedbackDao();
         request.setAttribute("feedback_type_selected", typeStr);
         request.setAttribute("content_search_selected", content_search);
         request.setAttribute("currentPage", index);
-      request.getRequestDispatcher("feedback/viewCustomerFeedback.jsp").forward(request, response);
+        request.getRequestDispatcher("feedback/viewCustomerFeedback.jsp").forward(request, response);
     }
 
     @Override
@@ -143,7 +143,7 @@ FeedbackDao dao = new FeedbackDao();
             return;
         }
 
-FeedbackDao dao = new FeedbackDao();
+        FeedbackDao dao = new FeedbackDao();
         List<Feedback> list = new ArrayList<>();
         String ratingStr = request.getParameter("rating");
         String typeStr = request.getParameter("feedback_type");
@@ -212,9 +212,9 @@ FeedbackDao dao = new FeedbackDao();
         request.setAttribute("feedback_type_selected", typeStr);
         request.setAttribute("content_search_selected", content_search);
         request.setAttribute("currentPage", index);
-      request.getRequestDispatcher("feedback/viewCustomerFeedback.jsp").forward(request, response);
-  
+        request.getRequestDispatcher("feedback/viewCustomerFeedback.jsp").forward(request, response);
 
     }
 
 }
+    

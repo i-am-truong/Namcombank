@@ -105,7 +105,22 @@
                                     <input type="hidden" name="customerId" value="${customer.customerId}">
                                     <div class="col-12">
                                         <div class="form-floating mb-3 text-center">
-                                            <img src="${customer.avatar}" alt="Customer Avatar" class="img-fluid" style="width: 150px; height: 150px; object-fit: cover;">
+                                            <c:choose>
+                                                <c:when test="${empty customer.avatar}">
+                                                    <img src="${pageContext.request.contextPath}/assets/img/profile/default-avatar.png"
+                                                         alt="Default Avatar"
+                                                         width="120"
+                                                         height="150"
+                                                         style="object-fit: cover;">
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <img src="${pageContext.request.contextPath}/${customer.avatar}"
+                                                         alt="${customer.fullname}'s avatar"
+                                                         width="120"
+                                                         height="150"
+                                                         style="object-fit: cover;">
+                                                </c:otherwise>
+                                            </c:choose>
                                         </div>
                                     </div>
                                     <div class="col-12">

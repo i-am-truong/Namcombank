@@ -12,6 +12,7 @@ import jakarta.mail.Transport;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import java.security.MessageDigest;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.logging.Level;
@@ -890,7 +891,15 @@ public class CustomerDAO extends DBContext {
     }
 
     //_____________________________________Register Account______________________________
-    public Customer registerCustomer(String fullname, String email, String phonenumber, String address, String password) {
+
+     public static String generateRandomPassword() {
+        SecureRandom random = new SecureRandom();
+        byte[] password = new byte[12]; // Password length
+        random.nextBytes(password);
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(password); // URL-safe encoding
+    }
+
+    public Customer registerCustomer(String fullname, String email, String phonenumber, String address, String password, int gender) {
         String sql = "INSERT INTO [dbo].[Customer] "
                 + "([fullname], [username], [password], [email], [phonenumber], [address], "
                 + "[active], [balance], [dob], [gender], [avatar], [citizen_identification_card]) "
@@ -900,19 +909,17 @@ public class CustomerDAO extends DBContext {
 
         try (PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             String username = email.substring(0, email.indexOf("@"));
-            String hashedPassword = toSHA1("123456"); // Hash the default password
             Date defaultDob = Date.valueOf("1970-01-01");
-            int defaultGender = 1;
             String defaultCID = "012345678910";
 
             ps.setString(1, fullname);
             ps.setString(2, username);
-            ps.setString(3, hashedPassword); // Store the hashed password
+            ps.setString(3, password);
             ps.setString(4, email);
             ps.setString(5, phonenumber);
             ps.setString(6, address);
             ps.setDate(7, defaultDob);
-            ps.setInt(8, defaultGender);
+            ps.setInt(8, gender);  // Sử dụng giá trị gender được truyền vào
             ps.setString(9, defaultCID);
 
             ps.executeUpdate();
@@ -920,8 +927,8 @@ public class CustomerDAO extends DBContext {
             try (ResultSet rs = ps.getGeneratedKeys()) {
                 if (rs.next()) {
                     int generatedId = rs.getInt(1);
-                    newCustomer = new Customer(generatedId, fullname, username, hashedPassword, 1,
-                            email, defaultDob, defaultGender, phonenumber, 0, defaultCID, address, null);
+                    newCustomer = new Customer(generatedId, fullname, username, password, 1,
+                            email, defaultDob, gender, phonenumber, 0, defaultCID, address, null);
                 }
             }
         } catch (SQLException e) {
@@ -1021,28 +1028,21 @@ public class CustomerDAO extends DBContext {
             throw new IllegalArgumentException("Customer object cannot be null.");
         }
 
-        String sql = "UPDATE [Customer] "
-                + "SET [phonenumber] = ?, "
-                + "[address] = ?, "
-                + "[email] = ?, "
-                + "[citizen_identification_card] = ? "
-                + "WHERE [customer_id] = ?";
+        String sql = "UPDATE Customer SET fullname = ?, phonenumber = ?, email = ?, address = ?, gender = ?, dob = ?, avatar = ? WHERE customer_id = ?";
 
-        try {
-            PreparedStatement stm = connection.prepareStatement(sql);
-            stm.setString(1, customer.getPhonenumber());
-            stm.setString(2, customer.getAddress());
-            stm.setString(3, customer.getEmail());
-            stm.setString(4, customer.getCid());
-            stm.setInt(5, customer.getCustomerId());
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, customer.getFullname());
+            stmt.setString(2, customer.getPhonenumber());
+            stmt.setString(3, customer.getEmail());
+            stmt.setString(4, customer.getAddress());
+            stmt.setInt(5, customer.getGender());
+            stmt.setDate(6, customer.getDob()); // Định dạng yyyy-MM-dd
+            stmt.setString(7, customer.getAvatar()); // Avatar path
+            stmt.setInt(8, customer.getCustomerId());
 
-            int rowsUpdated = stm.executeUpdate();
-            if (rowsUpdated == 0) {
-                throw new SQLException("Update failed, no rows affected.");
-            }
+            stmt.executeUpdate();
         } catch (SQLException e) {
-            System.err.println("SQL error: " + e.getMessage());
-            throw new RuntimeException("Failed to update customer profile", e);
+            e.printStackTrace();
         }
     }
 

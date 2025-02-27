@@ -31,7 +31,7 @@ import model.Customer;
 
 public class userProfile extends HttpServlet {
 
-    private static final String UPLOAD_DIR = "uploads/avatars";
+    private static final String UPLOAD_DIR = "assets/img/profile/";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -139,24 +139,25 @@ public class userProfile extends HttpServlet {
 
         // Xử lý file upload avatar
         Part filePart = request.getPart("avatar");
-        String avatarFileName = null;
+        String avatarFileName = customer.getAvatar(); // Giữ nguyên nếu không có ảnh mới
 
         if (filePart != null && filePart.getSize() > 0) {
-            String uploadPath = getServletContext().getRealPath("") + File.separator + UPLOAD_DIR;
+            // Lấy đường dẫn thư mục lưu ảnh
+            String uploadPath = getServletContext().getRealPath("/") + UPLOAD_DIR;
             File uploadDir = new File(uploadPath);
             if (!uploadDir.exists()) {
-                uploadDir.mkdir();
+                uploadDir.mkdirs(); // Tạo thư mục nếu chưa có
             }
 
             // Lấy tên file gốc
             avatarFileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
             String avatarPath = uploadPath + File.separator + avatarFileName;
 
-            // Lưu file avatar vào thư mục
+            // Lưu file ảnh vào thư mục
             filePart.write(avatarPath);
 
-            // Cập nhật avatar cho customer
-            customer.setAvatar("uploads/avatars/" + avatarFileName);
+            // Cập nhật avatar với đường dẫn hợp lệ
+            customer.setAvatar(UPLOAD_DIR + avatarFileName);
         }
 
         // Cập nhật thông tin khách hàng
