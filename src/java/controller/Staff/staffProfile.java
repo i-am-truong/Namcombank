@@ -130,7 +130,7 @@
 
                 // Kiểm tra số điện thoại đã tồn tại chưa
                 StaffDAO sdao = new StaffDAO();
-                if (sdao.isPhoneNumberExist(phoneNumber, staff.getId())) {
+                if (sdao.isPhoneNumberExist(phoneNumber, staff.getId())) { // Đang bị lỗi chõ này
                     request.setAttribute("existPhoneNumber", "This phone number is already in use!");
                     request.getRequestDispatcher("staff/profileStaff.jsp").forward(request, response);
                     return;
@@ -155,7 +155,7 @@
                 staff.setGender(gender.equalsIgnoreCase("male"));
 
                 // Cập nhật vào database
-                sdao.updateProfile(staff);
+                sdao.updateProfile(staff); // Đang bị lỗi chõ này
 
                 // Cập nhật lại session
                 session.setAttribute("staff", staff);
