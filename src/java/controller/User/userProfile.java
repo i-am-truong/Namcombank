@@ -33,7 +33,7 @@ import model.Customer;
 
 public class userProfile extends HttpServlet {
     
-    private static final String UPLOAD_DIR = "web/assets/img/profile/";
+    private static final String UPLOAD_DIR = "assets/img/profile/";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -160,7 +160,7 @@ public class userProfile extends HttpServlet {
         // Xử lý file upload avatar
         Part filePart = request.getPart("avatar");
 
-// Kiểm tra nếu người dùng có tải ảnh mới
+        // Kiểm tra nếu người dùng có tải ảnh mới
         if (filePart != null && filePart.getSize() > 0) {
             String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
 
