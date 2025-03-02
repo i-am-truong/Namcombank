@@ -18,13 +18,23 @@ public class SearchUtils {
         if(input==null) return "";
         return input.trim().replaceAll("\\s+", "").toLowerCase();
     }
+    
+     public static String normalizeNameString(String input) {
+        if(input==null) return "";
+        return input.trim().replaceAll("\\s+", " ");
+    }
 
     // Loại bỏ dấu tiếng Việt (nếu có)
     public static String removeAccents(String input) {
         if(input==null) return "";
-        return java.text.Normalizer.normalize(input, java.text.Normalizer.Form.NFD)
-                .replaceAll("\\p{M}", "");
+        return input;
     }
+    
+     public static String preprocessFullname(String query) {
+        if(query==null) return "";
+        return removeAccents(normalizeNameString(query));
+    }
+
 
     // Chuẩn hóa trước khi tìm kiếm
     public static String preprocessSearchQuery(String query) {

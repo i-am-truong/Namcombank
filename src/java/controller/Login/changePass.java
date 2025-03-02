@@ -88,7 +88,7 @@ public class changePass extends HttpServlet {
             cd.changePass(sname, newPass);
             customer.setPassword(newPass);
             session.setAttribute("customer", customer);
-            request.setAttribute("err", "change password successfully!");
+            request.setAttribute("err", "Change password successfully!");
             request.getRequestDispatcher("login/changePass.jsp").forward(request, response);
 
         }

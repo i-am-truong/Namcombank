@@ -75,22 +75,16 @@
                 <th>Hinh Anh</th>
                 <th>Actions</th>
             </tr>
-            <c:if test="${not empty errorContent}">
-                <p style="color: red;">${errorContent}</p>
-            </c:if>
-            <c:if test="${not empty errorAttachment}">
-                <p style="color: red;">${errorAttachment}</p>
-            </c:if>
             <c:forEach var="feedback" items="${list}">
                 <form action="editFeedback" method="post" enctype="multipart/form-data">
                     <tr>
                     <input type="hidden" name="feedback_id" value="${feedback.feedback_id}">
 
                     <td>
-                        <input type="number" name="rating" value="${feedback.rating}" min="1" max="5">
+                        <input type="number" name="rating" value="${feedback.rating}" min="1" max="5" required>
                     </td>
                     <td>
-                        <input type="text" name="content" value="${feedback.content}">
+                        <input type="text" name="content" value="${feedback.content}" >
                     </td>
                     <td>
                         <input type="text" name="submitted_at" value="${feedback.submitted_at}" readonly>

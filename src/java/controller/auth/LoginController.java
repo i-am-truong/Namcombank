@@ -5,6 +5,7 @@
 package controller.auth;
 
 import context.StaffAccountDBContext;
+import context.StaffDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -59,6 +60,7 @@ public class LoginController extends HttpServlet {
             }
             req.getSession().setAttribute("roleId", roleId);
             req.getSession().setAttribute("staffRole", staffRole);
+            req.getSession().setAttribute("account", account);
             if (!hasValidRole) {
                 resp.sendRedirect("403.html");
             }

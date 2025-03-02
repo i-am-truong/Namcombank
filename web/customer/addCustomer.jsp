@@ -100,7 +100,7 @@
                     <div class="col-lg-6 offset-lg-3">
                         <div class="login-register-form-full">
 
-                            <form id="registerForm" action="addCustomer" method="post">
+                            <form id="registerForm" action="addCustomer" method="post" onsubmit="return normalizeFormFields()">
                                 <div class="row gy-3 overflow-hidden">
                                     <div class="col-12">
                                         <div class="form-floating mb-3">
@@ -110,30 +110,30 @@
                                             <label for="fullname" class="form-label">Full Name</label>
                                         </div>
                                     </div>
-<!--                                    <div class="col-12">
-                                        <div class="form-floating mb-3">
-                                            <input type="text" class="form-control" name="usernameC" id="username" placeholder="Username" value="${param.usernameC != null ? param.usernameC : ''}" >
-                                            <label for="username" class="form-label">Username</label>
-                                        </div>
-                                    </div>-->
-<!--                                    <div class="col-12">
-                                        <div class="form-floating mb-3">
-                                            <input type="password" class="form-control" name="passwordC" id="password" placeholder="Password" value="${param.passwordC != null ? param.passwordC : ''}" >
-                                            <label for="password" class="form-label">Password</label>
-                                        </div>
-                                    </div>-->
+                                    <!--                                    <div class="col-12">
+                                                                            <div class="form-floating mb-3">
+                                                                                <input type="text" class="form-control" name="usernameC" id="username" placeholder="Username" value="${param.usernameC != null ? param.usernameC : ''}" >
+                                                                                <label for="username" class="form-label">Username</label>
+                                                                            </div>
+                                                                        </div>-->
+                                    <!--                                    <div class="col-12">
+                                                                            <div class="form-floating mb-3">
+                                                                                <input type="password" class="form-control" name="passwordC" id="password" placeholder="Password" value="${param.passwordC != null ? param.passwordC : ''}" >
+                                                                                <label for="password" class="form-label">Password</label>
+                                                                            </div>
+                                                                        </div>-->
                                     <div class="col-12">
                                         <div class="form-floating mb-3">
                                             <input type="email" class="form-control" name="emailC" id="email" placeholder="name@example.com" value="${param.emailC != null ? param.emailC : ''}" required pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" title="Enter a valid email.">
                                             <label for="email" class="form-label">Email</label>
                                         </div>
                                     </div>
-<!--                                    <div class="col-12">
-                                        <div class="form-floating mb-3">
-                                            <input type="date" class="form-control" name="dobC" id="dob" placeholder="Date of Birth" >
-                                            <label for="dob" class="form-label">Date of Birth</label>
-                                        </div>
-                                    </div>-->
+                                    <!--                                    <div class="col-12">
+                                                                            <div class="form-floating mb-3">
+                                                                                <input type="date" class="form-control" name="dobC" id="dob" placeholder="Date of Birth" >
+                                                                                <label for="dob" class="form-label">Date of Birth</label>
+                                                                            </div>
+                                                                        </div>-->
                                     <div class="col-12">
                                         <div class="form-floating mb-3">
                                             <select class="form-select" name="genderC" id="gender" required>
@@ -158,13 +158,13 @@
                                             <label for="address" class="form-label">Address</label>
                                         </div>
                                     </div>
-<!--                                    <div class="col-12">
-                                        <div class="form-floating mb-3">
-                                            <input type="text" class="form-control" name="cicC" id="citizenID" placeholder="Citizen Identification Card"
-                                                   value="${param.cicC != null ? param.cicC : ''}" required pattern="^0\d{11}$"  title="Citizen ID must be exactly 12 digits and start with 0" maxlength="12">
-                                            <label for="citizenID" class="form-label">Citizen Identification Card</label>
-                                        </div>
-                                    </div>-->
+                                    <!--                                    <div class="col-12">
+                                                                            <div class="form-floating mb-3">
+                                                                                <input type="text" class="form-control" name="cicC" id="citizenID" placeholder="Citizen Identification Card"
+                                                                                       value="${param.cicC != null ? param.cicC : ''}" required pattern="^0\d{11}$"  title="Citizen ID must be exactly 12 digits and start with 0" maxlength="12">
+                                                                                <label for="citizenID" class="form-label">Citizen Identification Card</label>
+                                                                            </div>
+                                                                        </div>-->
                                     <div class="col-12">
                                         <div class="d-grid">
                                             <button class="btn btn-success btn-lg" id="resetBtn" type="submit">Create New Customer</button>
@@ -191,6 +191,23 @@
     <script src="assets/js/bootstrap.min.js"></script>
     <script src="assets/js/script.js"></script>
 
+    <script>
+
+                                function normalizeWhitespace(str) {
+                                    return str.trim().replace(/\s+/g, ' ');
+                                }
+
+                                function normalizeFormFields() {
+                                    let inputs = document.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"], input[type="address"]');
+
+                                    inputs.forEach(function (input) {
+                                        input.value = normalizeWhitespace(input.value);
+                                    });
+
+                                    return true; // Đảm bảo form vẫn gửi đi
+                                }
+
+    </script>
 
 </body>
 </html>

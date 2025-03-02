@@ -80,7 +80,7 @@ public class CustomerDAO extends DBContext {
                 customer.setPhonenumber(rs.getString("phonenumber"));
                 customer.setBalance(rs.getFloat("balance"));
                 customer.setCid(rs.getString("cid"));
-                customer.setAvatar(rs.getString("avatar"));
+                customer.setAvatar(rs.getString("avatar")); // Avatar vẫn được lấy từ DB
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -466,6 +466,23 @@ public class CustomerDAO extends DBContext {
 
             if (rs.next()) {
                 return rs.getInt(1) > 0; // Nếu COUNT > 0, số điện thoại đã tồn tại
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false; // Mặc định trả về false nếu có lỗi hoặc không tìm thấy trùng
+    }
+
+    public boolean isEmailExist(String email, int customerId) {
+        String sql = "SELECT COUNT(*) FROM Customer WHERE [email] = ? AND customer_id <> ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, email);
+            ps.setInt(2, customerId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1) > 0; // Nếu COUNT > 0, email đã tồn tại
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -891,8 +908,7 @@ public class CustomerDAO extends DBContext {
     }
 
     //_____________________________________Register Account______________________________
-
-     public static String generateRandomPassword() {
+    public static String generateRandomPassword() {
         SecureRandom random = new SecureRandom();
         byte[] password = new byte[12]; // Password length
         random.nextBytes(password);

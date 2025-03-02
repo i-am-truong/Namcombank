@@ -17,6 +17,8 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 import java.io.PrintWriter;
 import java.sql.Date;
+import java.time.LocalDate;
+import java.time.Period;
 import model.Customer;
 
 /**
@@ -30,7 +32,7 @@ import model.Customer;
 )
 
 public class userProfile extends HttpServlet {
-
+    
     private static final String UPLOAD_DIR = "assets/img/profile/";
 
     /**
@@ -79,7 +81,7 @@ public class userProfile extends HttpServlet {
         } else {
             request.getRequestDispatcher("user/profileUser.jsp").forward(request, response);
         }
-
+        
     }
 
     /**
@@ -95,12 +97,12 @@ public class userProfile extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         Customer customer = (Customer) session.getAttribute("customer");
-
+        
         if (customer == null) {
             response.sendRedirect("login");
             return;
         }
-
+        
         String errorPhoneNumber = "Please enter the first letter is 09 or 03!";
         String errorName = "Please enter only letters!";
 
@@ -114,7 +116,7 @@ public class userProfile extends HttpServlet {
 
         // Kiểm tra hợp lệ tên
         if (!checkName(fullNameStr)) {
-            request.setAttribute("errorName", errorName);
+            request.setAttribute("errorName", "Invalid name!");
             request.getRequestDispatcher("user/profileUser.jsp").forward(request, response);
             return;
         }
@@ -135,29 +137,63 @@ public class userProfile extends HttpServlet {
             request.setAttribute("existPhoneNumber", "This phone number is already in use!");
             request.getRequestDispatcher("user/profileUser.jsp").forward(request, response);
             return;
+        } else if (cdao.isEmailExist(email, customer.getCustomerId())) {
+            request.setAttribute("existEmail", "This email is already in use!");
+            request.getRequestDispatcher("user/profileUser.jsp").forward(request, response);
+            return;
+        }
+
+        // Kiểm tra address
+        if (!validateAddress(address)) {
+            request.setAttribute("errorAddress", "Invalid address! It must be at least 5 characters long and contain only letters, numbers, spaces, commas, or dashes.");
+            request.getRequestDispatcher("user/profileUser.jsp").forward(request, response);
+            return;
+        }
+
+        // Kiểm tra dob
+        if (!validateDob(dob)) {
+            request.setAttribute("errorDob", "Invalid dob! You must be at least 18 years old.");
+            request.getRequestDispatcher("user/profileUser.jsp").forward(request, response);
+            return;
         }
 
         // Xử lý file upload avatar
         Part filePart = request.getPart("avatar");
-        String avatarFileName = customer.getAvatar(); // Giữ nguyên nếu không có ảnh mới
 
+        // Kiểm tra nếu người dùng có tải ảnh mới
         if (filePart != null && filePart.getSize() > 0) {
-            // Lấy đường dẫn thư mục lưu ảnh
+            String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+
+            // Kiểm tra định dạng file
+            if (!isValidImageFile(fileName)) {
+                request.setAttribute("errorAvatar", "Invalid file type! Please upload JPG, JPEG, PNG, avif or GIF.");
+                request.getRequestDispatcher("user/profileUser.jsp").forward(request, response);
+                return;
+            }
+
+            // Kiểm tra kích thước file
+            if (filePart.getSize() > 10 * 1024 * 1024) { // 10MB
+                request.setAttribute("errorAvatar", "File size must be less than 10MB.");
+                request.getRequestDispatcher("user/profileUser.jsp").forward(request, response);
+                return;
+            }
+
+            // Tạo đường dẫn lưu ảnh
             String uploadPath = getServletContext().getRealPath("/") + UPLOAD_DIR;
             File uploadDir = new File(uploadPath);
             if (!uploadDir.exists()) {
-                uploadDir.mkdirs(); // Tạo thư mục nếu chưa có
+                uploadDir.mkdirs();
             }
 
-            // Lấy tên file gốc
-            avatarFileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
-            String avatarPath = uploadPath + File.separator + avatarFileName;
+            // Tạo tên file duy nhất
+            String uniqueFileName = System.currentTimeMillis() + "_" + fileName;
+            String avatarPath = uploadPath + File.separator + uniqueFileName;
 
-            // Lưu file ảnh vào thư mục
+            // Lưu file ảnh
             filePart.write(avatarPath);
 
-            // Cập nhật avatar với đường dẫn hợp lệ
-            customer.setAvatar(UPLOAD_DIR + avatarFileName);
+            // Cập nhật đường dẫn avatar
+            customer.setAvatar(UPLOAD_DIR + uniqueFileName);
         }
 
         // Cập nhật thông tin khách hàng
@@ -165,7 +201,7 @@ public class userProfile extends HttpServlet {
         customer.setPhonenumber(phoneNumber);
         customer.setAddress(address);
         customer.setEmail(email);
-
+        
         try {
             customer.setDob(Date.valueOf(dob));
         } catch (IllegalArgumentException e) {
@@ -173,7 +209,7 @@ public class userProfile extends HttpServlet {
             request.getRequestDispatcher("user/profileUser.jsp").forward(request, response);
             return;
         }
-
+        
         customer.setGender(gender.equals("male") ? 1 : 0);
 
         // Cập nhật vào database
@@ -185,7 +221,7 @@ public class userProfile extends HttpServlet {
         // Chuyển hướng về trang profile
         request.getRequestDispatcher("user/profileUser.jsp").forward(request, response);
     }
-
+    
     private String formatName(String name) {
         name = name.trim().replaceAll("\\s+", " ");
         String[] words = name.split(" ");
@@ -197,12 +233,34 @@ public class userProfile extends HttpServlet {
         }
         return formattedName.toString().trim();
     }
-
+    
     private boolean formatPhoneNumber(String phone) {
         return phone != null && (phone.startsWith("09") || phone.startsWith("03"));
     }
-
+    
     private boolean checkName(String name) {
         return name != null && name.matches("^[\\p{L}\\s]+$");
     }
+    
+    private boolean validateAddress(String address) {
+        return address != null && address.matches("^[\\p{L}0-9 ,\\-]{5,}$");
+    }
+    
+    private boolean validateDob(String dobStr) {
+        try {
+            LocalDate dob = LocalDate.parse(dobStr);
+            LocalDate today = LocalDate.now();
+            return Period.between(dob, today).getYears() >= 18;
+        } catch (Exception e) {
+            return false; // Ngày không hợp lệ
+        }
+    }
+    
+    private boolean isValidImageFile(String fileName) {
+        String fileNameLower = fileName.toLowerCase();
+        return fileNameLower.endsWith(".jpg") || fileNameLower.endsWith(".jpeg")
+                || fileNameLower.endsWith(".png") || fileNameLower.endsWith(".gif")
+                || fileNameLower.endsWith(".avif");
+    }
+    
 }

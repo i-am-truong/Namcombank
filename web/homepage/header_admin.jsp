@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page import="model.auth.Staff" %>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -130,15 +131,17 @@
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" onclick="toggleDropdown(event)">
                             <i style="padding-right: 20px" class="fas fa-bell"></i>
 
-                            <span>${sessionScope.user.fullName}</span>
+                            <span>${sessionScope.account.fullname}</span>
                     </a>
 
                 </li>
             </ul>
         </nav>
         <div class="dropdown-menu" id="dropdownMenu">
-            <a href="userProfile"><i class="fas fa-user"></i>&nbsp;&nbsp;Show profile </a>
+
             <a href="ChatListServlet"><i class="fas fa-user"></i>&nbsp;&nbsp;Tin Nhan Dang Cho</a>
+            <a href="staffProfile"><i class="fas fa-user"></i>&nbsp;&nbsp;Show profile </a>
+
             <a href="#"><i class="fas fa-cog"></i>&nbsp;&nbsp;Setting</a>
             <a href="logOut"><i class="fas fa-sign-out-alt"></i>&nbsp;&nbsp;Logout</a>
         </div>

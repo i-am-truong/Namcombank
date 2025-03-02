@@ -27,7 +27,7 @@ public class login extends HttpServlet {
     private static final Map<String, Instant> lockedAccounts = new HashMap<>();
     private static final String CLIENT_ID = System.getenv("GOOGLE_CLIENT_ID"); // nhớ thay client ID
     private static final String CLIENT_SECRET = System.getenv("GOOGLE_CLIENT_SECRET"); // nhớ thay Client Secret
-    private static final String REDIRECT_URI = "http://localhost:9999/Namcombank/login";
+    private static final String REDIRECT_URI = "http://localhost:8080/Namcombank/login";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
