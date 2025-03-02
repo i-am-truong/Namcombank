@@ -11,16 +11,12 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import java.util.List;
-import model.Feedback;
-import model.Feedback_id;
 
 /**
  *
  * @author admin
  */
-public class cusFeedback extends HttpServlet {
+public class ImageServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,10 +35,10 @@ public class cusFeedback extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet cusFeedback</title>");
+            out.println("<title>Servlet ImageServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet cusFeedback at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet ImageServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -60,21 +56,19 @@ public class cusFeedback extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        if (session.getAttribute("customer") == null) {
-            response.sendRedirect("login");
-            return;
-        }
-
-        String cus_id = request.getParameter("customer_id");
-        int customer_id = Integer.parseInt(cus_id);
+        int rating = Integer.parseInt(request.getParameter("rating"));
+        String content = request.getParameter("content");
+        String submittedAt = request.getParameter("submitted_at");
+        String feedbackType = request.getParameter("feedback_type");
         FeedbackDao dao = new FeedbackDao();
+        byte[] imageData = dao.getImageByFeedback(rating, content, submittedAt, feedbackType);
 
-        List<Feedback_id> list = dao.getCusFeedback(customer_id);
-
-        request.setAttribute("list", list);
-        request.getRequestDispatcher("feedback/myFeedback.jsp").forward(request, response);
-        
+        if (imageData != null) {
+            response.setContentType("image/jpeg"); 
+            response.getOutputStream().write(imageData);
+        } else {
+            response.sendRedirect("/feedback/viewFeedback.jsp");
+        }
     }
 
     /**

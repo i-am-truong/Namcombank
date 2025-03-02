@@ -71,21 +71,54 @@
                 <th>Rating</th>
                 <th>Content</th>
                 <th>Submitted At</th>
+                <th>Type</th>
+                <th>Hinh Anh</th>
                 <th>Actions</th>
             </tr>
             <c:forEach var="feedback" items="${list}">
-                <tr>
-                    <td>${feedback.rating} ⭐</td>
-                    <td>${feedback.content}</td>
-                    <td>${feedback.submitted_at}</td>
+                <form action="editFeedback" method="post" enctype="multipart/form-data">
+                    <tr>
+                    <input type="hidden" name="feedback_id" value="${feedback.feedback_id}">
+
                     <td>
-                        <a href="editFeedback?rating=${feedback.rating}&content=${feedback.content}&submitted_at=${feedback.submitted_at}">✏ Sửa</a> | 
-                        <a href="deleteFeedback?rating=${feedback.rating}&content=${feedback.content}&submitted_at=${feedback.submitted_at}" style="color: red;">🗑 Xóa</a>
+                        <input type="number" name="rating" value="${feedback.rating}" min="1" max="5" required>
+                    </td>
+                    <td>
+                        <input type="text" name="content" value="${feedback.content}" >
+                    </td>
+                    <td>
+                        <input type="text" name="submitted_at" value="${feedback.submitted_at}" readonly>
+                    </td>
+                    <td>
+                        <select name="feedback_type" required>
+                            <option value="human" ${feedback.feedback_type == 'human' ? 'selected' : ''}>Human</option>
+                            <option value="system" ${feedback.feedback_type == 'system' ? 'selected' : ''}>System</option>
+                        </select>
+                    </td>
+                    <td>
+                        <c:if test="${not empty feedback.attachment}">
+                            <img src="ImageServlet?rating=${feedback.rating}&content=${feedback.content}&submitted_at=${feedback.submitted_at}&feedback_type=${feedback.feedback_type}" alt="Feedback Image" width="200">
+                        </c:if>
+                        <br>
+                        <label for="attachment">Upload Image (optional):</label>
+                        <input type="file" id="attachment" name="attachment" accept="image/*">
+                    </td>
+                    <td>
+                        <input type="hidden" name="original_submitted_at" value="${feedback.submitted_at}">
+                        <button type="submit">✔ Lưu</button>
+                    </td>
+                    </tr>
+                </form>
+                <tr>
+                    <td colspan="6">
+                        <a href="deleteFeedback?rating=${feedback.rating}&content=${feedback.content}&submitted_at=${feedback.submitted_at}&feedback_type=${feedback.feedback_type}" style="color: red;">🗑 Xóa</a>
                     </td>
                 </tr>
             </c:forEach>
         </table>
-
         <button class="btn" onclick="window.location.href = 'viewFeedback'">Quay lại</button>
+
+
     </body>
 </html>
+
