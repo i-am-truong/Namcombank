@@ -119,15 +119,11 @@ public class editFeedback extends HttpServlet {
         int feedback_id = Integer.parseInt(request.getParameter("feedback_id"));
 
         if (rating == 5) {
-//            if () {
-//                
-//            }
-        }
-
-        if (attachment == null || attachment.length == 0) {
-            dao.updateFeedbackNoAttachment(content, submitted_at, rating, feedback_id, feedback_type);
-        } else {
-            dao.updateFeedback(content, submitted_at, rating, feedback_id, feedback_type, attachment);
+            if ((attachment == null || attachment.length == 0) && (content == null || content.length() == 0)) {
+                dao.updateFeedbackNoAttachment(formatContent(content), submitted_at, rating, feedback_id, feedback_type);
+            } else {
+                dao.updateFeedback(formatContent(content), submitted_at, rating, feedback_id, feedback_type, attachment);
+            }
         }
         response.sendRedirect("cusFeedback?customer_id=" + customer_id);
     }
@@ -141,5 +137,17 @@ public class editFeedback extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+
+    public boolean checkContent(String content) {
+        return content.matches("^[\\p{L}0-9\\s.,!?]+$");
+    }
+
+    private String formatContent(String content) {
+        return Character.toUpperCase(content.charAt(0)) + content.substring(1);
+    }
+
+    public boolean checkAttachment(Part filePart) {
+        return filePart != null && filePart.getSize() > 0;
+    }
 
 }
