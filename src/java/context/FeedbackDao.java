@@ -479,7 +479,7 @@ public class FeedbackDao extends DBContext {
         }
     }
 
-    public void updateFeedback2(String content, String submitted_at, int rating, int feedback_id, String feedback_type) {
+    public void updateFeedbackNoAttachment(String content, String submitted_at, int rating, int feedback_id, String feedback_type) {
         String sql = "UPDATE Feedback SET content = ?, submitted_at = ?, rating = ?, feedback_type = ? WHERE feedback_id = ?";
 
         try (PreparedStatement stm = connection.prepareStatement(sql)) {

@@ -118,8 +118,14 @@ public class editFeedback extends HttpServlet {
 //        int feedback_id = dao.getFeedbackId(content, submitted_at, rating, feedback_type);
         int feedback_id = Integer.parseInt(request.getParameter("feedback_id"));
 
-        if (attachment == null || attachment.length==0) {
-            dao.updateFeedback2(content, submitted_at, rating, feedback_id, feedback_type);
+        if (rating == 5) {
+//            if () {
+//                
+//            }
+        }
+
+        if (attachment == null || attachment.length == 0) {
+            dao.updateFeedbackNoAttachment(content, submitted_at, rating, feedback_id, feedback_type);
         } else {
             dao.updateFeedback(content, submitted_at, rating, feedback_id, feedback_type, attachment);
         }
