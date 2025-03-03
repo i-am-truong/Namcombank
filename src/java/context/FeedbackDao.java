@@ -95,8 +95,8 @@ public class FeedbackDao extends DBContext {
         }
         return total;
     }
-    
-    public int getTotalFeedbackByContent( String content) {
+
+    public int getTotalFeedbackByContent(String content) {
         int total = 0;
         String sql = "SELECT COUNT(*) FROM Feedback WHERE content like ?";
         try (PreparedStatement stm = connection.prepareStatement(sql)) {
@@ -223,7 +223,7 @@ public class FeedbackDao extends DBContext {
         return list;
     }
 
-    public int getTotalFeedbackByTypeAndContent(String feedback_type,String content) {
+    public int getTotalFeedbackByTypeAndContent(String feedback_type, String content) {
         int total = 0;
         String sql = "SELECT COUNT(*) FROM Feedback WHERE  feedback_type = ? AND content like ?";
         try (PreparedStatement stm = connection.prepareStatement(sql)) {
@@ -240,7 +240,7 @@ public class FeedbackDao extends DBContext {
         }
         return total;
     }
-    
+
     public int getTotalFeedbackByType(String feedback_type) {
         int total = 0;
         String sql = "SELECT COUNT(*) FROM Feedback WHERE  feedback_type = ?";
@@ -275,8 +275,8 @@ public class FeedbackDao extends DBContext {
         }
         return total;
     }
-    
-     public List<Feedback> pagingFeedbackByRatingAndContent(int index, int rating, String content) {
+
+    public List<Feedback> pagingFeedbackByRatingAndContent(int index, int rating, String content) {
         List<Feedback> list = new ArrayList<>();
         String sql = "SELECT * FROM Feedback WHERE rating=? AND content like ? ORDER BY submitted_at DESC OFFSET ? ROWS FETCH NEXT 4 ROWS ONLY";
         try (PreparedStatement stm = connection.prepareStatement(sql)) {
@@ -302,7 +302,7 @@ public class FeedbackDao extends DBContext {
         return list;
     }
 
-     public List<Feedback> pagingFeedbackByTypeAndContent(int index, String feedback_type, String content) {
+    public List<Feedback> pagingFeedbackByTypeAndContent(int index, String feedback_type, String content) {
         List<Feedback> list = new ArrayList<>();
         String sql = "SELECT * FROM Feedback WHERE feedback_type=?  AND content like ? ORDER BY submitted_at DESC OFFSET ? ROWS FETCH NEXT 4 ROWS ONLY";
         try (PreparedStatement stm = connection.prepareStatement(sql)) {
@@ -327,8 +327,8 @@ public class FeedbackDao extends DBContext {
         }
         return list;
     }
-     
-     public List<Feedback> pagingFeedbackByContent(int index, String content) {
+
+    public List<Feedback> pagingFeedbackByContent(int index, String content) {
         List<Feedback> list = new ArrayList<>();
         String sql = "SELECT * FROM Feedback WHERE content like ? ORDER BY submitted_at DESC OFFSET ? ROWS FETCH NEXT 4 ROWS ONLY";
         try (PreparedStatement stm = connection.prepareStatement(sql)) {
@@ -352,7 +352,7 @@ public class FeedbackDao extends DBContext {
         }
         return list;
     }
-     
+
     public List<Feedback> pagingFeedbackByType(int index, String feedback_type) {
         List<Feedback> list = new ArrayList<>();
         String sql = "SELECT * FROM Feedback WHERE feedback_type=? ORDER BY submitted_at DESC OFFSET ? ROWS FETCH NEXT 4 ROWS ONLY";
@@ -420,6 +420,34 @@ public class FeedbackDao extends DBContext {
         return null;
     }
 
+    public void deleteFeedbackWithId(int id) {
+
+        String sql = "delete from Feedback where feedback_id=?";
+
+        try (PreparedStatement stm = connection.prepareStatement(sql)) {
+            stm.setInt(1, id);
+            stm.executeQuery();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public boolean checkFeedbackAttachment(int feedback_id) {
+        String sql = "SELECT 1 FROM feedback WHERE feedback_id = ? AND attachment IS NOT NULL";
+
+        try (PreparedStatement stm = connection.prepareStatement(sql)) {
+            stm.setInt(1, feedback_id);
+            try (ResultSet rs = stm.executeQuery()) {
+                return rs.next(); // Nếu có dữ liệu thì feedback có ảnh
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false; // Mặc định không có ảnh
+    }
+
     public void deleteFeedback(String content, String submitted_at, int rating) {
 
         String sql = "delete from feedback WHERE  content=? and submitted_at=? and rating=?";
@@ -467,6 +495,27 @@ public class FeedbackDao extends DBContext {
             stm.setString(4, feedback_type);
             stm.setBytes(5, attachment);
             stm.setInt(6, feedback_id);
+
+            int rowsAffected = stm.executeUpdate();  // Dùng executeUpdate()
+            if (rowsAffected > 0) {
+                System.out.println("Cập nhật thành công!");
+            } else {
+                System.out.println("Không có bản ghi nào được cập nhật.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateFeedbackNoContentAndAttachment(String content, String submitted_at, int rating, int feedback_id, String feedback_type) {
+        String sql = "UPDATE Feedback SET content = ?, submitted_at = ?, rating = ?, feedback_type = ? WHERE feedback_id = ?";
+
+        try (PreparedStatement stm = connection.prepareStatement(sql)) {
+            stm.setString(1, content);
+            stm.setString(2, submitted_at);
+            stm.setInt(3, rating);
+            stm.setString(4, feedback_type);
+            stm.setInt(5, feedback_id);
 
             int rowsAffected = stm.executeUpdate();  // Dùng executeUpdate()
             if (rowsAffected > 0) {

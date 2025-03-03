@@ -68,8 +68,8 @@
                 <div class="form-group">
                     <label for="feedback_type">Feedback Type:</label><br>
                     <select id="feedback_type" name="feedback_type" required>
-                        <option value="system" ${param.feedback_type == 'system' ? 'selected' : ''}>Hệ thống</option>
-                        <option value="human" ${param.feedback_type == 'human' ? 'selected' : ''}>Nhân viên</option>
+                        <option value="SYSTEM" ${param.feedback_type == 'system' ? 'selected' : ''}>Hệ thống</option>
+                        <option value="HUMAN" ${param.feedback_type == 'human' ? 'selected' : ''}>Nhân viên</option>
                     </select><br>
                 </div>
 

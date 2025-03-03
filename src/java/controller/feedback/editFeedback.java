@@ -15,6 +15,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 import java.io.InputStream;
+import java.util.List;
+import model.Feedback_id;
 
 /**
  *
@@ -109,22 +111,63 @@ public class editFeedback extends HttpServlet {
         FeedbackDao dao = new FeedbackDao();
         int customer_id = (int) session.getAttribute("customer_id");
         String content = request.getParameter("content");
+        if (!checkContent(content)) {
+            List<Feedback_id> list = dao.getCusFeedback(customer_id);
+            request.setAttribute("errorContent", "Content contains invalid characters");
+            request.setAttribute("list", list);
+            request.getRequestDispatcher("feedback/myFeedback.jsp").forward(request, response);
+            return;
+        }
         String submitted_at = request.getParameter("submitted_at");
         String feedback_type = request.getParameter("feedback_type");
-
+        int feedback_id = Integer.parseInt(request.getParameter("feedback_id"));
         String ratingStr = request.getParameter("rating");
         int rating = (ratingStr != null && !ratingStr.isEmpty()) ? Integer.parseInt(ratingStr) : 0;
 
 //        int feedback_id = dao.getFeedbackId(content, submitted_at, rating, feedback_type);
-        int feedback_id = Integer.parseInt(request.getParameter("feedback_id"));
+        if (rating > 4) {
+            if ((content != null) && (attachment == null)) {
+                dao.updateFeedbackNoContentAndAttachment(formatContent(content), submitted_at, rating, feedback_id, feedback_type);
+            }
+            if ((content == null || content.isEmpty()) && (attachment != null)) {
+                dao.updateFeedback(content, submitted_at, rating, feedback_id, feedback_type, attachment);
+            }
+            if ((content == null || content.isEmpty()) && (attachment == null)) {
+                dao.updateFeedbackNoContentAndAttachment(content, submitted_at, rating, feedback_id, feedback_type);
 
-        if (rating == 5) {
-            if ((attachment == null || attachment.length == 0) && (content == null || content.length() == 0)) {
+            } else {
+                if (attachment == null) {
+                    dao.updateFeedbackNoContentAndAttachment(formatContent(content), submitted_at, rating, feedback_id, feedback_type);
+//                    dao.updateFeedback(formatContent(content), submitted_at, rating, feedback_id, feedback_type, attachment);
+                } else if (attachment != null) {
+                    dao.updateFeedback(formatContent(content), submitted_at, rating, feedback_id, feedback_type, attachment);
+                } else {
+                    dao.updateFeedback(formatContent(content), submitted_at, rating, feedback_id, feedback_type, attachment);
+                }
+            }
+        } else {
+
+            boolean hasAttachment = dao.checkFeedbackAttachment(feedback_id);
+            if (content == null || content.isEmpty()) {
+                List<Feedback_id> list = dao.getCusFeedback(customer_id);
+                request.setAttribute("errorContentNull", "Please give your feedback ratings below 5");
+                request.setAttribute("list", list);
+                request.getRequestDispatcher("feedback/myFeedback.jsp").forward(request, response);
+                return;
+            }
+            if (content != null && attachment != null) {
+                dao.updateFeedback(formatContent(content), submitted_at, rating, feedback_id, feedback_type, attachment);
+            } else if (content != null && hasAttachment) {
                 dao.updateFeedbackNoAttachment(formatContent(content), submitted_at, rating, feedback_id, feedback_type);
             } else {
-                dao.updateFeedback(formatContent(content), submitted_at, rating, feedback_id, feedback_type, attachment);
+                List<Feedback_id> list = dao.getCusFeedback(customer_id);
+                request.setAttribute("errorAttachmentNull", "Please provide a photo for ratings below 5");
+                request.setAttribute("list", list);
+                request.getRequestDispatcher("feedback/myFeedback.jsp").forward(request, response);
+                return;
             }
         }
+
         response.sendRedirect("cusFeedback?customer_id=" + customer_id);
     }
 
@@ -139,10 +182,13 @@ public class editFeedback extends HttpServlet {
     }// </editor-fold>
 
     public boolean checkContent(String content) {
-        return content.matches("^[\\p{L}0-9\\s.,!?]+$");
+        return content.matches("^[\\p{L}0-9\\s.,!?]*$");
     }
 
     private String formatContent(String content) {
+        if (content == null || content.isEmpty()) {
+            return null;
+        }
         return Character.toUpperCase(content.charAt(0)) + content.substring(1);
     }
 

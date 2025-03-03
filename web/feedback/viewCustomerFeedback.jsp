@@ -103,6 +103,6 @@
             <c:forEach begin="1" end="${endPage}" var="i">
                 <a href="viewCustomerFeedback?index=${i}&rating=${selectedRating}&feedback_type=${feedback_type_selected}&content_search=${content_search_selected}">${i}</a>
             </c:forEach>
-            <p>DEBUG: rating = ${selectedRating}, type = ${feedback_type_selected}, search=${content_search_selected}</p>
+            <!--<p>DEBUG: rating = ${selectedRating}, type = ${feedback_type_selected}, search=${content_search_selected}</p>-->
         </body>
     </html>

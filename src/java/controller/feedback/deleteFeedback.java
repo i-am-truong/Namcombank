@@ -67,12 +67,9 @@ public class deleteFeedback extends HttpServlet {
 
         int customer_id = (int) session.getAttribute("customer_id");
 
-        String ratingStr = request.getParameter("rating");
-        int rating = Integer.parseInt(ratingStr);
-        String content = request.getParameter("content");
-        String submit_at = request.getParameter("submitted_at");
+        int feedback_id = Integer.parseInt(request.getParameter("feedback_id"));
 
-        dao.deleteFeedback(content, submit_at, rating);
+        dao.deleteFeedbackWithId(feedback_id);
         response.sendRedirect("cusFeedback?customer_id=" + customer_id);
     }
 
