@@ -245,6 +245,30 @@
         <servlet-class>controller.customer.ExportCustomers</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>CreateLoanRequest</servlet-name>
+        <servlet-class>controller.loanrequest.CreateLoanRequest</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ListLoanRequest</servlet-name>
+        <servlet-class>controller.loanrequest.ListLoanRequest</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpdateLoanRequest</servlet-name>
+        <servlet-class>controller.loanrequest.UpdateLoanRequest</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DeleteLoanRequest</servlet-name>
+        <servlet-class>controller.loanrequest.DeleteLoanRequest</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ApproveLoanRequestController</servlet-name>
+        <servlet-class>controller.loanrequest.ApproveLoanRequestController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>staffProfile</servlet-name>
+        <servlet-class>controller.Staff.staffProfile</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>ImageServlet</servlet-name>
         <servlet-class>controller.feedback.ImageServlet</servlet-class>
     </servlet>
@@ -503,6 +527,30 @@
     <servlet-mapping>
         <servlet-name>ExportCustomers</servlet-name>
         <url-pattern>/ExportCustomers</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CreateLoanRequest</servlet-name>
+        <url-pattern>/loan-request/create</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ListLoanRequest</servlet-name>
+        <url-pattern>/loan-request/list</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateLoanRequest</servlet-name>
+        <url-pattern>/loan-request/update</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteLoanRequest</servlet-name>
+        <url-pattern>/loan-request/delete</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ApproveLoanRequestController</servlet-name>
+        <url-pattern>/ApproveLoanRequestController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>staffProfile</servlet-name>
+        <url-pattern>/staffProfile</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ImageServlet</servlet-name>

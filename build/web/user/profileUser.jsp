@@ -142,6 +142,9 @@
                                     title="Full Name cannot be just spaces."
                                     value="${sessionScope.customer.fullname}"
                                     >
+                                <c:if test="${not empty requestScope.errorName}">
+                                    <span style="color: red;">${requestScope.errorName}</span>
+                                </c:if>
                             </div>
 
                             <div class="col-md-9">
@@ -178,7 +181,9 @@
                                     >
                                 <div id="email-error" style="color: red; display: none;">Please enter a valid email address.</div>
                             </div>
-
+                            <c:if test="${not empty requestScope.existEmail}">
+                                <span style="color: red;">${requestScope.existEmail}</span>
+                            </c:if>
                             <div class="col-md-9">
                                 <label class="labels">Address</label>
                                 <input
@@ -192,6 +197,9 @@
                                     title="Address cannot be just spaces."
                                     value="${sessionScope.customer.address}"
                                     >
+                                <c:if test="${not empty requestScope.errorAddress}">
+                                    <span style="color: red;">${requestScope.errorAddress}</span>
+                                </c:if>
                             </div>
 
                             <div class="col-md-9">
@@ -233,6 +241,9 @@
                                 <div id="dob-error" style="color: red; display: none;">
                                     Date of Birth cannot be in the future.
                                 </div>
+                                <c:if test="${not empty requestScope.errorDob}">
+                                    <span style="color: red;">${requestScope.errorDob}</span>
+                                </c:if>
                             </div>
 
 
@@ -241,8 +252,8 @@
                                 <div class="user-profile-thumb" style="width: 150px; height: 150px;">
                                     <label class="labels">Avatar</label>
                                     <img src="${pageContext.request.contextPath}/${sessionScope.customer.avatar}" id="avatarImage"
-                                             alt="User Avatar" class="rounded-circle"
-                                             style="width: 120px; height: 120px; object-fit: cover;">
+                                         alt="User Avatar" class="rounded-circle"
+                                         style="width: 120px; height: 120px; object-fit: cover;">
                                 </div>
 
                                 <div class="custom-file mt-2">
@@ -253,8 +264,11 @@
                                         Choose file
                                     </button>
                                 </div>
-
+                                <c:if test="${not empty requestScope.errorAvatar}">
+                                    <span style="color: red;">${requestScope.errorAvatar}</span>
+                                </c:if>
                             </div>
+
 
                             <div class="mt-3 text-left" style="display: flex; justify-content: flex-start; align-items: center;">
                                 <button class="btn btn-primary profile-button" type="submit" style="margin-right: 10px;">Save Profile</button>
