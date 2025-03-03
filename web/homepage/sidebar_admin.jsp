@@ -65,7 +65,7 @@
             <span>Manage Customer</span>
         </a>
     </li>-->
-    
+
     <!-- manage contracts -->
     <li class="nav-item active">
         <a class="nav-link" href="contractApproval">
@@ -142,15 +142,15 @@
                 <i class="fas fa-fw fa-table"></i>
                 <span>Category Table</span></a>
         </li>
-    
-    
-    
+
+
+
     -->    <li class="nav-item active">
         <a class="nav-link" href="newsList">
             <i class="fas fa-fw fa-table"></i>
             <span> News</span></a>
     </li>
-    
+
     <li class="nav-item active">
         <a class="nav-link" href="manageCustomerVer2">
             <i class="fas fa-fw fa-table"></i>

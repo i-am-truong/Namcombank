@@ -59,6 +59,31 @@ public class CustomerDAO extends DBContext {
         return getBalanceMinMax("max");
     }
 
+    public Date getMinMaxBirthday(String order) {
+        Date dob = null;
+        String orderBy = order.equalsIgnoreCase("min") ? "ASC" : "DESC";
+
+        String query = "SELECT TOP 1 dob FROM [dbo].[Customer] ORDER BY dob " + orderBy;
+
+        try (PreparedStatement ps = connection.prepareStatement(query); ResultSet rs = ps.executeQuery()) {
+
+            if (rs.next()) {
+                dob = rs.getDate(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return dob;
+    }
+
+    public Date getMinBirthday() {
+        return getMinMaxBirthday("min");
+    }
+
+    public Date getMaxBirthday() {
+        return getMinMaxBirthday("max");
+    }
+
     public Customer getCustomerByEmail(String email) {
         Customer customer = null;
         try {
@@ -1389,7 +1414,7 @@ public class CustomerDAO extends DBContext {
         return null;
     }
 
-    public int getTotalSearchCustomersByFields(String paraSearchUserName, String paraSearchFullName, Integer genderID, Integer activeID, String cid, String address, String email, String phonenumber, Float minBalance, Float maxBalance) {
+    public int getTotalSearchCustomersByFields(String paraSearchUserName, String paraSearchFullName, Integer genderID, Integer activeID, String cid, String address, String email, String phonenumber, Float minBalance, Float maxBalance, Date minDob, Date maxDob) {
 
         StringBuilder query = new StringBuilder("SELECT COUNT(*) FROM Customer c "
                 + "JOIN Gender g ON c.gender = g.gender "
@@ -1447,6 +1472,18 @@ public class CustomerDAO extends DBContext {
         } else if (maxBalance != null) {
             query.append(" AND c.balance <= ?");
             parameters.add(maxBalance);
+        }
+
+        if(minDob != null && maxDob != null) {
+            query.append(" AND c.dob BETWEEN ? AND ?");
+            parameters.add(minDob);
+            parameters.add(maxDob);
+        } else if(minDob != null) {
+            query.append(" AND c.dob >= ?");
+            parameters.add(minDob);
+        } else if(maxDob != null) {
+            query.append(" AND c.dob <= ?");
+            parameters.add(maxDob);
         }
 
         try (PreparedStatement ps = connection.prepareStatement(query.toString())) {
@@ -1519,7 +1556,7 @@ public class CustomerDAO extends DBContext {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    public List<Customer> searchCustomersByFieldsPage(String paraSearchUserName, String paraSearchFullName, int page, Integer pageSize, Integer genderID, Integer activeID, String cid, String address, String email, String phonenumber, Float minBalance, Float maxBalance) {
+    public List<Customer> searchCustomersByFieldsPage(String paraSearchUserName, String paraSearchFullName, int page, Integer pageSize, Integer genderID, Integer activeID, String cid, String address, String email, String phonenumber, Float minBalance, Float maxBalance, Date minDob, Date maxDob) {
 
         StringBuilder query = new StringBuilder("SELECT c.customer_id, c.fullname, c.username, "
                 + "c.password, c.active, c.email, c.dob, c.gender, "
@@ -1584,6 +1621,19 @@ public class CustomerDAO extends DBContext {
             parameters.add(maxBalance);
         }
 
+        // Add dob range conditions if specified
+        if (minDob != null && maxDob != null) {
+            query.append("AND c.dob BETWEEN ? AND ? ");
+            parameters.add(minDob);
+            parameters.add(maxDob);
+        } else if (minDob != null) {
+            query.append("AND c.dob >= ? ");
+            parameters.add(minDob);
+        } else if (maxDob != null) {
+            query.append("AND c.dob <= ? ");
+            parameters.add(maxDob);
+        }
+
         // Add pagination
         query.append("ORDER BY c.customer_id OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
         parameters.add((page - 1) * pageSize);
@@ -1621,7 +1671,7 @@ public class CustomerDAO extends DBContext {
         return customers;
     }
 
-    public List<Customer> searchCustomersByFieldsPageSorted(String paraSearchUserName, String paraSearchFullName, int page, Integer pageSize, String sortSQL, String order, Integer genderID, Integer activeID, String cid, String address, String email, String phonenumber, Float minBalance, Float maxBalance) {
+    public List<Customer> searchCustomersByFieldsPageSorted(String paraSearchUserName, String paraSearchFullName, int page, Integer pageSize, String sortSQL, String order, Integer genderID, Integer activeID, String cid, String address, String email, String phonenumber, Float minBalance, Float maxBalance, Date minDob, Date maxDob) {
 
         StringBuilder query = new StringBuilder("SELECT c.customer_id, c.fullname, c.username, c.password, "
                 + "c.email, c.dob, c.gender, c.phonenumber, c.balance, c.citizen_identification_card, "
@@ -1683,6 +1733,19 @@ public class CustomerDAO extends DBContext {
         } else if (maxBalance != null) {
             query.append("AND c.balance <= ? ");
             parameters.add(maxBalance);
+        }
+
+        // Add dob range conditions if specified
+        if (minDob != null && maxDob != null) {
+            query.append("AND c.dob BETWEEN ? AND ? ");
+            parameters.add(minDob);
+            parameters.add(maxDob);
+        } else if (minDob != null) {
+            query.append("AND c.dob >= ? ");
+            parameters.add(minDob);
+        } else if (maxDob != null) {
+            query.append("AND c.dob <= ? ");
+            parameters.add(maxDob);
         }
 
         // Add sorting and pagination

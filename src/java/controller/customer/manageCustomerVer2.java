@@ -74,32 +74,44 @@ public class manageCustomerVer2 extends HttpServlet {
         List<Customer> customers = new ArrayList<>();
         int totalCustomers = paraSearch == null || paraSearch.isBlank() ? cdao.getTotalCustomersPage() : cdao.getTotalSearchCustomers(paraSearch);
         int totalPages = (int) Math.ceil((double) totalCustomers / pageSize);
+
+        // Đảm bảo totalPages luôn ít nhất là 1
+        if (totalPages < 1) {
+            totalPages = 1;
+        }
+
+        // Kiểm tra page hợp lệ
         if (page > totalPages) {
             page = totalPages;
         }
         page = page < 1 ? 1 : page;
-        if (order != null && sort != null && (order.equals("asc") || order.equals("desc"))) {
-            //xac nhan cac tham so de sort truyen vao la dung
-            if (sort.equals("email") || sort.equals("fullname") || sort.equals("username") || sort.equals("address")) {
-                String sortSQL;
-                sortSQL = switch (sort) {
-                    case "email" ->
-                        "email";
-                    case "fullname" ->
-                        "fullname";
-                    case "username" ->
-                        "username";
-                    default ->
-                        "address";
-                };
-                customers = paraSearch == null || paraSearch.isBlank() ? cdao.getCustomersByPageSorted(page, pageSize, sortSQL, order)
-                        : cdao.searchCustomersByPageSorted(paraSearch, page, pageSize, sortSQL, order);
+
+        // Chỉ truy vấn dữ liệu nếu thực sự có kết quả
+        if (totalCustomers > 0) {
+            if (order != null && sort != null && (order.equals("asc") || order.equals("desc"))) {
+                //xac nhan cac tham so de sort truyen vao la dung
+                if (sort.equals("email") || sort.equals("fullname") || sort.equals("username") || sort.equals("address")) {
+                    String sortSQL;
+                    sortSQL = switch (sort) {
+                        case "email" ->
+                            "email";
+                        case "fullname" ->
+                            "fullname";
+                        case "username" ->
+                            "username";
+                        default ->
+                            "address";
+                    };
+                    customers = paraSearch == null || paraSearch.isBlank() ? cdao.getCustomersByPageSorted(page, pageSize, sortSQL, order)
+                            : cdao.searchCustomersByPageSorted(paraSearch, page, pageSize, sortSQL, order);
+                } else {
+                    customers = paraSearch == null || paraSearch.isBlank() ? cdao.getCustomersByPage(page, pageSize) : cdao.searchCustomersByPage(paraSearch, page, pageSize);
+                }
             } else {
                 customers = paraSearch == null || paraSearch.isBlank() ? cdao.getCustomersByPage(page, pageSize) : cdao.searchCustomersByPage(paraSearch, page, pageSize);
             }
-        } else {
-            customers = paraSearch == null || paraSearch.isBlank() ? cdao.getCustomersByPage(page, pageSize) : cdao.searchCustomersByPage(paraSearch, page, pageSize);
         }
+        // Nếu không có kết quả, customers vẫn là danh sách rỗng
 
         //Phan trang
         Pagination pagination = new Pagination();
