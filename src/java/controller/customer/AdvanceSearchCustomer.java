@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import model.Customer;
 import model.Pagination;
+import java.sql.Date;
 
 /**
  *
@@ -39,13 +40,13 @@ public class AdvanceSearchCustomer extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("roleId") == null || (int) session.getAttribute("roleId") != 1) {
             response.sendRedirect("admin.login");
             return;
         }
-       
+
         //
         String pageParam = request.getParameter("page");
         String paraSearchUserName = SearchUtils.preprocessSearchQuery(request.getParameter("searchUserName"));
@@ -68,41 +69,80 @@ public class AdvanceSearchCustomer extends HttpServlet {
         Integer pageSize;
         pageSize = (FormatUtils.tryParseInt(pageSizeParam) != null) ? FormatUtils.tryParseInt(pageSizeParam) : PAGE_SIZE;
         String paraSearchBalanceMin = request.getParameter("searchBalanceMin");
-        Float searchBalanceMin = (FormatUtils.tryParseFloat(paraSearchBalanceMin) != null&&FormatUtils.tryParseFloat(paraSearchBalanceMin)< cdao.getBalanceMax()) ? FormatUtils.tryParseFloat(paraSearchBalanceMin) : 0;
         String paraSearchBalanceMax = request.getParameter("searchBalanceMax");
-        Float searchBalanceMax = (FormatUtils.tryParseFloat(paraSearchBalanceMax) != null && FormatUtils.tryParseFloat(paraSearchBalanceMax)< cdao.getBalanceMax()) ? FormatUtils.tryParseFloat(paraSearchBalanceMax) : cdao.getBalanceMax();
+        Float searchBalanceMin = (FormatUtils.tryParseFloat(paraSearchBalanceMin) != null) ? FormatUtils.tryParseFloat(paraSearchBalanceMin) : 0;
+        Float searchBalanceMax = (FormatUtils.tryParseFloat(paraSearchBalanceMax) != null) ? FormatUtils.tryParseFloat(paraSearchBalanceMax) : cdao.getBalanceMax();
+
+        // Thêm xử lý date range
+        String paraSearchDateMin = request.getParameter("searchDateMin");
+        String paraSearchDateMax = request.getParameter("searchDateMax");
+        Date searchDateMin = null;
+        Date searchDateMax = null;
+
+        try {
+            if (paraSearchDateMin != null && !paraSearchDateMin.isEmpty()) {
+                searchDateMin = Date.valueOf(paraSearchDateMin);
+            }
+            if (paraSearchDateMax != null && !paraSearchDateMax.isEmpty()) {
+                searchDateMax = Date.valueOf(paraSearchDateMax);
+            }
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+
+        if (searchDateMin == null) searchDateMin = cdao.getMinBirthday();
+        if (searchDateMax == null) searchDateMax = cdao.getMaxBirthday();
+
+        // Update customer search to include date range
         List<Customer> customers = new ArrayList<>();
-        int totalCustomers = cdao.getTotalSearchCustomersByFields(paraSearchUserName, paraSearchFullName, genderID, activeID, cid, address, email, phonenumber, searchBalanceMin, searchBalanceMax);
+        int totalCustomers = cdao.getTotalSearchCustomersByFields(
+            paraSearchUserName, paraSearchFullName, genderID, activeID,
+            cid, address, email, phonenumber,
+            searchBalanceMin, searchBalanceMax,
+            searchDateMin, searchDateMax); // Thêm tham số date range
+
         // Tính tổng số trang
         int totalPages = (int) Math.ceil((double) totalCustomers / pageSize);
+
+        // Thêm kiểm tra này để đảm bảo totalPages luôn ít nhất là 1
+        if (totalPages < 1) {
+            totalPages = 1;
+        }
+
+        // Kiểm tra trang hiện tại
         if (page > totalPages) {
             page = totalPages;
         }
         if (page < 1) {
             page = 1;
         }
-        if (order != null && sort != null && (order.equals("asc") || order.equals("desc"))) {
-            //xac nhan cac tham so de sort truyen vao la dung
-            if (sort.equals("email") || sort.equals("fullname") || sort.equals("username") || sort.equals("address")) {
-                String sortSQL;
-                sortSQL = switch (sort) {
-                    case "email" ->
-                        "email";
-                    case "fullname" ->
-                        "fullname";
-                    case "username" ->
-                        "username";
-                    default ->
-                        "address";
-                };
-                customers = cdao.searchCustomersByFieldsPageSorted(paraSearchUserName, paraSearchFullName, page, pageSize, sortSQL, order, genderID, activeID, cid, address, email, phonenumber, searchBalanceMin, searchBalanceMax);
-            } else {
 
-                customers = cdao.searchCustomersByFieldsPage(paraSearchUserName, paraSearchFullName, page, pageSize, genderID, activeID, cid, address, email, phonenumber, searchBalanceMin, searchBalanceMax);
+        // Chỉ truy vấn dữ liệu nếu thực sự có kết quả
+        if (totalCustomers > 0) {
+            if (order != null && sort != null && (order.equals("asc") || order.equals("desc"))) {
+                //xac nhan cac tham so de sort truyen vao la dung
+                if (sort.equals("email") || sort.equals("fullname") || sort.equals("username") || sort.equals("address")) {
+                    String sortSQL;
+                    sortSQL = switch (sort) {
+                        case "email" ->
+                            "email";
+                        case "fullname" ->
+                            "fullname";
+                        case "username" ->
+                            "username";
+                        default ->
+                            "address";
+                    };
+                    customers = cdao.searchCustomersByFieldsPageSorted(paraSearchUserName, paraSearchFullName, page, pageSize, sortSQL, order, genderID, activeID, cid, address, email, phonenumber, searchBalanceMin, searchBalanceMax, searchDateMin, searchDateMax);
+                } else {
+                    customers = cdao.searchCustomersByFieldsPage(paraSearchUserName, paraSearchFullName, page, pageSize, genderID, activeID, cid, address, email, phonenumber, searchBalanceMin, searchBalanceMax, searchDateMin, searchDateMax);
+                }
+            } else {
+                customers = cdao.searchCustomersByFieldsPage(paraSearchUserName, paraSearchFullName, page, pageSize, genderID, activeID, cid, address, email, phonenumber, searchBalanceMin, searchBalanceMax, searchDateMin, searchDateMax);
             }
         } else {
-
-            customers = cdao.searchCustomersByFieldsPage(paraSearchUserName, paraSearchFullName, page, pageSize, genderID, activeID, cid, address, email, phonenumber, searchBalanceMin, searchBalanceMax);
+            // Nếu không có kết quả, để customers là danh sách rỗng
+            customers = new ArrayList<>();
         }
 
                 //Phan trang
@@ -117,8 +157,8 @@ public class AdvanceSearchCustomer extends HttpServlet {
         pagination.setUrlPattern("/manageCustomerVer2/Search");
         pagination.setSearchFields(new String[] {"searchFullname","searchUsername","searchGender","searchAccountStatus", "searchCID", "searchAddress", "searchEmail", "searchPhoneNumber"});
         pagination.setSearchValues(new String[] {paraSearchFullName, paraSearchUserName, gender, accountStatus, cid, address, email, phonenumber});
-        pagination.setRangeFields(new String[] {"searchBalanceMin","searchBalanceMax"});
-        pagination.setRangeValues(new Object[]{searchBalanceMin, searchBalanceMax});
+        pagination.setRangeFields(new String[] {"searchBalanceMin","searchBalanceMax", "searchDateMin", "searchDateMax"});
+        pagination.setRangeValues(new Object[]{searchBalanceMin, searchBalanceMax, searchDateMin, searchDateMax});
         request.setAttribute("pagination", pagination);
 
                 // Đặt các thuộc tính cho request

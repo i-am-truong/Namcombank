@@ -29,6 +29,10 @@
         <link href="${pageContext.request.contextPath}/adminassets/css/range-slider.css" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+        <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+        <link href="adminassets/css/sb-admin-2.min.css" rel="stylesheet">
+        <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+
 
         <style>
             .btn-pagination {
@@ -51,6 +55,7 @@
 
     <body>
         <div class="wrapper">
+            <jsp:include page="../homepage/sidebar_admin.jsp" />
 
             <div class="main">
                 <jsp:include page="../homepage/header_admin.jsp" />
@@ -89,6 +94,10 @@
                             <button type="submit" class="btn btn-success">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search align-middle"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                             </button>
+                            <!-- Thêm nút Clear Search -->
+                            <a href="manageCustomerVer2/Search" class="btn btn-secondary ms-2">
+                                <i class="fas fa-times"></i> Clear
+                            </a>
                         </div>
                         <div class="row">
                             <div class="col-md-3 input-group d-flex justify-content-end">
@@ -138,25 +147,25 @@
                                                     </div>
 
                         -->
-                    <div class="row">
+                        <div class="row">
                             <div class="col-md-6">
                                 <div class="slider-container" data-type="balance">
                                     <div class="price-input">
                                         <div class="field">
                                             <span>Balance</span>
                                             <input type="text"
-                                                  class="input-min format-float"
-                                                  name="searchBalanceMin"
-                                                  value="${pagination.rangeValues[0]}"
-                                                  step="0.01">
+                                                   class="input-min format-float"
+                                                   name="searchBalanceMin"
+                                                   value="${pagination.rangeValues[0]}"
+                                                   step="0.01">
                                         </div>
                                         <div class="separator">-</div>
                                         <div class="field">
                                             <input type="text"
-                                                  class="input-max format-float"
-                                                  name="searchBalanceMax"
-                                                  value="${pagination.rangeValues[1]==balanceMax?pagination.rangeValues[1]+0.01:pagination.rangeValues[1]}"
-                                                  step="0.01">
+                                                   class="input-max format-float"
+                                                   name="searchBalanceMax"
+                                                   value="${pagination.rangeValues[1]==balanceMax?pagination.rangeValues[1]+0.01:pagination.rangeValues[1]}"
+                                                   step="0.01">
                                         </div>
                                     </div>
                                     <div class="slider">
@@ -164,17 +173,40 @@
                                     </div>
                                     <div class="range-input">
                                         <input type="range"
-                                              class="range-min"
-                                              min="0"
-                                              max="${balanceMax + 0.01}"
-                                              value="${pagination.rangeValues[0]}"
-                                              step="0.01">
+                                               class="range-min"
+                                               min="0"
+                                               max="${balanceMax + 0.01}"
+                                               value="${pagination.rangeValues[0]}"
+                                               step="0.01">
                                         <input type="range"
-                                              class="range-max"
-                                              min="0"
-                                              max="${balanceMax + 0.01}"
-                                              value="${pagination.rangeValues[1]==balanceMax?pagination.rangeValues[1]+0.01:pagination.rangeValues[1]}"
-                                              step="0.01">
+                                               class="range-max"
+                                               min="0"
+                                               max="${balanceMax + 0.01}"
+                                               value="${pagination.rangeValues[1]==balanceMax?pagination.rangeValues[1]+0.01:pagination.rangeValues[1]}"
+                                               step="0.01">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="price-input">
+                                    <div class="field">
+                                        <span>DOB Range</span>
+                                        <input type="date"
+                                               class="form-control"
+                                               name="searchDateMin"
+                                               value="${pagination.rangeValues[2]}"
+                                               min="${dateMin}"
+                                               max="${dateMax}">
+                                    </div>
+                                    <div class="separator">-</div>
+                                    <div class="field">
+                                        <input type="date"
+                                               class="form-control"
+                                               name="searchDateMax"
+                                               value="${pagination.rangeValues[3]}"
+                                               min="${dateMin}"
+                                               max="${dateMax}">
                                     </div>
                                 </div>
                             </div>
@@ -341,7 +373,7 @@
                                             </c:choose>
                                         </c:when>
                                         <c:otherwise>
-                                            <img src="${pageContext.request.contextPath}/${customer.avatar}"
+                                            <img src="${pageContext.request.contextPath}/assets/img/Unknown.jpg"
                                                  alt="${customer.fullname}'s avatar"
                                                  width="120"
                                                  height="150">
