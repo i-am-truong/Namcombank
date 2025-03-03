@@ -85,7 +85,7 @@ public class StaffUpdateController extends BaseRBACControlller {
             // Validate input data
             String errorMessage = null;
             StaffDAO db = new StaffDAO();
-            
+
             if (raw_id == null || raw_id.trim().isEmpty()) {
                 errorMessage = "Staff ID is missing.";
             } else if (raw_sname == null || raw_sname.trim().isEmpty() || !FULLNAME_REGEX.matcher(raw_sname).matches()) {
@@ -102,12 +102,15 @@ public class StaffUpdateController extends BaseRBACControlller {
                 errorMessage = "Invalid address. Must be at least 3 characters and only contain letters, numbers, and allowed special characters.";
             } else {
                 int staffId = Integer.parseInt(raw_id);
-                // Only check for duplicates using the new methods that exclude the current staff
-                if (db.isPhoneExistsExcept(raw_phonenumber, staffId)){
+                boolean isEmailExists = db.isValueExistExcept("email", raw_email, staffId);
+                boolean isPhoneExists = db.isValueExistExcept("phonenumber", raw_phonenumber, staffId);
+                boolean isCitizenIDExists = db.isValueExistExcept("citizen_identification_card", raw_cic, staffId);
+
+                if (isPhoneExists) {
                     errorMessage = "Phone number already exists.";
-                } else if (db.isEmailExistsExcept(raw_email, staffId)) {
+                } else if (isEmailExists) {
                     errorMessage = "Email already exists.";
-                } else if (db.isCitizenIDExistsExcept(raw_cic, staffId)) {
+                } else if (isCitizenIDExists) {
                     errorMessage = "Citizen ID already exists.";
                 }
             }

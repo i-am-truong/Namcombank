@@ -41,17 +41,22 @@ public class LoginController extends HttpServlet {
             Integer roleId = null;
             Staff staffRole = null;
             for (Role role : roles) {
-                if ("Staff".equalsIgnoreCase(role.getName())) {
+                if ("Staff".equalsIgnoreCase(role.getName())) { //Staff Role
                     roleId = role.getId();
                     resp.sendRedirect("contractApproval");
                     hasValidRole = true;
                     break;
-                } else if (role.getId() == 1) {
+                } else if (role.getId() == 1) { // Admin Role
                     roleId = role.getId();
                     resp.sendRedirect("staffFilter");
                     hasValidRole = true;
                     break;
-                } else if (role.getId() == 5) {
+                } else if (role.getId() == 3) { // Head of Staff
+                    roleId = role.getId();
+                    resp.sendRedirect("managerContracts");
+                    hasValidRole = true;
+                    break;
+                } else if (role.getId() == 4) { //Accountant
                     roleId = role.getId();
                     resp.sendRedirect("managerContracts");
                     hasValidRole = true;

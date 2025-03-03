@@ -73,118 +73,38 @@ public class StaffDAO extends DBContext<Staff> {
             System.out.println("Error sending email: " + e.getMessage());
         }
     }
-    
-    // Kiểm tra email đã tồn tại chưa (loại trừ nhân viên hiện tại)
-    public boolean isEmailExistsExcept(String email, int staffId) {
-        String sql = "SELECT COUNT(*) FROM Staff WHERE email = ? AND staff_id != ?";
-        try {
-            PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setString(1, email);
+
+
+    public boolean isValueExistExcept(String columnName, String value, int staffId) {
+        String sql = "SELECT COUNT(*) FROM Staff WHERE " + columnName + " = ? AND staff_id != ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, value);
             ps.setInt(2, staffId);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 return rs.getInt(1) > 0;
             }
         } catch (SQLException e) {
-            System.out.println("Error checking email: " + e.getMessage());
-        }
-        return false;
-    }
-
-    // Kiểm tra số điện thoại đã tồn tại chưa (loại trừ nhân viên hiện tại)
-    public boolean isPhoneExistsExcept(String phone, int staffId) {
-        String sql = "SELECT COUNT(*) FROM Staff WHERE phonenumber = ? AND staff_id != ?";
-        try {
-            PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setString(1, phone);
-            ps.setInt(2, staffId);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return rs.getInt(1) > 0;
-            }
-        } catch (SQLException e) {
-            System.out.println("Error checking phone: " + e.getMessage());
-        }
-        return false;
-    }
-
-    // Kiểm tra CCCD đã tồn tại chưa (loại trừ nhân viên hiện tại)
-    public boolean isCitizenIDExistsExcept(String citizenId, int staffId) {
-        String sql = "SELECT COUNT(*) FROM Staff WHERE citizen_identification_card = ? AND staff_id != ?";
-        try {
-            PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setString(1, citizenId);
-            ps.setInt(2, staffId);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return rs.getInt(1) > 0;
-            }
-        } catch (SQLException e) {
-            System.out.println("Error checking citizen ID: " + e.getMessage());
-        }
-        return false;
-    }
-
-    // Check if the Citizen ID exists
-    public boolean isCitizenIDExists(String citizenID) {
-        String query = "SELECT COUNT(*) FROM Staff WHERE citizen_identification_card = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1, citizenID);
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                return resultSet.getInt(1) > 0;
-            }
-        } catch (SQLException e) {
+            System.out.println("Lỗi khi kiểm tra " + columnName + ": " + e.getMessage());
             e.printStackTrace();
         }
         return false;
     }
 
-    // Kiểm tra username đã tồn tại chưa
-    public boolean isUsernameExists(String username) {
-        String sql = "SELECT COUNT(*) FROM Staff WHERE username = ?";
-        try {
-            PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setString(1, username);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return rs.getInt(1) > 0;
-            }
-        } catch (SQLException e) {
-            System.out.println("Error checking username: " + e.getMessage());
-        }
-        return false;
-    }
+    public boolean doesRecordExist(String columnName, String value) {
+        String sql = "SELECT COUNT(*) FROM Staff WHERE " + columnName + " = ?";
 
-    // Kiểm tra email đã tồn tại chưa
-    public boolean isEmailExists(String email) {
-        String sql = "SELECT COUNT(*) FROM Staff WHERE email = ?";
-        try {
-            PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setString(1, email);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return rs.getInt(1) > 0;
-            }
-        } catch (SQLException e) {
-            System.out.println("Error checking email: " + e.getMessage());
-        }
-        return false;
-    }
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, value);
+            ResultSet resultSet = statement.executeQuery();
 
-    // Kiểm tra số điện thoại đã tồn tại chưa
-    public boolean isPhoneExists(String phone) {
-        String sql = "SELECT COUNT(*) FROM Staff WHERE phonenumber = ?";
-        try {
-            PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setString(1, phone);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return rs.getInt(1) > 0;
+            if (resultSet.next()) {
+                return resultSet.getInt(1) > 0;
             }
         } catch (SQLException e) {
-            System.out.println("Error checking phone: " + e.getMessage());
+            System.out.println("Error checking " + columnName + ": " + e.getMessage());
         }
+
         return false;
     }
 

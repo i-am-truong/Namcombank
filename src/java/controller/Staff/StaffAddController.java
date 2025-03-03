@@ -61,6 +61,7 @@ public class StaffAddController extends BaseRBACControlller {
             String errorMessage = null;
             StaffDAO db = new StaffDAO();
 
+
             // Validate input parameters
             if (raw_sname == null || raw_sname.trim().isEmpty() || !FULLNAME_REGEX.matcher(raw_sname).matches()) {
                 errorMessage = "Fullname must include at least the first and last names, separated by spaces, and contain only valid characters.";
@@ -77,14 +78,19 @@ public class StaffAddController extends BaseRBACControlller {
             } else if (raw_username == null || raw_username.trim().isEmpty() || !USERNAME_REGEX.matcher(raw_username).matches()) {
                 errorMessage = "Invalid username format.";
             } else {
+                boolean isCitizenIDExists = db.doesRecordExist("citizen_identification_card", raw_cic);
+                boolean isUsernameExists = db.doesRecordExist("username", raw_username);
+                boolean isEmailExists = db.doesRecordExist("email", raw_email);
+                boolean isPhoneExists = db.doesRecordExist("phonenumber", raw_phonenumber);
+
                 // Check for existing credentials
-                if (db.isPhoneExists(raw_phonenumber)) {
+                if (isPhoneExists) {
                     errorMessage = "Phone number already exists.";
-                } else if (db.isEmailExists(raw_email)) {
+                } else if (isEmailExists) {
                     errorMessage = "Email already exists.";
-                } else if (db.isCitizenIDExists(raw_cic)) {
+                } else if (isCitizenIDExists) {
                     errorMessage = "Citizen ID already exists.";
-                } else if (db.isUsernameExists(raw_username)) {
+                } else if (isUsernameExists) {
                     errorMessage = "Username already exists.";
                 }
             }
@@ -149,7 +155,7 @@ public class StaffAddController extends BaseRBACControlller {
             db.insert(s);
             // Send the generated password via email
             db.sendEmail(raw_email, generatedPassword, raw_username);
-            
+
             request.setAttribute("successMessage", "Staff added successfully! Password sent via email.");
             // Keep the entered information of the newly added staff
             request.setAttribute("nameS", raw_sname);
