@@ -170,12 +170,11 @@
 
                                 </ul>
                             </li>
-                            <li><a href="/Namcombank/allSavings">Savings <i class="fa fa-angle-down"></i></a>
+                            <li><a href="AllSaving">Savings <i class="fa fa-angle-down"></i></a>
                                 <ul class="submenu-item">
-                                    <li><a href="/Namcombank/allSavings">All Savings</a></li>
-                                    <li><a href="savings-without-term">Savings without term</a></li>
-                                    <li><a href="term-savings">Term Savings</a></li>
-                                    <li><a href="accumulated-savings">Accumulated savings</a></li>
+                                    <li><a href="AllSaving">All Savings</a></li>
+                                    <li><a href="SavingWIthoutTerm">Savings without term</a></li>
+                                    <li><a href="SavingTerm">Term Savings</a></li>
                                 </ul>
                             </li>
                             <li class="menu-item-has-children">

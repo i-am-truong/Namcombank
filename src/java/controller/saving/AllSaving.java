@@ -14,9 +14,9 @@ import jakarta.servlet.http.HttpServletResponse;
 
 /**
  *
- * @author lenovo
+ * @author admin
  */
-public class CreateSavingController extends HttpServlet {
+public class AllSaving extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -33,10 +33,10 @@ public class CreateSavingController extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet CreateSavingController</title>");  
+            out.println("<title>Servlet AllSaving</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet CreateSavingController at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet AllSaving at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }

@@ -137,14 +137,6 @@
         <servlet-class>controller.loanpackage.DeleteLoanPackageController</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>ListSavingController</servlet-name>
-        <servlet-class>controller.saving.ListSavingController</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>CreateSavingController</servlet-name>
-        <servlet-class>controller.saving.CreateSavingController</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>StaffLoginController</servlet-name>
         <servlet-class>controller.auth.LoginController</servlet-class>
     </servlet>
@@ -283,6 +275,18 @@
     <servlet>
         <servlet-name>ChatListServlet</servlet-name>
         <servlet-class>com.chat.websocket.ChatConfigurator</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AllSaving</servlet-name>
+        <servlet-class>controller.saving.AllSaving</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SavingWIthoutTerm</servlet-name>
+        <servlet-class>controller.saving.SavingWIthoutTerm</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SavingTerm</servlet-name>
+        <servlet-class>controller.saving.SavingTerm</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>ChatEndpoint</servlet-name>
@@ -433,14 +437,6 @@
         <url-pattern>/loanpackage/deleteloanpackage</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>ListSavingController</servlet-name>
-        <url-pattern>/savingInterest</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>CreateSavingController</servlet-name>
-        <url-pattern>/saving/create</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>StaffLoginController</servlet-name>
         <url-pattern>/admin.login</url-pattern>
     </servlet-mapping>
@@ -563,6 +559,18 @@
     <servlet-mapping>
         <servlet-name>ChatListServlet</servlet-name>
         <url-pattern>/ChatListServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AllSaving</servlet-name>
+        <url-pattern>/AllSaving</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SavingWIthoutTerm</servlet-name>
+        <url-pattern>/SavingWIthoutTerm</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SavingTerm</servlet-name>
+        <url-pattern>/SavingTerm</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

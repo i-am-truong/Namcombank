@@ -3,31 +3,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/admin/Documents/GitHub/Namcombank/src/java/controller/feedback/cusFeedback.java</file>
-            <file>file:/C:/Users/admin/Documents/GitHub/Namcombank/src/java/context/DepartmentDAO.java</file>
-            <file>file:/C:/Users/admin/Documents/GitHub/Namcombank/src/java/context/DBContext.java</file>
-            <file>file:/C:/Users/admin/Documents/GitHub/Namcombank/web/customer/viewCustomer.jsp</file>
-            <file>file:/C:/Users/admin/Documents/GitHub/Namcombank/web/WEB-INF/web.xml</file>
-            <file>file:/C:/Users/admin/Documents/GitHub/Namcombank/web/customer/ManageCustomerVer2.jsp</file>
-            <file>file:/C:/Users/admin/Documents/GitHub/Namcombank/src/java/controller/feedback/deleteFeedback.java</file>
-            <file>file:/C:/Users/admin/Documents/GitHub/Namcombank/web/homepage/sidebar_admin.jsp</file>
-            <file>file:/C:/Users/admin/Documents/GitHub/Namcombank/src/java/controller/feedback/ImageServlet.java</file>
-            <file>file:/C:/Users/admin/Documents/GitHub/Namcombank/src/java/controller/feedback/editFeedback.java</file>
-            <file>file:/C:/Users/admin/Documents/GitHub/Namcombank/src/java/controller/feedback/addFeedback.java</file>
             <file>file:/C:/Users/admin/Documents/GitHub/Namcombank/web/feedback/viewCustomerFeedback.jsp</file>
-            <file>file:/C:/Users/admin/Documents/GitHub/Namcombank/src/java/model/Feedback.java</file>
-            <file>file:/C:/Users/admin/Documents/GitHub/Namcombank/src/java/controller/customer/manageCustomerVer2.java</file>
-            <file>file:/C:/Users/admin/Documents/GitHub/Namcombank/web/homepage/header_admin.jsp</file>
-            <file>file:/C:/Users/admin/Documents/GitHub/Namcombank/web/feedback/feedback-create.jsp</file>
-            <file>file:/C:/Users/admin/Documents/GitHub/Namcombank/web/feedback/myFeedback.jsp</file>
-            <file>file:/C:/Users/admin/Documents/GitHub/Namcombank/web/feedback/viewFeedback.jsp</file>
-            <file>file:/C:/Users/admin/Documents/GitHub/Namcombank/src/java/context/FeedbackDao.java</file>
-            <file>file:/C:/Users/admin/Documents/GitHub/Namcombank/web/contract/managerContracts.jsp</file>
-            <file>file:/C:/Users/admin/Documents/GitHub/Namcombank/web/feedback/thankYou.jsp</file>
-            <file>file:/C:/Users/admin/Documents/GitHub/Namcombank/src/java/model/Feedback_id.java</file>
-            <file>file:/C:/Users/admin/Documents/GitHub/Namcombank/src/java/controller/auth/LoginController.java</file>
-            <file>file:/C:/Users/admin/Documents/GitHub/Namcombank/web/homepage/header_bottom.jsp</file>
-            <file>file:/C:/Users/admin/Documents/GitHub/Namcombank/src/java/controller/feedback/viewFeedback.java</file>
+            <file>file:/C:/Users/admin/Documents/GitHub/Namcombank/nbproject/build-impl.xml</file>
         </group>
     </open-files>
 </project-private>
