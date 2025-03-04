@@ -100,5 +100,7 @@
                     </div>
                 </div>
             </div>
+
+            <!--<p>DEBUG: rating = ${selectedRating}, type = ${feedback_type_selected}, search=${content_search_selected}</p>-->
         </body>
     </html>

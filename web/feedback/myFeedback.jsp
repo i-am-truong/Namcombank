@@ -62,11 +62,27 @@
             .btn:hover {
                 background-color: #5a6268;
             }
+            .error-message {
+                color: red;
+                font-weight: bold;
+                margin: 10px 0;
+            }
         </style>
     </head>
     <body>
         <h2>My Feedback</h2>
-        <table>
+<button class="btn" onclick="window.location.href = 'viewFeedback'">Quay lại</button>
+
+        <c:if test="${not empty errorContent}">
+            <p class="error-message">${errorContent}</p>
+        </c:if>
+        <c:if test="${not empty errorContentNull}">
+            <p class="error-message">${errorContentNull}</p>
+        </c:if>
+        <c:if test="${not empty errorAttachmentNull}">
+            <p class="error-message" >${errorAttachmentNull}</p>
+        </c:if>
+        <table> 
             <tr>
                 <th>Rating</th>
                 <th>Content</th>
@@ -91,8 +107,8 @@
                     </td>
                     <td>
                         <select name="feedback_type" required>
-                            <option value="human" ${feedback.feedback_type == 'human' ? 'selected' : ''}>Human</option>
-                            <option value="system" ${feedback.feedback_type == 'system' ? 'selected' : ''}>System</option>
+                            <option value="HUMAN" ${feedback.feedback_type == 'HUMAN' ? 'selected' : ''}>Human</option>
+                            <option value="SYSTEM" ${feedback.feedback_type == 'SYSTEM' ? 'selected' : ''}>System</option>
                         </select>
                     </td>
                     <td>
@@ -111,7 +127,11 @@
                 </form>
                 <tr>
                     <td colspan="6">
-                        <a href="deleteFeedback?rating=${feedback.rating}&content=${feedback.content}&submitted_at=${feedback.submitted_at}&feedback_type=${feedback.feedback_type}" style="color: red;">🗑 Xóa</a>
+                        <a href="deleteFeedback?feedback_id=${feedback.feedback_id}" 
+                           style="color: red;" 
+                           onclick="return confirm('Bạn có chắc chắn muốn xóa phản hồi này không?')">
+                            🗑 Xóa
+                        </a>
                     </td>
                 </tr>
             </c:forEach>

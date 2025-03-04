@@ -133,12 +133,13 @@ public class Pagination {
 
     public void setListPageSize(int total) {
         List<Integer> list = new ArrayList<>();
-        list.add(total);
+        list.add(5);
         list.add(10);
         list.add(30);
         list.add(total / 5);
         list.add(total / 4);
         list.add(total / 3);
+        list.add(total);
         listPageSize = list;
     }
 

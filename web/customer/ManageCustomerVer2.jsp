@@ -29,6 +29,9 @@
         <link href="${pageContext.request.contextPath}/adminassets/css/light.css" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+        <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+        <link href="adminassets/css/sb-admin-2.min.css" rel="stylesheet">
+        <link href="assets/css/bootstrap.min.css" rel="stylesheet">
         <style>
             .btn-pagination {
                 width: 40px;
@@ -45,12 +48,53 @@
                 cursor: pointer;
             }
 
+            /* Thêm CSS mới cho thanh search */
+            .search-container {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                width: 100%;
+                max-width: 600px;
+                margin-left: auto;
+            }
+
+            .search-container input[type="search"] {
+                flex: 1;
+                min-width: 300px;
+            }
+
+            .search-container .btn {
+                flex-shrink: 0;
+            }
+
+            /* Thêm CSS cho fixed sidebar layout */
+            .wrapper {
+                display: flex;
+                width: 100%;
+                height: 100%;
+            }
+
+            .main {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                min-height: 100vh;
+                overflow: hidden;
+            }
+
+            .content {
+                flex: 1 1 auto;
+                overflow-y: auto;
+                padding: 20px;
+            }
+
         </style>
     </head>
 
     <body>
         <div class="wrapper">
-            <%--<jsp:include page="../homepage/sidebar_admin.jsp" />--%>
+            <jsp:include page="../homepage/sidebar_admin.jsp" />
+
             <div class="main">
 
                 <jsp:include page="../homepage/header_admin.jsp" />
@@ -84,16 +128,21 @@
                                 </label>
                             </div>
                             <div class="col-sm-6 col-md-6 text-end">
-                                <div class="col-md-3 input-group d-flex justify-content-end">
-                                    <input type="search" style="flex: 0.5 1 auto" name="search" class="form-control form-control-md" placeholder="Search" value="${pagination.searchValues[0]}" aria-controls="datatables-column-search-text-inputs">
+                                <div class="search-container">
+                                    <input type="search"
+                                           name="search"
+                                           class="form-control form-control-md"
+                                           placeholder="Search"
+                                           value="${pagination.searchValues[0]}"
+                                           aria-controls="datatables-column-search-text-inputs">
                                     <button type="submit" class="btn btn-success">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search align-middle"><circle cx="11" cx="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search align-middle"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                                     </button>
                                     </form>
-                                    <form action="ExportCustomers" method="get" class="ms-1">
+                                    <form action="ExportCustomers" method="get">
                                         <button type="submit" class="btn btn-success"><i class="fas fa-print"></i></button>
                                     </form>
-                                    <form action="ImportCustomers" class="ms-1" id="importForm" method="post" enctype="multipart/form-data" >
+                                    <form action="ImportCustomers" id="importForm" method="post" enctype="multipart/form-data">
                                         <input type="file" name="file" id="fileInput" style="display: none;" required>
                                         <button type="button" class="btn btn-success" id="uploadBtn">
                                             <i class="fas fa-file-import"></i>
@@ -122,189 +171,190 @@
                                 </div>
                             </div>
                         </c:if>
-                        <table class="table table-hover my-0">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>
-                                        <form action="manageCustomerVer2" method="get">
-                                            <input type="hidden" name="page" value="${pagination.currentPage}" />
-                                            <input type="hidden" name="page-size" value="${pagination.pageSize}" />
-                                            <input type="hidden" name="search" value="${pagination.searchValues[0]}" />
-                                            <input type="hidden" name="sort" value="fullname" />
-                                            <input type="hidden" name="order" value="${pagination.sort eq 'fullname' and pagination.order eq 'asc' ? 'desc' : 'asc'}" />
-                                            <button type="submit" class="btn-sort">
-                                                <i class="align-middle fas fa-fw
-                                                   ${pagination.sort eq 'fullname' ? (pagination.order eq 'asc' ? 'fa-sort-up' : 'fa-sort-down') : 'fa-sort'}">
-                                                </i>
-                                            </button>
-                                            Full Name
-                                        </form>
-                                    </th>
-                                    <th>Image</th>
-                                    <th>
-                                        Gender
-                                    </th>
-                                    <th>
-                                        Date Of Birth
-                                    </th>
+                            <table class="table table-hover my-0">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>
+                                            <form action="manageCustomerVer2" method="get">
+                                                <input type="hidden" name="page" value="${pagination.currentPage}" />
+                                                <input type="hidden" name="page-size" value="${pagination.pageSize}" />
+                                                <input type="hidden" name="search" value="${pagination.searchValues[0]}" />
+                                                <input type="hidden" name="sort" value="fullname" />
+                                                <input type="hidden" name="order" value="${pagination.sort eq 'fullname' and pagination.order eq 'asc' ? 'desc' : 'asc'}" />
+                                                <button type="submit" class="btn-sort">
+                                                    <i class="align-middle fas fa-fw
+                                                       ${pagination.sort eq 'fullname' ? (pagination.order eq 'asc' ? 'fa-sort-up' : 'fa-sort-down') : 'fa-sort'}">
+                                                    </i>
+                                                </button>
+                                                Full Name
+                                            </form>
+                                        </th>
+                                        <th>Image</th>
+                                        <th>
+                                            Gender
+                                        </th>
+                                        <th>
+                                            Date Of Birth
+                                        </th>
 
-                                    <th>
-                                        <form action="manageCustomerVer2" method="get">
-                                            <input type="hidden" name="page" value="${pagination.currentPage}" />
-                                            <input type="hidden" name="page-size" value="${pagination.pageSize}" />
-                                            <input type="hidden" name="search" value="${pagination.searchValues[0]}" />
-                                            <input type="hidden" name="sort" value="email" />
-                                            <input type="hidden" name="order" value="${pagination.sort eq 'email' and pagination.order eq 'asc' ? 'desc' : 'asc'}" />
-                                            <button type="submit" class="btn-sort">
-                                                <i class="align-middle fas fa-fw
-                                                   ${pagination.sort eq 'email' ? (pagination.order eq 'asc' ? 'fa-sort-up' : 'fa-sort-down') : 'fa-sort'}">
-                                                </i>
-                                            </button>
-                                            Email
-                                        </form>
-                                    </th>
+                                        <th>
+                                            <form action="manageCustomerVer2" method="get">
+                                                <input type="hidden" name="page" value="${pagination.currentPage}" />
+                                                <input type="hidden" name="page-size" value="${pagination.pageSize}" />
+                                                <input type="hidden" name="search" value="${pagination.searchValues[0]}" />
+                                                <input type="hidden" name="sort" value="email" />
+                                                <input type="hidden" name="order" value="${pagination.sort eq 'email' and pagination.order eq 'asc' ? 'desc' : 'asc'}" />
+                                                <button type="submit" class="btn-sort">
+                                                    <i class="align-middle fas fa-fw
+                                                       ${pagination.sort eq 'email' ? (pagination.order eq 'asc' ? 'fa-sort-up' : 'fa-sort-down') : 'fa-sort'}">
+                                                    </i>
+                                                </button>
+                                                Email
+                                            </form>
+                                        </th>
 
-                                    <th>Phone Number</th>
+                                        <th>Phone Number</th>
 
-                                    <th>CID</th>
+                                        <th>CID</th>
 
-                                    <th>Account Status</th>
+                                        <th>Account Status</th>
 
-                                    <th>
-                                        <form action="manageCustomerVer2" method="get">
-                                            <input type="hidden" name="page" value="${pagination.currentPage}" />
-                                            <input type="hidden" name="page-size" value="${pagination.pageSize}" />
-                                            <input type="hidden" name="search" value="${pagination.searchValues[0]}" />
-                                            <input type="hidden" name="sort" value="username" />
-                                            <input type="hidden" name="order" value="${pagination.sort eq 'username' and pagination.order eq 'asc' ? 'desc' : 'asc'}" />
-                                            <button type="submit" class="btn-sort">
-                                                <i class="align-middle fas fa-fw
-                                                   ${pagination.sort eq 'username' ? (pagination.order eq 'asc' ? 'fa-sort-up' : 'fa-sort-down') : 'fa-sort'}">
-                                                </i>
-                                            </button>
-                                            Username
-                                        </form>
-                                    </th>
+                                        <th>
+                                            <form action="manageCustomerVer2" method="get">
+                                                <input type="hidden" name="page" value="${pagination.currentPage}" />
+                                                <input type="hidden" name="page-size" value="${pagination.pageSize}" />
+                                                <input type="hidden" name="search" value="${pagination.searchValues[0]}" />
+                                                <input type="hidden" name="sort" value="username" />
+                                                <input type="hidden" name="order" value="${pagination.sort eq 'username' and pagination.order eq 'asc' ? 'desc' : 'asc'}" />
+                                                <button type="submit" class="btn-sort">
+                                                    <i class="align-middle fas fa-fw
+                                                       ${pagination.sort eq 'username' ? (pagination.order eq 'asc' ? 'fa-sort-up' : 'fa-sort-down') : 'fa-sort'}">
+                                                    </i>
+                                                </button>
+                                                Username
+                                            </form>
+                                        </th>
 
-                                    <th>
-                                        <form action="manageCustomerVer2" method="get">
-                                            <input type="hidden" name="page" value="${pagination.currentPage}" />
-                                            <input type="hidden" name="page-size" value="${pagination.pageSize}" />
-                                            <input type="hidden" name="search" value="${pagination.searchValues[0]}" />
-                                            <input type="hidden" name="sort" value="address" />
-                                            <input type="hidden" name="order" value="${pagination.sort eq 'address' and pagination.order eq 'asc' ? 'desc' : 'asc'}" />
-                                            <button type="submit" class="btn-sort">
-                                                <i class="align-middle fas fa-fw
-                                                   ${pagination.sort eq 'address' ? (pagination.order eq 'asc' ? 'fa-sort-up' : 'fa-sort-down') : 'fa-sort'}">
-                                                </i>
-                                            </button>
-                                            Address
-                                        </form>
-                                    </th>
+                                        <th>
+                                            <form action="manageCustomerVer2" method="get">
+                                                <input type="hidden" name="page" value="${pagination.currentPage}" />
+                                                <input type="hidden" name="page-size" value="${pagination.pageSize}" />
+                                                <input type="hidden" name="search" value="${pagination.searchValues[0]}" />
+                                                <input type="hidden" name="sort" value="address" />
+                                                <input type="hidden" name="order" value="${pagination.sort eq 'address' and pagination.order eq 'asc' ? 'desc' : 'asc'}" />
+                                                <button type="submit" class="btn-sort">
+                                                    <i class="align-middle fas fa-fw
+                                                       ${pagination.sort eq 'address' ? (pagination.order eq 'asc' ? 'fa-sort-up' : 'fa-sort-down') : 'fa-sort'}">
+                                                    </i>
+                                                </button>
+                                                Address
+                                            </form>
+                                        </th>
 
-                                    <th>Balance</th>
-                                    <th>Reload<a href="manageCustomerVer2?page=${pagination.currentPage}&page-size=${pagination.pageSize}"><i class="fa fa-refresh ms-2"></i></a></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!--                        varStatus để lấy trạng thái của vòng lặp-->
-                                <c:forEach var="customer" items="${customers}" varStatus="status">
-                                    <tr class="${status.index % 2 == 0 ? 'table-success' : ''}">
-                                        <td>${status.index + 1 + (pagination.currentPage - 1) * pagination.pageSize}</td>
-                                        <td>${customer.fullname}</td>
-                                        <td>
-                                            <c:choose>
-                                                <c:when test="${empty customer.avatar}">
-                                                    <c:choose>
-                                                        <c:when test="${customer.gender == 1}">
-                                                            <img src="${pageContext.request.contextPath}/assets/img/Male.jpg"
-                                                                 alt="Male Avatar"
-                                                                 width="120"
-                                                                 height="150">
-                                                        </c:when>
-                                                        <c:when test="${customer.gender == 0}">
-                                                            <img src="${pageContext.request.contextPath}/assets/img/Female.jpg"
-                                                                 alt="Female Avatar"
-                                                                 width="120"
-                                                                 height="150">
-                                                        </c:when>
-                                                    </c:choose>
-                                                </c:when>
-                                                <c:otherwise>
-                                                    <img src="${pageContext.request.contextPath}/${customer.avatar}"
-                                                         alt="${customer.fullname}'s avatar"
-                                                         width="120"
-                                                         height="150">
-                                                </c:otherwise>
-                                            </c:choose>
-                                        </td>
-                                        <td>
-                                            <c:choose>
-                                                <c:when test="${customer.gender == 0}">
-                                                    Female
-                                                </c:when>
-                                                <c:when test="${customer.gender == 1}">
-                                                    Male
-                                                </c:when>
-                                            </c:choose>
-                                        </td>
-                                        <td>${customer.dob}</td>
-                                        <td>${customer.email}</td>
-                                        <td>${customer.phonenumber}</td>
-                                        <td>${customer.cid}</td>
-                                        <td>
-                                            <c:choose>
-                                                <c:when test="${customer.active == 0}">
-                                                    <span class="badge bg-danger">Closed</span>
-                                                </c:when>
-                                                <c:when test="${customer.active == 1}">
-                                                    <span class="badge bg-success">Opening</span>
-                                                </c:when>
-                                            </c:choose>
-                                        </td>
-                                        <td>${customer.username}</td>
-                                        <td>${customer.address}</td>
-                                        <td>${customer.balance}</td>
-                                        <td class="table-action">
-    <!--                                        <a href="ComponentWarehouse/Detail?ID=${customer.customerId}&from=warehouse">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2 align-middle">
-                                                <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
-                                                </svg>
-                                            </a>
-                                            <a data-bs-toggle="modal" data-bs-target="#centeredModalPrimary_${customer.customerId}">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash align-middle">
-                                                <polyline points="3 6 5 6 21 6"></polyline>
-                                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                                                </svg>
-                                            </a>-->
-                                        </td>
-
+                                        <th>Balance</th>
+                                        <th>Reload<a href="manageCustomerVer2?page=${pagination.currentPage}&page-size=${pagination.pageSize}"><i class="fa fa-refresh ms-2"></i></a></th>
                                     </tr>
+                                </thead>
+                                <tbody>
+                                    <!--                        varStatus để lấy trạng thái của vòng lặp-->
+                                    <c:forEach var="customer" items="${customers}" varStatus="status">
+                                        <tr class="${status.index % 2 == 0 ? 'table-success' : ''}">
+                                            <td>${status.index + 1 + (pagination.currentPage - 1) * pagination.pageSize}</td>
+                                            <td>${customer.fullname}</td>
+                                            <td>
+                                                <c:choose>
+                                                    <c:when test="${empty customer.avatar}">
+                                                        <c:choose>
+                                                            <c:when test="${customer.gender == 1}">
+                                                                <img src="${pageContext.request.contextPath}/assets/img/Male.jpg"
+                                                                     alt="Male Avatar"
+                                                                     width="120"
+                                                                     height="150">
+                                                            </c:when>
+                                                            <c:when test="${customer.gender == 0}">
+                                                                <img src="${pageContext.request.contextPath}/assets/img/Female.jpg"
+                                                                     alt="Female Avatar"
+                                                                     width="120"
+                                                                     height="150">
+                                                            </c:when>
+                                                        </c:choose>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <img src="${pageContext.request.contextPath}/assets/img/Unknown.jpg"
+                                                             alt="${customer.fullname}'s avatar"
+                                                             width="120"
+                                                             height="150">
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </td>
+                                            <td>
+                                                <c:choose>
+                                                    <c:when test="${customer.gender == 0}">
+                                                        Female
+                                                    </c:when>
+                                                    <c:when test="${customer.gender == 1}">
+                                                        Male
+                                                    </c:when>
+                                                </c:choose>
+                                            </td>
+                                            <td>${customer.dob}</td>
+                                            <td>${customer.email}</td>
+                                            <td>${customer.phonenumber}</td>
+                                            <td>${customer.cid}</td>
+                                            <td>
+                                                <c:choose>
+                                                    <c:when test="${customer.active == 0}">
+                                                        <span class="badge bg-danger">Closed</span>
+                                                    </c:when>
+                                                    <c:when test="${customer.active == 1}">
+                                                        <span class="badge bg-success">Opening</span>
+                                                    </c:when>
+                                                </c:choose>
+                                            </td>
+                                            <td>${customer.username}</td>
+                                            <td>${customer.address}</td>
+                                            <td>${customer.balance}</td>
+                                            <td class="table-action">
+        <!--                                        <a href="ComponentWarehouse/Detail?ID=${customer.customerId}&from=warehouse">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2 align-middle">
+                                                    <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+                                                    </svg>
+                                                </a>
+                                                <a data-bs-toggle="modal" data-bs-target="#centeredModalPrimary_${customer.customerId}">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash align-middle">
+                                                    <polyline points="3 6 5 6 21 6"></polyline>
+                                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                                    </svg>
+                                                </a>-->
+                                            </td>
 
-                                    <!-- Modal for each component -->
-                                <div class="modal fade" id="centeredModalPrimary_${customer.customerId}" tabindex="-1" aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title">Delete Confirmation</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body m-3">
-                                                <p class="mb-0">Confirm your action. Really want to delete?</p>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" disabled>Close</button>
-                                                <a href="ComponentWarehouse/Delete?ID=${customer.customerId}&page=${pagination.currentPage}&page-size=${pagination.pageSize}&search=${pagination.searchValues[0]}&sort=${pagination.sort}&order=${pagination.order}" class="btn btn-success">Delete</a>
+                                        </tr>
+
+                                        <!-- Modal for each component -->
+                                    <div class="modal fade" id="centeredModalPrimary_${customer.customerId}" tabindex="-1" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Delete Confirmation</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body m-3">
+                                                    <p class="mb-0">Confirm your action. Really want to delete?</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" disabled>Close</button>
+                                                    <a href="ComponentWarehouse/Delete?ID=${customer.customerId}&page=${pagination.currentPage}&page-size=${pagination.pageSize}&search=${pagination.searchValues[0]}&sort=${pagination.sort}&order=${pagination.order}" class="btn btn-success">Delete</a>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </c:forEach>
+                                </c:forEach>
 
 
-                            </tbody>
-                        </table>
+                                </tbody>
+                            </table>
+
                         <c:if test="${totalCustomers==0}">
                             <div class="alert alert-primary alert-dismissible" role="alert">
                                 <div class="alert-message text-center">

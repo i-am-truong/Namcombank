@@ -96,6 +96,9 @@
             .nav-item.dropdown.show .dropdown-menu {
                 display: block;
             }
+            h2{
+                color: #000000;
+            }
             @media (max-width: 768px) {
                 .navbar .navbar-toggler {
                     display: block;

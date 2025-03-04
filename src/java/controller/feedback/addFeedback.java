@@ -99,15 +99,39 @@ public class addFeedback extends HttpServlet {
             Integer customerId = Integer.parseInt(request.getParameter("customer_id"));
             String content = request.getParameter("content");
             String submittedAt = request.getParameter("submitted_at");
-            String feedbackType = request.getParameter("feedback_type");
+            String feedback_type = request.getParameter("feedback_type");
             int rating = Integer.parseInt(request.getParameter("rating"));
+
+            if (content == null || content.trim().isEmpty()) {
+                if (rating < 5) {
+                    request.setAttribute("errorContent", "Please give your feedback ratings below 5.");
+                    request.getRequestDispatcher("feedback/feedback-create.jsp").forward(request, response);
+                    return;
+                }
+            } else if (!checkContent(content)) {
+                request.setAttribute("errorContent", "Content contains invalid characters.");
+                request.setAttribute("content", content);
+                request.setAttribute("feedback_type", feedback_type);
+                request.setAttribute("rating", rating);
+                request.getRequestDispatcher("feedback/feedback-create.jsp").forward(request, response);
+                return;
+            }
+
+            if (rating < 5 && (attachment == null || attachment.length == 0)) {
+                request.setAttribute("errorAttachment", "Attachment is required for ratings below 5.");
+                request.setAttribute("content", content);
+                request.setAttribute("feedback_type", feedback_type);
+                request.setAttribute("rating", rating);
+                request.getRequestDispatcher("feedback/feedback-create.jsp").forward(request, response);
+                return;
+            }
 
             FeedbackDao dao = new FeedbackDao();
             Feedback feedback = new Feedback();
             feedback.setCustomer_id(customerId);
-            feedback.setContent(content);
+            feedback.setContent(formatContent(content));
             feedback.setRating(rating);
-            feedback.setFeedback_type(feedbackType);
+            feedback.setFeedback_type(feedback_type);
             feedback.setSubmitted_at(submittedAt);
             feedback.setAttachment(attachment);
 
@@ -126,5 +150,21 @@ public class addFeedback extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+
+    public boolean checkContent(String content) {
+        return content.matches("^[\\p{L}0-9\\s.,!?]+$");
+    }
+
+    private String formatContent(String content) {
+
+        if (content == null || content.isEmpty()) {
+            return null;
+        }
+        return Character.toUpperCase(content.charAt(0)) + content.substring(1);
+    }
+
+    public boolean checkAttachment(Part filePart) {
+        return filePart != null && filePart.getSize() > 0;
+    }
 
 }
