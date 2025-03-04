@@ -58,13 +58,13 @@ public class StaffDAO extends DBContext<Staff> {
         // Create email session
         Session session = Session.getInstance(properties, new Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication("duongkoi0504@gmail.com", "qjew mxlv juli wgwr"); // Your email and password
+                return new PasswordAuthentication("doanvinhhung369@gmail.com", "typj uudv rlzc yxzq"); // Your email and password
             }
         });
 
         try {
             MimeMessage message = new MimeMessage(session);
-            message.setFrom(new InternetAddress("duongkoi0504@gmail.com")); // Sender email
+            message.setFrom(new InternetAddress("doanvinhhung369@gmail.com")); // Sender email
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientEmail));
             message.setSubject(subject);
             message.setText(body);
@@ -73,7 +73,6 @@ public class StaffDAO extends DBContext<Staff> {
             System.out.println("Error sending email: " + e.getMessage());
         }
     }
-
 
     public boolean isValueExistExcept(String columnName, String value, int staffId) {
         String sql = "SELECT COUNT(*) FROM Staff WHERE " + columnName + " = ? AND staff_id != ?";
@@ -140,14 +139,14 @@ public class StaffDAO extends DBContext<Staff> {
                 stm_update.setInt(9, model.getId());
 
                 int rowsUpdated = stm_update.executeUpdate();
-                System.out.println("✅ Cập nhật thông tin nhân viên: " + rowsUpdated + " dòng");
+
             }
 
             // 2. Xóa roles cũ
             try (PreparedStatement stm_delete = connection.prepareStatement(sql_delete_roles)) {
                 stm_delete.setInt(1, model.getId());
                 int rolesDeleted = stm_delete.executeUpdate();
-                System.out.println("🗑️ Xóa roles cũ: " + rolesDeleted + " roles");
+
             }
 
             // 3. Thêm roles mới
@@ -159,12 +158,12 @@ public class StaffDAO extends DBContext<Staff> {
                         stm_insert.addBatch();
                     }
                     int[] results = stm_insert.executeBatch();
-                    System.out.println("✨ Thêm roles mới: " + results.length + " roles");
+
                 }
             }
 
             connection.commit();
-            System.out.println("✅ Cập nhật thành công!");
+
             return true;
 
         } catch (SQLException ex) {
@@ -514,12 +513,9 @@ public class StaffDAO extends DBContext<Staff> {
                     + "LEFT JOIN StaffRoles sr ON s.staff_id = sr.staff_id "
                     + "LEFT JOIN Roles r ON sr.role_id = r.role_id "
                     + "where 1=1";
-
             stm = connection.prepareStatement(sql);
             ResultSet rs = stm.executeQuery();
-
             HashMap<Integer, Staff> staffMap = new HashMap<>();
-
             while (rs.next()) {
                 int staffId = rs.getInt("staff_id");
 
@@ -535,19 +531,15 @@ public class StaffDAO extends DBContext<Staff> {
                     s.setPhonenumber(rs.getString("phonenumber"));
                     s.setCitizenId(rs.getString("citizen_identification_card"));
                     s.setAddress(rs.getString("address"));
-
                     // Gán phòng ban
                     Department d = new Department();
                     d.setName(rs.getString("department_name"));
                     s.setDept(d);
-
                     // Tạo danh sách vai trò rỗng
                     s.setRoles(new ArrayList<>());
-
                     // Thêm nhân viên vào HashMap
                     staffMap.put(staffId, s);
                 }
-
                 String roleName = rs.getString("role_name");
                 if (roleName != null) {
                     Role r = new Role();
@@ -559,8 +551,7 @@ public class StaffDAO extends DBContext<Staff> {
             staffs.addAll(staffMap.values());
 
         } catch (SQLException ex) {
-            Logger.getLogger(StaffDAO.class
-                    .getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(StaffDAO.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 if (stm != null) {
@@ -568,7 +559,6 @@ public class StaffDAO extends DBContext<Staff> {
                 }
                 if (connection != null) {
                     connection.close();
-
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(StaffDAO.class

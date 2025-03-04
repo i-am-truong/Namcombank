@@ -272,6 +272,14 @@
         <servlet-name>ImageServlet</servlet-name>
         <servlet-class>controller.feedback.ImageServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>SendOtp</servlet-name>
+        <servlet-class>controller.auth.SendOtp</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>VerifyOTPServlet</servlet-name>
+        <servlet-class>controller.auth.VerifyOTPServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>viewCustomerDetail</servlet-name>
         <url-pattern>/viewCustomerDetail</url-pattern>
@@ -539,6 +547,14 @@
     <servlet-mapping>
         <servlet-name>ImageServlet</servlet-name>
         <url-pattern>/ImageServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SendOtp</servlet-name>
+        <url-pattern>/sendotp</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>VerifyOTPServlet</servlet-name>
+        <url-pattern>/verifyotp</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

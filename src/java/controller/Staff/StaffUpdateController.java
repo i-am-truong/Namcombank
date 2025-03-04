@@ -164,7 +164,6 @@ public class StaffUpdateController extends BaseRBACControlller {
                     }
                 }
                 staff.setRoles(roles);
-
                 request.setAttribute("staff", staff);
                 request.getRequestDispatcher("staff/updateStaff.jsp").forward(request, response);
                 return;

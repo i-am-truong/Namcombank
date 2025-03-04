@@ -25,6 +25,21 @@ import model.auth.Staff;
  */
 public class StaffAccountDBContext extends DBContext<Staff> {
 
+    public String getStaffEmailByUsername(String username) {
+        String sql = "SELECT email FROM staff WHERE username = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, username);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("email");
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error when getting staff email: " + e.getMessage());
+        }
+        return null;
+    }
+
     public static String toSHA1(String str) {
         String salt = "kaisd#$%^&*(sg~~sda";
         String result = null;
