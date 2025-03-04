@@ -4,6 +4,7 @@
  */
 package model;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 /**
  *
@@ -15,9 +16,9 @@ public class LoanPackage {
     private String packageName;
     private String loanType;
     private String description;
-    private double interestRate;
-    private double maxAmount;
-    private double minAmount;
+    private BigDecimal interestRate;
+    private BigDecimal maxAmount;
+    private BigDecimal minAmount;
     private int loanTerm;
     private Date createdDate;
 
@@ -25,7 +26,7 @@ public class LoanPackage {
         
     }
 
-    public LoanPackage(int packageId, int staffId, String packageName, String loanType, String description, double interestRate, double maxAmount, double minAmount, int loanTerm, Date createdDate) {
+    public LoanPackage(int packageId, int staffId, String packageName, String loanType, String description, BigDecimal interestRate, BigDecimal maxAmount, BigDecimal minAmount, int loanTerm, Date createdDate) {
         this.packageId = packageId;
         this.staffId = staffId;
         this.packageName = packageName;
@@ -78,27 +79,27 @@ public class LoanPackage {
         this.description = description;
     }
 
-    public double getInterestRate() {
+    public BigDecimal getInterestRate() {
         return interestRate;
     }
 
-    public void setInterestRate(double interestRate) {
+    public void setInterestRate(BigDecimal interestRate) {
         this.interestRate = interestRate;
     }
 
-    public double getMaxAmount() {
+    public BigDecimal getMaxAmount() {
         return maxAmount;
     }
 
-    public void setMaxAmount(double maxAmount) {
+    public void setMaxAmount(BigDecimal maxAmount) {
         this.maxAmount = maxAmount;
     }
 
-    public double getMinAmount() {
+    public BigDecimal getMinAmount() {
         return minAmount;
     }
 
-    public void setMinAmount(double minAmount) {
+    public void setMinAmount(BigDecimal minAmount) {
         this.minAmount = minAmount;
     }
 
@@ -119,5 +120,5 @@ public class LoanPackage {
     }
     
     
-    
+
 }

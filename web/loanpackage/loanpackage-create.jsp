@@ -1,80 +1,58 @@
-<%-- 
-    Document   : loanpackage-create
-    Created on : Jan 28, 2025, 1:10:25 PM
-    Author     : lenovo
---%>
-
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Create Loan Package</title>
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-            }
-            .container {
-                max-width: 600px;
-                margin: 0 auto;
-                padding: 20px;
-                border: 1px solid #ddd;
-                border-radius: 8px;
-                background-color: #f9f9f9;
-            }
-            label {
-                display: block;
-                margin: 10px 0 5px;
-                font-weight: bold;
-            }
-            input[type="text"],
-            input[type="number"],
-            textarea {
-                width: 100%;
-                padding: 8px;
-                margin-bottom: 10px;
-                border: 1px solid #ddd;
-                border-radius: 4px;
-            }
-            button {
-                padding: 10px 15px;
-                background-color: #28a745;
-                color: white;
-                border: none;
-                border-radius: 4px;
-                cursor: pointer;
-            }
-            button:hover {
-                background-color: #218838;
-            }
-        </style>
+        <script src="https://cdn.tailwindcss.com"></script>
     </head>
-    <body>
-        <div class="container">
-            <h1>Create New Loan Package</h1>
-            <form action="createloanpackage" method="post">
-                <label for="packageName">Package Name</label>
-                <input type="text" id="packageName" name="packageName" required maxlength="100">
+    <body class="bg-gray-100 flex items-center justify-center min-h-screen">
+        <div class="bg-white p-6 rounded-lg shadow-md max-w-lg w-full">
+            <h1 class="text-2xl font-bold text-center text-gray-700 mb-6">Create New Loan Package</h1>
+            <form action="createloanpackage" method="post" class="space-y-4">
+                <div>
+                    <label for="packageName" class="block text-gray-600 font-semibold">Package Name</label>
+                    <input type="text" id="packageName" name="packageName" required maxlength="100" 
+                           class="w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300">
+                </div>
 
-                <label for="loanType">Loan Type</label>
-                <input type="text" id="loanType" name="loanType" required maxlength="50">
+                <div>
+                    <label for="loanType" class="block text-gray-600 font-semibold">Loan Type</label>
+                    <input type="text" id="loanType" name="loanType" required maxlength="50" 
+                           class="w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300">
+                </div>
 
-                <label for="description">Description</label>
-                <textarea id="description" name="description" rows="4" required maxlength="500"></textarea>
+                <div>
+                    <label for="description" class="block text-gray-600 font-semibold">Description</label>
+                    <textarea id="description" name="description" rows="4" required maxlength="500" 
+                              class="w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300"></textarea>
+                </div>
 
-                <label for="interestRate">Interest Rate (%)</label>
-                <input type="number" step="0.01" id="interestRate" name="interestRate" required min="0" max="100">
+                <div>
+                    <label for="interestRate" class="block text-gray-600 font-semibold">Interest Rate (%)</label>
+                    <input type="number" step="0.01" id="interestRate" name="interestRate" required min="0" max="100" 
+                           class="w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300">
+                </div>
 
-                <label for="maxAmount">Maximum Loan Amount</label>
-                <input type="number" step="0.01" id="maxAmount" name="maxAmount" required min="0">
+                <div>
+                    <label for="maxAmount" class="block text-gray-600 font-semibold">Maximum Loan Amount</label>
+                    <input type="number" step="0.01" id="maxAmount" name="maxAmount" required min="0" 
+                           class="w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300">
+                </div>
 
-                <label for="minAmount">Minimum Loan Amount</label>
-                <input type="number" step="0.01" id="minAmount" name="minAmount" required min="0">
+                <div>
+                    <label for="minAmount" class="block text-gray-600 font-semibold">Minimum Loan Amount</label>
+                    <input type="number" step="0.01" id="minAmount" name="minAmount" required min="0" 
+                           class="w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300">
+                </div>
 
-                <label for="loanTerm">Loan Term (months)</label>
-                <input type="number" id="loanTerm" name="loanTerm" required min="1" max="360">
+                <div>
+                    <label for="loanTerm" class="block text-gray-600 font-semibold">Loan Term (months)</label>
+                    <input type="number" id="loanTerm" name="loanTerm" required min="1" max="360" 
+                           class="w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300">
+                </div>
 
-                <button type="submit">Create Loan Package</button>
+                <button type="submit" class="w-full bg-green-500 text-white py-2 rounded-md hover:bg-green-600 transition">Create Loan Package</button>
             </form>
         </div>
     </body>

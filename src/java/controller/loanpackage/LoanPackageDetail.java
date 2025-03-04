@@ -6,22 +6,18 @@ package controller.loanpackage;
 
 import context.LoanPackageDAO;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.PrintWriter;
-import java.math.BigDecimal;
 import model.LoanPackage;
 
 /**
  *
  * @author lenovo
  */
-public class CreateLoanPackageController extends HttpServlet {
+public class LoanPackageDetail extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,10 +36,10 @@ public class CreateLoanPackageController extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet CreateLoanPackageController</title>");
+            out.println("<title>Servlet LoanPackageDetail</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet CreateLoanPackageController at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet LoanPackageDetail at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -58,10 +54,27 @@ public class CreateLoanPackageController extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        String idParam = request.getParameter("id");
+        if (idParam != null) {
+            try {
+                int packageId = Integer.parseInt(idParam);
+                LoanPackageDAO dao = new LoanPackageDAO();
+                LoanPackage loanPackage = dao.getLoanPackageById(packageId);
+
+                if (loanPackage != null) {
+                    request.setAttribute("loanPackage", loanPackage);
+                    request.getRequestDispatcher("loanpackage-detail.jsp").forward(request, response);
+                } else {
+                    response.sendRedirect("loan-request-list.jsp?error=PackageNotFound");
+                }
+            } catch (NumberFormatException e) {
+                response.sendRedirect("loan-request-list.jsp?error=InvalidID");
+            }
+        } else {
+            response.sendRedirect("loan-request-list.jsp?error=MissingID");
+        }
     }
 
     /**
@@ -75,49 +88,7 @@ public class CreateLoanPackageController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            String staffId = request.getParameter("staffId");
-            String packageName = request.getParameter("packageName");
-            String loanType = request.getParameter("loanType");
-            String description = request.getParameter("description");
-            String interestRateStr = request.getParameter("interestRate");
-            String maxAmountStr = request.getParameter("maxAmount");
-            String minAmountStr = request.getParameter("minAmount");
-            String loanTermStr = request.getParameter("loanTerm");
-
-            // Kiểm tra và parse an toàn
-            BigDecimal interestRate = (interestRateStr != null && !interestRateStr.isEmpty())
-                    ? new BigDecimal(interestRateStr) : BigDecimal.ZERO;
-
-            BigDecimal maxAmount = (maxAmountStr != null && !maxAmountStr.isEmpty())
-                    ? new BigDecimal(maxAmountStr) : BigDecimal.ZERO;
-
-            BigDecimal minAmount = (minAmountStr != null && !minAmountStr.isEmpty())
-                    ? new BigDecimal(minAmountStr) : BigDecimal.ZERO;
-
-            int loanTerm = (loanTermStr != null && !loanTermStr.isEmpty())
-                    ? Integer.parseInt(loanTermStr) : 12; // Default 12 months
-
-// Validate staffId
-            int staffIdInt = (staffId != null && !staffId.isEmpty())
-                    ? Integer.parseInt(staffId) : 1;
-
-// Get current date
-            Date createdDate = new Date();
-
-// Create LoanPackage object
-            LoanPackage loanPackage = new LoanPackage(
-                    0, staffIdInt, packageName, loanType, description,
-                    interestRate, maxAmount, minAmount, loanTerm, new java.sql.Date(createdDate.getTime()));
-
-            LoanPackageDAO dao = new LoanPackageDAO();
-            dao.insertLoanPackage(loanPackage);
-
-            response.sendRedirect("loanpackage-list.jsp");
-        } catch (NumberFormatException e) {
-            request.setAttribute("error", "Invalid input! Please enter valid numbers.");
-            request.getRequestDispatcher("loanpackage-create.jsp").forward(request, response);
-        }
+        processRequest(request, response);
     }
 
     /**

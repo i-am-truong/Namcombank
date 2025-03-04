@@ -32,9 +32,9 @@ public class LoanPackageDAO extends DBContext {
                             rs.getString("package_name"),
                             rs.getString("loan_type"),
                             rs.getString("description"),
-                            rs.getDouble("interest_rate"),
-                            rs.getDouble("max_amount"),
-                            rs.getDouble("min_amount"),
+                            rs.getBigDecimal("interest_rate"),
+                            rs.getBigDecimal("max_amount"),
+                            rs.getBigDecimal("min_amount"),
                             rs.getInt("loan_term"),
                             rs.getDate("created_date")
                     );
@@ -46,6 +46,26 @@ public class LoanPackageDAO extends DBContext {
         }
 
         return loanPackages;
+    }
+
+    public boolean updateLoanPackage(LoanPackage loanPackage) {
+        String query = "UPDATE LoanPackages SET package_name = ?, loan_type = ?, description = ?, interest_rate = ?, max_amount = ?, min_amount = ?, loan_term = ? WHERE package_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, loanPackage.getPackageName());
+            ps.setString(2, loanPackage.getLoanType());
+            ps.setString(3, loanPackage.getDescription());
+            ps.setBigDecimal(4, loanPackage.getInterestRate());
+            ps.setBigDecimal(5, loanPackage.getMaxAmount());
+            ps.setBigDecimal(6, loanPackage.getMinAmount());
+            ps.setInt(7, loanPackage.getLoanTerm());
+            ps.setInt(8, loanPackage.getPackageId());
+
+            int affectedRows = ps.executeUpdate();
+            return affectedRows > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public LoanPackage getLoanPackageById(int packageId) {
@@ -60,9 +80,9 @@ public class LoanPackageDAO extends DBContext {
                             rs.getString("package_name"),
                             rs.getString("loan_type"),
                             rs.getString("description"),
-                            rs.getDouble("interest_rate"),
-                            rs.getDouble("max_amount"),
-                            rs.getDouble("min_amount"),
+                            rs.getBigDecimal("interest_rate"),
+                            rs.getBigDecimal("max_amount"),
+                            rs.getBigDecimal("min_amount"),
                             rs.getInt("loan_term"),
                             rs.getDate("created_date")
                     );
@@ -118,26 +138,6 @@ public class LoanPackageDAO extends DBContext {
 //            }
 //        }
 //}
-    public boolean updateLoanPackage(LoanPackage loanPackage) {
-        String query = "UPDATE LoanPackages SET staff_id = ?, package_name = ?, loan_type = ?, description = ?, interest_rate = ?, max_amount = ?, min_amount = ?, loan_term = ?, created_date = ? WHERE package_id = ?";
-        try (PreparedStatement ps = connection.prepareStatement(query)) {
-            ps.setInt(1, loanPackage.getStaffId());
-            ps.setString(2, loanPackage.getPackageName());
-            ps.setString(3, loanPackage.getLoanType());
-            ps.setString(4, loanPackage.getDescription());
-            ps.setDouble(5, loanPackage.getInterestRate());
-            ps.setDouble(6, loanPackage.getMaxAmount());
-            ps.setDouble(7, loanPackage.getMinAmount());
-            ps.setInt(8, loanPackage.getLoanTerm());
-            ps.setDate(9, loanPackage.getCreatedDate());
-            ps.setInt(10, loanPackage.getPackageId());
-            return ps.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
     public void deleteLoanPackage(int packageId) {
         String sql_update = "DELETE FROM LoanPackages\n"
                 + " WHERE package_id = ?";
@@ -176,9 +176,9 @@ public class LoanPackageDAO extends DBContext {
                         rs.getString("package_name"),
                         rs.getString("loan_type"),
                         rs.getString("description"),
-                        rs.getDouble("interest_rate"),
-                        rs.getDouble("max_amount"),
-                        rs.getDouble("min_amount"),
+                        rs.getBigDecimal("interest_rate"),
+                        rs.getBigDecimal("max_amount"),
+                        rs.getBigDecimal("min_amount"),
                         rs.getInt("loan_term"),
                         rs.getDate("created_date")
                 );
@@ -199,9 +199,9 @@ public class LoanPackageDAO extends DBContext {
             pstmt.setString(2, loanPackage.getPackageName());
             pstmt.setString(3, loanPackage.getLoanType());
             pstmt.setString(4, loanPackage.getDescription());
-            pstmt.setDouble(5, loanPackage.getInterestRate());
-            pstmt.setDouble(6, loanPackage.getMaxAmount());
-            pstmt.setDouble(7, loanPackage.getMinAmount());
+            pstmt.setBigDecimal(5, loanPackage.getInterestRate());
+            pstmt.setBigDecimal(6, loanPackage.getMaxAmount());
+            pstmt.setBigDecimal(7, loanPackage.getMinAmount());
             pstmt.setInt(8, loanPackage.getLoanTerm());
             pstmt.setDate(9, new java.sql.Date(loanPackage.getCreatedDate().getTime()));
 

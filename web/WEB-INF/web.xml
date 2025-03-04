@@ -280,6 +280,10 @@
         <servlet-name>VerifyOTPServlet</servlet-name>
         <servlet-class>controller.auth.VerifyOTPServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>LoanPackageDetail</servlet-name>
+        <servlet-class>controller.loanpackage.LoanPackageDetail</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>viewCustomerDetail</servlet-name>
         <url-pattern>/viewCustomerDetail</url-pattern>
@@ -417,10 +421,6 @@
         <url-pattern>/loanpackage/listloanpackage</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>UpdateLoanPackageController</servlet-name>
-        <url-pattern>/loanpackage/updateloanpackage</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>DeleteLoanPackageController</servlet-name>
         <url-pattern>/loanpackage/deleteloanpackage</url-pattern>
     </servlet-mapping>
@@ -555,6 +555,14 @@
     <servlet-mapping>
         <servlet-name>VerifyOTPServlet</servlet-name>
         <url-pattern>/verifyotp</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LoanPackageDetail</servlet-name>
+        <url-pattern>/loanpackage/detail</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateLoanPackageController</servlet-name>
+        <url-pattern>/loanpackage/updateloanpackage</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
