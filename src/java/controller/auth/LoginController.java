@@ -181,7 +181,7 @@ public class LoginController extends HttpServlet {
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
             
             // Thiết lập tiêu đề
-            message.setSubject("Mã OTP Xác Thực Tài Khoản");
+            message.setSubject("Mã OTP Xác Thực Tài Khoản", "UTF-8");
             
             // Thiết lập nội dung
             String body = "Chào bạn,\n\n"
@@ -189,7 +189,7 @@ public class LoginController extends HttpServlet {
                         + "Mã này sẽ hết hạn sau 5 phút.\n\n"
                         + "Trân trọng,\n"
                         + "Đội ngũ hỗ trợ";
-            message.setText(body);
+            message.setText(body, "UTF-8");
             
             // Gửi email
             Transport.send(message);

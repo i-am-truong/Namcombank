@@ -1,5 +1,12 @@
 package controller.auth;
 
+import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
+import jakarta.mail.PasswordAuthentication;
+import jakarta.mail.Session;
+import jakarta.mail.Transport;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -7,9 +14,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Properties;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 
 public class VerifyOTPServlet extends HttpServlet {
 
@@ -18,75 +26,230 @@ public class VerifyOTPServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         HttpSession session = request.getSession();
-        
+
         // Kiểm tra xem người dùng đã đăng nhập chưa
         if (session.getAttribute("account") == null) {
-            response.sendRedirect("login");
+            request.getRequestDispatcher("admin.login/login.jsp").forward(request, response);
             return;
         }
-        
-        // Kiểm tra xem OTP đã được gửi chưa
-        if (session.getAttribute("otp") == null) {
-            response.sendRedirect("login");
-            return;
-        }
-        
+
+        // Lấy thông tin email từ session hoặc từ đối tượng Staff
+        String staffEmail = getStaffEmail(session);
+        request.setAttribute("staffEmail", staffEmail);
+
+        // Kiểm tra trạng thái OTP và thiết lập các thuộc tính
+        checkOtpStatus(request, session);
+
         // Chuyển hướng đến trang nhập OTP
         request.getRequestDispatcher("admin.login/two-factor-auth.jsp").forward(request, response);
     }
 
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        String userOtp = request.getParameter("otp");
+
         HttpSession session = request.getSession();
-        
-        String storedOtp = (String) session.getAttribute("otp");
-        Long otpExpiry = (Long) session.getAttribute("otpExpiry");
-        String redirectAfterOTP = (String) session.getAttribute("redirectAfterOTP");
-        
-        // Kiểm tra xem OTP có tồn tại và chưa hết hạn không
-        if (storedOtp == null || otpExpiry == null) {
-            request.setAttribute("error", "Phiên OTP đã hết hạn. Vui lòng yêu cầu mã OTP mới.");
+        String staffEmail = getStaffEmail(session);
+        request.setAttribute("staffEmail", staffEmail);
+
+        // Check if this is a resend request
+        String action = request.getParameter("action");
+        if ("resend".equals(action) || "new".equals(action)) {
+            try {
+                // Generate new OTP
+                String otpValue = generateOTP();
+
+                // Send OTP via email
+                sendEmail(staffEmail, otpValue);
+
+                // Store OTP in session with expiry time (1 minute)
+                session.setAttribute("otp", otpValue);
+                session.setAttribute("otpExpiry", System.currentTimeMillis() + 60000);
+                session.setAttribute("otpSent", true);
+
+                // Set success message
+                request.setAttribute("success", "Mã OTP mới đã được gửi đến email của bạn.");
+                request.setAttribute("otpSent", true);
+
+                LOGGER.log(Level.INFO, "New OTP sent to {0}", staffEmail);
+
+                // Forward back to the OTP verification page
+                request.getRequestDispatcher("admin.login/two-factor-auth.jsp").forward(request, response);
+                return;
+            } catch (Exception e) {
+                LOGGER.log(Level.SEVERE, "Error sending OTP: " + e.getMessage(), e);
+                request.setAttribute("error", "Không thể gửi mã OTP. Vui lòng thử lại sau.");
+                request.getRequestDispatcher("admin.login/two-factor-auth.jsp").forward(request, response);
+                return;
+            }
+        }
+
+        // If not a resend request, verify the submitted OTP
+        String userOtp = request.getParameter("otp");
+        if (userOtp == null || userOtp.isEmpty()) {
+            // If no OTP provided, check if we need to send a new one
+            checkOtpStatus(request, session);
             request.getRequestDispatcher("admin.login/two-factor-auth.jsp").forward(request, response);
             return;
         }
-        
-        // Kiểm tra xem OTP đã hết hạn chưa
+
+        String storedOtp = (String) session.getAttribute("otp");
+        Long otpExpiry = (Long) session.getAttribute("otpExpiry");
+        String redirectAfterOTP = (String) session.getAttribute("redirectAfterOTP");
+
+        // Check if OTP exists and hasn't expired
+        if (storedOtp == null || otpExpiry == null) {
+            request.setAttribute("error", "Phiên OTP đã hết hạn. Vui lòng yêu cầu mã OTP mới.");
+            request.setAttribute("otpExpired", true);
+            request.getRequestDispatcher("admin.login/two-factor-auth.jsp").forward(request, response);
+            return;
+        }
+
+        // Check if OTP has expired
         if (System.currentTimeMillis() > otpExpiry) {
             session.removeAttribute("otp");
             session.removeAttribute("otpExpiry");
             request.setAttribute("error", "Mã OTP đã hết hạn. Vui lòng yêu cầu mã OTP mới.");
+            request.setAttribute("otpExpired", true);
             request.getRequestDispatcher("admin.login/two-factor-auth.jsp").forward(request, response);
             return;
         }
-        
-        // Xác thực OTP
+
+        // Verify OTP
         if (storedOtp.equals(userOtp)) {
-            // OTP đã được xác thực thành công
+            // OTP verified successfully
             session.setAttribute("otpVerified", true);
-            
-            // Xóa dữ liệu OTP
+
+            // Clear OTP data
             session.removeAttribute("otp");
             session.removeAttribute("otpExpiry");
             session.removeAttribute("otpSent");
-            
-            LOGGER.log(Level.INFO, "OTP xác thực thành công. Chuyển hướng đến {0}", redirectAfterOTP);
-            
-            // Chuyển hướng đến trang tương ứng dựa trên vai trò
+
+            LOGGER.log(Level.INFO, "OTP verification successful. Redirecting to {0}", redirectAfterOTP);
+
+            // Redirect to appropriate page based on role
             if (redirectAfterOTP != null && !redirectAfterOTP.isEmpty()) {
                 response.sendRedirect(redirectAfterOTP);
             } else {
-                // Chuyển hướng mặc định nếu không có trang cụ thể
+                // Default redirect if no specific page
                 response.sendRedirect("dashboard");
             }
         } else {
-            // OTP không hợp lệ
+            // Invalid OTP
             request.setAttribute("error", "Mã OTP không đúng. Vui lòng thử lại.");
+            request.setAttribute("otpSent", true); // OTP sent, show OTP input form
             request.getRequestDispatcher("admin.login/two-factor-auth.jsp").forward(request, response);
         }
+    }
+
+// Add these methods to VerifyOTPServlet class if they don't exist already
+    private String generateOTP() {
+        Random rand = new Random();
+        StringBuilder otpValue = new StringBuilder(6);
+        for (int i = 0; i < 6; i++) {
+            otpValue.append(rand.nextInt(10)); // Generate a random digit from 0-9
+        }
+        return otpValue.toString();
+    }
+
+    private void sendEmail(String to, String otpvalue) throws MessagingException {
+        // Set up email properties
+        Properties props = new Properties();
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
+        props.put("mail.smtp.ssl.protocols", "TLSv1.2");
+
+        // Email account info
+        final String senderEmail = "doanvinhhung369@gmail.com"; // Replace with your email
+        final String senderPassword = "typj uudv rlzc yxzq"; // Replace with your app password
+
+        // Create email session with authentication
+        Session mailSession = Session.getInstance(props, new jakarta.mail.Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(senderEmail, senderPassword);
+            }
+        });
+
+        try {
+            // Create message
+            MimeMessage message = new MimeMessage(mailSession);
+
+            // Set sender
+            message.setFrom(new InternetAddress(senderEmail));
+
+            // Set recipient - staff email
+            message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+
+            // Set subject
+            message.setSubject("Mã OTP Xác Thực Tài Khoản", "UTF-8");
+
+            // Set content
+            String body = "Chào bạn,\n\n"
+                    + "Mã OTP để xác thực tài khoản của bạn là: " + otpvalue + "\n"
+                    + "Mã này sẽ hết hạn sau 1 phút.\n\n"
+                    + "Trân trọng,\n"
+                    + "Đội ngũ hỗ trợ";
+            message.setText(body, "UTF-8");
+
+            // Send email
+            Transport.send(message);
+
+            LOGGER.log(Level.INFO, "OTP email sent successfully to {0}", to);
+        } catch (MessagingException e) {
+            LOGGER.log(Level.SEVERE, "Error sending email: " + e.getMessage(), e);
+            throw e; // Rethrow exception to be handled by caller
+        }
+    }
+
+    // Phương thức lấy email của nhân viên
+    private String getStaffEmail(HttpSession session) {
+        String staffEmail = "";
+
+        // Ưu tiên lấy email từ session
+        String sessionEmail = (String) session.getAttribute("email");
+        if (sessionEmail != null && !sessionEmail.isEmpty()) {
+            staffEmail = sessionEmail;
+        } // Nếu không có trong session, lấy từ đối tượng Staff
+        else {
+            model.auth.Staff staff = (model.auth.Staff) session.getAttribute("account");
+            if (staff != null && staff.getEmail() != null && !staff.getEmail().isEmpty()) {
+                staffEmail = staff.getEmail();
+            }
+        }
+
+        // Nếu vẫn không có, hiển thị thông báo
+        if (staffEmail.isEmpty()) {
+            staffEmail = "Email chưa được cấu hình";
+        }
+
+        return staffEmail;
+    }
+
+    // Phương thức kiểm tra trạng thái OTP
+    private void checkOtpStatus(HttpServletRequest request, HttpSession session) {
+        // Kiểm tra xem OTP đã được gửi chưa
+        boolean otpSent = session.getAttribute("otp") != null;
+        request.setAttribute("otpSent", otpSent);
+
+        // Kiểm tra xem OTP có hết hạn chưa
+        boolean otpExpired = false;
+        if (session.getAttribute("otpExpiry") != null) {
+            Long otpExpiry = (Long) session.getAttribute("otpExpiry");
+            otpExpired = System.currentTimeMillis() > otpExpiry;
+
+            if (otpExpired) {
+                // Nếu OTP đã hết hạn, xóa khỏi session
+                session.removeAttribute("otp");
+                session.removeAttribute("otpExpiry");
+            }
+        }
+        request.setAttribute("otpExpired", otpExpired);
     }
 }
