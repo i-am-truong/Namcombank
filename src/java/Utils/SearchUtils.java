@@ -25,25 +25,25 @@ public class SearchUtils {
     }
 
     // Loại bỏ dấu tiếng Việt (nếu có)
-    public static String removeAccents(String input) {
-        if(input==null) return "";
-        return input;
-    }
+//    public static String removeAccents(String input) {
+//        if(input==null) return "";
+//        return input;
+//    }
     
      public static String preprocessFullname(String query) {
         if(query==null) return "";
-        return removeAccents(normalizeNameString(query));
+        return (normalizeNameString(query));
     }
 
 
     // Chuẩn hóa trước khi tìm kiếm
     public static String preprocessSearchQuery(String query) {
         if(query==null) return "";
-        return removeAccents(normalizeString(query));
+        return (normalizeString(query));
     }
     public static String searchValidateNonSapce(String query) {
         if(query==null) return "";
-        return removeAccents(normalizeString2(query));
+        return (normalizeString2(query));
     }
     
     //Advance, kho su dung

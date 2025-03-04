@@ -138,10 +138,6 @@
                                     <button type="submit" class="btn btn-success">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search align-middle"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                                     </button>
-                                    <!-- Thêm nút Clear Search -->
-                                    <a href="manageCustomerVer2" class="btn btn-secondary">
-                                        <i class="fas fa-times"></i> Clear
-                                    </a>
                                     </form>
                                     <form action="ExportCustomers" method="get">
                                         <button type="submit" class="btn btn-success"><i class="fas fa-print"></i></button>

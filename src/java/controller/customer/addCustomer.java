@@ -97,7 +97,7 @@ public class addCustomer extends BaseRBACControlller {
             String email = normalizeWhitespace(request.getParameter("emailC"));
             String address = normalizeWhitespace(request.getParameter("addressC"));
             int gender = Integer.parseInt(request.getParameter("genderC"));
-
+            
             fullname = SearchUtils.preprocessFullname(fullname);
             address = SearchUtils.preprocessFullname(address);
 
