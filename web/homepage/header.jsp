@@ -156,6 +156,7 @@
                                 <span class="dropdown-menu" id="dropdownMenu">
                                     <a href="#">&nbsp;&nbsp;$${sessionScope.customer.balance}</a>
                                     <a href="userProfile"><i class="fas fa-user"></i>&nbsp;&nbsp;Show profile</a>
+                                    <a href="chating/chat.jsp"><i class="fas fa-user"></i>&nbsp;&nbsp;Chat With Staff</a>
                                     <a href="orderHistory">
                                         <i class="fas fa-shopping-bag"></i>&nbsp;&nbsp;History Order
                                     </a>
