@@ -1,114 +1,87 @@
-<%-- 
-    Document   : loanpackage-update
-    Created on : Jan 28, 2025, 1:10:39 PM
-    Author     : lenovo
---%>
-
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="java.math.BigDecimal" %>
 <%@ page import="model.LoanPackage" %>
 <%@ page import="context.LoanPackageDAO" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <!DOCTYPE html>
 <html>
     <head>
         <meta charset="UTF-8">
         <title>Update Loan Package</title>
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-                background-color: #f4f4f4;
-                margin: 0;
-                padding: 0;
-            }
-            .container {
-                max-width: 600px;
-                margin: 50px auto;
-                background: #ffffff;
-                padding: 20px;
-                border-radius: 8px;
-                box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            }
-            input[type="text"], input[type="number"], input[type="date"], textarea {
-                width: 100%;
-                padding: 10px;
-                margin: 10px 0;
-                border-radius: 4px;
-                border: 1px solid #ccc;
-                box-sizing: border-box;
-            }
-            button {
-                background: #007bff;
-                color: white;
-                padding: 10px 20px;
-                border: none;
-                border-radius: 4px;
-                cursor: pointer;
-                font-size: 16px;
-            }
-            button:hover {
-                background: #0056b3;
-            }
-            label {
-                font-weight: bold;
-                display: block;
-                margin-bottom: 5px;
-            }
-            .error {
-                color: red;
-                font-size: 14px;
-            }
-            h1 {
-                text-align: center;
-                color: #333;
-            }
-        </style>
+        <script src="https://cdn.tailwindcss.com"></script>
     </head>
-    <body>
-        <div class="container">
-            <h1>Update Loan Package</h1>
-            <form action="updateloanpackage" method="post">
+    <body class="bg-gray-100 flex items-center justify-center min-h-screen">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg">
+            <h1 class="text-2xl font-bold text-center text-gray-700 mb-6">Update Loan Package</h1>
+
+            <%
+                // Lấy packageId từ request
+                int packageId = Integer.parseInt(request.getParameter("id"));
+                LoanPackageDAO dao = new LoanPackageDAO();
+                LoanPackage loanPackage = dao.getLoanPackageById(packageId);
+
+                if (loanPackage == null) {
+            %>
+            <p class="text-red-500 text-center font-bold">Loan package not found!</p>
+            <div class="text-center mt-4">
+                <a href="loanpackage-list.jsp" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">Back to List</a>
+            </div>
+            <%
+                } else {
+            %>
+
+            <form action="updateloanpackage" method="post" class="space-y-4">
                 <!-- Hidden Fields -->
-                <input type="hidden" name="packageId" value="${loanPackage.packageId}" />
-                <input type="hidden" name="staffId" value="${loanPackage.staffId}" />
+                <input type="hidden" name="package_id" value="<%= loanPackage.getPackageId() %>" />
+                <input type="hidden" name="staff_id" value="<%= loanPackage.getStaffId() %>" />
 
                 <!-- Package Name -->
-                <label for="packageName">Package Name:</label>
-                <input type="text" id="packageName" name="packageName" value="${loanPackage.packageName}" required />
+                <label class="block text-gray-700 font-medium">Package Name:</label>
+                <input type="text" name="packageName" value="<%= loanPackage.getPackageName() %>" required
+                       class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
 
                 <!-- Loan Type -->
-                <label for="loanType">Loan Type:</label>
-                <input type="text" id="loanType" name="loanType" value="${loanPackage.loanType}" required />
+                <label class="block text-gray-700 font-medium">Loan Type:</label>
+                <input type="text" name="loanType" value="<%= loanPackage.getLoanType() %>" required
+                       class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
 
                 <!-- Description -->
-                <label for="description">Description:</label>
-                <textarea id="description" name="description" required>${loanPackage.description}</textarea>
+                <label class="block text-gray-700 font-medium">Description:</label>
+                <textarea name="description" required
+                          class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"><%= loanPackage.getDescription() %></textarea>
 
                 <!-- Interest Rate -->
-                <label for="interestRate">Interest Rate (%):</label>
-                <input type="number" id="interestRate" step="0.01" name="interestRate" value="${loanPackage.interestRate}" required />
+                <label class="block text-gray-700 font-medium">Interest Rate (%):</label>
+                <input type="number" step="0.01" name="interestRate" value="<%= loanPackage.getInterestRate() %>" required
+                       class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
 
                 <!-- Max Amount -->
-                <label for="maxAmount">Max Amount:</label>
-                <input type="number" id="maxAmount" step="0.01" name="maxAmount" value="${loanPackage.maxAmount}" required />
+                <label class="block text-gray-700 font-medium">Max Amount:</label>
+                <input type="number" step="0.01" name="maxAmount" value="<%= loanPackage.getMaxAmount() %>" required
+                       class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
 
                 <!-- Min Amount -->
-                <label for="minAmount">Min Amount:</label>
-                <input type="number" id="minAmount" step="0.01" name="minAmount" value="${loanPackage.minAmount}" required />
+                <label class="block text-gray-700 font-medium">Min Amount:</label>
+                <input type="number" step="0.01" name="minAmount" value="<%= loanPackage.getMinAmount() %>" required
+                       class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
 
                 <!-- Loan Term -->
-                <label for="loanTerm">Loan Term (in months):</label>
-                <input type="number" id="loanTerm" name="loanTerm" value="${loanPackage.loanTerm}" required />
-
-                <!-- Optional: Created Date -->
-                <%-- Uncomment if the created date is editable
-                <label for="createdDate">Created Date:</label>
-                <input type="date" id="createdDate" name="createdDate" value="${loanPackage.createdDate}" required />
-                --%>
+                <label class="block text-gray-700 font-medium">Loan Term (in months):</label>
+                <input type="number" name="loanTerm" value="<%= loanPackage.getLoanTerm() %>" required
+                       class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
 
                 <!-- Submit Button -->
-                <button type="submit">Update</button>
+                <button type="submit" class="w-full bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600">Update</button>
             </form>
+
+            <div class="text-center mt-4">
+                <a href="loanpackage-list.jsp" class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600">Cancel</a>
+            </div>
+
+            <%
+                } // Kết thúc kiểm tra loanPackage != null
+            %>
+
         </div>
     </body>
 </html>
