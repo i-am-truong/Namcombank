@@ -107,8 +107,8 @@
                     </td>
                     <td>
                         <select name="feedback_type" required>
-                            <option value="HUMAN" ${feedback.feedback_type == 'human' ? 'selected' : ''}>Human</option>
-                            <option value="SYSTEM" ${feedback.feedback_type == 'system' ? 'selected' : ''}>System</option>
+                            <option value="HUMAN" ${feedback.feedback_type == 'HUMAN' ? 'selected' : ''}>Human</option>
+                            <option value="SYSTEM" ${feedback.feedback_type == 'SYSTEM' ? 'selected' : ''}>System</option>
                         </select>
                     </td>
                     <td>
