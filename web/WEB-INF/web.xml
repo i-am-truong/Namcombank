@@ -280,6 +280,18 @@
         <servlet-name>VerifyOTPServlet</servlet-name>
         <servlet-class>controller.auth.VerifyOTPServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>AssetAddController</servlet-name>
+        <servlet-class>controller.Asset.AssetAddController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AssetListController</servlet-name>
+        <servlet-class>controller.Asset.AssetListController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AssetDetailController</servlet-name>
+        <servlet-class>controller.Asset.AssetDetailController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>viewCustomerDetail</servlet-name>
         <url-pattern>/viewCustomerDetail</url-pattern>
@@ -555,6 +567,18 @@
     <servlet-mapping>
         <servlet-name>VerifyOTPServlet</servlet-name>
         <url-pattern>/verifyotp</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AssetAddController</servlet-name>
+        <url-pattern>/assets-add</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AssetListController</servlet-name>
+        <url-pattern>/assets-filter</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AssetDetailController</servlet-name>
+        <url-pattern>/asset-detail</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

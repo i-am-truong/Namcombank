@@ -193,7 +193,7 @@ public class VerifyOTPServlet extends HttpServlet {
             // Set content
             String body = "Chào bạn,\n\n"
                     + "Mã OTP để xác thực tài khoản của bạn là: " + otpvalue + "\n"
-                    + "Mã này sẽ hết hạn sau 1 phút.\n\n"
+                    + "Mã này sẽ hết hạn sau 5 phút.\n\n"
                     + "Trân trọng,\n"
                     + "Đội ngũ hỗ trợ";
             message.setText(body, "UTF-8");

@@ -89,7 +89,7 @@
                     <div class="container-fluid">
                         <div class="d-sm-flex align-items-center justify-content-between mb-4">
                             <h1 class="h3 mb-0 text-gray-800">Chi Tiết Tài Sản</h1>
-                            <a href="assets" class="btn btn-secondary btn-sm">
+                            <a href="assets-filter" class="btn btn-secondary btn-sm">
                                 <i class="fas fa-arrow-left"></i> Quay lại danh sách
                             </a>
                         </div>

@@ -1474,14 +1474,14 @@ public class CustomerDAO extends DBContext {
             parameters.add(maxBalance);
         }
 
-        if(minDob != null && maxDob != null) {
+        if (minDob != null && maxDob != null) {
             query.append(" AND c.dob BETWEEN ? AND ?");
             parameters.add(minDob);
             parameters.add(maxDob);
-        } else if(minDob != null) {
+        } else if (minDob != null) {
             query.append(" AND c.dob >= ?");
             parameters.add(minDob);
-        } else if(maxDob != null) {
+        } else if (maxDob != null) {
             query.append(" AND c.dob <= ?");
             parameters.add(maxDob);
         }
@@ -1515,16 +1515,25 @@ public class CustomerDAO extends DBContext {
 
     @Override
     public ArrayList list() {
+
+        // Gọi phương thức getAllCustomers() đã tồn tại
+        List<Customer> customerList = getAllCustomers();
+
+        // Chuyển đổi List<Customer> thành ArrayList<Customer> nếu cần
+        ArrayList<Customer> customers = new ArrayList<>(customerList);
+
+        return customers;
+    }
+
+
+
+@Override
+public Object get(int id) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
-    public Object get(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public void delete(Object model) {
+public void delete(Object model) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 

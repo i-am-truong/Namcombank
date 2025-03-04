@@ -40,31 +40,12 @@
             <i class="fas fa-fw fa-table"></i>
             <span>Profile</span></a>
     </li>
-    <!--    <li class="nav-item active">
-            <a class="nav-link" href="userProfile">
-                <i class="fas fa-fw fa-table"></i>
-                <span>Profile</span></a>
-        </li>-->
 
-    <!-- Nav Item - Tables -->
     <li class="nav-item active">
         <a class="nav-link" href="loanpackage/listloanpackage">
             <i class="fas fa-fw fa-table"></i>
             <span>Loan Packages Table</span></a>
     </li>
-
-<!--    <li class="nav-item active">
-        <a class="nav-link" href="managerUser">
-            <i class="fas fa-fw fa-table"></i>
-            <span>Manager Customer</span></a>
-    </li>-->
-
-<!--    <li class="nav-item active">
-        <a class="nav-link" href="manageCustomer">
-            <i class="fas fa-fw fa-table"></i>
-            <span>Manage Customer</span>
-        </a>
-    </li>-->
 
     <!-- manage contracts -->
     <li class="nav-item active">
@@ -75,11 +56,11 @@
     </li>
 
     <li class="nav-item">
-        <a class="nav-link" href="#" data-toggle="collapse" data-target="#staffMenu" aria-expanded="false">
+        <a class="nav-link" href="#" data-toggle="collapse" data-target="#toolMenu" aria-expanded="false">
             <i class="fas fa-fw fa-table"></i>
             <span>Tool & Extensions</span>
         </a>
-        <div id="staffMenu" class="collapse">
+        <div id="toolMenu" class="collapse">
             <a class="nav-link sub-menu" href="repaymentSchedule">
                 <i class="fas fa-fw fa-table"></i> Repayment Schedule
             </a>
@@ -102,6 +83,20 @@
             </a>
             <a class="nav-link sub-menu" href="addStaff">
                 <i class="fas fa-fw fa-user-plus"></i> Add Staff
+            </a>
+        </div>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#" data-toggle="collapse" data-target="#assetMenu" aria-expanded="false">
+            <i class="fas fa-fw fa-user"></i>
+            <span>Asset Manager</span>
+        </a>
+        <div id="assetMenu" class="collapse">
+            <a class="nav-link sub-menu" href="assets-filter">
+                <i class="fas fa-fw fa-filter"></i> Filter Asset
+            </a>
+            <a class="nav-link sub-menu" href="assets-add">
+                <i class="fas fa-fw fa-user-plus"></i> Add Asset
             </a>
         </div>
     </li>

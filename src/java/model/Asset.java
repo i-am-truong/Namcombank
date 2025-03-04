@@ -21,6 +21,18 @@ public class Asset {
     private String customerName;
     private String staffName;
     private String approverName;
+    
+    public String getAssetTypeDisplay() {
+    if (assetType == null) return "";
+    
+    switch (assetType) {
+        case "REAL_ESTATE": return "Bất động sản";
+        case "VEHICLE": return "Phương tiện";
+        case "INCOME": return "Thu nhập";
+        case "OTHER": return "Khác";
+        default: return assetType;
+    }
+}
 
     public Asset(int assetId, int customerId, int staffId, String assetType, String assetName, BigDecimal assetValue, String description, Integer approvedBy, String status, Date createdDate, Date approvedDate, String notes, String customerName, String staffName, String approverName) {
         this.assetId = assetId;

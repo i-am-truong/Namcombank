@@ -18,7 +18,7 @@ import model.Asset;
  *
  * @author Asus
  */
-@WebServlet(name = "AssetDetailController", urlPatterns = {"/AssetDetailController"})
+
 public class AssetDetailController extends HttpServlet {
     private AssetDAO assetDAO;
 
@@ -41,7 +41,7 @@ public class AssetDetailController extends HttpServlet {
             }
 
             request.setAttribute("asset", asset);
-            request.getRequestDispatcher("/WEB-INF/jsp/asset-detail.jsp").forward(request, response);
+            request.getRequestDispatcher("/customer-assets/viewCustomerAssetDetail.jsp").forward(request, response);
 
         } catch (Exception e) {
             request.getSession().setAttribute("errorMessage", "Lỗi: " + e.getMessage());
