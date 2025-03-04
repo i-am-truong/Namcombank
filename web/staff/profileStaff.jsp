@@ -4,7 +4,7 @@
     Author     : lenovo
 --%>
 
---%>
+
 <%@ page import="java.util.ArrayList" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -79,7 +79,7 @@
             <!-- Header Top -->
 
             <!-- Header Middle -->
-            <%@include file="../homepage/header.jsp" %>
+            <%@include file="../homepage/header_admin.jsp" %>
             <!-- Header Bottom -->
             <div class="d-flex justify-content-between align-items-center mb-3">
 
@@ -87,21 +87,7 @@
 
         </header>
         <!-- Header -->
-        <div class="breadcrumb-area pt-100 pb-100" style="background-image: url('assets/img/breadcrumb.jpg');">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="breadcrumb-content">
-                            <h2>Profile</h2>
-                            <ul>
-                                <li><a href="Home">Home</a></li>
-                                <li class="active">Staff Profile</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+
         <div class="container" style="margin-top: 50px; margin-bottom: 100px">
             <div class="main-body">
                 <div class="row">
@@ -109,13 +95,9 @@
                         <div class="card">
                             <div class="card-body">
                                 <div class="d-flex flex-column align-items-center text-center">
-                                    <c:if test="${not empty sessionScope.staff.avatar}">
-                                        <img src="${pageContext.request.contextPath}/${sessionScope.staff.avatar}" id="avatarImage"
-                                             alt="User Avatar" class="rounded-circle"
-                                             style="width: 150px; height: 150px; object-fit: cover;">
-                                    </c:if>
+
                                     <div class="mt-3">
-                                        <h4>${sessionScope.staff.fullname}</h4>
+                                        <h4>${sessionScope.account.fullname}</h4>
                                         <hr class="my-4">
                                         <button class="btn btn-danger">Follow</button>
                                         <button class="btn btn-outline-danger">Message</button>
@@ -142,21 +124,21 @@
                                     maxlength="50"
                                     pattern=".+\S+.*"
                                     title="Full Name cannot be just spaces."
-                                    value="${sessionScope.staff.fullname}"
+                                    value="${sessionScope.account.fullname}"
                                     >
                             </div>
 
                             <div class="col-md-9">
                                 <label class="labels">Phone Number</label>
                                 <input
-                                    name="phoneNumber"
+                                    name="phoneS"
                                     required
                                     type="text"
                                     class="form-control"
                                     placeholder="enter phone number"
                                     pattern="\d{10}"
                                     title="Please enter a valid 10-digit phone number"
-                                    value="${sessionScope.staff.phonenumber}"
+                                    value="${sessionScope.account.phonenumber}"
                                     >
                                 <c:if test="${not empty requestScope.errorPhoneNumber}">
                                     <span style="color: red;">${requestScope.errorPhoneNumber}</span>
@@ -176,7 +158,7 @@
                                     placeholder="enter email"
                                     required
                                     maxlength="50"
-                                    value="${sessionScope.staff.email}"
+                                    value="${sessionScope.account.email}"
                                     >
                                 <div id="email-error" style="color: red; display: none;">Please enter a valid email address.</div>
                             </div>
@@ -192,7 +174,7 @@
                                     maxlength="50"
                                     pattern=".+\S+.*"
                                     title="Address cannot be just spaces."
-                                    value="${sessionScope.staff.address}"
+                                    value="${sessionScope.account.address}"
                                     >
                             </div>
 
@@ -200,8 +182,8 @@
                                 <label class="labels">Gender</label>
                                 <select name="gender" class="form-control" required>
                                     <option value="" disabled selected>Select gender</option>
-                                    <option value="true" ${sessionScope.staff.gender ? "selected" : ""}>Male</option>
-                                    <option value="false" ${!sessionScope.staff.gender ? "selected" : ""}>Female</option>
+                                    <option value="true" ${sessionScope.account.gender ? "selected" : ""}>Male</option>
+                                    <option value="false" ${!sessionScope.account.gender ? "selected" : ""}>Female</option>
                                 </select>
                             </div>
 
@@ -214,7 +196,7 @@
                                     class="form-control"
                                     id="dob-input"
                                     placeholder="Enter date of birth"
-                                    value="${sessionScope.staff.dob}"
+                                    value="${sessionScope.account.dob}"
                                     >
                                 <div id="dob-error" style="color: red; display: none;">
                                     Date of Birth cannot be in the future.
@@ -223,28 +205,43 @@
 
 
                             <!-- Upload Avatar Section -->
-                            <div class="col-md-4 text-center">
-                                <div class="user-profile-thumb" style="width: 150px; height: 150px;">
-                                    <label class="labels">Avatar</label>
-                                    <img src="${pageContext.request.contextPath}/${sessionScope.staff.avatar}" id="avatarImage"
-                                         alt="User Avatar" class="rounded-circle"
-                                         style="width: 120px; height: 120px; object-fit: cover;">
-                                </div>
 
-                                <div class="custom-file mt-2">
-                                    <input type="file" class="custom-file" id="avatarInput" name="avatar"
-                                           style="display: none;" onchange="previewAvatar(event)">
-                                    <button type="button" class="btn btn-dark mt-2" 
-                                            onclick="document.getElementById('avatarInput').click()">
-                                        Choose file
-                                    </button>
-                                </div>
 
+                            <div class="col-md-9">
+                                <label>Department:</label>
+                                <select class="form-control" name="did">
+                                    <c:forEach var="dept" items="${depts}">
+                                        <option value="${dept.id}" ${staff.dept.id == dept.id ? 'selected' : ''}>${dept.name}</option>
+                                    </c:forEach>
+                                </select>
                             </div>
+
+                            <div class="role-wrapper">
+                                <label class="role-title">Select Roles</label>
+                                <div class="role-options">
+                                    <c:forEach var="role" items="${allRoles}">
+                                        <label class="role-toggle">
+                                            <input type="checkbox" name="roleIds" value="${role.id}" 
+                                                   <c:forEach var="staffRole" items="${staff.roles}">
+                                                       <c:if test="${role.id eq staffRole.id}">checked</c:if>
+                                                   </c:forEach>>
+                                            ${role.name}
+                                        </label>
+                                    </c:forEach>
+                                </div>
+                            </div>
+
+                            <c:if test="${not empty errorMessage}">
+                                <div class="alert alert-danger">${errorMessage}</div>
+                            </c:if>
+                            <c:if test="${not empty successMessage}">
+                                <div class="alert alert-success">${successMessage}</div>
+                            </c:if>
+
+
 
                             <div class="mt-3 text-left" style="display: flex; justify-content: flex-start; align-items: center;">
                                 <button class="btn btn-primary profile-button" type="submit" style="margin-right: 10px;">Save Profile</button>
-                                <a href="changePass" style="margin-left: 100px" class="btn btn-primary profile-button" type="button">Change Password</a>
                             </div>
                         </form>
 

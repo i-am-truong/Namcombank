@@ -1,187 +1,223 @@
-//    /*
-//     * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
-//     * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
-//     */
-//    package controller.Staff;
-//
-//    import context.StaffDAO;
-//    import java.io.IOException;
-//    import java.io.PrintWriter;
-//    import jakarta.servlet.ServletException;
-//    import jakarta.servlet.annotation.MultipartConfig;
-//    import jakarta.servlet.http.HttpServlet;
-//    import jakarta.servlet.http.HttpServletRequest;
-//    import jakarta.servlet.http.HttpServletResponse;
-//    import jakarta.servlet.http.HttpSession;
-//    import jakarta.servlet.http.Part;
-//    import java.io.File;
-//    import java.nio.file.Paths;
-//    import model.auth.Staff;
-//    import java.sql.Date;
-//
-//    /**
-//     *
-//     * @author lenovo
-//     */
-//    @MultipartConfig(
-//            fileSizeThreshold = 1024 * 1024 * 2, // 2MB
-//            maxFileSize = 1024 * 1024 * 10, // 10MB
-//            maxRequestSize = 1024 * 1024 * 50 // 50MB
-//    )
-//    public class staffProfile extends HttpServlet {
-//
-//        private static final String UPLOAD_DIR = "assets/img/profile/";
-//
-//        /**
-//         * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-//         * methods.
-//         *
-//         * @param request servlet request
-//         * @param response servlet response
-//         * @throws ServletException if a servlet-specific error occurs
-//         * @throws IOException if an I/O error occurs
-//         */
-//        protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-//                throws ServletException, IOException {
-//            response.setContentType("text/html;charset=UTF-8");
-//            try (PrintWriter out = response.getWriter()) {
-//                /* TODO output your page here. You may use following sample code. */
-//                out.println("<!DOCTYPE html>");
-//                out.println("<html>");
-//                out.println("<head>");
-//                out.println("<title>Servlet staffProfile</title>");
-//                out.println("</head>");
-//                out.println("<body>");
-//                out.println("<h1>Servlet staffProfile at " + request.getContextPath() + "</h1>");
-//                out.println("</body>");
-//                out.println("</html>");
-//            }
-//        }
-//
-//        // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-//        /**
-//         * Handles the HTTP <code>GET</code> method.
-//         *
-//         * @param request servlet request
-//         * @param response servlet response
-//         * @throws ServletException if a servlet-specific error occurs
-//         * @throws IOException if an I/O error occurs
-//         */
-//        @Override
-//        protected void doGet(HttpServletRequest request, HttpServletResponse response)
-//                throws ServletException, IOException {
-//            HttpSession session = request.getSession();
-//            Staff staff = (Staff) session.getAttribute("staff");
-//            if (staff == null) {
-//                response.sendRedirect("admin.login");
-//                return; // Ensure the method returns to avoid further execution
-//            } else {
-//                request.getRequestDispatcher("staff/profileStaff.jsp").forward(request, response);
-//            }
-//
-//        }
-//
-//        /**
-//         * Handles the HTTP <code>POST</code> method.
-//         *
-//         * @param request servlet request
-//         * @param response servlet response
-//         * @throws ServletException if a servlet-specific error occurs
-//         * @throws IOException if an I/O error occurs
-//         */
-//        @Override
-//        protected void doPost(HttpServletRequest request, HttpServletResponse response)
-//                throws ServletException, IOException {
-//            HttpSession session = request.getSession();
-//            Staff staff = (Staff) session.getAttribute("staff");
-//
-//            if (staff == null) {
-//                response.sendRedirect("admin.login");
-//                return;
-//            } else {
-//
-//                String errorPhoneNumber = "Please enter the first letter is 09 or 03!";
-//                String errorName = "Please enter only letters!";
-//
-//                // Lấy thông tin từ form
-//                String fullNameStr = request.getParameter("fullName");
-//                String phoneNumber = request.getParameter("phoneNumber");
-//                String email = request.getParameter("email");
-//                String address = request.getParameter("address");
-//                String gender = request.getParameter("gender");
-//                String dob = request.getParameter("dateOfBirth");
-//
-//                // Kiểm tra hợp lệ tên
-//                if (!checkName(fullNameStr)) {
-//                    request.setAttribute("errorName", errorName);
-//                    request.getRequestDispatcher("staff/profileStaff.jsp").forward(request, response);
-//                    return;
-//                }
-//
-//                // Định dạng lại tên hợp lệ
-//                String fullName = formatName(fullNameStr);
-//
-//                // Kiểm tra số điện thoại hợp lệ
-//                if (!formatPhoneNumber(phoneNumber)) {
-//                    request.setAttribute("errorPhoneNumber", errorPhoneNumber);
-//                    request.getRequestDispatcher("staff/profileStaff.jsp").forward(request, response);
-//                    return;
-//                }
-//
-//                // Kiểm tra số điện thoại đã tồn tại chưa
-//                StaffDAO sdao = new StaffDAO();
-//                if (sdao.isPhoneNumberExist(phoneNumber, staff.getId())) { // Đang bị lỗi chõ này
-//                    request.setAttribute("existPhoneNumber", "This phone number is already in use!");
-//                    request.getRequestDispatcher("staff/profileStaff.jsp").forward(request, response);
-//                    return;
-//                }
-//
-//                // Cập nhật thông tin nhân viên
-//                staff.setFullname(fullName);
-//                staff.setPhonenumber(phoneNumber);
-//                staff.setAddress(address);
-//                staff.setEmail(email);
-//
-//                // Xử lý ngày sinh
-//                try {
-//                    staff.setDob(Date.valueOf(dob));
-//                } catch (IllegalArgumentException e) {
-//                    request.setAttribute("errorDob", "Invalid date format!");
-//                    request.getRequestDispatcher("staff/profileStaff.jsp").forward(request, response);
-//                    return;
-//                }
-//
-//                // Cập nhật giới tính (boolean)
-//                staff.setGender(gender.equalsIgnoreCase("male"));
-//
-//                // Cập nhật vào database
-//                sdao.updateProfile(staff); // Đang bị lỗi chõ này
-//
-//                // Cập nhật lại session
-//                session.setAttribute("staff", staff);
-//
-//                // Chuyển hướng về trang profile
-//                request.getRequestDispatcher("staff/profileStaff.jsp").forward(request, response);
-//            }
-//        }
-//
-//        private String formatName(String name) {
-//            name = name.trim().replaceAll("\\s+", " ");
-//            String[] words = name.split(" ");
-//            StringBuilder formattedName = new StringBuilder();
-//            for (String word : words) {
-//                formattedName.append(Character.toUpperCase(word.charAt(0)))
-//                        .append(word.substring(1).toLowerCase())
-//                        .append(" ");
-//            }
-//            return formattedName.toString().trim();
-//        }
-//
-//        private boolean formatPhoneNumber(String phone) {
-//            return phone != null && (phone.startsWith("09") || phone.startsWith("03"));
-//        }
-//
-//        private boolean checkName(String name) {
-//            return name != null && name.matches("^[\\p{L}\\s]+$");
-//        }
-//    }
+package controller.Staff;
+
+import context.DepartmentDAO;
+import context.RoleDAO;
+import context.StaffDAO;
+import jakarta.servlet.ServletException;
+import java.util.*;
+import java.sql.*;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import model.Department;
+import model.auth.Role;
+import model.auth.Staff;
+
+import java.io.IOException;
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Pattern;
+
+public class staffProfile extends HttpServlet {
+   
+    private static final Logger logger = Logger.getLogger(staffProfile.class.getName());
+
+    // Regex patterns for validation
+    private static final Pattern CIC_REGEX = Pattern.compile("^[0-9]{12}$");
+    private static final Pattern PHONE_REGEX = Pattern.compile("^0[0-9]{9,10}$");
+    private static final Pattern EMAIL_REGEX = Pattern.compile("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+    private static final Pattern ADDRESS_REGEX = Pattern.compile("^[\\p{L}0-9\\s,.\\-'/()]{3,}$");
+    private static final Pattern FULLNAME_REGEX = Pattern.compile("^\\p{L}+(?:\\s\\p{L}+)+$");
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        Staff account = (Staff) session.getAttribute("account");
+
+        if (account == null) {
+            response.sendRedirect("admin.login");
+            return;
+    } 
+
+        System.out.println("Session ID: " + session.getId());
+        System.out.println("Staff in session: " + account);
+
+        // Lấy danh sách phòng ban
+        DepartmentDAO dbDept = new DepartmentDAO();
+        ArrayList<Department> depts = dbDept.list();
+        request.setAttribute("depts", depts);
+
+        // Lấy danh sách roles
+        RoleDAO roleDAO = new RoleDAO();
+        ArrayList<Role> roles = roleDAO.getAllRoles();
+        request.setAttribute("allRoles", roles);
+
+        // Gửi dữ liệu nhân viên đến JSP
+        request.setAttribute("staff", account);
+        request.getRequestDispatcher("staff/profileStaff.jsp").forward(request, response);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    throws ServletException, IOException {
+        try {
+            // Retrieve parameters
+            String raw_id = request.getParameter("id");
+            String raw_sname = request.getParameter("nameS");
+            String raw_dob = request.getParameter("dobS");
+            String raw_gender = request.getParameter("genderS");
+            String raw_address = request.getParameter("addressS");
+            String raw_email = request.getParameter("emailS");
+            String raw_phonenumber = request.getParameter("phoneS");
+            String raw_cic = request.getParameter("cicS");
+            String raw_did = request.getParameter("did");
+            String[] raw_roleIds = request.getParameterValues("roleIds");
+
+            // Validate input data
+            String errorMessage = null;
+            StaffDAO db = new StaffDAO();
+
+            if (raw_id == null || raw_id.trim().isEmpty()) {
+                errorMessage = "Staff ID is missing.";
+            } else if (raw_sname == null || raw_sname.trim().isEmpty() || !FULLNAME_REGEX.matcher(raw_sname).matches()) {
+                errorMessage = "Fullname must include at least the first and last names, separated by spaces, and contain only valid characters.";
+            } else if (raw_dob == null || raw_dob.isEmpty()) {
+                errorMessage = "Date of birth cannot be empty.";
+            } else if (raw_phonenumber == null || !PHONE_REGEX.matcher(raw_phonenumber).matches()) {
+                errorMessage = "Invalid phone number.";
+            } else if (raw_email == null || !EMAIL_REGEX.matcher(raw_email).matches()) {
+                errorMessage = "Invalid email format.";
+            } else if (raw_cic == null || !CIC_REGEX.matcher(raw_cic).matches()) {
+                errorMessage = "Citizen Identification must be 12 digits.";
+            } else if (raw_address == null || raw_address.trim().isEmpty() || !ADDRESS_REGEX.matcher(raw_address).matches()) {
+                errorMessage = "Invalid address. Must be at least 3 characters and only contain letters, numbers, and allowed special characters.";
+            } else {
+                int staffId = Integer.parseInt(raw_id);
+                boolean isEmailExists = db.isValueExistExcept("email", raw_email, staffId);
+                boolean isPhoneExists = db.isValueExistExcept("phonenumber", raw_phonenumber, staffId);
+                boolean isCitizenIDExists = db.isValueExistExcept("citizen_identification_card", raw_cic, staffId);
+
+                if (isPhoneExists) {
+                    errorMessage = "Phone number already exists.";
+                } else if (isEmailExists) {
+                    errorMessage = "Email already exists.";
+                } else if (isCitizenIDExists) {
+                    errorMessage = "Citizen ID already exists.";
+    }
+            }
+
+            // Load departments and roles for potential redisplay
+            DepartmentDAO dbDept = new DepartmentDAO();
+            ArrayList<Department> depts = dbDept.list();
+            request.setAttribute("depts", depts);
+
+            RoleDAO roleDAO = new RoleDAO();
+            ArrayList<Role> allRoles = roleDAO.getAllRoles();
+            request.setAttribute("allRoles", allRoles);
+
+            int id = Integer.parseInt(raw_id);
+            StaffDAO sdao = new StaffDAO();
+
+            if (errorMessage != null) {
+                request.setAttribute("errorMessage", errorMessage);
+
+                // Create a staff object with entered values to preserve form data
+                Staff staff = new Staff();
+                staff.setId(id);
+                staff.setFullname(raw_sname);
+                staff.setPhonenumber(raw_phonenumber);
+                if (raw_dob != null && !raw_dob.isEmpty()) {
+                    try {
+                        staff.setDob(Date.valueOf(raw_dob));
+                    } catch (IllegalArgumentException e) {
+                        // Invalid date format, don't set
+}
+                }
+                staff.setGender("1".equals(raw_gender));
+                staff.setAddress(raw_address);
+                staff.setEmail(raw_email);        
+                staff.setCitizenId(raw_cic);
+                        
+                // Set department
+                Department dept = new Department();
+                if (raw_did != null && !raw_did.isEmpty()) {
+                    dept.setId(Integer.parseInt(raw_did));
+                }
+                staff.setDept(dept);
+
+                // Set roles
+                ArrayList<Role> roles = new ArrayList<>();
+                if (raw_roleIds != null) {
+                    for (String roleId : raw_roleIds) {
+                        Role role = new Role();
+                        role.setId(Integer.parseInt(roleId));
+                        roles.add(role);
+                    }
+                }
+                staff.setRoles(roles);
+                request.setAttribute("staff", staff);
+                request.getRequestDispatcher("staff/profileStaff.jsp").forward(request, response);
+                return;
+            }
+
+            // Create updated Staff object
+            Staff staff = new Staff();
+            staff.setId(id);
+            staff.setFullname(raw_sname);
+            staff.setPhonenumber(raw_phonenumber);
+            staff.setDob(Date.valueOf(raw_dob));
+            staff.setGender("1".equals(raw_gender));
+            staff.setAddress(raw_address);
+            staff.setEmail(raw_email);    
+            staff.setCitizenId(raw_cic);
+
+            // Set department
+            Department dept = new Department();
+            dept.setId(Integer.parseInt(raw_did));
+            staff.setDept(dept);
+
+            // Set roles
+            ArrayList<Role> roles = new ArrayList<>();
+            if (raw_roleIds != null) {
+                for (String roleId : raw_roleIds) {
+                    Role role = new Role();
+                    role.setId(Integer.parseInt(roleId));
+                    roles.add(role);
+                }
+            }
+            staff.setRoles(roles);
+
+            // Update staff information
+            boolean isUpdated = sdao.updateStaff(staff);
+
+            if (isUpdated) {
+                // Refresh staff data after update
+                staff = sdao.getById(id);
+                request.setAttribute("staff", staff);
+                request.setAttribute("successMessage", "Staff updated successfully!");
+            } else {
+                request.setAttribute("errorMessage", "Failed to update staff.");
+                request.setAttribute("staff", staff);
+            }
+
+            request.getRequestDispatcher("staff/profileStaff.jsp").forward(request, response);
+
+        } catch (NumberFormatException e) {
+            logger.log(Level.SEVERE, "Invalid number format in request parameters", e);
+            request.setAttribute("errorMessage", "Invalid input format. Please check your data.");
+            request.getRequestDispatcher("staff/profileStaff.jsp").forward(request, response);
+        } catch (IllegalArgumentException e) {
+            logger.log(Level.SEVERE, "Invalid date format or other input error", e);
+            request.setAttribute("errorMessage", "Invalid date format or input error.");
+            request.getRequestDispatcher("staff/profileStaff.jsp").forward(request, response);
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Unexpected error in doAuthorizedPost", e);
+            request.setAttribute("errorMessage", "An unexpected error occurred: " + e.getMessage());
+            request.getRequestDispatcher("staff/profileStaff.jsp").forward(request, response);
+        }
+    }
+}
