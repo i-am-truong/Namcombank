@@ -75,26 +75,31 @@ public class AssetAddController extends BaseRBACControlller {
                 errors.put("asset_name", "Tên tài sản không được vượt quá 100 ký tự");
             }
 
-            // 5. Kiểm tra asset_value
+            // Kiểm tra asset_value - đoạn này rất quan trọng
             BigDecimal assetValue = null;
             if (assetValueStr == null || assetValueStr.trim().isEmpty()) {
                 errors.put("asset_value", "Vui lòng nhập giá trị tài sản");
             } else {
                 try {
                     // Loại bỏ dấu phẩy và khoảng trắng
-                    assetValueStr = assetValueStr.replace(",", "").trim();
+                    String cleanValue = assetValueStr.replaceAll("\\s+", "").trim();
 
-                    // Chuyển đổi sang BigDecimal
-                    assetValue = new BigDecimal(assetValueStr);
+                    // Kiểm tra nếu giá trị không phải số
+                    if (!cleanValue.matches("^\\d+$")) {
+                        errors.put("asset_value", "Giá trị tài sản phải là số");
+                    } else {
+                        // Chuyển đổi sang BigDecimal
+                        assetValue = new BigDecimal(cleanValue);
 
-                    // Kiểm tra giá trị phải lớn hơn 0
-                    if (assetValue.compareTo(BigDecimal.ZERO) <= 0) {
-                        errors.put("asset_value", "Giá trị tài sản phải lớn hơn 0");
-                    }
+                        // Kiểm tra giá trị phải lớn hơn 0
+                        if (assetValue.compareTo(BigDecimal.ZERO) <= 0) {
+                            errors.put("asset_value", "Giá trị tài sản phải lớn hơn 0");
+                        }
 
-                    // Kiểm tra giá trị quá lớn (tùy chọn, ví dụ: lớn hơn 1 nghìn tỷ)
-                    if (assetValue.compareTo(new BigDecimal("1000000000000")) > 0) {
-                        errors.put("asset_value", "Giá trị tài sản quá lớn (tối đa 1.000 tỷ VND)");
+                        // Kiểm tra giá trị quá lớn
+                        if (assetValue.compareTo(new BigDecimal("1000000000000")) > 0) {
+                            errors.put("asset_value", "Giá trị tài sản quá lớn (tối đa 1.000 tỷ VND)");
+                        }
                     }
                 } catch (NumberFormatException e) {
                     errors.put("asset_value", "Giá trị tài sản không hợp lệ");
@@ -103,13 +108,29 @@ public class AssetAddController extends BaseRBACControlller {
 
             // Nếu có lỗi, quay lại form với thông báo lỗi
             if (!errors.isEmpty()) {
+                // Log lỗi để debug
+                System.out.println("Có lỗi validate:");
+                for (Map.Entry<String, String> entry : errors.entrySet()) {
+                    System.out.println(entry.getKey() + ": " + entry.getValue());
+                }
+
+                // Lưu lại các giá trị đã nhập
                 request.setAttribute("customer_id", customerIdStr);
                 request.setAttribute("asset_type", assetType);
                 request.setAttribute("asset_name", assetName);
-                request.setAttribute("asset_value", assetValueStr);
+                request.setAttribute("asset_value", assetValueStr); // Giữ nguyên giá trị đã nhập
                 request.setAttribute("description", description);
+
+                // Lưu lỗi để hiển thị trong JSP
                 request.setAttribute("errors", errors);
+
+                // Lấy lại danh sách khách hàng
                 request.setAttribute("customers", customerDAO.getAllCustomers());
+
+                // Đặt viewMode = false để hiển thị form thêm tài sản
+                request.setAttribute("viewMode", false);
+
+                // Chuyển tiếp đến trang JSP
                 request.getRequestDispatcher("/customer-assets/addCustomerAsset.jsp").forward(request, response);
                 return;
             }
@@ -125,15 +146,37 @@ public class AssetAddController extends BaseRBACControlller {
             asset.setStatus("PENDING");
 
             // Lưu vào database
-            assetDAO.insert(asset);
+            boolean success = assetDAO.insertAsset(asset);
 
-            // Đặt thông báo thành công
-            request.getSession().setAttribute("successMessage", "Tạo tài sản thành công!");
+            if (success) {
+                // Đặt thông báo thành công
+                request.getSession().setAttribute("successMessage", "Tạo tài sản thành công!");
 
-            // Chuyển hướng đến trang danh sách tài sản
-            response.sendRedirect("assets-filter");
+                // Chuyển hướng đến trang danh sách tài sản
+                response.sendRedirect("assets-filter");
+            } else {
+                // Thêm thất bại, hiển thị lại form với thông báo lỗi
+                request.getSession().setAttribute("errorMessage", "Có lỗi xảy ra khi thêm tài sản. Vui lòng thử lại.");
+
+                // Lưu lại các giá trị đã nhập
+                request.setAttribute("customer_id", customerIdStr);
+                request.setAttribute("asset_type", assetType);
+                request.setAttribute("asset_name", assetName);
+                request.setAttribute("asset_value", assetValueStr);
+                request.setAttribute("description", description);
+
+                // Lấy lại danh sách khách hàng
+                request.setAttribute("customers", customerDAO.getAllCustomers());
+
+                // Đặt viewMode = false
+                request.setAttribute("viewMode", false);
+
+                request.getRequestDispatcher("/customer-assets/addCustomerAsset.jsp").forward(request, response);
+            }
 
         } catch (Exception e) {
+            System.err.println("Lỗi: " + e.getMessage());
+            e.printStackTrace();
             request.getSession().setAttribute("errorMessage", "Lỗi: " + e.getMessage());
             response.sendRedirect("error.jsp");
         }
@@ -160,7 +203,7 @@ public class AssetAddController extends BaseRBACControlller {
                 }
             }
 
-            request.getRequestDispatcher("/customer-assets/addCutomerAsset.jsp").forward(request, response);
+            request.getRequestDispatcher("/customer-assets/addCustomerAsset.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
             request.getSession().setAttribute("errorMessage", "Lỗi: " + e.getMessage());

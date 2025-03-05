@@ -282,13 +282,13 @@
                                                     <label for="asset_value" class="required-field">Giá Trị Tài Sản (VND)</label>
                                                     <input type="text" class="form-control ${not empty errors.asset_value ? 'is-invalid' : ''}" 
                                                            id="asset_value" name="asset_value" value="${asset_value}"
-                                                           placeholder="Nhập giá trị, ví dụ: 1,000,000">
-                                                    <small class="form-text text-muted">Vui lòng nhập giá trị số, không bao gồm đơn vị tiền tệ</small>
+                                                           placeholder="Vui lòng nhập giá trị số, tối đa 1.000 tỷ VND">
                                                     <c:if test="${not empty errors.asset_value}">
                                                         <div class="error-message">${errors.asset_value}</div>
                                                     </c:if>
                                                 </div>
                                             </div>
+
 
                                             <div class="col-md-6">
                                                 <div class="form-group">
@@ -297,7 +297,6 @@
                                                 </div>
                                             </div>
                                         </div>
-
                                         <!-- Nút submit -->
                                         <div class="form-group text-center mt-4">
                                             <button type="submit" class="btn btn-primary btn-action mr-2">
@@ -327,15 +326,16 @@
         <script src="adminassets/js/sb-admin-2.min.js"></script>
 
         <c:if test="${not viewMode}">
-
-            <script>
-                // Định dạng số tiền khi nhập
+<!--            <script>
+                // Định dạng số tiền khi nhập - chỉ định dạng, không validate
                 document.getElementById('asset_value').addEventListener('input', function (e) {
                     // Lưu vị trí con trỏ
                     var cursorPos = this.selectionStart;
                     var oldLength = this.value.length;
+
                     // Loại bỏ tất cả ký tự không phải số
                     var value = this.value.replace(/[^\d]/g, '');
+
                     // Nếu không có gì, không làm gì cả
                     if (!value) {
                         this.value = '';
@@ -353,6 +353,7 @@
 
                     // Cập nhật giá trị
                     this.value = formattedValue;
+
                     // Điều chỉnh vị trí con trỏ sau khi định dạng
                     var newLength = this.value.length;
                     var newCursorPos = cursorPos + (newLength - oldLength);
@@ -362,22 +363,8 @@
                         newCursorPos = newLength;
                     this.setSelectionRange(newCursorPos, newCursorPos);
                 });
-
-                // Kiểm tra form trước khi submit
-                document.getElementById('assetForm').addEventListener('submit', function (e) {
-                    var assetValue = document.getElementById('asset_value').value;
-                    // Kiểm tra nếu giá trị tài sản trống
-                    if (!assetValue || assetValue.trim() === '') {
-                        e.preventDefault();
-                        alert('Vui lòng nhập giá trị tài sản');
-                        document.getElementById('asset_value').focus();
-                        return false;
-                    }
-
-                    // Form hợp lệ, tiếp tục submit
-                    return true;
-                });
-            </script>
+            </script>-->
         </c:if>
+
     </body>
 </html>

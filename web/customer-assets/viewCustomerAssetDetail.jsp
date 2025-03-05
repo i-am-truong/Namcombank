@@ -80,6 +80,15 @@
                 background-color: #eafbf3;
                 border-left: 4px solid #1cc88a;
             }
+            .btn-delete {
+                background-color: #dc3545;
+                color: white;
+            }
+            .delete-section {
+                margin-top: 20px;
+                padding-top: 20px;
+                border-top: 1px dashed #ccc;
+            }
         </style>
     </head>
 
@@ -138,10 +147,6 @@
                                     <div class="detail-section">
                                         <h5><i class="fas fa-info-circle"></i> Thông Tin Cơ Bản</h5>
                                         <div class="detail-row">
-                                            <div class="detail-label">ID Tài Sản:</div>
-                                            <div class="detail-value">${asset.assetId}</div>
-                                        </div>
-                                        <div class="detail-row">
                                             <div class="detail-label">Loại Tài Sản:</div>
                                             <div class="detail-value">${asset.assetTypeDisplay}</div>
                                         </div>
@@ -164,6 +169,14 @@
                                         <div class="detail-row">
                                             <div class="detail-label">Tên Khách Hàng:</div>
                                             <div class="detail-value">${asset.customerName}</div>
+                                        </div>
+                                                                                <div class="detail-row">
+                                            <div class="detail-label">CCCD:</div>
+                                            <div class="detail-value">${customer.cid}</div>
+                                        </div>
+                                                                                <div class="detail-row">
+                                            <div class="detail-label">Số Điện Thoại:</div>
+                                            <div class="detail-value">${customer.phonenumber}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -255,55 +268,31 @@
                                             <button type="button" class="btn btn-success mr-2" onclick="submitAction('approve')">
                                                 <i class="fas fa-check"></i> Duyệt
                                             </button>
-                                            <button type="button" class="btn btn-danger" onclick="showReasonField()">
+                                            <button type="button" class="btn btn-danger mr-2" onclick="showReasonField()">
                                                 <i class="fas fa-times"></i> Từ Chối
                                             </button>
                                         </div>
                                     </form>
                                 </div>
-
-                                <script>
-                                    function showReasonField() {
-                                        document.getElementById('reasonGroup').style.display = 'block';
-                                        document.getElementById('reason').focus();
-
-                                        // Thay đổi nút từ chối
-                                        const rejectBtn = document.querySelector('.btn-danger');
-                                        rejectBtn.innerHTML = '<i class="fas fa-times"></i> Xác nhận từ chối';
-                                        rejectBtn.onclick = function () {
-                                            submitAction('reject');
-                                        };
-                                    }
-
-                                    function submitAction(action) {
-                                        const form = document.getElementById('assetActionForm');
-                                        const actionInput = document.getElementById('actionType');
-                                        const reasonInput = document.getElementById('reason');
-
-                                        actionInput.value = action;
-
-                                        if (action === 'reject') {
-                                            // Kiểm tra lý do từ chối
-                                            if (!reasonInput.value.trim()) {
-                                                alert('Vui lòng nhập lý do từ chối.');
-                                                reasonInput.focus();
-                                                return;
-                                            }
-
-                                            // Xác nhận từ chối
-                                            if (!confirm('Bạn có chắc chắn muốn từ chối tài sản này?')) {
-                                                return;
-                                            }
-                                        } else {
-                                            // Xác nhận duyệt
-                                            if (!confirm('Bạn có chắc chắn muốn duyệt tài sản này?')) {
-                                                return;
-                                            }
-                                        }
-
-                                        form.submit();
-                                    }
-                                </script>
+                            </c:if>
+                            
+                            <!-- Thêm nút xóa tài sản dành cho người có quyền duyệt -->
+                            <c:if test="${canApprove}">
+                                <div class="delete-section">
+                                    <h5><i class="fas fa-trash-alt"></i> Quản Lý Tài Sản</h5>
+                                    <form action="asset-detail" method="POST" id="deleteAssetForm">
+                                        <input type="hidden" name="asset_id" value="${asset.assetId}"/>
+                                        <input type="hidden" name="action" value="delete"/>
+                                        
+                                        <div class="alert alert-warning">
+                                            <i class="fas fa-exclamation-triangle"></i> Lưu ý: Việc xóa tài sản là không thể hoàn tác
+                                        </div>
+                                        
+                                        <button type="button" class="btn btn-delete" onclick="confirmDelete()">
+                                            <i class="fas fa-trash-alt"></i> Xóa Tài Sản
+                                        </button>
+                                    </form>
+                                </div>
                             </c:if>
                         </div>
                     </div>
@@ -320,5 +309,59 @@
 
         <!-- Custom scripts for all pages-->
         <script src="adminassets/js/sb-admin-2.min.js"></script>
+        
+        <script>
+            function showReasonField() {
+                document.getElementById('reasonGroup').style.display = 'block';
+                document.getElementById('reason').focus();
+
+                // Thay đổi nút từ chối
+                const rejectBtn = document.querySelector('.btn-danger');
+                rejectBtn.innerHTML = '<i class="fas fa-times"></i> Xác nhận từ chối';
+                rejectBtn.onclick = function () {
+                    submitAction('reject');
+                };
+            }
+
+            function submitAction(action) {
+                const form = document.getElementById('assetActionForm');
+                const actionInput = document.getElementById('actionType');
+                const reasonInput = document.getElementById('reason');
+
+                actionInput.value = action;
+
+                if (action === 'reject') {
+                    // Kiểm tra lý do từ chối
+                    if (!reasonInput.value.trim()) {
+                        alert('Vui lòng nhập lý do từ chối.');
+                        reasonInput.focus();
+                        return;
+                    }
+
+                    // Xác nhận từ chối
+                    if (!confirm('Bạn có chắc chắn muốn từ chối tài sản này?')) {
+                        return;
+                    }
+                } else if (action === 'approve') {
+                    // Xác nhận duyệt
+                    if (!confirm('Bạn có chắc chắn muốn duyệt tài sản này?')) {
+                        return;
+                    }
+                } else if (action === 'delete') {
+                    // Xác nhận xóa
+                    if (!confirm('CẢNH BÁO: Bạn sắp xóa tài sản này. Hành động này không thể hoàn tác. Bạn có chắc chắn muốn tiếp tục?')) {
+                        return;
+                    }
+                }
+
+                form.submit();
+            }
+            
+            function confirmDelete() {
+                if (confirm('CẢNH BÁO: Bạn sắp xóa tài sản này. Hành động này không thể hoàn tác. Bạn có chắc chắn muốn tiếp tục?')) {
+                    document.getElementById('deleteAssetForm').submit();
+                }
+            }
+        </script>
     </body>
 </html>

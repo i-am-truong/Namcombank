@@ -14,6 +14,59 @@ import java.math.BigDecimal;
  */
 public class AssetDAO extends DBContext<Asset> {
 
+    // Trong AssetDAO
+    public boolean insertAsset(Asset asset) {
+        PreparedStatement stm = null;
+
+        boolean success = false;
+
+        try {
+
+            String sql = "INSERT INTO CustomerAssets (customer_id, staff_id, asset_type, asset_name, asset_value, description, status, created_date) "
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP);";
+
+            stm = connection.prepareStatement(sql);
+            stm.setInt(1, asset.getCustomerId());
+            stm.setInt(2, asset.getStaffId());
+            stm.setString(3, asset.getAssetType());
+            stm.setString(4, asset.getAssetName());
+            stm.setBigDecimal(5, asset.getAssetValue());
+            stm.setString(6, asset.getDescription());
+            stm.setString(7, asset.getStatus());
+
+            int rowsAffected = stm.executeUpdate();
+            success = rowsAffected > 0;
+
+        } catch (SQLException ex) {
+            System.out.println("Error inserting asset: " + ex.getMessage());
+        } finally {
+            try {
+                if (stm != null) {
+                    stm.close();
+                }
+            } catch (SQLException ex) {
+                System.out.println("Error closing resources: " + ex.getMessage());
+            }
+        }
+
+        return success;
+    }
+    public boolean deleteAsset(int assetId) {
+    String sql = "DELETE FROM CustomerAssets WHERE asset_id = ?";
+    
+    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        
+        ps.setInt(1, assetId);
+        int rowsAffected = ps.executeUpdate();
+        
+        return rowsAffected > 0;
+        
+    } catch (SQLException e) {
+        System.out.println("Error closing resources: " + e.getMessage());
+        return false;
+    }
+}
+
     @Override
     public void insert(Asset model) {
         PreparedStatement stm = null;

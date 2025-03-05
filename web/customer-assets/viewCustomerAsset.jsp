@@ -270,7 +270,7 @@
                                 <table class="table table-bordered" id="assetTable">
                                     <thead>
                                         <tr>
-                                            <th>ID</th>
+
                                             <th>Tên tài sản</th>
                                             <th>Loại</th>
                                             <th>Khách hàng</th>
@@ -287,7 +287,7 @@
                                             <c:when test="${not empty assets && assets.size() > 0}">
                                                 <c:forEach items="${assets}" var="asset">
                                                     <tr class="clickable-row" onclick="window.location.href = 'asset-detail?id=${asset.assetId}'">
-                                                        <td>${asset.assetId}</td>
+
                                                         <td>${asset.assetName}</td>
                                                         <td>${asset.assetTypeDisplay}</td>
                                                         <td>${asset.customerName}</td>
