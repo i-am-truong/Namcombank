@@ -14,7 +14,7 @@
                                         <i class="fas fa-shopping-cart"></i>
                                         <span class="counter">02</span>
                                         <span class="counter-cart"><small>Your Cart</small></span>
-                                         Mini Cart Content 
+                                         Mini art Content
 
                                     </div>
                                 </div>
@@ -29,8 +29,7 @@
                                                 <li><a href="persional-loans">Personal Loans</a></li>
                                                 <li><a href="bussiness-loans">Business Loans</a></li>
                                                 <li><a href="unsecured-loans">Unsecured Loans</a></li>
-                                                <li><a href=secured-loans">Secured Loans</a></li>
-                                                
+                                                <li><a href=secured-loans">Secured Loan
                                             </ul>
                                         </li>
                                         <li><a href="/Namcombank/allSavings">Savings <i class="fa fa-angle-down"></i></a>
@@ -43,7 +42,7 @@
                                         </li>
                                         <li><a href="viewWishList">Wish list</a>
                                         </li>
-                                        <li><a href="newsList">News <i class="fa fa-angle-down"></i></a>
+                                        <li><a href="newsList">News</a>
                                         </li>
                             <li><a href="viewFeedback?customer_id=<%= session.getAttribute("customer_id") %>">Feedback <i></i></a></li>
                                     </ul>
