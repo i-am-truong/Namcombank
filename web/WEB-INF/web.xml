@@ -101,6 +101,30 @@
         <servlet-class>controller.wishList.addWishList</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>AllSaving</servlet-name>
+        <servlet-class>controller.saving.AllSaving</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SavingTerm</servlet-name>
+        <servlet-class>controller.saving.SavingTerm</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Saving_create</servlet-name>
+        <servlet-class>controller.saving.Saving_create</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>listSaving</servlet-name>
+        <servlet-class>controller.saving.listSaving</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>managerSaving</servlet-name>
+        <servlet-class>controller.saving.managerSaving</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>savingMoney</servlet-name>
+        <servlet-class>controller.saving.savingMoney</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>viewWishList</servlet-name>
         <servlet-class>controller.wishList.viewWishList</servlet-class>
     </servlet>
@@ -135,10 +159,6 @@
     <servlet>
         <servlet-name>DeleteLoanPackageController</servlet-name>
         <servlet-class>controller.loanpackage.DeleteLoanPackageController</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>ListSavingController</servlet-name>
-        <servlet-class>controller.saving.ListSavingController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>CreateSavingController</servlet-name>
@@ -435,10 +455,6 @@
         <url-pattern>/loanpackage/deleteloanpackage</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>ListSavingController</servlet-name>
-        <url-pattern>/savingInterest</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>CreateSavingController</servlet-name>
         <url-pattern>/saving/create</url-pattern>
     </servlet-mapping>
@@ -583,6 +599,30 @@
     <servlet-mapping>
         <servlet-name>UpdateLoanPackageController</servlet-name>
         <url-pattern>/loanpackage/updateloanpackage</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AllSaving</servlet-name>
+        <url-pattern>/AllSaving</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SavingTerm</servlet-name>
+        <url-pattern>/SavingTerm</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Saving_create</servlet-name>
+        <url-pattern>/Saving_create</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>listSaving</servlet-name>
+        <url-pattern>/listSaving</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>managerSaving</servlet-name>
+        <url-pattern>/managerSaving</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>savingMoney</servlet-name>
+        <url-pattern>/savingMoney</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

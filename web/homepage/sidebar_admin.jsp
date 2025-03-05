@@ -55,6 +55,45 @@
         </a>
     </li>
 
+    <!-- manage Saving Request -->
+    <li class="nav-item active">
+        <a class="nav-link" href="#"data-toggle="collapse" data-target="#toolMenu" aria-expanded="false">
+            <i class="fas fa-fw fa-table"></i>
+            <span>Saving Request Table</span>
+        </a>
+        <div id="toolMenu" class="collapse">
+            <a class="nav-link sub-menu" href="listSaving">
+                <i class="fas fa-fw fa-table"></i> Saving Request
+            </a>
+            <a class="nav-link sub-menu" href="savingMoney">
+                <i class="fas fa-fw fa-table"></i> Saving Request Money Revie
+            </a>
+            <a class="nav-link sub-menu" href="savingInterest">
+                <i class="fas fa-fw fa-table"></i> Saving ALL
+            </a>
+        </div>
+        </a>
+    </li>
+
+    <!-- manage Saving Package -->
+    <li class="nav-item active">
+        <a class="nav-link" href="#"data-toggle="collapse" data-target="#toolMenu" aria-expanded="false">
+            <i class="fas fa-fw fa-table"></i>
+            <span>Saving Package Manager</span>
+        </a>
+        <div id="toolMenu" class="collapse">
+            <a class="nav-link sub-menu" href="managerSaving">
+                <i class="fas fa-fw fa-table"></i> Manager Saving
+            </a>
+            <a class="nav-link sub-menu" href="repaymentSchedule">
+                <i class="fas fa-fw fa-table"></i> ?
+            </a>
+            <a class="nav-link sub-menu" href="savingInterest">
+                <i class="fas fa-fw fa-table"></i> ?
+            </a>
+        </div>
+    </li>
+
     <li class="nav-item">
         <a class="nav-link" href="#" data-toggle="collapse" data-target="#toolMenu" aria-expanded="false">
             <i class="fas fa-fw fa-table"></i>
