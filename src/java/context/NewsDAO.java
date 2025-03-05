@@ -18,11 +18,11 @@ public class NewsDAO extends DBContext{
       public ArrayList<News> pagging(int index){
         ArrayList<News> b = new ArrayList<>();
         try {
-            String sql = "select * from News WHERE status = '1'  order by 'nid' DESC  OFFSET ? ROWS FETCH NEXT 4 ROWS ONLY";
+            String sql = "select * from News WHERE status = '1'  order by 'news_id' DESC  OFFSET ? ROWS FETCH NEXT 4 ROWS ONLY";
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setInt(1, (index-1)*4);
-            ResultSet rs = stm.executeQuery();     
-            while (rs.next()) {                
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
                 b.add(new News(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getTimestamp(6), rs.getBoolean(5), getAuthorByid(rs.getInt(4))));
             }
         } catch (Exception e) {
@@ -35,8 +35,8 @@ public class NewsDAO extends DBContext{
             String sql = "select * from News WHERE status = '0'  order by 'nid' DESC  OFFSET ? ROWS FETCH NEXT 4 ROWS ONLY";
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setInt(1, (index-1)*4);
-            ResultSet rs = stm.executeQuery();     
-            while (rs.next()) {                
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
                 b.add(new News(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getTimestamp(6), rs.getBoolean(5), getAuthorByid(rs.getInt(4))));
             }
         } catch (Exception e) {
@@ -49,34 +49,34 @@ public class NewsDAO extends DBContext{
             String sql = "select * from [User] Where uid = ?";
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setInt(1, id);
-            ResultSet rs = stm.executeQuery();     
-            
-            if (rs.next()) {                
+            ResultSet rs = stm.executeQuery();
+
+            if (rs.next()) {
                author = rs.getString(2);
             }
         } catch (Exception e) {
         }
         return author;
     }
-    
+
     public  int count(String title){
         try {
             ResultSet rs;
             if(title !=null && title != ""){
-                String sql = "select count (*) from News WHERE title LIKE ? AND status = '1'  ";
+                String sql = "select count (*) from News WHERE title LIKE ? AND status = 1  ";
                 String searchTitle = "%" + title + "%";
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setString(1, searchTitle);
               rs = stm.executeQuery();
             }
             else{
-              String sql = "select count (*)  from News  WHERE status = '1'";   
+              String sql = "select count (*)  from News  WHERE status = '1'";
               PreparedStatement stm = connection.prepareStatement(sql);
                 rs = stm.executeQuery();
             }
-            
-           
-            while (rs.next()) {                
+
+
+            while (rs.next()) {
                 return rs.getInt(1);
             }
         } catch (Exception e) {
@@ -86,15 +86,15 @@ public class NewsDAO extends DBContext{
     public  int countWaiting(){
         try {
             ResultSet rs;
-          
-          
-              String sql = "select count (*)  from News  WHERE status = 0 ";  
+
+
+              String sql = "select count (*)  from News  WHERE status = 0 ";
               PreparedStatement stm = connection.prepareStatement(sql);
                 rs = stm.executeQuery();
-            
-            
-           
-            while (rs.next()) {                
+
+
+
+            while (rs.next()) {
                 return rs.getInt(1);
             }
         } catch (Exception e) {
@@ -105,34 +105,34 @@ public class NewsDAO extends DBContext{
          ArrayList<News> b = new ArrayList<>();
         try {
             String searchTitle = "%" + title + "%";
-            String sql = "select * from News WHERE title LIKE ? AND status = 1  order by 'nid' DESC  OFFSET ? ROWS FETCH NEXT 4 ROWS ONLY";
+            String sql = "select * from News WHERE title LIKE ? AND status = 1  order by news_id DESC  OFFSET ? ROWS FETCH NEXT 4 ROWS ONLY";
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setString(1, searchTitle);
             stm.setInt(2, (index-1)*4);
-            ResultSet rs = stm.executeQuery();     
-            while (rs.next()) {                
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
                 b.add(new News(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getTimestamp(6), rs.getBoolean(5), getAuthorByid(rs.getInt(4))));
             }
         } catch (Exception e) {
         }
         return b;
     }
-    
+
     public News detail(int newsId){
         News b = new News();
         try {
-            String sql = "select * from News where nid = ? ";
+            String sql = "select * from News where news_id = ? ";
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setInt(1, newsId);
             ResultSet rs = stm.executeQuery();
-            if (rs.next()) {                
+            if (rs.next()) {
                b=new News(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getTimestamp(6), rs.getBoolean(5), getAuthorByid(rs.getInt(4)));
             }
         } catch (Exception e) {
         }
         return b;
     }
-    
+
     public ArrayList<News> list(){
         ArrayList<News> b = new ArrayList<>();
         try {
@@ -152,7 +152,7 @@ public class NewsDAO extends DBContext{
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setInt(1, newsId);
             stm.executeUpdate();
-            
+
         } catch (Exception e) {
         }
     }
@@ -167,7 +167,7 @@ public class NewsDAO extends DBContext{
             stm.setDate(5, new java.sql.Date(news.getUpdateDate().getTime()));
             stm.executeUpdate();
 
-          
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -190,12 +190,12 @@ public class NewsDAO extends DBContext{
             stm.setInt(6, news.getnId());
             stm.executeUpdate();
 
-          
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    
+
    public static void main(String[] args) {
         NewsDAO dao = new NewsDAO();
         News news = new News("tesst","tessssst",1,new Date(), false);
@@ -222,9 +222,9 @@ public class NewsDAO extends DBContext{
     public Object get(int id) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-  
-    
-    
-   
+
+
+
+
 
 }
