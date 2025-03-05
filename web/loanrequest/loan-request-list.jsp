@@ -1,113 +1,82 @@
-<%-- 
-    Document   : loan-request-list
-    Created on : Feb 24, 2025, 9:41:01 PM
-    Author     : lenovo
---%>
-
-<%@page import="java.util.List, model.LoanRequest"%>
-<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="model.LoanRequest" %>
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
     <head>
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Danh sách gói vay</title>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-        <style>
-            .card img {
-                height: 200px;
-                object-fit: cover;
-            }
-            .btn-green {
-                background-color: #86c232;
-                color: white;
-            }
-            .btn-green:hover {
-                background-color: #61892f;
-            }
-        </style>
+        <title>Loan Requests</title>
+        <script src="https://cdn.tailwindcss.com"></script>
     </head>
-    <body>
-        <div class="container mt-4">
-            <h2 class="text-center mb-4">Danh sách gói vay</h2>
-            <form action="ListLoanPackageController" method="POST">
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="card">
-                            <img src="../assets/img/loanpackage/vaytinchap.png" class="card-img-top" alt="Vay tín chấp">
-                            <div class="card-body">
-                                <h5 class="card-title">Vay tín chấp đối với Người lao động</h5>
-                                <p><strong>Mức vay:</strong> Linh hoạt</p>
-                                <p><strong>Thời hạn vay tối đa:</strong> 60 tháng</p>
-                                <a href="#" class="btn btn-green">Đăng ký ngay</a>
-                                <a href="#" class="btn btn-outline-secondary">Xem chi tiết</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card">
-                            <img src="../assets/img/loanpackage/vaymuaoto.jpg" class="card-img-top" alt="Vay mua ô tô">
-                            <div class="card-body">
-                                <h5 class="card-title">Vay mua ô tô</h5>
-                                <p><strong>Mức vay lên tới:</strong> 100% giá trị xe</p>
-                                <p><strong>Thời hạn vay tối đa:</strong> 96 tháng</p>
-                                <a href="#" class="btn btn-green">Đăng ký ngay</a>
-                                <a href="#" class="btn btn-outline-secondary">Xem chi tiết</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card">
-                            <img src="../assets/img/loanpackage/antamkinhdoanh.jpg" class="card-img-top" alt="An tâm kinh doanh">
-                            <div class="card-body">
-                                <h5 class="card-title">An tâm kinh doanh</h5>
-                                <p><strong>Mức vay lên tới:</strong> 70% phương án vay</p>
-                                <p><strong>Thời gian vay tối đa:</strong> 84 tháng</p>
-                                <a href="#" class="btn btn-green">Đăng ký ngay</a>
-                                <a href="#" class="btn btn-outline-secondary">Xem chi tiết</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card">
-                            <img src="../assets/img/loanpackage/vayxaysuanhao.jpg" class="card-img-top" alt="Vay xây sửa nhà ở">
-                            <div class="card-body">
-                                <h5 class="card-title">Vay xây sửa nhà ở</h5>
-                                <p><strong>Mức vay lên tới:</strong> 100% giá trị xây sửa</p>
-                                <p><strong>Thời gian vay tối đa:</strong> 30 năm</p>
-                                <a href="#" class="btn btn-green">Đăng ký ngay</a>
-                                <a href="#" class="btn btn-outline-secondary">Xem chi tiết</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card">
-                            <img src="../assets/img/loanpackage/vaycamcogiaytocogia.webg" class="card-img-top" alt="Vay cầm cố giấy tờ có giá">
-                            <div class="card-body">
-                                <h5 class="card-title">Vay cầm cố giấy tờ có giá</h5>
-                                <p><strong>Mức vay lên tới:</strong> 100% giá trị giấy tờ có giá</p>
-                                <p><strong>Thời gian vay tối đa:</strong> Linh hoạt</p>
-                                <a href="#" class="btn btn-green">Đăng ký ngay</a>
-                                <a href="#" class="btn btn-outline-secondary">Xem chi tiết</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card">
-                            <img src="../assets/img/loanpackage/vaytieudungcotaisanbaodam.webg" class="card-img-top" alt="Vay tiêu dùng có tài sản bảo đảm">
-                            <div class="card-body">
-                                <h5 class="card-title">Vay tiêu dùng có tài sản bảo đảm</h5>
-                                <p><strong>Mức vay lên tới:</strong> 02 tỷ VND</p>
-                                <p><strong>Thời gian vay tối đa:</strong> 120 tháng</p>
-                                <a href="#" class="btn btn-green">Đăng ký ngay</a>
-                                <a href="#" class="btn btn-outline-secondary">Xem chi tiết</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    <body class="bg-gray-100">
+        <div class="container mx-auto p-6">
+            <h1 class="text-4xl font-bold text-center text-blue-600 mb-6">Loan Requests</h1>
+
+            <div class="mb-6 flex justify-end">
+                <a href="../create-loan-request"
+                   class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition">
+                    New Loan Request
+                </a>
+            </div>
+
+            <div class="overflow-x-auto bg-white rounded-lg shadow">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Staff</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <%
+    ArrayList<LoanRequest> loanRequests = (ArrayList<LoanRequest>) request.getAttribute("loanRequests");
+    if (loanRequests != null && !loanRequests.isEmpty()) {
+        for (LoanRequest loanRequest : loanRequests) {
+            String statusColor = "gray";
+            if (loanRequest.getApprovalStatus().equals("APPROVED")) statusColor = "green";
+            else if (loanRequest.getApprovalStatus().equals("REJECTED")) statusColor = "red";
+            else if (loanRequest.getApprovalStatus().equals("PENDING")) statusColor = "yellow";
+                        %>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900">#<%= loanRequest.getRequestId() %></div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900"><%= loanRequest.getCustomerName() %></div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm font-medium text-gray-900">
+                                    <%= String.format("%,.0f", loanRequest.getLoanAmount()) %> VND
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-<%= statusColor %>-100 text-<%= statusColor %>-800">
+                                    <%= loanRequest.getApprovalStatus() %>
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                <%= loanRequest.getStaffName() != null ? loanRequest.getStaffName() : "Not assigned" %>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <a href="loan-requests?action=view&id=<%= loanRequest.getRequestId() %>" 
+                                   class="text-indigo-600 hover:text-indigo-900">View Details</a>
+                            </td>
+                        </tr>
+                        <%
+                                }
+                            } else {
+                        %>
+                        <tr>
+                            <td colspan="6" class="px-6 py-4 text-center text-gray-500">No loan requests found.</td>
+                        </tr>
+                        <% } %>
+
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </form>
-</body>
+    </body>
 </html>

@@ -44,7 +44,7 @@ public class Staff {
         this.did = did;
         this.roles = roles;
     }
-  
+
     
 
     public ArrayList<Role> getRoles() {
@@ -163,10 +163,10 @@ public class Staff {
         this.citizenId = citizenId;
     }
 
-    
-    
+
+
     public Staff() {
     }
 
 
-}
+    }
