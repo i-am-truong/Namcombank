@@ -4,28 +4,25 @@ import context.DepartmentDAO;
 import context.RoleDAO;
 import context.StaffDAO;
 import jakarta.servlet.ServletException;
-import java.util.*;
-import java.sql.*;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.*;
 import model.Department;
 import model.auth.Role;
 import model.auth.Staff;
 
 import java.io.IOException;
 import java.sql.Date;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 public class staffProfile extends HttpServlet {
-   
+
     private static final Logger logger = Logger.getLogger(staffProfile.class.getName());
 
-    // Regex patterns for validation
     private static final Pattern CIC_REGEX = Pattern.compile("^[0-9]{12}$");
     private static final Pattern PHONE_REGEX = Pattern.compile("^0[0-9]{9,10}$");
     private static final Pattern EMAIL_REGEX = Pattern.compile("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
@@ -34,190 +31,156 @@ public class staffProfile extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         HttpSession session = request.getSession();
-        Staff account = (Staff) session.getAttribute("account");
+        Staff staff = (Staff) session.getAttribute("account");
 
-        if (account == null) {
+        if (staff == null) {
+            logger.warning("No staff found in session. Redirecting to login.");
             response.sendRedirect("admin.login");
             return;
-    } 
+        }
 
-        System.out.println("Session ID: " + session.getId());
-        System.out.println("Staff in session: " + account);
+        try {
+            // Get fresh staff data from database
+            StaffDAO dao = new StaffDAO();
+            Staff freshStaffData = dao.getById(staff.getId());
 
-        // Lấy danh sách phòng ban
-        DepartmentDAO dbDept = new DepartmentDAO();
-        ArrayList<Department> depts = dbDept.list();
-        request.setAttribute("depts", depts);
+            if (freshStaffData != null) {
+                // Update session with fresh data
+                session.setAttribute("account", freshStaffData);
 
-        // Lấy danh sách roles
-        RoleDAO roleDAO = new RoleDAO();
-        ArrayList<Role> roles = roleDAO.getAllRoles();
-        request.setAttribute("allRoles", roles);
+                // Get departments and roles
+                DepartmentDAO dbDept = new DepartmentDAO();
+                RoleDAO roleDAO = new RoleDAO();
 
-        // Gửi dữ liệu nhân viên đến JSP
-        request.setAttribute("staff", account);
-        request.getRequestDispatcher("staff/profileStaff.jsp").forward(request, response);
+                request.setAttribute("depts", dbDept.list());
+                request.setAttribute("allRoles", roleDAO.getAllRoles());
+                request.setAttribute("staff", freshStaffData);
+
+                logger.info("Loading profile page for staff ID: " + freshStaffData.getId());
+                request.getRequestDispatcher("/staff/profileStaff.jsp").forward(request, response);
+            } else {
+                logger.warning("Could not retrieve staff data for ID: " + staff.getId());
+                response.sendRedirect("error.jsp");
+            }
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error loading staff profile", e);
+            response.sendRedirect("error.jsp");
+        }
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         try {
-            // Retrieve parameters
-            String raw_id = request.getParameter("id");
-            String raw_sname = request.getParameter("nameS");
-            String raw_dob = request.getParameter("dobS");
-            String raw_gender = request.getParameter("genderS");
-            String raw_address = request.getParameter("addressS");
-            String raw_email = request.getParameter("emailS");
-            String raw_phonenumber = request.getParameter("phoneS");
-            String raw_cic = request.getParameter("cicS");
-            String raw_did = request.getParameter("did");
-            String[] raw_roleIds = request.getParameterValues("roleIds");
+            // Get current staff from session
+            HttpSession session = request.getSession();
+            Staff currentStaff = (Staff) session.getAttribute("account");
 
-            // Validate input data
-            String errorMessage = null;
-            StaffDAO db = new StaffDAO();
-
-            if (raw_id == null || raw_id.trim().isEmpty()) {
-                errorMessage = "Staff ID is missing.";
-            } else if (raw_sname == null || raw_sname.trim().isEmpty() || !FULLNAME_REGEX.matcher(raw_sname).matches()) {
-                errorMessage = "Fullname must include at least the first and last names, separated by spaces, and contain only valid characters.";
-            } else if (raw_dob == null || raw_dob.isEmpty()) {
-                errorMessage = "Date of birth cannot be empty.";
-            } else if (raw_phonenumber == null || !PHONE_REGEX.matcher(raw_phonenumber).matches()) {
-                errorMessage = "Invalid phone number.";
-            } else if (raw_email == null || !EMAIL_REGEX.matcher(raw_email).matches()) {
-                errorMessage = "Invalid email format.";
-            } else if (raw_cic == null || !CIC_REGEX.matcher(raw_cic).matches()) {
-                errorMessage = "Citizen Identification must be 12 digits.";
-            } else if (raw_address == null || raw_address.trim().isEmpty() || !ADDRESS_REGEX.matcher(raw_address).matches()) {
-                errorMessage = "Invalid address. Must be at least 3 characters and only contain letters, numbers, and allowed special characters.";
-            } else {
-                int staffId = Integer.parseInt(raw_id);
-                boolean isEmailExists = db.isValueExistExcept("email", raw_email, staffId);
-                boolean isPhoneExists = db.isValueExistExcept("phonenumber", raw_phonenumber, staffId);
-                boolean isCitizenIDExists = db.isValueExistExcept("citizen_identification_card", raw_cic, staffId);
-
-                if (isPhoneExists) {
-                    errorMessage = "Phone number already exists.";
-                } else if (isEmailExists) {
-                    errorMessage = "Email already exists.";
-                } else if (isCitizenIDExists) {
-                    errorMessage = "Citizen ID already exists.";
-    }
-            }
-
-            // Load departments and roles for potential redisplay
-            DepartmentDAO dbDept = new DepartmentDAO();
-            ArrayList<Department> depts = dbDept.list();
-            request.setAttribute("depts", depts);
-
-            RoleDAO roleDAO = new RoleDAO();
-            ArrayList<Role> allRoles = roleDAO.getAllRoles();
-            request.setAttribute("allRoles", allRoles);
-
-            int id = Integer.parseInt(raw_id);
-            StaffDAO sdao = new StaffDAO();
-
-            if (errorMessage != null) {
-                request.setAttribute("errorMessage", errorMessage);
-
-                // Create a staff object with entered values to preserve form data
-                Staff staff = new Staff();
-                staff.setId(id);
-                staff.setFullname(raw_sname);
-                staff.setPhonenumber(raw_phonenumber);
-                if (raw_dob != null && !raw_dob.isEmpty()) {
-                    try {
-                        staff.setDob(Date.valueOf(raw_dob));
-                    } catch (IllegalArgumentException e) {
-                        // Invalid date format, don't set
-}
-                }
-                staff.setGender("1".equals(raw_gender));
-                staff.setAddress(raw_address);
-                staff.setEmail(raw_email);        
-                staff.setCitizenId(raw_cic);
-                        
-                // Set department
-                Department dept = new Department();
-                if (raw_did != null && !raw_did.isEmpty()) {
-                    dept.setId(Integer.parseInt(raw_did));
-                }
-                staff.setDept(dept);
-
-                // Set roles
-                ArrayList<Role> roles = new ArrayList<>();
-                if (raw_roleIds != null) {
-                    for (String roleId : raw_roleIds) {
-                        Role role = new Role();
-                        role.setId(Integer.parseInt(roleId));
-                        roles.add(role);
-                    }
-                }
-                staff.setRoles(roles);
-                request.setAttribute("staff", staff);
-                request.getRequestDispatcher("staff/profileStaff.jsp").forward(request, response);
+            if (currentStaff == null) {
+                response.sendRedirect("admin.login");
                 return;
             }
 
-            // Create updated Staff object
-            Staff staff = new Staff();
-            staff.setId(id);
-            staff.setFullname(raw_sname);
-            staff.setPhonenumber(raw_phonenumber);
-            staff.setDob(Date.valueOf(raw_dob));
-            staff.setGender("1".equals(raw_gender));
-            staff.setAddress(raw_address);
-            staff.setEmail(raw_email);    
-            staff.setCitizenId(raw_cic);
+            // Get form parameters
+            String fullName = request.getParameter("fullName");
+            String phoneNumber = request.getParameter("phoneS");
+            String email = request.getParameter("emailS");
+            String address = request.getParameter("addressS");
+            String cic = request.getParameter("cicS");
+            String dob = request.getParameter("dobS");
+            String gender = request.getParameter("genderS");
+            String departmentId = request.getParameter("did");
+            String[] roleIds = request.getParameterValues("roleIds");
+
+            // Validate input
+            String errorMessage = validateInput(fullName, phoneNumber, email, address, cic, dob);
+            if (errorMessage != null) {
+                request.setAttribute("errorMessage", errorMessage);
+                doGet(request, response);
+                return;
+            }
+
+            // Update staff object
+            Staff updatedStaff = new Staff();
+            updatedStaff.setId(currentStaff.getId());
+            updatedStaff.setFullname(fullName);
+            updatedStaff.setPhonenumber(phoneNumber);
+            updatedStaff.setEmail(email);
+            updatedStaff.setAddress(address);
+            updatedStaff.setCitizenId(cic);
+            updatedStaff.setDob(Date.valueOf(dob));
+            updatedStaff.setGender("1".equals(gender));
 
             // Set department
             Department dept = new Department();
-            dept.setId(Integer.parseInt(raw_did));
-            staff.setDept(dept);
+            dept.setId(Integer.parseInt(departmentId));
+            updatedStaff.setDept(dept);
 
             // Set roles
             ArrayList<Role> roles = new ArrayList<>();
-            if (raw_roleIds != null) {
-                for (String roleId : raw_roleIds) {
+            if (roleIds != null) {
+                for (String roleId : roleIds) {
                     Role role = new Role();
                     role.setId(Integer.parseInt(roleId));
                     roles.add(role);
                 }
             }
-            staff.setRoles(roles);
+            updatedStaff.setRoles(roles);
 
-            // Update staff information
-            boolean isUpdated = sdao.updateStaff(staff);
+            // Update in database
+            StaffDAO staffDAO = new StaffDAO();
+            boolean isUpdated = staffDAO.updateStaff(updatedStaff);
 
             if (isUpdated) {
-                // Refresh staff data after update
-                staff = sdao.getById(id);
-                request.setAttribute("staff", staff);
-                request.setAttribute("successMessage", "Staff updated successfully!");
+                // Refresh session data
+                Staff refreshedStaff = staffDAO.getById(currentStaff.getId());
+                session.setAttribute("account", refreshedStaff);
+                session.setAttribute("address", refreshedStaff.getAddress());
+                request.setAttribute("successMessage", "Profile updated successfully!");
             } else {
-                request.setAttribute("errorMessage", "Failed to update staff.");
-                request.setAttribute("staff", staff);
+                request.setAttribute("errorMessage", "Failed to update profile.");
             }
 
-            request.getRequestDispatcher("staff/profileStaff.jsp").forward(request, response);
+            // Reload the page with updated data
+            doGet(request, response);
 
-        } catch (NumberFormatException e) {
-            logger.log(Level.SEVERE, "Invalid number format in request parameters", e);
-            request.setAttribute("errorMessage", "Invalid input format. Please check your data.");
-            request.getRequestDispatcher("staff/profileStaff.jsp").forward(request, response);
-        } catch (IllegalArgumentException e) {
-            logger.log(Level.SEVERE, "Invalid date format or other input error", e);
-            request.setAttribute("errorMessage", "Invalid date format or input error.");
-            request.getRequestDispatcher("staff/profileStaff.jsp").forward(request, response);
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "Unexpected error in doAuthorizedPost", e);
+            logger.log(Level.SEVERE, "Error updating staff profile", e);
             request.setAttribute("errorMessage", "An unexpected error occurred: " + e.getMessage());
-            request.getRequestDispatcher("staff/profileStaff.jsp").forward(request, response);
+            doGet(request, response);
         }
     }
+
+    private String validateInput(String fullName, String phoneNumber, String email, String address, String cic, String dob) {
+        if (!FULLNAME_REGEX.matcher(fullName).matches()) {
+            return "Invalid full name format";
+        }
+        if (!PHONE_REGEX.matcher(phoneNumber).matches()) {
+            return "Invalid phone number format";
+        }
+        if (!EMAIL_REGEX.matcher(email).matches()) {
+            return "Invalid email format";
+        }
+        if (!ADDRESS_REGEX.matcher(address).matches()) {
+            return "Invalid address format";
+        }
+        if (!CIC_REGEX.matcher(cic).matches()) { // 🆕 Kiểm tra CIC hợp lệ
+        return "CIC must be exactly 12 digits.";
+    }
+
+        // Kiểm tra ngày sinh phải từ 18 tuổi trở lên
+        try {
+            LocalDate birthDate = LocalDate.parse(dob);
+            if (Period.between(birthDate, LocalDate.now()).getYears() < 18) {
+                return "Staff must be at least 18 years old";
+            }
+        } catch (Exception e) {
+            return "Invalid date of birth format";
+        }
+
+        return null;
+    }
+
 }

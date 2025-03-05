@@ -2,22 +2,24 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controller.loanpackage;
+package controller.loanrequest;
 
-import context.LoanPackageDAO;
+import context.LoanRequestDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import model.LoanPackage;
+import model.LoanRequest;
 
 /**
  *
  * @author lenovo
  */
-public class LoanPackageDetail extends HttpServlet {
+public class CreateLoanServlet extends HttpServlet {
+
+    private final LoanRequestDAO loanRequestDAO = new LoanRequestDAO();
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -36,10 +38,10 @@ public class LoanPackageDetail extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet LoanPackageDetail</title>");
+            out.println("<title>Servlet CreateLoanServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet LoanPackageDetail at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet CreateLoanServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -54,41 +56,42 @@ public class LoanPackageDetail extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String idParam = request.getParameter("id");
-        if (idParam != null) {
-            try {
-                int packageId = Integer.parseInt(idParam);
-                LoanPackageDAO dao = new LoanPackageDAO();
-                LoanPackage loanPackage = dao.getLoanPackageById(packageId);
-
-                if (loanPackage != null) {
-                    request.setAttribute("loanPackage", loanPackage);
-                    request.getRequestDispatcher("loanpackage-detail.jsp").forward(request, response);
-                } else {
-                    response.sendRedirect("loan-request-list.jsp?error=PackageNotFound");
-                }
-            } catch (NumberFormatException e) {
-                response.sendRedirect("loan-request-list.jsp?error=InvalidID");
-            }
-        } else {
-            response.sendRedirect("loan-request-list.jsp?error=MissingID");
-        }
+        request.getRequestDispatcher("/loanrequest/loan-request-create.jsp").forward(request, response);
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            String customerName = request.getParameter("customerName");
+            double loanAmount = Double.parseDouble(request.getParameter("loanAmount"));
+            double minAmount = Double.parseDouble(request.getParameter("minAmount"));
+            double maxAmount = Double.parseDouble(request.getParameter("maxAmount"));
+
+            if (loanAmount < minAmount || loanAmount > maxAmount) {
+                request.setAttribute("error", "Loan amount must be between " + minAmount + " and " + maxAmount + " VND.");
+                request.getRequestDispatcher("/loanrequest/loan-request-create.jsp").forward(request, response);
+                return;
+            }
+
+            LoanRequest loanRequest = new LoanRequest();
+            loanRequest.setApprovalStatus("Pending");
+            loanRequest.setStaffId(1); // Giá trị giả định, nên lấy từ session
+
+            loanRequest.setCustomerName(customerName);
+            loanRequest.setLoanAmount(loanAmount);
+
+            loanRequestDAO.insert(loanRequest);
+            response.sendRedirect("loan-request-list");
+
+        } catch (Exception e) {
+            System.out.println("Error creating loan request: " + e.getMessage());
+            request.setAttribute("error", "Không thể tạo yêu cầu vay");
+            request.getRequestDispatcher("/loanrequest/loan-request-create.jsp").forward(request, response);
+        }
     }
 
     /**

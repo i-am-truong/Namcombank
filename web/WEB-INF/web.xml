@@ -292,6 +292,18 @@
         <servlet-name>AssetDetailController</servlet-name>
         <servlet-class>controller.Asset.AssetDetailController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>LoanPackageDetail</servlet-name>
+        <servlet-class>controller.loanpackage.LoanPackageDetail</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CreateLoanServlet</servlet-name>
+        <servlet-class>controller.loanrequest.CreateLoanServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>LoanRequestDetailServlet</servlet-name>
+        <servlet-class>controller.loanrequest.LoanRequestDetailServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>viewCustomerDetail</servlet-name>
         <url-pattern>/viewCustomerDetail</url-pattern>
@@ -577,8 +589,20 @@
         <url-pattern>/asset-detail</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
+        <servlet-name>LoanPackageDetail</servlet-name>
+        <url-pattern>/loanpackage/detail</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
         <servlet-name>UpdateLoanPackageController</servlet-name>
         <url-pattern>/loanpackage/updateloanpackage</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CreateLoanServlet</servlet-name>
+        <url-pattern>/create-loan-request</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LoanRequestDetailServlet</servlet-name>
+        <url-pattern>/loan-detail</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

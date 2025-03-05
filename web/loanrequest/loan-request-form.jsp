@@ -1,96 +1,134 @@
-<%@ page contentType="text/html; charset=UTF-8" %>
-<%@ page pageEncoding="UTF-8" %>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html lang="vi">
+<html>
     <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Yêu Cầu Vay</title>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-        <style>
-            body {
-                background-color: #f8f9fa;
-            }
-            .loan-container {
-                max-width: 900px;
-                margin: auto;
-                background: #fff;
-                padding: 20px;
-                border-radius: 10px;
-                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            }
-            .form-section {
-                background: #eefbea;
-                padding: 20px;
-                border-radius: 10px;
-            }
-            .result-section {
-                padding: 20px;
-            }
-            .result-box {
-                background: #fff;
-                border-radius: 10px;
-                padding: 15px;
-                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            }
-            .btn-primary {
-                width: 100%;
-            }
-        </style>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Tạo yêu cầu vay mới</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
     </head>
-    <body>
+    <body class="bg-light">
+        <div class="container py-4">
+            <h2 class="mb-4">Tạo yêu cầu vay mới</h2>
 
-        <div class="container my-4">
-            <div class="loan-container row">
-                <!-- Form nhập thông tin -->
-                <div class="col-md-6 form-section">
-                    <h3 class="mb-3">Yêu Cầu Vay</h3>
-                    <form action="LoanRequestServlet" method="post">
+            <div class="card">
+                <div class="card-body">
+                    <form action="create-loan-request" method="POST" class="needs-validation" novalidate>
                         <div class="mb-3">
-                            <label for="amount" class="form-label">Số tiền vay</label>
-                            <input type="number" class="form-control" id="amount" name="amount" required>
+                            <label for="customerName" class="form-label">Họ và tên</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+                                <input type="text" class="form-control" id="customerName" name="customerName" 
+                                       minlength="2" maxlength="100" required>
+                                <div class="invalid-feedback">
+                                    Vui lòng nhập họ tên (ít nhất 2 ký tự).
+                                </div>
+                            </div>
                         </div>
+
                         <div class="mb-3">
-                            <label for="interestRate" class="form-label">Lãi suất (%/năm)</label>
-                            <input type="number" step="0.01" class="form-control" id="interestRate" name="interestRate" required>
+                            <label for="loanAmount" class="form-label">Số tiền vay (VNĐ)</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-currency-dollar"></i></span>
+                                <input type="number" class="form-control" id="loanAmount" name="loanAmount" 
+                                       step="1000000" min="10000000" max="1000000000" required>
+                                <span class="input-group-text">VNĐ</span>
+                                <div class="invalid-feedback">
+                                    Vui lòng nhập số tiền vay từ 10.000.000 đến 1.000.000.000 VNĐ.
+                                </div>
+                            </div>
+                            <small class="form-text text-muted" id="formattedAmount"></small>
                         </div>
+
                         <div class="mb-3">
-                            <label for="package" class="form-label">Gói vay</label>
-                            <select class="form-select" id="package" name="package">
-                                <option value="6">Gói 1: 6 tháng</option>
-                                <option value="12">Gói 2: 12 tháng</option>
-                                <option value="24">Gói 3: 24 tháng</option>
+                            <label for="loanType" class="form-label">Loại khoản vay</label>
+                            <select class="form-select" id="loanType" name="loanType" required>
+                                <option value="">Chọn loại khoản vay</option>
+                                <option value="personal">Vay cá nhân</option>
+                                <option value="business">Vay kinh doanh</option>
+                                <option value="mortgage">Vay thế chấp</option>
                             </select>
+                            <div class="invalid-feedback">
+                                Vui lòng chọn loại khoản vay.
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="startDate" class="form-label">Ngày bắt đầu</label>
-                            <input type="date" class="form-control" id="startDate" name="startDate" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="endDate" class="form-label">Ngày kết thúc</label>
-                            <input type="date" class="form-control" id="endDate" name="endDate" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Gửi Yêu Cầu</button>
-                    </form>
-                </div>
 
-                <!-- Hiển thị kết quả -->
-                <div class="col-md-6 result-section">
-                    <h3 class="mb-3">Số tiền cần trả</h3>
-                    <div class="result-box">
-                        <p><strong>Phương thức vay:</strong> --</p>
-                        <p><strong>Lãi suất (%/năm):</strong> 0%</p>
-                        <p><strong>Số tiền trả hàng tháng:</strong> 0 VND</p>
-                        <p><strong>Tổng số gốc phải trả:</strong> 0 VND</p>
-                        <p><strong>Tổng lãi phải trả:</strong> 0 VND</p>
-                        <hr>
-                        <p><strong>Tổng số tiền cần trả:</strong> <span style="font-size: 20px; font-weight: bold;">0 VND</span></p>
-                        <p class="text-muted">Lưu ý: Kết quả chỉ mang tính chất tham khảo</p>
-                    </div>
+                        <div class="mb-3">
+                            <label for="loanTerm" class="form-label">Thời hạn vay (tháng)</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-calendar-event-fill"></i></span>
+                                <input type="number" class="form-control" id="loanTerm" name="loanTerm" 
+                                       min="6" max="360" required>
+                                <div class="invalid-feedback">
+                                    Vui lòng nhập thời hạn vay từ 6 đến 360 tháng.
+                                </div>
+                            </div>
+                        </div>
+
+                        <% if (request.getAttribute("error") != null) { %>
+                        <div class="alert alert-danger mb-3">
+                            <%= request.getAttribute("error") %>
+                        </div>
+                        <% } %>
+
+                        <div class="d-flex justify-content-between">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-circle-fill me-2"></i>Gửi yêu cầu
+                            </button>
+                            <a href="loan-requests" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left-circle me-2"></i>Quay lại danh sách
+                            </a>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            // Enable Bootstrap form validation
+            (function () {
+                'use strict'
+
+                // Fetch all forms that need validation
+                var forms = document.querySelectorAll('.needs-validation')
+
+                // Loop over them and prevent submission
+                Array.prototype.slice.call(forms).forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+
+                // Custom validation for loan amount
+                var loanAmountInput = document.getElementById('loanAmount')
+                var formattedAmountDiv = document.getElementById('formattedAmount')
+
+                loanAmountInput.addEventListener('input', function (event) {
+                    var value = parseFloat(this.value)
+                    if (value < 10000000) {
+                        this.setCustomValidity('Số tiền vay tối thiểu là 10.000.000 VNĐ')
+                    } else if (value > 1000000000) {
+                        this.setCustomValidity('Số tiền vay tối đa là 1.000.000.000 VNĐ')
+                    } else {
+                        this.setCustomValidity('')
+                    }
+
+                    // Format number with thousand separator
+                    if (value) {
+                        formattedAmountDiv.textContent = new Intl.NumberFormat('vi-VN', {
+                            style: 'currency',
+                            currency: 'VND'
+                        }).format(value)
+                    } else {
+                        formattedAmountDiv.textContent = ''
+                    }
+                })
+            })()
+        </script>
     </body>
 </html>
