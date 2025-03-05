@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
@@ -22,7 +22,6 @@
                 box-shadow: 0 2px 4px rgba(0,0,0,0.1);
                 margin-top: 20px;
             }
-            
             .status-badge {
                 padding: 5px 10px;
                 border-radius: 5px;
@@ -30,52 +29,56 @@
                 display: inline-block;
                 margin-bottom: 10px;
             }
-            
             .badge-pending {
                 background-color: #f6c23e;
                 color: #fff;
             }
-            
             .badge-approved {
                 background-color: #1cc88a;
                 color: #fff;
             }
-            
             .badge-rejected {
                 background-color: #e74a3b;
                 color: #fff;
             }
-            
             .detail-section {
                 margin-bottom: 30px;
             }
-            
             .detail-section h5 {
                 border-bottom: 1px solid #e3e6f0;
                 padding-bottom: 10px;
                 margin-bottom: 15px;
             }
-            
             .detail-row {
                 display: flex;
                 margin-bottom: 10px;
             }
-            
             .detail-label {
                 font-weight: bold;
                 width: 150px;
                 color: #4e73df;
             }
-            
             .detail-value {
                 flex: 1;
             }
-            
             .approval-section {
                 background-color: #f8f9fc;
                 padding: 20px;
                 border-radius: 8px;
                 margin-top: 20px;
+            }
+            .rejected-reason, .approval-note {
+                padding: 10px;
+                border-radius: 5px;
+                margin-top: 10px;
+            }
+            .rejected-reason {
+                background-color: #feecec;
+                border-left: 4px solid #e74a3b;
+            }
+            .approval-note {
+                background-color: #eafbf3;
+                border-left: 4px solid #1cc88a;
             }
         </style>
     </head>
@@ -93,7 +96,7 @@
                                 <i class="fas fa-arrow-left"></i> Quay lại danh sách
                             </a>
                         </div>
-                        
+
                         <c:if test="${not empty sessionScope.successMessage}">
                             <div class="alert alert-success alert-dismissible fade show" role="alert">
                                 ${sessionScope.successMessage}
@@ -103,7 +106,7 @@
                             </div>
                             <c:remove var="successMessage" scope="session" />
                         </c:if>
-                        
+
                         <c:if test="${not empty sessionScope.errorMessage}">
                             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                 ${sessionScope.errorMessage}
@@ -113,7 +116,7 @@
                             </div>
                             <c:remove var="errorMessage" scope="session" />
                         </c:if>
-                        
+
                         <div class="detail-card">
                             <div class="text-center mb-4">
                                 <h4>${asset.assetName}</h4>
@@ -129,7 +132,7 @@
                                     </c:when>
                                 </c:choose>
                             </div>
-                            
+
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="detail-section">
@@ -151,7 +154,7 @@
                                             <div class="detail-value">${asset.description}</div>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="detail-section">
                                         <h5><i class="fas fa-user"></i> Thông Tin Khách Hàng</h5>
                                         <div class="detail-row">
@@ -164,7 +167,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 <div class="col-md-6">
                                     <div class="detail-section">
                                         <h5><i class="fas fa-clipboard-list"></i> Thông Tin Đăng Ký</h5>
@@ -177,42 +180,130 @@
                                             <div class="detail-value"><fmt:formatDate value="${asset.createdDate}" pattern="dd/MM/yyyy HH:mm"/></div>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="detail-section">
                                         <h5><i class="fas fa-user-check"></i> Thông Tin Duyệt</h5>
-                                        <div class="detail-row">
-                                            <div class="detail-label">Người Duyệt:</div>
-                                            <div class="detail-value">${asset.approverName}</div>
-                                        </div>
-                                        <div class="detail-row">
-                                            <div class="detail-label">Ngày Duyệt:</div>
-                                            <div class="detail-value"><fmt:formatDate value="${asset.approvedDate}" pattern="dd/MM/yyyy HH:mm"/></div>
-                                        </div>
+                                        <c:choose>
+                                            <c:when test="${asset.status eq 'PENDING'}">
+                                                <div class="pending-message">
+                                                    <i class="fas fa-info-circle"></i> Tài sản này đang chờ duyệt
+                                                </div>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <div class="detail-row">
+                                                    <div class="detail-label">Người Duyệt:</div>
+                                                    <div class="detail-value">${not empty asset.approverName ? asset.approverName : 'N/A'}</div>
+                                                </div>
+                                                <div class="detail-row">
+                                                    <div class="detail-label">Ngày Duyệt:</div>
+                                                    <div class="detail-value">
+                                                        <c:choose>
+                                                            <c:when test="${not empty asset.approvedDate}">
+                                                                <fmt:formatDate value="${asset.approvedDate}" pattern="dd/MM/yyyy HH:mm"/>
+                                                            </c:when>
+                                                            <c:otherwise>N/A</c:otherwise>
+                                                        </c:choose>
+                                                    </div>
+                                                </div>
+
+                                                <c:if test="${asset.status eq 'APPROVED' && not empty asset.notes}">
+                                                    <div class="detail-row">
+                                                        <div class="detail-label">Ghi Chú:</div>
+                                                        <div class="detail-value">
+                                                            <div class="approval-note">
+                                                                <i class="fas fa-comment-dots mr-2"></i> ${asset.notes}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </c:if>
+
+                                                <c:if test="${asset.status eq 'REJECTED' && not empty asset.notes}">
+                                                    <div class="detail-row">
+                                                        <div class="detail-label">Lý Do Từ Chối:</div>
+                                                        <div class="detail-value">
+                                                            <div class="rejection-reason">
+                                                                <i class="fas fa-exclamation-circle mr-2"></i> ${asset.notes}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </c:if>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </div>
                                 </div>
                             </div>
-                            
-                            <c:if test="${isHeadOfStaff && asset.status eq 'PENDING'}">
+                            <!-- Hiển thị form duyệt/từ chối chỉ khi người dùng có quyền và tài sản đang ở trạng thái chờ duyệt -->
+                            <c:if test="${canApprove && asset.status eq 'PENDING'}">
                                 <div class="approval-section mt-4">
-                                    <h5>Quyết Định Duyệt</h5>
-                                    <form action="asset-approve" method="POST" class="mb-2">
+                                    <h5><i class="fas fa-check-double"></i> Quyết Định Duyệt</h5>
+                                    <form action="asset-detail" method="POST" id="assetActionForm" class="mb-2">
                                         <input type="hidden" name="asset_id" value="${asset.assetId}"/>
+                                        <input type="hidden" name="action" id="actionType" value=""/>
+
                                         <div class="form-group">
                                             <label for="note">Ghi Chú (tùy chọn):</label>
                                             <textarea id="note" name="note" class="form-control" rows="3"></textarea>
                                         </div>
-                                        <button type="submit" class="btn btn-success"><i class="fas fa-check"></i> Duyệt</button>
-                                    </form>
-                                    
-                                    <form action="asset-reject" method="POST">
-                                        <input type="hidden" name="asset_id" value="${asset.assetId}"/>
-                                        <div class="form-group">
-                                            <label for="reason">Lý Do Từ Chối:</label>
-                                            <textarea id="reason" name="reason" class="form-control" rows="3" required></textarea>
+
+                                        <div class="form-group" id="reasonGroup" style="display: none;">
+                                            <label for="reason"><span class="text-danger">*</span> Lý Do Từ Chối:</label>
+                                            <textarea id="reason" name="reason" class="form-control" rows="3"></textarea>
+                                            <small class="form-text text-muted">Lý do từ chối là bắt buộc.</small>
                                         </div>
-                                        <button type="submit" class="btn btn-danger"><i class="fas fa-times"></i> Từ Chối</button>
+
+                                        <div class="d-flex mt-3">
+                                            <button type="button" class="btn btn-success mr-2" onclick="submitAction('approve')">
+                                                <i class="fas fa-check"></i> Duyệt
+                                            </button>
+                                            <button type="button" class="btn btn-danger" onclick="showReasonField()">
+                                                <i class="fas fa-times"></i> Từ Chối
+                                            </button>
+                                        </div>
                                     </form>
                                 </div>
+
+                                <script>
+                                    function showReasonField() {
+                                        document.getElementById('reasonGroup').style.display = 'block';
+                                        document.getElementById('reason').focus();
+
+                                        // Thay đổi nút từ chối
+                                        const rejectBtn = document.querySelector('.btn-danger');
+                                        rejectBtn.innerHTML = '<i class="fas fa-times"></i> Xác nhận từ chối';
+                                        rejectBtn.onclick = function () {
+                                            submitAction('reject');
+                                        };
+                                    }
+
+                                    function submitAction(action) {
+                                        const form = document.getElementById('assetActionForm');
+                                        const actionInput = document.getElementById('actionType');
+                                        const reasonInput = document.getElementById('reason');
+
+                                        actionInput.value = action;
+
+                                        if (action === 'reject') {
+                                            // Kiểm tra lý do từ chối
+                                            if (!reasonInput.value.trim()) {
+                                                alert('Vui lòng nhập lý do từ chối.');
+                                                reasonInput.focus();
+                                                return;
+                                            }
+
+                                            // Xác nhận từ chối
+                                            if (!confirm('Bạn có chắc chắn muốn từ chối tài sản này?')) {
+                                                return;
+                                            }
+                                        } else {
+                                            // Xác nhận duyệt
+                                            if (!confirm('Bạn có chắc chắn muốn duyệt tài sản này?')) {
+                                                return;
+                                            }
+                                        }
+
+                                        form.submit();
+                                    }
+                                </script>
                             </c:if>
                         </div>
                     </div>

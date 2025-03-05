@@ -121,7 +121,7 @@ public class LoginController extends HttpServlet {
                     session.setAttribute("otpExpiry", System.currentTimeMillis() + 300000); // 5 phút
                     
                     // Chuyển hướng đến trang nhập OTP
-                    resp.sendRedirect("verifyotp");
+                    resp.sendRedirect("staffFilter");
                     
                 } catch (MessagingException e) {
                     LOGGER.log(Level.SEVERE, "Lỗi khi gửi email OTP: " + e.getMessage(), e);

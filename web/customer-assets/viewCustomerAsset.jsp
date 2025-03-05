@@ -99,7 +99,7 @@
                                     Số tài sản tìm thấy: ${assets.size()}
                                 </div>
                             </c:if>
-                            
+
                             <!-- Search Filters Form - Sửa method thành GET và action thành assets -->
                             <form action="${pageContext.request.contextPath}/assets-filter" method="GET" id="searchForm">
                                 <div class="search-filters">
@@ -162,6 +162,24 @@
                                             <input type="date" id="createdDateTo" name="createdDateTo" class="form-control" 
                                                    value="${param.createdDateTo}">
                                         </div>
+
+                                        <div class="form-group">
+                                            <label for="approvedBy">Người duyệt</label>
+                                            <input type="text" id="approvedBy" name="approvedBy" class="form-control" 
+                                                   value="${param.approvedBy}" placeholder="Tên/ID người duyệt">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="approvedDateFrom">Ngày duyệt từ</label>
+                                            <input type="date" id="approvedDateFrom" name="approvedDateFrom" class="form-control" 
+                                                   value="${param.approvedDateFrom}">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="approvedDateTo">Ngày duyệt đến</label>
+                                            <input type="date" id="approvedDateTo" name="approvedDateTo" class="form-control" 
+                                                   value="${param.approvedDateTo}">
+                                        </div>
                                     </div>
 
                                     <div class="search-buttons">
@@ -173,6 +191,7 @@
                                         </button>
                                     </div>
                                 </div>
+
                             </form>
 
                             <!-- Status Summary Cards -->
@@ -314,50 +333,50 @@
                                             <c:if test="${currentPage > 1}">
                                                 <li class="page-item">
                                                     <a class="page-link" href="assets?page=${currentPage - 1}
-                                                        <c:if test="${not empty param.assetName}">&assetName=${param.assetName}</c:if>
-                                                        <c:if test="${not empty param.assetType}">&assetType=${param.assetType}</c:if>
-                                                        <c:if test="${not empty param.customerName}">&customerName=${param.customerName}</c:if>
-                                                        <c:if test="${not empty param.minValue}">&minValue=${param.minValue}</c:if>
-                                                        <c:if test="${not empty param.maxValue}">&maxValue=${param.maxValue}</c:if>
-                                                        <c:if test="${not empty param.status}">&status=${param.status}</c:if>
-                                                        <c:if test="${not empty param.createdDateFrom}">&createdDateFrom=${param.createdDateFrom}</c:if>
-                                                        <c:if test="${not empty param.createdDateTo}">&createdDateTo=${param.createdDateTo}</c:if>
-                                                    " aria-label="Previous">
-                                                        <span aria-hidden="true">&laquo;</span>
-                                                    </a>
-                                                </li>
+                                                       <c:if test="${not empty param.assetName}">&assetName=${param.assetName}</c:if>
+                                                       <c:if test="${not empty param.assetType}">&assetType=${param.assetType}</c:if>
+                                                       <c:if test="${not empty param.customerName}">&customerName=${param.customerName}</c:if>
+                                                       <c:if test="${not empty param.minValue}">&minValue=${param.minValue}</c:if>
+                                                       <c:if test="${not empty param.maxValue}">&maxValue=${param.maxValue}</c:if>
+                                                       <c:if test="${not empty param.status}">&status=${param.status}</c:if>
+                                                       <c:if test="${not empty param.createdDateFrom}">&createdDateFrom=${param.createdDateFrom}</c:if>
+                                                       <c:if test="${not empty param.createdDateTo}">&createdDateTo=${param.createdDateTo}</c:if>
+                                                           " aria-label="Previous">
+                                                           <span aria-hidden="true">&laquo;</span>
+                                                       </a>
+                                                    </li>
                                             </c:if>
 
                                             <c:forEach begin="1" end="${totalPages}" var="i">
                                                 <li class="page-item ${currentPage == i ? 'active' : ''}">
                                                     <a class="page-link" href="assets?page=${i}
-                                                        <c:if test="${not empty param.assetName}">&assetName=${param.assetName}</c:if>
-                                                        <c:if test="${not empty param.assetType}">&assetType=${param.assetType}</c:if>
-                                                        <c:if test="${not empty param.customerName}">&customerName=${param.customerName}</c:if>
-                                                        <c:if test="${not empty param.minValue}">&minValue=${param.minValue}</c:if>
-                                                        <c:if test="${not empty param.maxValue}">&maxValue=${param.maxValue}</c:if>
-                                                        <c:if test="${not empty param.status}">&status=${param.status}</c:if>
-                                                        <c:if test="${not empty param.createdDateFrom}">&createdDateFrom=${param.createdDateFrom}</c:if>
-                                                        <c:if test="${not empty param.createdDateTo}">&createdDateTo=${param.createdDateTo}</c:if>
-                                                    ">${i}</a>
+                                                       <c:if test="${not empty param.assetName}">&assetName=${param.assetName}</c:if>
+                                                       <c:if test="${not empty param.assetType}">&assetType=${param.assetType}</c:if>
+                                                       <c:if test="${not empty param.customerName}">&customerName=${param.customerName}</c:if>
+                                                       <c:if test="${not empty param.minValue}">&minValue=${param.minValue}</c:if>
+                                                       <c:if test="${not empty param.maxValue}">&maxValue=${param.maxValue}</c:if>
+                                                       <c:if test="${not empty param.status}">&status=${param.status}</c:if>
+                                                       <c:if test="${not empty param.createdDateFrom}">&createdDateFrom=${param.createdDateFrom}</c:if>
+                                                       <c:if test="${not empty param.createdDateTo}">&createdDateTo=${param.createdDateTo}</c:if>
+                                                       ">${i}</a>
                                                 </li>
                                             </c:forEach>
 
                                             <c:if test="${currentPage < totalPages}">
                                                 <li class="page-item">
                                                     <a class="page-link" href="assets?page=${currentPage + 1}
-                                                        <c:if test="${not empty param.assetName}">&assetName=${param.assetName}</c:if>
-                                                        <c:if test="${not empty param.assetType}">&assetType=${param.assetType}</c:if>
-                                                        <c:if test="${not empty param.customerName}">&customerName=${param.customerName}</c:if>
-                                                        <c:if test="${not empty param.minValue}">&minValue=${param.minValue}</c:if>
-                                                        <c:if test="${not empty param.maxValue}">&maxValue=${param.maxValue}</c:if>
-                                                        <c:if test="${not empty param.status}">&status=${param.status}</c:if>
-                                                        <c:if test="${not empty param.createdDateFrom}">&createdDateFrom=${param.createdDateFrom}</c:if>
-                                                        <c:if test="${not empty param.createdDateTo}">&createdDateTo=${param.createdDateTo}</c:if>
-                                                    " aria-label="Next">
-                                                        <span aria-hidden="true">&raquo;</span>
-                                                    </a>
-                                                </li>
+                                                       <c:if test="${not empty param.assetName}">&assetName=${param.assetName}</c:if>
+                                                       <c:if test="${not empty param.assetType}">&assetType=${param.assetType}</c:if>
+                                                       <c:if test="${not empty param.customerName}">&customerName=${param.customerName}</c:if>
+                                                       <c:if test="${not empty param.minValue}">&minValue=${param.minValue}</c:if>
+                                                       <c:if test="${not empty param.maxValue}">&maxValue=${param.maxValue}</c:if>
+                                                       <c:if test="${not empty param.status}">&status=${param.status}</c:if>
+                                                       <c:if test="${not empty param.createdDateFrom}">&createdDateFrom=${param.createdDateFrom}</c:if>
+                                                       <c:if test="${not empty param.createdDateTo}">&createdDateTo=${param.createdDateTo}</c:if>
+                                                           " aria-label="Next">
+                                                           <span aria-hidden="true">&raquo;</span>
+                                                       </a>
+                                                    </li>
                                             </c:if>
                                         </ul>
                                     </nav>
@@ -380,21 +399,21 @@
         <script src="adminassets/js/sb-admin-2.min.js"></script>
 
         <script>
-            // Clear filters functionality
-            document.getElementById('clearFiltersBtn').addEventListener('click', function () {
-                // Reset all form fields
-                document.getElementById('assetName').value = '';
-                document.getElementById('assetType').value = '';
-                document.getElementById('customerName').value = '';
-                document.getElementById('minValue').value = '';
-                document.getElementById('maxValue').value = '';
-                document.getElementById('status').value = '';
-                document.getElementById('createdDateFrom').value = '';
-                document.getElementById('createdDateTo').value = '';
+                                                        // Clear filters functionality
+                                                        document.getElementById('clearFiltersBtn').addEventListener('click', function () {
+                                                            // Reset all form fields
+                                                            document.getElementById('assetName').value = '';
+                                                            document.getElementById('assetType').value = '';
+                                                            document.getElementById('customerName').value = '';
+                                                            document.getElementById('minValue').value = '';
+                                                            document.getElementById('maxValue').value = '';
+                                                            document.getElementById('status').value = '';
+                                                            document.getElementById('createdDateFrom').value = '';
+                                                            document.getElementById('createdDateTo').value = '';
 
-                // Chuyển hướng đến trang assets mà không có tham số tìm kiếm
-                window.location.href = 'assets-filter';
-            });
+                                                            // Chuyển hướng đến trang assets mà không có tham số tìm kiếm
+                                                            window.location.href = 'assets-filter';
+                                                        });
         </script>
     </body>
 </html>

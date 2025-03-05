@@ -63,7 +63,7 @@
                             <h1 class="h3 mb-0 text-gray-800">
                                 ${viewMode ? 'Chi Tiết' : 'Thêm'} Tài Sản
                             </h1>
-                            <a href="assets" class="btn btn-secondary btn-sm">
+                            <a href="assets-filter" class="btn btn-secondary btn-sm">
                                 <i class="fas fa-arrow-left"></i> Quay lại danh sách
                             </a>
                         </div>
@@ -133,6 +133,7 @@
                                                 </div>
                                             </div>
                                         </div>
+
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label class="view-mode-label">Mô Tả</label>
@@ -280,12 +281,15 @@
                                                 <div class="form-group">
                                                     <label for="asset_value" class="required-field">Giá Trị Tài Sản (VND)</label>
                                                     <input type="text" class="form-control ${not empty errors.asset_value ? 'is-invalid' : ''}" 
-                                                           id="asset_value" name="asset_value" value="${asset_value}">
+                                                           id="asset_value" name="asset_value" value="${asset_value}"
+                                                           placeholder="Nhập giá trị, ví dụ: 1,000,000">
+                                                    <small class="form-text text-muted">Vui lòng nhập giá trị số, không bao gồm đơn vị tiền tệ</small>
                                                     <c:if test="${not empty errors.asset_value}">
                                                         <div class="error-message">${errors.asset_value}</div>
                                                     </c:if>
                                                 </div>
                                             </div>
+
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label for="description">Mô Tả</label>
@@ -323,19 +327,55 @@
         <script src="adminassets/js/sb-admin-2.min.js"></script>
 
         <c:if test="${not viewMode}">
+
             <script>
                 // Định dạng số tiền khi nhập
                 document.getElementById('asset_value').addEventListener('input', function (e) {
-                    // Loại bỏ dấu phẩy và ký tự không phải số
+                    // Lưu vị trí con trỏ
+                    var cursorPos = this.selectionStart;
+                    var oldLength = this.value.length;
+                    // Loại bỏ tất cả ký tự không phải số
                     var value = this.value.replace(/[^\d]/g, '');
-
-                    // Định dạng số với dấu phẩy ngăn cách hàng nghìn
-                    if (value.length > 0) {
-                        value = parseInt(value, 10).toLocaleString('vi-VN');
+                    // Nếu không có gì, không làm gì cả
+                    if (!value) {
+                        this.value = '';
+                        return;
                     }
 
-                    // Hiển thị giá trị đã định dạng
-                    this.value = value;
+                    // Định dạng số với dấu phẩy ngăn cách hàng nghìn mà không sử dụng parseInt
+                    var formattedValue = '';
+                    for (var i = 0; i < value.length; i++) {
+                        if (i > 0 && (value.length - i) % 3 === 0) {
+                            formattedValue += ',';
+                        }
+                        formattedValue += value.charAt(i);
+                    }
+
+                    // Cập nhật giá trị
+                    this.value = formattedValue;
+                    // Điều chỉnh vị trí con trỏ sau khi định dạng
+                    var newLength = this.value.length;
+                    var newCursorPos = cursorPos + (newLength - oldLength);
+                    if (newCursorPos < 0)
+                        newCursorPos = 0;
+                    if (newCursorPos > newLength)
+                        newCursorPos = newLength;
+                    this.setSelectionRange(newCursorPos, newCursorPos);
+                });
+
+                // Kiểm tra form trước khi submit
+                document.getElementById('assetForm').addEventListener('submit', function (e) {
+                    var assetValue = document.getElementById('asset_value').value;
+                    // Kiểm tra nếu giá trị tài sản trống
+                    if (!assetValue || assetValue.trim() === '') {
+                        e.preventDefault();
+                        alert('Vui lòng nhập giá trị tài sản');
+                        document.getElementById('asset_value').focus();
+                        return false;
+                    }
+
+                    // Form hợp lệ, tiếp tục submit
+                    return true;
                 });
             </script>
         </c:if>

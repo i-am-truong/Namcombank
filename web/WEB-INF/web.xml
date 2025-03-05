@@ -291,8 +291,6 @@
     <servlet>
         <servlet-name>AssetDetailController</servlet-name>
         <servlet-class>controller.Asset.AssetDetailController</servlet-class>
-        <servlet-name>LoanPackageDetail</servlet-name>
-        <servlet-class>controller.loanpackage.LoanPackageDetail</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>viewCustomerDetail</servlet-name>
@@ -577,8 +575,6 @@
     <servlet-mapping>
         <servlet-name>AssetDetailController</servlet-name>
         <url-pattern>/asset-detail</url-pattern>
-        <servlet-name>LoanPackageDetail</servlet-name>
-        <url-pattern>/loanpackage/detail</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>UpdateLoanPackageController</servlet-name>

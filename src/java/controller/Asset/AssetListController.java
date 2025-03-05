@@ -4,15 +4,12 @@ import context.AssetDAO;
 import controller.auth.BaseRBACControlller;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import model.Asset;
-
-import model.Role;
 import model.auth.Staff;
 
 /**
@@ -37,6 +34,10 @@ public class AssetListController extends BaseRBACControlller {
     @Override
     protected void doAuthorizedGet(HttpServletRequest request, HttpServletResponse response, Staff account) throws ServletException, IOException {
         try {
+            // Ngăn cache để đảm bảo hiển thị dữ liệu mới nhất
+            response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+            response.setHeader("Pragma", "no-cache");
+            response.setDateHeader("Expires", 0);
 
             // Lấy tham số tìm kiếm
             String assetName = request.getParameter("assetName");
@@ -47,6 +48,10 @@ public class AssetListController extends BaseRBACControlller {
             String status = request.getParameter("status");
             String createdDateFrom = request.getParameter("createdDateFrom");
             String createdDateTo = request.getParameter("createdDateTo");
+            String approvedBy = request.getParameter("approvedBy"); // Tham số mới
+            String approvedDateFrom = request.getParameter("approvedDateFrom");
+            String approvedDateTo = request.getParameter("approvedDateTo");
+
 
             // Chuyển đổi giá trị tìm kiếm
             BigDecimal minValue = null;
@@ -72,9 +77,16 @@ public class AssetListController extends BaseRBACControlller {
             ArrayList<Asset> assets = assetDAO.searchAssets(
                     assetName, assetType, customerName,
                     minValue, maxValue, status,
-                    createdDateFrom, createdDateTo
+                    createdDateFrom, createdDateTo,
+                    approvedBy, approvedDateFrom, approvedDateTo
             );
 
+            // Log để debug
+            System.out.println("Tìm thấy " + assets.size() + " tài sản");
+            for (Asset asset : assets) {
+                System.out.println("Asset ID: " + asset.getAssetId() + ", Status: " + asset.getStatus()
+                        + ", Note: " + asset.getNotes());
+            }
 
             // Tính toán số lượng tài sản theo trạng thái (cho các card thống kê)
             int totalAssets = assetDAO.countAllAssets();
@@ -98,6 +110,9 @@ public class AssetListController extends BaseRBACControlller {
             request.setAttribute("status", status);
             request.setAttribute("createdDateFrom", createdDateFrom);
             request.setAttribute("createdDateTo", createdDateTo);
+            request.setAttribute("approvedBy", approvedBy);
+            request.setAttribute("approvedDateFrom", approvedDateFrom);
+            request.setAttribute("approvedDateTo", approvedDateTo);
 
             // Chuyển đến trang danh sách tài sản
             request.getRequestDispatcher("/customer-assets/viewCustomerAsset.jsp").forward(request, response);
@@ -109,5 +124,4 @@ public class AssetListController extends BaseRBACControlller {
             response.sendRedirect("error.jsp");
         }
     }
-
 }
