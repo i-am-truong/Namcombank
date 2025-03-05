@@ -17,6 +17,7 @@ public class LoanRequest {
     private String approvalStatus;
     private Date approvalDate;
     private String approvedBy;
+    private String collateralImage;
 
     // Các thông tin bổ sung để hiển thị
     private String customerName;
@@ -26,7 +27,7 @@ public class LoanRequest {
     public LoanRequest() {
     }
 
-    public LoanRequest(int requestId, int loanId, int staffId, int customerId, String approvalStatus, Date approvalDate, String approvedBy, String customerName, Double loanAmount, String staffName) {
+    public LoanRequest(int requestId, int loanId, int staffId, int customerId, String approvalStatus, Date approvalDate, String approvedBy, String collateralImage, String customerName, Double loanAmount, String staffName) {
         this.requestId = requestId;
         this.loanId = loanId;
         this.staffId = staffId;
@@ -34,6 +35,7 @@ public class LoanRequest {
         this.approvalStatus = approvalStatus;
         this.approvalDate = approvalDate;
         this.approvedBy = approvedBy;
+        this.collateralImage = collateralImage;
         this.customerName = customerName;
         this.loanAmount = loanAmount;
         this.staffName = staffName;
@@ -95,6 +97,14 @@ public class LoanRequest {
         this.approvedBy = approvedBy;
     }
 
+    public String getCollateralImage() {
+        return collateralImage;
+    }
+
+    public void setCollateralImage(String collateralImage) {
+        this.collateralImage = collateralImage;
+    }
+
     public String getCustomerName() {
         return customerName;
     }
@@ -119,6 +129,5 @@ public class LoanRequest {
         this.staffName = staffName;
     }
 
-    
     
 }

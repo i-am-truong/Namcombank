@@ -1,19 +1,24 @@
-package dao;
+package context;
 
 import context.DBContext;
 import model.LoanRequest;
+
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class LoanRequestDAO extends DBContext<LoanRequest> {
 
     @Override
     public void insert(LoanRequest request) {
-        String sql = "INSERT INTO LoanRequests (loan_id, staff_id, approval_status) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO LoanRequests (loan_id, staff_id, customer_id, approval_status, collateral_image) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, request.getLoanId());
             stmt.setInt(2, request.getStaffId());
-            stmt.setString(3, "Pending");
+            stmt.setInt(3, request.getCustomerId());
+            stmt.setString(4, "Pending"); // Mặc định trạng thái chờ duyệt
+            stmt.setString(5, request.getCollateralImage());
+
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -28,6 +33,7 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
             stmt.setTimestamp(2, request.getApprovalDate() != null ? new Timestamp(request.getApprovalDate().getTime()) : null);
             stmt.setString(3, request.getApprovedBy());
             stmt.setInt(4, request.getRequestId());
+
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -47,96 +53,57 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
 
     @Override
     public ArrayList<LoanRequest> list() {
-        ArrayList<LoanRequest> requests = new ArrayList<>();
-        String sql = """
-                SELECT 
-                    lr.request_id, 
-                    lr.loan_id, 
-                    lr.staff_id, 
-                    lr.approval_status, 
-                    lr.approval_date, 
-                    lr.approved_by, 
-                    c.customer_id, 
-                    c.fullname AS customer_name, 
-                    l.amount AS loan_amount,
-                    s.fullname AS staff_name
-                FROM 
-                    LoanRequests lr
-                JOIN 
-                    Loans l ON lr.loan_id = l.loan_id
-                JOIN 
-                    Customer c ON l.customer_id = c.customer_id
-                JOIN 
-                    Staff s ON lr.staff_id = s.staff_id
-                WHERE 1 = 1;         
-            """;
+        ArrayList<LoanRequest> loanRequests = new ArrayList<>();
+        String sql = "SELECT lr.request_id, c.fullname AS customer_name, l.amount, lr.approval_date, "
+                + "lr.approval_status, lr.approved_by, lr.collateral_image, s.fullname AS staff_name "
+                + "FROM LoanRequests lr "
+                + "JOIN Loans l ON lr.loan_id = l.loan_id "
+                + "JOIN LoanPackages lp ON lp.package_id = l.package_id "
+                + "JOIN Customer c ON c.customer_id = l.customer_id "
+                + "JOIN CustomerAssets ca ON ca.customer_id = c.customer_id "
+                + "JOIN Staff s ON s.staff_id = ca.staff_id";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
-                LoanRequest request = new LoanRequest();
-                request.setRequestId(rs.getInt("request_id"));
-                request.setLoanId(rs.getInt("loan_id"));
-                request.setStaffId(rs.getInt("staff_id"));
-                request.setApprovalStatus(rs.getString("approval_status"));
+                LoanRequest loanRequest = new LoanRequest();
+                loanRequest.setRequestId(rs.getInt("request_id"));
+                loanRequest.setCustomerName(rs.getString("customer_name"));
+                loanRequest.setLoanAmount(rs.getDouble("amount"));
+                loanRequest.setApprovalDate(rs.getDate("approval_date"));
+                loanRequest.setApprovalStatus(rs.getString("approval_status"));
+                loanRequest.setApprovedBy(rs.getString("approved_by"));
+                loanRequest.setCollateralImage(rs.getString("collateral_image"));
+                loanRequest.setStaffName(rs.getString("staff_name"));
 
-                // Xử lý giá trị NULL cho approval_date
-                request.setApprovalDate(rs.getTimestamp("approval_date") != null ? rs.getTimestamp("approval_date") : null);
-
-                request.setApprovedBy(rs.getString("approved_by"));
-                request.setCustomerId(rs.getInt("customer_id"));
-                request.setCustomerName(rs.getString("customer_name"));
-
-                // Xử lý giá trị NULL cho loan_amount
-                double loanAmount = rs.getDouble("loan_amount");
-                request.setLoanAmount(!rs.wasNull() ? loanAmount : 0.0);
-
-                request.setStaffName(rs.getString("staff_name"));
-                requests.add(request);
+                loanRequests.add(loanRequest);
             }
         } catch (SQLException e) {
-            System.err.println("Error retrieving loan requests: " + e.getMessage());
             e.printStackTrace();
         }
-        return requests;
+        return loanRequests;
     }
 
     @Override
     public LoanRequest get(int id) {
-        String sql = """
-                SELECT 
-                    lr.request_id, 
-                    lr.loan_id, 
-                    lr.staff_id, 
-                    lr.approval_status, 
-                    lr.approval_date, 
-                    lr.approved_by, 
-                    c.customer_id, 
-                    c.fullname AS customer_name, 
-                    l.amount AS loan_amount,
-                    s.fullname AS staff_name
-                FROM 
-                    LoanRequests lr
-                JOIN 
-                    Loans l ON lr.loan_id = l.loan_id
-                JOIN 
-                    Customer c ON l.customer_id = c.customer_id
-                JOIN 
-                    Staff s ON lr.staff_id = s.staff_id
-                WHERE lr.request_id = ?
-            """;
-
+        String sql = "SELECT lr.*, c.customer_name, lp.loan_amount, s.staff_name FROM LoanRequests lr "
+                + "JOIN Customers c ON lr.customer_id = c.customer_id "
+                + "JOIN LoanPackages lp ON lr.loan_id = lp.package_id "
+                + "JOIN Staff s ON lr.staff_id = s.staff_id "
+                + "WHERE lr.request_id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
+
             if (rs.next()) {
                 LoanRequest request = new LoanRequest();
                 request.setRequestId(rs.getInt("request_id"));
                 request.setLoanId(rs.getInt("loan_id"));
                 request.setStaffId(rs.getInt("staff_id"));
+                request.setCustomerId(rs.getInt("customer_id"));
                 request.setApprovalStatus(rs.getString("approval_status"));
                 request.setApprovalDate(rs.getTimestamp("approval_date"));
                 request.setApprovedBy(rs.getString("approved_by"));
-                request.setCustomerId(rs.getInt("customer_id"));
+                request.setCollateralImage(rs.getString("collateral_image"));
                 request.setCustomerName(rs.getString("customer_name"));
                 request.setLoanAmount(rs.getDouble("loan_amount"));
                 request.setStaffName(rs.getString("staff_name"));

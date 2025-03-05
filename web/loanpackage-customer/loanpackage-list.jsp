@@ -70,7 +70,7 @@
             </div>
 
             <div class="mt-6 text-center">
-                <a href="../staffFilter"
+                <a href="../Home"
                    class="bg-gray-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-green-600 transition">
                     Back
                 </a> 

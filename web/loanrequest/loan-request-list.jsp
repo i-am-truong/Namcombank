@@ -1,82 +1,78 @@
-<%@ page import="java.util.ArrayList" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page import="java.util.List" %>
 <%@ page import="model.LoanRequest" %>
+<%@ page import="context.LoanRequestDAO" %>
+<%@ page import="jakarta.servlet.http.HttpSession" %>
 <!DOCTYPE html>
-<html lang="en">
+<html>
     <head>
         <meta charset="UTF-8">
-        <title>Loan Requests</title>
+        <title>Loan Request List</title>
         <script src="https://cdn.tailwindcss.com"></script>
     </head>
-    <body class="bg-gray-100">
-        <div class="container mx-auto p-6">
-            <h1 class="text-4xl font-bold text-center text-blue-600 mb-6">Loan Requests</h1>
+    <body class="bg-gray-100 p-6">
+        <div class="container mx-auto bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-2xl font-bold mb-4">Loan Request List</h2>
 
-            <div class="mb-6 flex justify-end">
-                <a href="../create-loan-request"
-                   class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition">
-                    New Loan Request
-                </a>
-            </div>
+            <!-- Form tạo yêu cầu vay -->
+            <%
+                HttpSession sessionObj = request.getSession();
+                String selectedPackage = request.getParameter("selectedLoanPackage");
+                if (selectedPackage != null) {
+                    sessionObj.setAttribute("selectedLoanPackage", selectedPackage);
+                }
+            %>
+            <form action="LoanRequestServlet" method="post" class="mb-4" enctype="multipart/form-data">
+                <div class="grid grid-cols-2 gap-4">
+                    <input type="text" name="customerName" placeholder="Customer Name" class="border p-2 rounded" required>
+                    <input type="number" name="loanAmount" value="<%= sessionObj.getAttribute("selectedLoanPackage") != null ? sessionObj.getAttribute("selectedLoanPackage") : "" %>" placeholder="Loan Amount" class="border p-2 rounded" required>
+                    <input type="text" name="staffName" placeholder="Staff Name" class="border p-2 rounded" required>
+                    <input type="file" name="collateralImage" class="border p-2 rounded">
+                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Create Loan Request</button>
+                </div>
+            </form>
 
-            <div class="overflow-x-auto bg-white rounded-lg shadow">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Staff</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        <%
-    ArrayList<LoanRequest> loanRequests = (ArrayList<LoanRequest>) request.getAttribute("loanRequests");
-    if (loanRequests != null && !loanRequests.isEmpty()) {
-        for (LoanRequest loanRequest : loanRequests) {
-            String statusColor = "gray";
-            if (loanRequest.getApprovalStatus().equals("APPROVED")) statusColor = "green";
-            else if (loanRequest.getApprovalStatus().equals("REJECTED")) statusColor = "red";
-            else if (loanRequest.getApprovalStatus().equals("PENDING")) statusColor = "yellow";
-                        %>
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-gray-900">#<%= loanRequest.getRequestId() %></div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-gray-900"><%= loanRequest.getCustomerName() %></div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-gray-900">
-                                    <%= String.format("%,.0f", loanRequest.getLoanAmount()) %> VND
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-<%= statusColor %>-100 text-<%= statusColor %>-800">
-                                    <%= loanRequest.getApprovalStatus() %>
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                <%= loanRequest.getStaffName() != null ? loanRequest.getStaffName() : "Not assigned" %>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <a href="loan-requests?action=view&id=<%= loanRequest.getRequestId() %>" 
-                                   class="text-indigo-600 hover:text-indigo-900">View Details</a>
-                            </td>
-                        </tr>
-                        <%
-                                }
-                            } else {
-                        %>
-                        <tr>
-                            <td colspan="6" class="px-6 py-4 text-center text-gray-500">No loan requests found.</td>
-                        </tr>
-                        <% } %>
-
-                    </tbody>
-                </table>
-            </div>
+            <table class="w-full border-collapse border border-gray-300">
+                <thead>
+                    <tr class="bg-gray-200">
+                        <th class="border border-gray-300 px-4 py-2">Request ID</th>
+                        <th class="border border-gray-300 px-4 py-2">Customer Name</th>
+                        <th class="border border-gray-300 px-4 py-2">Loan Amount</th>
+                        <th class="border border-gray-300 px-4 py-2">Staff Name</th>
+                        <th class="border border-gray-300 px-4 py-2">Approval Status</th>
+                        <th class="border border-gray-300 px-4 py-2">Approval Date</th>
+                        <th class="border border-gray-300 px-4 py-2">Approved By</th>
+                        <th class="border border-gray-300 px-4 py-2">Collateral Image</th>
+                        <th class="border border-gray-300 px-4 py-2">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% LoanRequestDAO dao = new LoanRequestDAO();
+                       List<LoanRequest> loanRequests = dao.list();
+                       for (LoanRequest loanReq : loanRequests) { %>
+                    <tr class="bg-white hover:bg-gray-100">
+                        <td class="border border-gray-300 px-4 py-2"><%= loanReq.getRequestId() %></td>
+                        <td class="border border-gray-300 px-4 py-2"><%= loanReq.getCustomerName() %></td>
+                        <td class="border border-gray-300 px-4 py-2"><%= loanReq.getLoanAmount() %></td>
+                        <td class="border border-gray-300 px-4 py-2"><%= loanReq.getStaffName() %></td>
+                        <td class="border border-gray-300 px-4 py-2"><%= loanReq.getApprovalStatus() %></td>
+                        <td class="border border-gray-300 px-4 py-2"><%= loanReq.getApprovalDate() != null ? loanReq.getApprovalDate() : "N/A" %></td>
+                        <td class="border border-gray-300 px-4 py-2"><%= loanReq.getApprovedBy() != null ? loanReq.getApprovedBy() : "N/A" %></td>
+                        <td class="border border-gray-300 px-4 py-2">
+                            <% if (loanReq.getCollateralImage() != null && !loanReq.getCollateralImage().isEmpty()) { %>
+                            <img src="<%= loanReq.getCollateralImage() %>" alt="Collateral" class="w-24 h-auto rounded-md">
+                            <% } else { %>
+                            No Image
+                            <% } %>
+                        </td>
+                        <td class="border border-gray-300 px-4 py-2">
+                            <a href="LoanRequestServlet?action=edit&id=<%= loanReq.getRequestId() %>" class="text-blue-500">Edit</a> |
+                            <a href="LoanRequestServlet?action=delete&id=<%= loanReq.getRequestId() %>" class="text-red-500">Delete</a>
+                        </td>
+                    </tr>
+                    <% } %>
+                </tbody>
+            </table>
         </div>
     </body>
 </html>

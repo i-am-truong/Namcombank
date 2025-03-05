@@ -26,8 +26,6 @@
                                         <li><a href="/Namcombank/loanpackage-customer/loanpackage-list.jsp">Loan Packages <i class="fa fa-angle-down"></i></a>
                                             <ul class="submenu-item">
                                                 <li><a href="/Namcombank/loanpackage-customer/loanpackage-list.jsp">All Loan Packages</a></li>
-                                                <li><a href="persional-loans">Personal Loans</a></li>
-                                                <li><a href="bussiness-loans">Business Loans</a></li>
                                                 <li><a href="unsecured-loans">Unsecured Loans</a></li>
                                                 <li><a href=secured-loans">Secured Loans</a></li>
                                                 

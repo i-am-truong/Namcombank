@@ -26,7 +26,7 @@
         }
     }
                 %>
-                <form action="CreateLoanServlet" method="POST" class="space-y-4" onsubmit="return validateLoanAmount();">
+                <form action="loan-requests" method="POST" class="space-y-4" onsubmit="return validateLoanAmount();">
                     <input type="hidden" name="action" value="create">
                     <input type="hidden" name="packageId" value="<%= packageId != null ? packageId : "" %>">
 

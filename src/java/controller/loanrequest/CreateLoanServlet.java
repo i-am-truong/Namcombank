@@ -4,7 +4,7 @@
  */
 package controller.loanrequest;
 
-import dao.LoanRequestDAO;
+import context.LoanRequestDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -59,7 +59,7 @@ public class CreateLoanServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("/loanrequest/loan-request-form.jsp").forward(request, response);
+        request.getRequestDispatcher("/loanrequest/loan-request-create.jsp").forward(request, response);
     }
 
     @Override
@@ -73,7 +73,7 @@ public class CreateLoanServlet extends HttpServlet {
 
             if (loanAmount < minAmount || loanAmount > maxAmount) {
                 request.setAttribute("error", "Loan amount must be between " + minAmount + " and " + maxAmount + " VND.");
-                request.getRequestDispatcher("/loanrequest/loan-request-form.jsp").forward(request, response);
+                request.getRequestDispatcher("/loanrequest/loan-request-create.jsp").forward(request, response);
                 return;
             }
 
@@ -90,7 +90,7 @@ public class CreateLoanServlet extends HttpServlet {
         } catch (Exception e) {
             System.out.println("Error creating loan request: " + e.getMessage());
             request.setAttribute("error", "Không thể tạo yêu cầu vay");
-            request.getRequestDispatcher("/loanrequest/loan-request-form.jsp").forward(request, response);
+            request.getRequestDispatcher("/loanrequest/loan-request-create.jsp").forward(request, response);
         }
     }
 

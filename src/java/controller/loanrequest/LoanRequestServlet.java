@@ -4,7 +4,7 @@
  */
 package controller.loanrequest;
 
-import dao.LoanRequestDAO;
+import context.LoanRequestDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -63,13 +63,6 @@ public class LoanRequestServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         ArrayList<LoanRequest> loanRequests = loanRequestDAO.list();
-
-        // Debug: In danh sách ra console
-        System.out.println("Loan Requests Count: " + loanRequests.size());
-        for (LoanRequest lr : loanRequests) {
-            System.out.println("Request ID: " + lr.getRequestId() + ", Customer: " + lr.getCustomerName());
-        }
-
         request.setAttribute("loanRequests", loanRequests);
         request.getRequestDispatcher("/loanrequest/loan-request-list.jsp").forward(request, response);
     }
