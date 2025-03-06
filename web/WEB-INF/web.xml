@@ -125,6 +125,10 @@
         <servlet-class>controller.saving.savingMoney</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>createSavingPackage</servlet-name>
+        <servlet-class>controller.saving.createSavingPackage</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>viewWishList</servlet-name>
         <servlet-class>controller.wishList.viewWishList</servlet-class>
     </servlet>
@@ -159,10 +163,6 @@
     <servlet>
         <servlet-name>DeleteLoanPackageController</servlet-name>
         <servlet-class>controller.loanpackage.DeleteLoanPackageController</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>CreateSavingController</servlet-name>
-        <servlet-class>controller.saving.CreateSavingController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>StaffLoginController</servlet-name>
@@ -454,10 +454,7 @@
         <servlet-name>DeleteLoanPackageController</servlet-name>
         <url-pattern>/loanpackage/deleteloanpackage</url-pattern>
     </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>CreateSavingController</servlet-name>
-        <url-pattern>/saving/create</url-pattern>
-    </servlet-mapping>
+
     <servlet-mapping>
         <servlet-name>StaffLoginController</servlet-name>
         <url-pattern>/admin.login</url-pattern>
@@ -623,6 +620,10 @@
     <servlet-mapping>
         <servlet-name>savingMoney</servlet-name>
         <url-pattern>/savingMoney</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>createSavingPackage</servlet-name>
+        <url-pattern>/createSavingPackage</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
