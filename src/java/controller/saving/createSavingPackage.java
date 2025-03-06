@@ -4,6 +4,7 @@
  */
 package controller.saving;
 
+import context.SavingDao;
 import controller.auth.BaseRBACControlller;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -12,6 +13,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import model.auth.Staff;
 
 /**
@@ -58,7 +61,64 @@ public class createSavingPackage extends BaseRBACControlller {
             response.sendRedirect("admin.login");
             return;
         }
-        request.getRequestDispatcher("saving/createSavingPackage.jsp").forward(request, response);
+
+        //private int staff_id;private String saving_package_created_at;private String saving_package_updated_at;
+//         private String saving_package_name;
+//                        private String saving_package_description;
+//                        private double saving_package_interest_rate;
+//                        private int saving_package_term_months;
+//                        private Double saving_package_min_deposit;
+//                        private Double saving_package_max_deposit;
+//                        private String saving_package_status;
+        try {
+            // Lấy tham số từ request
+            String saving_package_name = request.getParameter("saving_package_name");
+            String saving_package_description = request.getParameter("saving_package_description");
+            String interestRateStr = request.getParameter("saving_package_interest_rate");
+            String termMonthsStr = request.getParameter("saving_package_term_months");
+            String minDepositStr = request.getParameter("saving_package_min_deposit");
+            String maxDepositStr = request.getParameter("saving_package_max_deposit");
+            String saving_package_status = request.getParameter("saving_package_status");
+            String saving_package_approval_status = request.getParameter("saving_package_approval_status");
+            String withdrawableStr = request.getParameter("saving_package_withdrawable");
+
+            // Chuyển đổi kiểu dữ liệu với xử lý lỗi
+            double saving_package_interest_rate;
+            int saving_package_term_months;
+            double saving_package_min_deposit;
+            double saving_package_max_deposit;
+            int saving_package_withdrawable;
+
+            saving_package_interest_rate = Double.parseDouble(interestRateStr);
+            saving_package_term_months = Integer.parseInt(termMonthsStr);
+            saving_package_min_deposit = Double.parseDouble(minDepositStr);
+            saving_package_max_deposit = Double.parseDouble(maxDepositStr);
+            saving_package_withdrawable = Integer.parseInt(withdrawableStr);
+            
+
+            Staff staff = (Staff) request.getSession().getAttribute("account");
+            if (staff == null) {
+                response.sendRedirect("admin.login");
+                return;
+            }
+            int staff_id = staff.getId();
+
+            String saving_package_created_at = getCurrentDate();
+            String saving_package_updated_at = getCurrentDate();
+
+            // Insert vào database
+            SavingDao dao = new SavingDao();
+            dao.insertSavingPackage(staff_id, saving_package_name, saving_package_description, saving_package_created_at, saving_package_updated_at, saving_package_interest_rate, saving_package_term_months, saving_package_min_deposit, saving_package_max_deposit, saving_package_status, saving_package_withdrawable, saving_package_approval_status);
+
+            // Chuyển hướng sau khi thêm thành công
+            response.sendRedirect("managerSaving");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("error", "Có lỗi xảy ra, vui lòng thử lại.");
+            request.getRequestDispatcher("saving/listSavingPackages.jsp").forward(request, response);
+
+        }
     }
 
     @Override
@@ -71,4 +131,9 @@ public class createSavingPackage extends BaseRBACControlller {
         request.getRequestDispatcher("saving/createSavingPackage.jsp").forward(request, response);
     }
 
+    private String getCurrentDate() {
+        LocalDate currentDate = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return currentDate.format(formatter);
+    }
 }

@@ -1,5 +1,6 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html lang="vi">
     <head>
@@ -50,8 +51,6 @@
             <%@include file="../homepage/sidebar_admin.jsp" %>
 
             <div class="container">
-
-
                 <h2 class="text-center">Manager Saving Package</h2>
                 <a href="createSavingPackage">Tạo mới</a>
                 <table class="table">
@@ -81,8 +80,8 @@
                                 <td>${sp.saving_package_description}</td>
                                 <td>${sp.saving_package_interest_rate}</td>
                                 <td>${sp.saving_package_term_months}</td>
-                                <td>${sp.saving_package_min_deposit}</td>
-                                <td>${sp.saving_package_max_deposit}</td>
+                                <td><fmt:formatNumber value="${sp.saving_package_min_deposit}" pattern="#,##0" /></td>
+                                <td><fmt:formatNumber value="${sp.saving_package_max_deposit}" pattern="#,##0" /></td>
                                 <td>${sp.saving_package_status}</td>
                                 <td>${sp.saving_package_approval_status}</td>
                                 <td>${sp.saving_withdrawable ? '1' : '0'}</td>
@@ -93,6 +92,5 @@
                     </tbody>
                 </table>
             </div>
-
     </body>
 </html>

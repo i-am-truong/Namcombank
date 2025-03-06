@@ -49,50 +49,91 @@
         <div id="wrapper">
             <%@include file="../homepage/sidebar_admin.jsp" %>
 
-            <div class="container">
 
+            <!--            
+                        private String saving_package_name;
+                        private String saving_package_description;
+                        private double saving_package_interest_rate;
+                        private int saving_package_term_months;
+                        private Double saving_package_min_deposit;
+                        private Double saving_package_max_deposit;
+                        private String saving_package_status;
+                        
+                        
+                        private boolean saving_withdrawable;
+                        private String saving_package_approval_status;-->
 
-                <h2 class="text-center">Manager Saving Package</h2>
-                <a href="saving/createSavingPackage.jsp">Tạo mới</a>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Staff ID</th>
-                            <th>Name</th>
-                            <th>Description</th>
-                            <th>Interest Rate</th>
-                            <th>Term (months)</th>
-                            <th>Min Deposit</th>
-                            <th>Max Deposit</th>
-                            <th>Status</th>
-                            <th>Approval Status</th>
-                            <th>Withdrawable</th>
-                            <th>Created At</th>
-                            <th>Updated At</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <c:forEach var="sp" items="${list}">
-                            <tr>
-                                <td>${sp.saving_package_id}</td>
-                                <td>${sp.staff_id}</td>
-                                <td>${sp.saving_package_name}</td>
-                                <td>${sp.saving_package_description}</td>
-                                <td>${sp.saving_package_interest_rate}</td>
-                                <td>${sp.saving_package_term_months}</td>
-                                <td>${sp.saving_package_min_deposit}</td>
-                                <td>${sp.saving_package_max_deposit}</td>
-                                <td>${sp.saving_package_status}</td>
-                                <td>${sp.saving_package_approval_status}</td>
-                                <td>${sp.saving_withdrawable ? '1' : '0'}</td>
-                                <td>${sp.saving_package_created_at}</td>
-                                <td>${sp.saving_package_updated_at}</td>
-                            </tr>
-                        </c:forEach>
-                    </tbody>
-                </table>
-            </div>
+            <form action="createSavingPackage" method="post">
+                <div class="container">
+                    <c:if test="${not empty error}">
+                        <div class="alert alert-danger text-center">
+                            ${error}
+                        </div>
+                    </c:if>
 
+                    <h2 class="text-center">Create Saving Package</h2>
+                    <input type="text" id="staff_id" name="staff_id" class="form-control" value="null" hidden>
+                    <div >
+                        <label for="saving_package_name" class="form-label">Package Name</label>
+                        <input type="text" id="saving_package_name" name="saving_package_name" class="form-control" required>
+                    </div>
+
+                    <div >
+                        <label for="saving_package_description" class="form-label">Description</label>
+                        <textarea id="saving_package_description" name="saving_package_description" class="form-control" required></textarea>
+                    </div>
+
+                    <div >
+                        <label for="saving_package_interest_rate" class="form-label">Interest Rate</label>
+                        <input type="number" step="0.001" id="saving_package_interest_rate" name="saving_package_interest_rate" class="form-control" required>
+                    </div>
+
+                    <div >
+                        <label for="saving_package_term_months" class="form-label">Term (Months)</label>
+                        <input type="number" id="saving_package_term_months" name="saving_package_term_months" class="form-control" required>
+                    </div>
+
+                    <div >
+                        <label for="saving_package_min_deposit" class="form-label">Min Deposit</label>
+                        <input type="number" step="1" id="saving_package_min_deposit" name="saving_package_min_deposit" class="form-control" required>
+                    </div>
+
+                    <div >
+                        <label for="saving_package_max_deposit" class="form-label">Max Deposit</label>
+                        <input type="number" step="1" id="saving_package_max_deposit" name="saving_package_max_deposit" class="form-control" required>
+                    </div>
+
+                    <div >
+                        <label for="saving_package_status" class="form-label">Status</label>
+                        <select id="saving_package_status" name="saving_package_status" class="form-control" required>
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+                    </div>
+
+                    <div >
+                        <label for="saving_package_approval_status" class="form-label">Approval Status</label>
+                        <select id="saving_package_approval_status" name="saving_package_approval_status" class="form-control" required>
+                            <option value="pending">Pending</option>
+                            <option value="approved">Approved</option>
+                            <option value="rejected">Rejected</option>
+                        </select>
+                    </div>
+
+                    <div >
+                        <label class="form-label">Withdrawable</label>
+                        <div>
+                            <input type="radio" id="withdrawable_yes" name="saving_package_withdrawable" value="1" required>
+                            <label for="withdrawable_yes">Yes</label>
+                            <input type="radio" id="withdrawable_no" name="saving_package_withdrawable" value="0">
+                            <label for="withdrawable_no">No</label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Create Package</button>
+                </div>
+            </form>
+
+        </div>
     </body>
 </html>

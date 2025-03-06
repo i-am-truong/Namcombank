@@ -68,9 +68,6 @@
             <a class="nav-link sub-menu" href="savingMoney">
                 <i class="fas fa-fw fa-table"></i> Saving Request Money Revie
             </a>
-            <a class="nav-link sub-menu" href="managerSaving">
-                <i class="fas fa-fw fa-table"></i> Saving ALL
-            </a>
         </div>
         </a>
     </li>

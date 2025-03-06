@@ -302,6 +302,69 @@ public class SavingDao extends DBContext {
         }
     }
 
+    public void insertSavingPackage(int staff_id, String saving_package_name, String saving_package_description,
+            String saving_package_created_at, String saving_package_updated_at,
+            double saving_package_interest_rate, int saving_package_term_months,
+            double saving_package_min_deposit, double saving_package_max_deposit,
+            String saving_package_status, int saving_package_withdrawable,
+            String saving_package_approval_status) {
+
+        String query = "INSERT INTO [SavingPackage] "
+                + "([staff_id], [saving_package_name], [saving_package_description], [saving_package_interest_rate], "
+                + "[saving_package_term_months], [saving_package_min_deposit], [saving_package_max_deposit], "
+                + "[saving_package_status], [saving_package_created_at], [saving_package_updated_at], "
+                + "[saving_package_withdrawable], [saving_package_approval_status]) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, staff_id);
+            ps.setString(2, saving_package_name);
+            ps.setString(3, saving_package_description);
+            ps.setDouble(4, saving_package_interest_rate);
+            ps.setInt(5, saving_package_term_months);
+            ps.setDouble(6, saving_package_min_deposit);
+            ps.setDouble(7, saving_package_max_deposit);
+            ps.setString(8, saving_package_status);
+            ps.setString(9, saving_package_created_at);
+            ps.setString(10, saving_package_updated_at);
+            ps.setInt(11, saving_package_withdrawable);
+            ps.setString(12, saving_package_approval_status);
+
+            int rowsInserted = ps.executeUpdate();
+            if (rowsInserted > 0) {
+                System.out.println("Inserted successfully!");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void main(String[] args) {
+        SavingDao dao = new SavingDao();
+
+        int staff_id = 1;
+        String saving_package_name = "Premium Savings";
+        String saving_package_description = "High-interest savings package";
+        String saving_package_created_at = "2025-03-06";
+        String saving_package_updated_at = "2025-03-06";
+        double saving_package_interest_rate = 5.5;
+        int saving_package_term_months = 12;
+        double saving_package_min_deposit = 5000.0;
+        double saving_package_max_deposit = 50000.0;
+        String saving_package_status = "Active";
+        int saving_package_withdrawable = 1;
+        String saving_package_approval_status = "Pending";
+
+        dao.insertSavingPackage(
+                staff_id, saving_package_name, saving_package_description,
+                saving_package_created_at, saving_package_updated_at,
+                saving_package_interest_rate, saving_package_term_months,
+                saving_package_min_deposit, saving_package_max_deposit,
+                saving_package_status, saving_package_withdrawable,
+                saving_package_approval_status
+        );
+    }
+
     @Override
     public void insert(Object model) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
