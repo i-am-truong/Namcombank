@@ -1322,18 +1322,18 @@ public class CustomerDAO extends DBContext {
             while (rs.next()) {
                 Customer customer = new Customer(
                         rs.getInt("customer_id"),
-                        rs.getString("fullname"),
-                        rs.getString("username"),
-                        rs.getString("password"),
+                        rs.getNString("fullname"),
+                        rs.getNString("username"),
+                        rs.getNString("password"),
                         rs.getInt("active"),
-                        rs.getString("email"),
+                        rs.getNString("email"),
                         rs.getDate("dob"),
                         rs.getInt("gender"),
-                        rs.getString("phonenumber"),
+                        rs.getNString("phonenumber"),
                         rs.getFloat("balance"),
-                        rs.getString("citizen_identification_card"),
-                        rs.getString("address"),
-                        rs.getString("avatar")
+                        rs.getNString("citizen_identification_card"),
+                        rs.getNString("address"),
+                        rs.getNString("avatar")
                 );
                 customers.add(customer);
             }
@@ -1363,18 +1363,18 @@ public class CustomerDAO extends DBContext {
             while (rs.next()) {
                 Customer customer = new Customer(
                         rs.getInt("customer_id"),
-                        rs.getString("fullname"),
-                        rs.getString("username"),
-                        rs.getString("password"),
+                        rs.getNString("fullname"),
+                        rs.getNString("username"),
+                        rs.getNString("password"),
                         rs.getInt("active"),
-                        rs.getString("email"),
+                        rs.getNString("email"),
                         rs.getDate("dob"),
                         rs.getInt("gender"),
-                        rs.getString("phonenumber"),
+                        rs.getNString("phonenumber"),
                         rs.getFloat("balance"),
-                        rs.getString("citizen_identification_card"),
-                        rs.getString("address"),
-                        rs.getString("avatar")
+                        rs.getNString("citizen_identification_card"),
+                        rs.getNString("address"),
+                        rs.getNString("avatar")
                 );
                 customers.add(customer);
             }
@@ -1657,18 +1657,18 @@ public class CustomerDAO extends DBContext {
             while (rs.next()) {
                 Customer customer = new Customer(
                         rs.getInt("customer_id"),
-                        rs.getString("fullname"),
-                        rs.getString("username"),
-                        rs.getString("password"),
+                        rs.getNString("fullname"),
+                        rs.getNString("username"),
+                        rs.getNString("password"),
                         rs.getInt("active"),
-                        rs.getString("email"),
+                        rs.getNString("email"),
                         rs.getDate("dob"),
                         rs.getInt("gender"),
-                        rs.getString("phonenumber"),
+                        rs.getNString("phonenumber"),
                         rs.getFloat("balance"),
-                        rs.getString("citizen_identification_card"),
-                        rs.getString("address"),
-                        rs.getString("avatar")
+                        rs.getNString("citizen_identification_card"),
+                        rs.getNString("address"),
+                        rs.getNString("avatar")
                 );
                 customers.add(customer);
             }
@@ -1772,18 +1772,18 @@ public class CustomerDAO extends DBContext {
                 while (rs.next()) {
                     Customer customer = new Customer(
                             rs.getInt("customer_id"),
-                            rs.getString("fullname"),
-                            rs.getString("username"),
-                            rs.getString("password"),
+                            rs.getNString("fullname"),
+                            rs.getNString("username"),
+                            rs.getNString("password"),
                             rs.getInt("active"),
-                            rs.getString("email"),
+                            rs.getNString("email"),
                             rs.getDate("dob"),
                             rs.getInt("gender"),
-                            rs.getString("phonenumber"),
+                            rs.getNString("phonenumber"),
                             rs.getFloat("balance"),
-                            rs.getString("citizen_identification_card"),
-                            rs.getString("address"),
-                            rs.getString("avatar")
+                            rs.getNString("citizen_identification_card"),
+                            rs.getNString("address"),
+                            rs.getNString("avatar")
                     );
                     customers.add(customer);
                 }
