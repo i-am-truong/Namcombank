@@ -66,7 +66,7 @@
                         <div class="breadcrumb-content">
                             <h2>News</h2>
                             <ul>
-                                <li><a href="index.html">Home</a></li>
+                                <li><a>Home</a></li>
                                 <li class="active">News</li>
                             </ul>
                         </div>
@@ -138,7 +138,7 @@
                             <form actd="get">
                                 <ul>
                                     <li><a href="#">Top 5 Savings Plans for 2025</a></li>
-            <li><a href="#">How to Apply for a Personal Loan Online</a></li>
+                                    <li><a href="#">How to Apply for a Personal Loan Online</a></li>
                                     <li><a href="#">5 Tips to Manage Your Loan Repayments Effectively UK</a></li>
                                     <li><a href="#">Why Fixed Deposits are Still a Great Investment Option</a></li>
                                 </ul>
