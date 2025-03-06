@@ -1,6 +1,15 @@
 <%@ page import="model.LoanPackage" %>
 <%@ page import="context.LoanPackageDAO" %>
 <%@ page import="java.util.Optional" %>
+<%@ page import="model.Customer" %>
+<%
+    // Ki?m tra xem customer ?ã ??ng nh?p hay ch?a
+    Customer customer = (Customer) session.getAttribute("customer");
+    if (customer == null) {
+        response.sendRedirect("../login"); // Chuy?n h??ng ??n trang ??ng nh?p
+        return;
+    }
+%>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -26,7 +35,7 @@
         }
     }
                 %>
-                <form action="loan-requests" method="POST" class="space-y-4" onsubmit="return validateLoanAmount();">
+                <form action="../loan-requests" method="POST" class="space-y-4" onsubmit="return validateLoanAmount();">
                     <input type="hidden" name="action" value="create">
                     <input type="hidden" name="packageId" value="<%= packageId != null ? packageId : "" %>">
 
@@ -55,7 +64,7 @@
                     <input type="hidden" id="maxAmount" value="<%= loanPackage != null ? loanPackage.getMaxAmount() : "1000000000" %>">
                     <div>
                         <label class="block text-gray-700">Loan Term (months)</label>
-                        <input type="number" name="loanTerm" class="w-full p-2 border rounded" value="<%= loanPackage != null ? loanPackage.getLoanTerm() : "" %>" readonly="" required>
+                        <input type="number" name="loanTerm" class="w-full p-2 border rounded" value="<%= loanPackage != null ? loanPackage.getLoanTerm() : "" %>" required>
                     </div>
                     <div class="text-center">
                         <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600 transition">
@@ -66,7 +75,7 @@
             </div>
 
             <div class="mt-6 text-center">
-                <a href="../loanpackage/loanpackage-list.jsp" class="bg-gray-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-gray-600 transition">
+                <a href="../loanpackage-customer/loanpackage-list.jsp" class="bg-gray-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-gray-600 transition">
                     Back to List
                 </a>
             </div>
