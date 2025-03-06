@@ -50,49 +50,52 @@
             <%@include file="../homepage/sidebar_admin.jsp" %>
 
             <div class="container">
-
-
-                <h2 class="text-center">Manager Saving Package</h2>
-                <a href="createSavingPackage">Tạo mới</a>
+                <h2 class="text-center">Customer Saving Requests</h2>
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Staff ID</th>
-                            <th>Name</th>
-                            <th>Description</th>
-                            <th>Interest Rate</th>
-                            <th>Term (months)</th>
-                            <th>Min Deposit</th>
-                            <th>Max Deposit</th>
-                            <th>Status</th>
+                            <th>saving_request_id</th>
+                            <th>Saving_Package_ID</th>
+                            <th>Customer ID</th>
+                            <th>Saving Package</th>
+                            <th>Money</th>
                             <th>Approval Status</th>
-                            <th>Withdrawable</th>
                             <th>Created At</th>
-                            <th>Updated At</th>
+                            <th>Approval Date</th>
+                            <th>Saving Date</th>
+                            <th>Staff ID</th>
+                            <th>Money status</th>
+                            <th>Amount</th>
+                            <th>Thao tác</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <c:forEach var="sp" items="${list}">
+                        <c:forEach var="sr" items="${list}">
                             <tr>
-                                <td>${sp.saving_package_id}</td>
-                                <td>${sp.staff_id}</td>
-                                <td>${sp.saving_package_name}</td>
-                                <td>${sp.saving_package_description}</td>
-                                <td>${sp.saving_package_interest_rate}</td>
-                                <td>${sp.saving_package_term_months}</td>
-                                <td>${sp.saving_package_min_deposit}</td>
-                                <td>${sp.saving_package_max_deposit}</td>
-                                <td>${sp.saving_package_status}</td>
-                                <td>${sp.saving_package_approval_status}</td>
-                                <td>${sp.saving_withdrawable ? '1' : '0'}</td>
-                                <td>${sp.saving_package_created_at}</td>
-                                <td>${sp.saving_package_updated_at}</td>
+                                <td>${sr.saving_request_id}</td>
+                                <td>${sr.saving_package_id}</td>
+                                <td>${sr.customer_id}</td>
+                                <td>${sr.saving_package_name}</td>
+                                <td>${String.format("%.2f", sr.money)}</td>
+                                <td>${sr.saving_approval_status}</td>
+                                <td>${sr.created_at}</td>
+                                <td>${sr.saving_approval_date}</td>
+                                <td>${sr.saving_date}</td>
+                                <td>${sr.staff_id}</td>
+                                <td>${sr.money_approval_status}</td>
+                                <td>${String.format("%.2f", sr.amount)}</td>
+                                <td>
+                                    <form action="savingMoney" method="post" style="display:inline;">
+                                        <input type="hidden" name="saving_request_id" value="${sr.saving_request_id}">
+                                        <input type="hidden" name="money_approval_status" value="received">
+                                        <button type="submit" class="btn btn-approve">Đã nhận được tiền</button>
+                                    </form>
+
+                                </td>
                             </tr>
                         </c:forEach>
                     </tbody>
                 </table>
             </div>
-
     </body>
 </html>

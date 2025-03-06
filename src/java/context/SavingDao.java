@@ -259,6 +259,49 @@ public class SavingDao extends DBContext {
         return list;
     }
 
+    public List<SavingRequest_id> getAllSavingRequestMoneyPending() {
+        List<SavingRequest_id> list = new ArrayList<>();
+        String query = "select * from SavingRequest where staff_id is NULL and saving_date is null and money_approval_status ='pending' and saving_approval_status='approved';";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                SavingRequest_id sr = new SavingRequest_id();
+                sr.setSaving_request_id(rs.getInt("saving_request_id")); // Đúng tên cột
+                sr.setCustomer_id(rs.getInt("customer_id"));
+                sr.setSaving_package_id(rs.getInt("saving_package_id")); // Bổ sung
+                sr.setStaff_id(rs.getObject("staff_id") != null ? rs.getInt("staff_id") : null); // Xử lý NULL
+                sr.setMoney(rs.getDouble("money"));
+                sr.setSaving_approval_status(rs.getString("saving_approval_status")); // Bổ sung
+                sr.setSaving_approval_date(rs.getString("saving_approval_date"));
+                sr.setMoney_approval_status(rs.getString("money_approval_status")); // Bổ sung
+                sr.setSaving_date(rs.getString("saving_date"));
+                sr.setAmount(rs.getDouble("amount")); // Bổ sung
+                sr.setCreated_at(rs.getString("created_at"));
+                sr.setSaving_package_name(rs.getString("saving_package_name")); // Bổ sung
+                list.add(sr);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+
+    }
+
+//select * from SavingRequest where staff_id is NULL and saving_date is null and money_approval_status ='pending'
+    public void acceptMoney(String money_approval_status, String saving_date, int saving_request_id, int staff_id) {
+        String query = "UPDATE SavingRequest SET money_approval_status = ?, saving_date = ?, staff_id=? WHERE saving_request_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, money_approval_status);
+            ps.setString(2, saving_date);
+            ps.setInt(3, staff_id);
+            ps.setInt(4, saving_request_id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void insert(Object model) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody

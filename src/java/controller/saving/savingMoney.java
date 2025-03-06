@@ -4,6 +4,7 @@
  */
 package controller.saving;
 
+import context.SavingDao;
 import controller.auth.BaseRBACControlller;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -12,6 +13,11 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import model.SavingPackage_id;
+import model.SavingRequest_id;
 import model.auth.Staff;
 
 /**
@@ -58,6 +64,21 @@ public class savingMoney extends BaseRBACControlller {
             response.sendRedirect("admin.login");
             return;
         }
+        SavingDao dao = new SavingDao();
+
+        String saving_request_idStr = request.getParameter("saving_request_id");
+        int saving_request_id = Integer.parseInt(saving_request_idStr);
+        String money_approval_status = request.getParameter("money_approval_status");
+
+        String saving_date = getCurrentDate();
+        Staff staff = (Staff) request.getSession().getAttribute("account");
+        int staff_id = staff.getId();
+        dao.acceptMoney(money_approval_status, saving_date, saving_request_id, staff_id);
+
+        List<SavingRequest_id> list = dao.getAllSavingRequestMoneyPending();
+        request.setAttribute("list", list);
+        request.getRequestDispatcher("saving/SavingMoney.jsp").forward(request, response);
+
     }
 
     @Override
@@ -67,6 +88,17 @@ public class savingMoney extends BaseRBACControlller {
             response.sendRedirect("admin.login");
             return;
         }
+        SavingDao dao = new SavingDao();
+        List<SavingRequest_id> list = dao.getAllSavingRequestMoneyPending();
+
+        request.setAttribute("list", list);
+        request.getRequestDispatcher("saving/SavingMoney.jsp").forward(request, response);
+
     }
 
+    private String getCurrentDate() {
+        LocalDate currentDate = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return currentDate.format(formatter);
+    }
 }
