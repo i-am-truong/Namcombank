@@ -1,44 +1,33 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model;
-
 
 import java.util.Date;
 
-
 public class LoanRequest {
-
     private int requestId;
-    private int loanId;
-    private int staffId;
     private int customerId;
-    private String approvalStatus;
+    private int packageId;
+    private double amount;
+    private Date requestDate;
+    private String status;
+    private int staffId;
     private Date approvalDate;
     private String approvedBy;
-    private String collateralImage;
-
-    // Các thông tin bổ sung để hiển thị
-    private String customerName;
-    private Double loanAmount;
-    private String staffName;
+    private String notes;
 
     public LoanRequest() {
     }
 
-    public LoanRequest(int requestId, int loanId, int staffId, int customerId, String approvalStatus, Date approvalDate, String approvedBy, String collateralImage, String customerName, Double loanAmount, String staffName) {
+    public LoanRequest(int requestId, int customerId, int packageId, double amount, Date requestDate, String status, int staffId, Date approvalDate, String approvedBy, String notes) {
         this.requestId = requestId;
-        this.loanId = loanId;
-        this.staffId = staffId;
         this.customerId = customerId;
-        this.approvalStatus = approvalStatus;
+        this.packageId = packageId;
+        this.amount = amount;
+        this.requestDate = requestDate;
+        this.status = status;
+        this.staffId = staffId;
         this.approvalDate = approvalDate;
         this.approvedBy = approvedBy;
-        this.collateralImage = collateralImage;
-        this.customerName = customerName;
-        this.loanAmount = loanAmount;
-        this.staffName = staffName;
+        this.notes = notes;
     }
 
     public int getRequestId() {
@@ -49,22 +38,6 @@ public class LoanRequest {
         this.requestId = requestId;
     }
 
-    public int getLoanId() {
-        return loanId;
-    }
-
-    public void setLoanId(int loanId) {
-        this.loanId = loanId;
-    }
-
-    public int getStaffId() {
-        return staffId;
-    }
-
-    public void setStaffId(int staffId) {
-        this.staffId = staffId;
-    }
-
     public int getCustomerId() {
         return customerId;
     }
@@ -73,12 +46,44 @@ public class LoanRequest {
         this.customerId = customerId;
     }
 
-    public String getApprovalStatus() {
-        return approvalStatus;
+    public int getPackageId() {
+        return packageId;
     }
 
-    public void setApprovalStatus(String approvalStatus) {
-        this.approvalStatus = approvalStatus;
+    public void setPackageId(int packageId) {
+        this.packageId = packageId;
+    }
+
+    public double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
+    public Date getRequestDate() {
+        return requestDate;
+    }
+
+    public void setRequestDate(Date requestDate) {
+        this.requestDate = requestDate;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public int getStaffId() {
+        return staffId;
+    }
+
+    public void setStaffId(int staffId) {
+        this.staffId = staffId;
     }
 
     public Date getApprovalDate() {
@@ -97,36 +102,12 @@ public class LoanRequest {
         this.approvedBy = approvedBy;
     }
 
-    public String getCollateralImage() {
-        return collateralImage;
+    public String getNotes() {
+        return notes;
     }
 
-    public void setCollateralImage(String collateralImage) {
-        this.collateralImage = collateralImage;
-    }
-
-    public String getCustomerName() {
-        return customerName;
-    }
-
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
-    }
-
-    public Double getLoanAmount() {
-        return loanAmount;
-    }
-
-    public void setLoanAmount(Double loanAmount) {
-        this.loanAmount = loanAmount;
-    }
-
-    public String getStaffName() {
-        return staffName;
-    }
-
-    public void setStaffName(String staffName) {
-        this.staffName = staffName;
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 
     

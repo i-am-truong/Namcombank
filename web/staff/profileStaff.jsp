@@ -137,32 +137,33 @@
                                     >
                             </div>
 
-                            <div class="col-md-9">
+                            <!--<div class="col-md-9">
                                 <label>Department:</label>
                                 <select class="form-control" name="did">
-                                    <c:forEach var="dept" items="${depts}">
-                                        <option value="${dept.id}" ${staff.dept.id == dept.id ? 'selected' : ''}>${dept.name}</option>
-                                    </c:forEach>
-                                </select>
-                            </div>
+                            <c:forEach var="dept" items="${depts}">
+                                <option value="${dept.id}" ${staff.dept.id == dept.id ? 'selected' : ''}>${dept.name}</option>
+                            </c:forEach>
+                        </select>
+                    </div>
 
-                            <div class="role-wrapper mt-3">
-                                <label class="role-title">Roles</label>
-                                <div class="role-options">
-                                    <c:forEach var="role" items="${allRoles}">
-                                        <div class="form-check">
-                                            <input type="checkbox" 
-                                                   class="form-check-input" 
-                                                   name="roleIds" 
-                                                   value="${role.id}"
-                                                   <c:forEach var="staffRole" items="${staff.roles}">
-                                                       <c:if test="${role.id eq staffRole.id}">checked</c:if>
-                                                   </c:forEach>>
-                                            <label class="form-check-label">${role.name}</label>
-                                        </div>
-                                    </c:forEach>
-                                </div>
-                            </div>
+                    <div class="role-wrapper mt-3">
+                        <label class="role-title">Roles</label>
+                        <div class="role-options">
+                            <c:forEach var="role" items="${allRoles}">
+                                <div class="form-check">
+                                    <input type="checkbox" 
+                                           class="form-check-input" 
+                                           name="roleIds" 
+                                           value="${role.id}"
+                                <c:forEach var="staffRole" items="${staff.roles}">
+                                    <c:if test="${role.id eq staffRole.id}">checked</c:if>
+                                </c:forEach>>
+                         <label class="form-check-label">${role.name}</label>
+                     </div>
+                            </c:forEach>
+                        </div>
+                    </div>  -->
+
                             <!-- Upload Avatar Section -->
 
 

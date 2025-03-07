@@ -22,7 +22,7 @@
                     sessionObj.setAttribute("selectedLoanPackage", selectedPackage);
                 }
             %>
-            <form action="LoanRequestServlet" method="post" class="mb-4" enctype="multipart/form-data">
+            <form action="loan-requests" method="post" class="mb-4" enctype="multipart/form-data">
                 <div class="grid grid-cols-2 gap-4">
                     <input type="text" name="customerName" placeholder="Customer Name" class="border p-2 rounded" required>
                     <input type="number" name="loanAmount" value="<%= sessionObj.getAttribute("selectedLoanPackage") != null ? sessionObj.getAttribute("selectedLoanPackage") : "" %>" placeholder="Loan Amount" class="border p-2 rounded" required>

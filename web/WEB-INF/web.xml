@@ -245,22 +245,6 @@
         <servlet-class>controller.customer.ExportCustomers</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>CreateLoanRequest</servlet-name>
-        <servlet-class>controller.loanrequest.CreateLoanRequest</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>ListLoanRequest</servlet-name>
-        <servlet-class>controller.loanrequest.ListLoanRequest</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>UpdateLoanRequest</servlet-name>
-        <servlet-class>controller.loanrequest.UpdateLoanRequest</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>DeleteLoanRequest</servlet-name>
-        <servlet-class>controller.loanrequest.DeleteLoanRequest</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>ApproveLoanRequestController</servlet-name>
         <servlet-class>controller.loanrequest.ApproveLoanRequestController</servlet-class>
     </servlet>
@@ -606,7 +590,7 @@
     </servlet-mapping>
     <session-config>
         <session-timeout>
-            30
+            3000
         </session-timeout>
     </session-config>
 </web-app>
