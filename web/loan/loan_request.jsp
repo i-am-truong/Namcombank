@@ -13,6 +13,9 @@
 </head>
 <body class="container">
     <h2 class="mt-4">Gửi Yêu Cầu Vay</h2>
+    <% if (request.getParameter("success") != null) { %>
+        <div class="alert alert-success">Yêu cầu vay đã được gửi thành công!</div>
+    <% } %>
     <form action="loan-request" method="post" class="mt-3">
         <div class="mb-3">
             <label class="form-label">Chọn Gói Vay:</label>
@@ -25,6 +28,7 @@
             <label class="form-label">Số Tiền Vay:</label>
             <input type="number" name="amount" class="form-control" required>
         </div>
+        <input type="hidden" name="customer_id" value="${sessionScope.customer_id}">
         <button type="submit" class="btn btn-primary">Gửi Yêu Cầu</button>
     </form>
 </body>

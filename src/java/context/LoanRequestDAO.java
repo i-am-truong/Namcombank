@@ -1,4 +1,4 @@
-package dao;
+package context;
 
 import context.DBContext;
 import model.LoanRequest;
@@ -38,6 +38,27 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
         String sql = "DELETE FROM LoanRequests WHERE request_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, loan.getRequestId());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void updateAmount(int requestId, double newAmount) {
+        String sql = "UPDATE LoanRequests SET amount = ? WHERE request_id = ? AND status = 'pending'";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setDouble(1, newAmount);
+            ps.setInt(2, requestId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void cancelRequest(int requestId) {
+        String sql = "DELETE FROM LoanRequests WHERE request_id = ? AND status = 'pending'";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, requestId);
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

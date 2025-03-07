@@ -245,10 +245,6 @@
         <servlet-class>controller.customer.ExportCustomers</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>ApproveLoanRequestController</servlet-name>
-        <servlet-class>controller.loanrequest.ApproveLoanRequestController</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>staffProfile</servlet-name>
         <servlet-class>controller.Staff.staffProfile</servlet-class>
     </servlet>
@@ -281,12 +277,12 @@
         <servlet-class>controller.loanpackage.LoanPackageDetail</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>CreateLoanServlet</servlet-name>
-        <servlet-class>controller.loanrequest.CreateLoanServlet</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>LoanRequestDetailServlet</servlet-name>
         <servlet-class>controller.loanrequest.LoanRequestDetailServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>LoanRequestServlet</servlet-name>
+        <servlet-class>controller.loanrequest.LoanRequestServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>viewCustomerDetail</servlet-name>
@@ -525,26 +521,6 @@
         <url-pattern>/ExportCustomers</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>CreateLoanRequest</servlet-name>
-        <url-pattern>/loan-request/create</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>ListLoanRequest</servlet-name>
-        <url-pattern>/loan-request/list</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>UpdateLoanRequest</servlet-name>
-        <url-pattern>/loan-request/update</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>DeleteLoanRequest</servlet-name>
-        <url-pattern>/loan-request/delete</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>ApproveLoanRequestController</servlet-name>
-        <url-pattern>/ApproveLoanRequestController</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>staffProfile</servlet-name>
         <url-pattern>/staffProfile</url-pattern>
     </servlet-mapping>
@@ -581,12 +557,12 @@
         <url-pattern>/loanpackage/updateloanpackage</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>CreateLoanServlet</servlet-name>
-        <url-pattern>/create-loan-request</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>LoanRequestDetailServlet</servlet-name>
         <url-pattern>/loan-detail</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LoanRequestServlet</servlet-name>
+        <url-pattern>/loan-request</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

@@ -1,15 +1,13 @@
 package controller.loanrequest;
 
-import dao.LoanRequestDAO;
+import context.LoanRequestDAO;
 import model.LoanRequest;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/loan-detail")
 public class LoanRequestDetailServlet extends HttpServlet {
 
     private LoanRequestDAO loanRequestDAO = new LoanRequestDAO();

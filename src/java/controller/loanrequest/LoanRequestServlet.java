@@ -1,6 +1,6 @@
 package controller.loanrequest;
 
-import dao.LoanRequestDAO;
+import context.LoanRequestDAO;
 import jakarta.servlet.annotation.WebServlet;
 import model.LoanRequest;
 import jakarta.servlet.ServletException;
@@ -11,7 +11,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 
-@WebServlet("/loan-request")
 public class LoanRequestServlet extends HttpServlet {
 
     private LoanRequestDAO loanRequestDAO = new LoanRequestDAO();
@@ -20,7 +19,7 @@ public class LoanRequestServlet extends HttpServlet {
         HttpSession session = request.getSession();
         Integer customerId = (Integer) session.getAttribute("customer_id");
         if (customerId == null) {
-            response.sendRedirect("login.jsp");
+            response.sendRedirect("../login");
             return;
         }
         int packageId = Integer.parseInt(request.getParameter("package_id"));
@@ -32,6 +31,6 @@ public class LoanRequestServlet extends HttpServlet {
         loan.setAmount(amount);
 
         loanRequestDAO.insert(loan);
-        response.sendRedirect("loan/loan_list.jsp");
+        response.sendRedirect("loanrequest/loan-request-list.jsp");
     }
 }
