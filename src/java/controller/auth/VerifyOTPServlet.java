@@ -66,14 +66,12 @@ public class VerifyOTPServlet extends HttpServlet {
 
                 // Store OTP in session with expiry time (1 minute)
                 session.setAttribute("otp", otpValue);
-                session.setAttribute("otpExpiry", System.currentTimeMillis() + 60000);
+                session.setAttribute("otpExpiry", System.currentTimeMillis() + 300000);
                 session.setAttribute("otpSent", true);
 
                 // Set success message
                 request.setAttribute("success", "Mã OTP mới đã được gửi đến email của bạn.");
                 request.setAttribute("otpSent", true);
-
-                LOGGER.log(Level.INFO, "New OTP sent to {0}", staffEmail);
 
                 // Forward back to the OTP verification page
                 request.getRequestDispatcher("admin.login/two-factor-auth.jsp").forward(request, response);
@@ -127,14 +125,13 @@ public class VerifyOTPServlet extends HttpServlet {
             session.removeAttribute("otpExpiry");
             session.removeAttribute("otpSent");
 
-            LOGGER.log(Level.INFO, "OTP verification successful. Redirecting to {0}", redirectAfterOTP);
 
             // Redirect to appropriate page based on role
             if (redirectAfterOTP != null && !redirectAfterOTP.isEmpty()) {
                 response.sendRedirect(redirectAfterOTP);
             } else {
                 // Default redirect if no specific page
-                response.sendRedirect("dashboard");
+                response.sendRedirect("403.html");
             }
         } else {
             // Invalid OTP

@@ -67,6 +67,18 @@
                 border-radius: 8px;
                 margin-top: 20px;
             }
+            .approval-col {
+                padding: 15px;
+                border-radius: 5px;
+            }
+            .approval-col-approve {
+                background-color: rgba(28, 200, 138, 0.1);
+                border-left: 4px solid #1cc88a;
+            }
+            .approval-col-reject {
+                background-color: rgba(231, 74, 59, 0.1);
+                border-left: 4px solid #e74a3b;
+            }
             .rejected-reason, .approval-note {
                 padding: 10px;
                 border-radius: 5px;
@@ -88,6 +100,20 @@
                 margin-top: 20px;
                 padding-top: 20px;
                 border-top: 1px dashed #ccc;
+            }
+            .col-title {
+                font-weight: bold;
+                font-size: 16px;
+                margin-bottom: 15px;
+                display: flex;
+                align-items: center;
+            }
+            .col-title i {
+                margin-right: 8px;
+            }
+            .btn-block {
+                display: block;
+                width: 100%;
             }
         </style>
     </head>
@@ -170,11 +196,11 @@
                                             <div class="detail-label">Tên Khách Hàng:</div>
                                             <div class="detail-value">${asset.customerName}</div>
                                         </div>
-                                                                                <div class="detail-row">
+                                        <div class="detail-row">
                                             <div class="detail-label">CCCD:</div>
                                             <div class="detail-value">${customer.cid}</div>
                                         </div>
-                                                                                <div class="detail-row">
+                                        <div class="detail-row">
                                             <div class="detail-label">Số Điện Thoại:</div>
                                             <div class="detail-value">${customer.phonenumber}</div>
                                         </div>
@@ -245,32 +271,49 @@
                                     </div>
                                 </div>
                             </div>
+                            
                             <!-- Hiển thị form duyệt/từ chối chỉ khi người dùng có quyền và tài sản đang ở trạng thái chờ duyệt -->
                             <c:if test="${canApprove && asset.status eq 'PENDING'}">
                                 <div class="approval-section mt-4">
-                                    <h5><i class="fas fa-check-double"></i> Quyết Định Duyệt</h5>
+                                    <h5 class="mb-4"><i class="fas fa-check-double"></i> Quyết Định Duyệt</h5>
+                                    
                                     <form action="asset-detail" method="POST" id="assetActionForm" class="mb-2">
                                         <input type="hidden" name="asset_id" value="${asset.assetId}"/>
                                         <input type="hidden" name="action" id="actionType" value=""/>
-
-                                        <div class="form-group">
-                                            <label for="note">Ghi Chú (tùy chọn):</label>
-                                            <textarea id="note" name="note" class="form-control" rows="3"></textarea>
-                                        </div>
-
-                                        <div class="form-group" id="reasonGroup" style="display: none;">
-                                            <label for="reason"><span class="text-danger">*</span> Lý Do Từ Chối:</label>
-                                            <textarea id="reason" name="reason" class="form-control" rows="3"></textarea>
-                                            <small class="form-text text-muted">Lý do từ chối là bắt buộc.</small>
-                                        </div>
-
-                                        <div class="d-flex mt-3">
-                                            <button type="button" class="btn btn-success mr-2" onclick="submitAction('approve')">
-                                                <i class="fas fa-check"></i> Duyệt
-                                            </button>
-                                            <button type="button" class="btn btn-danger mr-2" onclick="showReasonField()">
-                                                <i class="fas fa-times"></i> Từ Chối
-                                            </button>
+                                        
+                                        <div class="row">
+                                            <!-- Cột bên trái - Duyệt -->
+                                            <div class="col-md-6">
+                                                <div class="approval-col approval-col-approve p-3">
+                                                    <div class="col-title">
+                                                        <i class="fas fa-check-circle text-success"></i> Duyệt Tài Sản
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="note">Ghi Chú (tùy chọn):</label>
+                                                        <textarea id="note" name="note" class="form-control" rows="3" placeholder="Nhập ghi chú khi duyệt (nếu cần)"></textarea>
+                                                    </div>
+                                                    <button type="button" class="btn btn-success btn-block" onclick="submitAction('approve')">
+                                                        <i class="fas fa-check"></i> Duyệt Tài Sản
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Cột bên phải - Từ chối -->
+                                            <div class="col-md-6">
+                                                <div class="approval-col approval-col-reject p-3">
+                                                    <div class="col-title">
+                                                        <i class="fas fa-times-circle text-danger"></i> Từ Chối Tài Sản
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="reason"><span class="text-danger">*</span> Lý Do Từ Chối:</label>
+                                                        <textarea id="reason" name="reason" class="form-control" rows="3" placeholder="Nhập lý do từ chối (bắt buộc)"></textarea>
+                                                        <small class="form-text text-muted">Lý do từ chối là bắt buộc.</small>
+                                                    </div>
+                                                    <button type="button" class="btn btn-danger btn-block" onclick="submitReject()">
+                                                        <i class="fas fa-times"></i> Từ Chối Tài Sản
+                                                    </button>
+                                                </div>
+                                            </div>
                                         </div>
                                     </form>
                                 </div>
@@ -311,49 +354,42 @@
         <script src="adminassets/js/sb-admin-2.min.js"></script>
         
         <script>
-            function showReasonField() {
-                document.getElementById('reasonGroup').style.display = 'block';
-                document.getElementById('reason').focus();
-
-                // Thay đổi nút từ chối
-                const rejectBtn = document.querySelector('.btn-danger');
-                rejectBtn.innerHTML = '<i class="fas fa-times"></i> Xác nhận từ chối';
-                rejectBtn.onclick = function () {
-                    submitAction('reject');
-                };
-            }
-
             function submitAction(action) {
                 const form = document.getElementById('assetActionForm');
                 const actionInput = document.getElementById('actionType');
-                const reasonInput = document.getElementById('reason');
-
+                
                 actionInput.value = action;
-
-                if (action === 'reject') {
-                    // Kiểm tra lý do từ chối
-                    if (!reasonInput.value.trim()) {
-                        alert('Vui lòng nhập lý do từ chối.');
-                        reasonInput.focus();
-                        return;
-                    }
-
-                    // Xác nhận từ chối
-                    if (!confirm('Bạn có chắc chắn muốn từ chối tài sản này?')) {
-                        return;
-                    }
-                } else if (action === 'approve') {
+                
+                if (action === 'approve') {
                     // Xác nhận duyệt
                     if (!confirm('Bạn có chắc chắn muốn duyệt tài sản này?')) {
                         return;
                     }
-                } else if (action === 'delete') {
-                    // Xác nhận xóa
-                    if (!confirm('CẢNH BÁO: Bạn sắp xóa tài sản này. Hành động này không thể hoàn tác. Bạn có chắc chắn muốn tiếp tục?')) {
-                        return;
-                    }
                 }
-
+                
+                form.submit();
+            }
+            
+            function submitReject() {
+                const form = document.getElementById('assetActionForm');
+                const actionInput = document.getElementById('actionType');
+                const reasonInput = document.getElementById('reason');
+                
+                // Thiết lập hành động
+                actionInput.value = 'reject';
+                
+                // Kiểm tra lý do từ chối
+                if (!reasonInput.value.trim()) {
+                    alert('Vui lòng nhập lý do từ chối.');
+                    reasonInput.focus();
+                    return;
+                }
+                
+                // Xác nhận từ chối
+                if (!confirm('Bạn có chắc chắn muốn từ chối tài sản này?')) {
+                    return;
+                }
+                
                 form.submit();
             }
             

@@ -325,63 +325,6 @@
                                 </table>
                             </div>
 
-                            <!-- Pagination - Cập nhật để duy trì tham số tìm kiếm -->
-                            <c:if test="${not empty assets && assets.size() > 0 && totalPages > 1}">
-                                <div class="d-flex justify-content-center mt-4">
-                                    <nav aria-label="Page navigation">
-                                        <ul class="pagination">
-                                            <c:if test="${currentPage > 1}">
-                                                <li class="page-item">
-                                                    <a class="page-link" href="assets?page=${currentPage - 1}
-                                                       <c:if test="${not empty param.assetName}">&assetName=${param.assetName}</c:if>
-                                                       <c:if test="${not empty param.assetType}">&assetType=${param.assetType}</c:if>
-                                                       <c:if test="${not empty param.customerName}">&customerName=${param.customerName}</c:if>
-                                                       <c:if test="${not empty param.minValue}">&minValue=${param.minValue}</c:if>
-                                                       <c:if test="${not empty param.maxValue}">&maxValue=${param.maxValue}</c:if>
-                                                       <c:if test="${not empty param.status}">&status=${param.status}</c:if>
-                                                       <c:if test="${not empty param.createdDateFrom}">&createdDateFrom=${param.createdDateFrom}</c:if>
-                                                       <c:if test="${not empty param.createdDateTo}">&createdDateTo=${param.createdDateTo}</c:if>
-                                                           " aria-label="Previous">
-                                                           <span aria-hidden="true">&laquo;</span>
-                                                       </a>
-                                                    </li>
-                                            </c:if>
-
-                                            <c:forEach begin="1" end="${totalPages}" var="i">
-                                                <li class="page-item ${currentPage == i ? 'active' : ''}">
-                                                    <a class="page-link" href="assets?page=${i}
-                                                       <c:if test="${not empty param.assetName}">&assetName=${param.assetName}</c:if>
-                                                       <c:if test="${not empty param.assetType}">&assetType=${param.assetType}</c:if>
-                                                       <c:if test="${not empty param.customerName}">&customerName=${param.customerName}</c:if>
-                                                       <c:if test="${not empty param.minValue}">&minValue=${param.minValue}</c:if>
-                                                       <c:if test="${not empty param.maxValue}">&maxValue=${param.maxValue}</c:if>
-                                                       <c:if test="${not empty param.status}">&status=${param.status}</c:if>
-                                                       <c:if test="${not empty param.createdDateFrom}">&createdDateFrom=${param.createdDateFrom}</c:if>
-                                                       <c:if test="${not empty param.createdDateTo}">&createdDateTo=${param.createdDateTo}</c:if>
-                                                       ">${i}</a>
-                                                </li>
-                                            </c:forEach>
-
-                                            <c:if test="${currentPage < totalPages}">
-                                                <li class="page-item">
-                                                    <a class="page-link" href="assets?page=${currentPage + 1}
-                                                       <c:if test="${not empty param.assetName}">&assetName=${param.assetName}</c:if>
-                                                       <c:if test="${not empty param.assetType}">&assetType=${param.assetType}</c:if>
-                                                       <c:if test="${not empty param.customerName}">&customerName=${param.customerName}</c:if>
-                                                       <c:if test="${not empty param.minValue}">&minValue=${param.minValue}</c:if>
-                                                       <c:if test="${not empty param.maxValue}">&maxValue=${param.maxValue}</c:if>
-                                                       <c:if test="${not empty param.status}">&status=${param.status}</c:if>
-                                                       <c:if test="${not empty param.createdDateFrom}">&createdDateFrom=${param.createdDateFrom}</c:if>
-                                                       <c:if test="${not empty param.createdDateTo}">&createdDateTo=${param.createdDateTo}</c:if>
-                                                           " aria-label="Next">
-                                                           <span aria-hidden="true">&raquo;</span>
-                                                       </a>
-                                                    </li>
-                                            </c:if>
-                                        </ul>
-                                    </nav>
-                                </div>
-                            </c:if>
                         </div>
                     </div>
                 </div>

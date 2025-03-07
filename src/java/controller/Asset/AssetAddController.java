@@ -149,9 +149,6 @@ public class AssetAddController extends BaseRBACControlller {
             boolean success = assetDAO.insertAsset(asset);
 
             if (success) {
-                // Đặt thông báo thành công
-                request.getSession().setAttribute("successMessage", "Tạo tài sản thành công!");
-
                 // Chuyển hướng đến trang danh sách tài sản
                 response.sendRedirect("assets-filter");
             } else {

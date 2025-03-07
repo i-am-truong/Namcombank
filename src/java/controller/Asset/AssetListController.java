@@ -81,12 +81,6 @@ public class AssetListController extends BaseRBACControlller {
                     approvedBy, approvedDateFrom, approvedDateTo
             );
 
-            // Log để debug
-            System.out.println("Tìm thấy " + assets.size() + " tài sản");
-            for (Asset asset : assets) {
-                System.out.println("Asset ID: " + asset.getAssetId() + ", Status: " + asset.getStatus()
-                        + ", Note: " + asset.getNotes());
-            }
 
             // Tính toán số lượng tài sản theo trạng thái (cho các card thống kê)
             int totalAssets = assetDAO.countAllAssets();

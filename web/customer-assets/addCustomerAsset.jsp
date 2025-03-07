@@ -302,9 +302,6 @@
                                             <button type="submit" class="btn btn-primary btn-action mr-2">
                                                 <i class="fas fa-save"></i> Lưu Tài Sản
                                             </button>
-                                            <a href="assets" class="btn btn-secondary btn-action">
-                                                <i class="fas fa-times"></i> Hủy
-                                            </a>
                                         </div>
                                     </form>
                                 </c:otherwise>
