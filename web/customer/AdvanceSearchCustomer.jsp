@@ -50,6 +50,25 @@
                 cursor: pointer;
             }
 
+            .wrapper {
+                display: flex;
+                width: 100%;
+                height: 100%;
+            }
+
+            .main {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                min-height: 100vh;
+                overflow: hidden;
+            }
+            
+            .content {
+                flex: 1 1 auto;
+                overflow-y: auto;
+                padding: 20px;
+            }
         </style>
     </head>
 

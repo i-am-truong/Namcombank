@@ -140,11 +140,11 @@
 
 
 
-    <li class="nav-item active">
+-->    <li class="nav-item active">
         <a class="nav-link" href="manageCustomerVer2">
             <i class="fas fa-fw fa-table"></i>
-            <span> Manage Customer Ver 2</span></a>
-    </li>
+            <span> Manage Customer</span></a>
+    </li><!--
 
 
     <!-- Divider -->
