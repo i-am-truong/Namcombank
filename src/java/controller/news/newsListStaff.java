@@ -60,70 +60,54 @@ public class newsListStaff extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        Customer o = (Customer) session.getAttribute("user");
-        if (o == null) {
-            response.sendRedirect("login");
-            return; // Ensure the method returns to avoid further execution
-        } else {
-            String indexPage = request.getParameter("index");
-            String type = request.getParameter("type");
-            NewsDAO dao = new NewsDAO();
-            ArrayList<News> n = new ArrayList<News>();
-            if (type == "" || type == null || type.equals("News")) {
-                if (indexPage != null) {
-                    int index = Integer.parseInt(indexPage);
-                    n = dao.pagging(index);
+        HttpSession session = request.getSession(false);
 
-                } else {
-
-                    n = dao.pagging(1);
-                }
-
-                int count = dao.count("");
-                int pages = 0;
-                if (count % 4 != 0) {
-                    pages = (count / 4) + 1;
-                } else {
-                    pages = count / 4;
-                }
-                request.setAttribute("n", n);
-                request.setAttribute("pages", pages);
-
-                request.getRequestDispatcher("news/newsListStaff.jsp").forward(request, response);
-            } else {
-                if (o.equals("Customer")) {
-                    if (indexPage != null) {
-                        int index = Integer.parseInt(indexPage);
-
-                        n = dao.paggingWaitingList(index);
-
-                    } else {
-
-                        n = dao.paggingWaitingList(1);
-
-                    }
-
-                    int count = dao.countWaiting();
-                    int pages = 0;
-                    if (count % 4 != 0) {
-                        pages = (count / 4) + 1;
-                    } else {
-                        pages = count / 4;
-                    }
-                    request.setAttribute("n", n);
-                    request.setAttribute("pages", pages);
-
-                    request.getRequestDispatcher("news/newsListStaff.jsp").forward(request, response);
-                } else {
-                    response.sendRedirect("login");
-                }
-
-            }
-
-            response.sendRedirect("login");
+        // The logical error is in this if condition - it's using OR logic incorrectly
+        // Fix: Check if session exists and user has valid role (1, 2, 3, or 4)
+        if (session == null || session.getAttribute("roleId") == null) {
+            response.sendRedirect("admin.login");
+            return;
         }
 
+        int roleId = (int) session.getAttribute("roleId");
+        if (roleId != 1 && roleId != 2 && roleId != 3 && roleId != 4) {
+            response.sendRedirect("admin.login");
+            return;
+        }
+
+        // Rest of your existing code for displaying news
+        String indexPage = request.getParameter("index");
+        String type = request.getParameter("type");
+        System.out.println("Request type parameter: " + type); // Debug log
+
+        NewsDAO dao = new NewsDAO();
+        ArrayList<News> n = new ArrayList<News>();
+
+        // Only show waiting news to role 1 (admin)
+        if (type != null && type.equals("WaitingNews") && roleId == 1) {
+            // Handle waiting news
+            int index = indexPage != null ? Integer.parseInt(indexPage) : 1;
+            n = dao.paggingWaitingList(index);
+            int count = dao.countWaiting();
+            int pages = count == 0 ? 1 : (count % 4 != 0) ? (count / 4) + 1 : count / 4;
+
+            request.setAttribute("n", n);
+            request.setAttribute("pages", pages);
+            request.setAttribute("type", "WaitingNews"); // Keep the type for the view
+        } else {
+            // Get published news (default)
+            int index = indexPage != null ? Integer.parseInt(indexPage) : 1;
+            n = dao.pagging(index);
+            int count = dao.count("");
+            int pages = (count % 4 != 0) ? (count / 4) + 1 : count / 4;
+
+            request.setAttribute("n", n);
+            request.setAttribute("pages", pages);
+            request.setAttribute("type", "News"); // For highlighting the active tab
+        }
+
+        // Forward to the JSP page
+        request.getRequestDispatcher("news/newsListStaff.jsp").forward(request, response);
     }
 
     /**

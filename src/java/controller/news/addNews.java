@@ -48,11 +48,19 @@ public class addNews extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        Customer o = (Customer) session.getAttribute("user");
-        if (o == null) {
-            response.sendRedirect("login");
-            return; // Ensure the method returns to avoid further execution
+         HttpSession session = request.getSession(false);
+
+        // The logical error is in this if condition - it's using OR logic incorrectly
+        // Fix: Check if session exists and user has valid role (1, 2, 3, or 4)
+        if (session == null || session.getAttribute("roleId") == null) {
+            response.sendRedirect("admin.login");
+            return;
+        }
+
+        int roleId = (int) session.getAttribute("roleId");
+        if (roleId != 1 && roleId != 2 && roleId != 3 && roleId != 4) {
+            response.sendRedirect("admin.login");
+            return;
         } else {
             request.getRequestDispatcher("news/addNews.jsp").forward(request, response);
         }
@@ -71,11 +79,14 @@ public class addNews extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         News news = new News();
-        news.setAuthor(Integer.parseInt(request.getParameter("authorId")));
-        news.setBody(request.getParameter("body"));
+        news.setStaff_id(Integer.parseInt(request.getParameter("authorId")));
+        news.setDescription(request.getParameter("body"));
         news.setTitle((request.getParameter("title")));
         news.setStatus(false);
-        news.setUpdateDate(new Date());
+
+        // Set current date and time
+        news.setUpdateDate(new java.util.Date());
+
         NewsDAO dao = new NewsDAO();
         dao.addNews(news);
     }

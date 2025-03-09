@@ -112,7 +112,7 @@
                         // integration to choose the right communication channel. This example uses
                         // a POST request with JSON as a data structure but your configuration
                         // could be different.
-                        xhr.open('POST', 'http://localhost:9998/clothesShop/imageUploader', true);
+                        xhr.open('POST', 'http://localhost:8080/Namcombank/imageUploader', true);
                         xhr.responseType = 'json';
                         console.log(xhr.response);
                     }
@@ -270,7 +270,7 @@
                                     <a  class="btn btn-link" style="height:20px;color:royalblue;width:160px;font-size:18px;height: 36px" href="newsListStaff?type=News">News</a>
 
                                 </div>
-                                 <c:if test="${sessionScope.user.rid == 1}">
+                                 <c:if test="${sessionScope.roleId == 1}">
                                 <div class="col-3">
                                     <a  class="btn btn-link" style="height:20px;color:royalblue;width:160px;font-size:18px;height: 36px" href="newsListStaff?type=WaitingNews">Waiting News</a>
                                 </div>
@@ -281,7 +281,7 @@
 
 
                             </div>
-                            <input id="uId" type="hidden" value="${sessionScope.user.uid}">
+                            <input id="uId" type="hidden" value="${sessionScope.roleId}">
                         </div>
 
 

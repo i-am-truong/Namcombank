@@ -93,12 +93,12 @@ public class LoginController extends HttpServlet {
                     break;
                 } else if (role.getId() == 3) { // Head of Staff
                     roleId = role.getId();
-                    redirectAfterOTP = "managerContracts";
+                    redirectAfterOTP = "contractApproval";
                     hasValidRole = true;
                     break;
                 } else if (role.getId() == 4) { // Accountant
                     roleId = role.getId();
-                    redirectAfterOTP = "managerContracts";
+                    redirectAfterOTP = "contractApproval";
                     hasValidRole = true;
                     break;
                 }

@@ -1,4 +1,4 @@
-<%-- 
+<%--
     Document   : newsListStaff
     Created on : 13/06/2024, 2:50:08 PM
     Author     : ADMIN
@@ -6,6 +6,9 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="java.util.Date" %>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -32,7 +35,7 @@
         <script type="text/javascript">
     function deleteNews(newsId){
                     var result =  confirm("Confirm delete?");
-                    var nId = newsId; 
+                    var nId = newsId;
         if (result) {
          console.log("News Id: "+ nId);
                     $.ajax({
@@ -40,19 +43,19 @@
     data: {nId:nId},
     url: 'newsListStaff',
     success: (result) => {
-        
+
          showAlert('Delete successfully', 3000);
-     
+
     setTimeout(() => {
-        window.location.reload(); 
+        window.location.reload();
     }, 1000);
     },
     error: function () {
      showError('Delete fail something went wrong', 3000);
     }
 });
-                }               
-    }   
+                }
+    }
       function showAlert(message, duration) {
             // Tạo phần tử alert mới
             let alertDiv = document.createElement('div');
@@ -86,7 +89,7 @@
             }, duration);
         }
     $(document).ready(function(){
-   
+
             });
         </script>
     </head>
@@ -118,51 +121,72 @@
                                     <h3 style="padding-left:40px; margin-top:20px;white-space: nowrap">News</h3>
                                 </div>
                                 <div class="col-9">
-                                    
+
                                     <a href="addNews" class="btn btn-info" style="float:right;margin-top:20px" >Create News</a>
 
                                 </div>
                             </div>
 
                             <div class="row" style="margin-top:50px;margin-left:50px;margin-bottom:20px">
+    <div class="col-3">
+        <a class="btn ${param.type eq 'News' || param.type == null ? 'btn-primary' : 'btn-link'}"
+           style="height:20px;color:${param.type eq 'News' || param.type == null ? 'white' : 'royalblue'};width:160px;font-size:18px;height: 36px"
+           href="newsListStaff?type=News">News</a>
+    </div>
 
-                                <div class="col-3">            
-                                    <a  class="btn btn-link" style="height:20px;color:royalblue;width:160px;font-size:18px;height: 36px" href="newsListStaff?type=News">News</a>
-
-                                </div>
-                                <c:if test="${sessionScope.user.rid == 1}">
-                                <div class="col-3">
-                                    <a  class="btn btn-link" style="height:20px;color:royalblue;width:160px;font-size:18px;height: 36px" href="newsListStaff?type=WaitingNews">Waiting News</a>
-                                </div>
+    <!-- Only show Waiting News option to admins (roleId = 1) -->
+    <c:if test="${sessionScope.roleId == 1}">
+        <div class="col-3">
+            <a class="btn ${param.type eq 'WaitingNews' ? 'btn-primary' : 'btn-link'}"
+               style="height:20px;color:${param.type eq 'WaitingNews' ? 'white' : 'royalblue'};width:160px;font-size:18px;height: 36px"
+               href="newsListStaff?type=WaitingNews">Waiting News</a>
+        </div>
+    </c:if>
+</div>
+                            <div id="box" class="row" style="min-width: 500px;max-width: 1060px;position: relative;margin-left:40px;border:solid;height:auto;background-color:white;min-height: 350px;border-radius: 7px;overflow: auto;">
+                                <c:if test="${empty n}">
+                                    <div class="col-12 text-center p-5">
+                                        <h4>No ${param.type eq 'WaitingNews' ? 'waiting' : 'published'} news available.</h4>
+                                        <p>
+                                            ${param.type eq 'WaitingNews' ? 'There are currently no news awaiting approval.' : 'No published news found.'}
+                                        </p>
+                                    </div>
                                 </c:if>
+
+                                <c:forEach var="news" items="${n}">
+                                    <table style="max-height:124px; min-height:119.4px;width:1049.7px; "><tr onmouseover="this.style.backgroundColor ='#B0E0E6'" onmouseout="this.style.backgroundColor='transparent'">
+                                        <th style="width: 85%;"><div  style="min-width: 500px;max-width: 916px;height:109.4px;padding-left:20px;padding-top:13px; white-space: nowrap;" ><h3 style="font-size: 20px;display: inline-block; vertical-align: top;margin-top: 17px;text-overflow: ellipsis; overflow: hidden; white-space: nowrap;" ><a href="">${news.title} </a></h3>
+                                            <button id="deletebtn" onclick="deleteNews(${news.nId})" style="float:right; border:none; width:103px; height:70px; appearance: none; background-color: inherit; display: flex; justify-content: center; align-items: center;">
+                                            <img src="https://drive.google.com/thumbnail?id=1jMT2nYYaUtyf7OQbRk3t_6u8U5bnL8r2" style="width:103px; height:70px; display:inline-block;" class="img-rounded" alt="Load img fail"></button>
+                                            <a href="updateNews?nId=${news.nId}"  class="btn btn-info editNewsbtn" style="float:right; display:inline-block; vertical-align:top; margin-top:15px;">Edit</a>
+                                            <p style="margin-top: -2px;">
+                                                Posted:
+                                                <%
+                                                    Date newsDate = ((model.News)pageContext.getAttribute("news")).getUpdateDate();
+                                                    if(newsDate != null) {
+                                                        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy, HH:mm");
+                                                        out.print(sdf.format(newsDate));
+                                                    } else {
+                                                        out.print("Unknown Date");
+                                                    }
+                                                %>
+                                                <span style="margin-left: 20px;">By: ${not empty news.authorName ? news.authorName : 'Unknown'}</span>
+                                            </p></th></div></tr></table>
+                                </c:forEach>
                             </div>
-                            <div id="box" class="row" style="   min-width: 500px;max-width: 1060px;position: relative;margin-left:40px;border:solid;height:auto;background-color:white;min-height: 350px;border-radius: 7px;overflow: auto;">
-                                 <c:forEach var="news" items="${n}">
-                                                                                <table style="max-height:124px; min-height:119.4px;width:1049.7px; "><tr onmouseover="this.style.backgroundColor ='#B0E0E6'" onmouseout="this.style.backgroundColor='transparent'">
-                                 <th style="width: 85%;"><div  style="min-width: 500px;max-width: 916px;height:109.4px;padding-left:20px;padding-top:13px; white-space: nowrap;" ><h3 style="font-size: 20px;display: inline-block; vertical-align: top;margin-top: 17px;text-overflow: ellipsis; overflow: hidden; white-space: nowrap;" ><a href="">${news.title} </a></h3>           
-                                <button id="deletebtn" onclick="deleteNews(${news.nId})" style="float:right; border:none; width:103px; height:70px; appearance: none; background-color: inherit; display: flex; justify-content: center; align-items: center;">
-                                <img src="https://drive.google.com/thumbnail?id=1jMT2nYYaUtyf7OQbRk3t_6u8U5bnL8r2" style="width:103px; height:70px; display:inline-block;" class="img-rounded" alt="Load img fail"></button>     
-                                <a href="updateNews?nId=${news.nId}"  class="btn btn-info editNewsbtn" style="float:right; display:inline-block; vertical-align:top; margin-top:15px;">Edit</a>
-                                <p style="margin-top: -2px;">
-                                    Posted: ${news.updateDate}
-                                     </p></th></div></tr></table>
-                                                </c:forEach>
-                                
-   
-                                     </div>
                             <!-- Pagination -->
                             <div aria-label="Page navigation example" class="mt-4">
                                 <ul class="pagination justify-content-center">
 
                                     <c:forEach begin="1" end = "${pages}" var = "i">
-                                        <li class="page-item"> 
+                                        <li class="page-item">
                                             <a class="page-link" href="newsListStaff?index=${i}&type=${param.type}">${i}</a>
                                         </li>
                                     </c:forEach>
 
 
                                 </ul>
-                            </div>                
+                            </div>
                         </div>
 
 

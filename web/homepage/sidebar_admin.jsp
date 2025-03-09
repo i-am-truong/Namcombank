@@ -124,12 +124,6 @@
             <span>News Manager</span></a>
     </li>
 
-    <li class="nav-item active">
-        <a class="nav-link" href="addNews">
-            <i class="fas fa-fw fa-table"></i>
-            <span> News Manager</span></a>
-    </li>
-
 
 
     <!--    <li class="nav-item active">
