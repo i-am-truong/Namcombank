@@ -31,6 +31,35 @@
     <link rel="stylesheet" href="assets/css/style.css">
 	<link rel="stylesheet" href="assets/css/responsive.css">
 
+	<!-- CSS để xử lý hiển thị ảnh trong nội dung bài viết -->
+	<style>
+		.news-content img {
+			max-width: 100%;
+			height: auto;
+			display: block;
+			margin: 1rem auto;
+		}
+
+		.news-content figure {
+			max-width: 100%;
+			margin: 1rem 0;
+		}
+
+		.news-content figure img {
+			max-width: 100%;
+			height: auto;
+		}
+
+		.news-content figcaption {
+			text-align: center;
+			font-style: italic;
+			margin-top: 0.5rem;
+		}
+
+		.news-content * {
+			max-width: 100%;
+		}
+	</style>
 </head>
 <body>
 	<div id="preloader" class="preeloader">
@@ -179,7 +208,7 @@
 					<div class="breadcrumb-content">
 						<h2>News Details</h2>
 						<ul>
-							<li><a href="index.html">Home</a></li>
+							<li><a href="newsList">Back to News</a></li>
 							<li class="active">News Details</li>
 						</ul>
 					</div>
@@ -194,7 +223,7 @@
 		<div class="container">
 			<div class="row">
 				<!-- Blog -->
-				<div class="col-lg-8">
+				<div class="col-lg-12">
 					<div class="blog-details">
 						<div class="blog-item">
 
@@ -203,7 +232,10 @@
 									<li><a href="#">by ${not empty news.authorName ? news.authorName : 'Unknown'}</a></li>
 									<li><a href="#">${DateFormatter.formatDefault(news.updateDate)}</a></li>
                                                                         <h1>${news.title}</h1>
-                                                                ${news.body}
+                                    <!-- Thêm class news-content để áp dụng CSS cho nội dung bài viết -->
+                                    <div class="news-content">
+                                        ${news.body}
+                                    </div>
 							</div>
 						</div>
 
