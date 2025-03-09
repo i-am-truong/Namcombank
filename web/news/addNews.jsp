@@ -1,4 +1,4 @@
-<%-- 
+<%--
     Document   : AddNews
     Created on : 16/06/2024, 2:48:30 PM
     Author     : ADMIN
@@ -33,7 +33,7 @@
         <script src="${pageContext.request.contextPath}/assets/js/jquery-3.5.1.min.js" type="text/javascript"></script>
         <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
         <script type="text/javascript">
-            
+
             function showAlert(message, duration) {
                 // Tạo phần tử alert mới
                 let alertDiv = document.createElement('div');
@@ -66,7 +66,7 @@
                     alertDiv.remove();
                 }, duration);
             }
-            
+
             $(document).ready(function () {
 
 
@@ -191,8 +191,8 @@
                         .catch(err => {
                             console.error(err.stack);
                         });
-                        
-                        
+
+
     $('#savebtn').click(() => {
     // Kiểm tra tiêu đề và nội dung có chứa ít nhất một ký tự chữ hoặc số không
     if (!/[A-Za-z0-9]/.test($('#title').val()) || !/[A-Za-z0-9]/.test(window.editor.getData())) {
@@ -258,30 +258,16 @@
                                     <h3 style="padding-left:40px; margin-top:20px;white-space: nowrap">News</h3>
                                 </div>
                                 <div class="col-9">
-                                    <a href="addNews" class="btn btn-info" style="float:right;margin-top:20px" >Create News</a>
-
-
-                                </div>
-                            </div>
-
-                            <div class="row" style="margin-top:50px;margin-left:50px;margin-bottom:20px">
-
-                                <div class="col-3">            
-                                    <a  class="btn btn-link" style="height:20px;color:royalblue;width:160px;font-size:18px;height: 36px" href="newsListStaff?type=News">News</a>
+                                    <a href="newsListStaff" class="btn btn-info" style="float:right;margin-top:20px" >Back to News</a>
 
                                 </div>
-                                 <c:if test="${sessionScope.roleId == 1}">
-                                <div class="col-3">
-                                    <a  class="btn btn-link" style="height:20px;color:royalblue;width:160px;font-size:18px;height: 36px" href="newsListStaff?type=WaitingNews">Waiting News</a>
-                                </div>
-                                </c:if>
                             </div>
                             <div id="box" class="row" style="   min-width: 500px;max-width: 1060px;position: relative;margin-left:40px;border:solid;height:auto;background-color:white;min-height: 350px;border-radius: 7px;overflow: auto;">
 
 
 
                             </div>
-                            <input id="uId" type="hidden" value="${sessionScope.roleId}">
+                            <input id="uId" type="hidden" value="${sessionScope.staffId != null ? sessionScope.staffId : (sessionScope.account != null ? sessionScope.account.id : '')}">
                         </div>
 
 

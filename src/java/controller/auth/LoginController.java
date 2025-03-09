@@ -75,6 +75,9 @@ public class LoginController extends HttpServlet {
             session.setAttribute("account", account);
             session.setAttribute("email", email);
 
+            // Thêm staffId vào session
+            session.setAttribute("staffId", account.getId());
+
             boolean hasValidRole = false;
             Integer roleId = null;
             String redirectAfterOTP = null;
