@@ -62,7 +62,7 @@
                 display: none;
                 position: absolute;
                 width: 200px;
-/*                margin-left: 1480px;*/
+                /*                margin-left: 1480px;*/
                 margin-left: 85%;
                 top: 70px;
                 right: 0px;
@@ -126,6 +126,9 @@
         <nav class="navbar">
             <c:if test="${sessionScope.roleId==1}"><h2>Admin manager</h2></c:if>
             <c:if test="${sessionScope.roleId==2}"><h2>Staff manager</h2></c:if>
+            <c:if test="${sessionScope.roleId==3}"><h2>Staff manager (Head of Department)</h2></c:if>
+            <c:if test="${sessionScope.roleId==4}"><h2>Staff manager (Accountant)</h2></c:if>
+
                 <button class="navbar-toggler" onclick="toggleNavbar()">
                     <i class="fa fa-bars"></i>
                 </button>

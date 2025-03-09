@@ -6,6 +6,8 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="java.util.Date" %>
 <!DOCTYPE html>
 <html  class="no-js" lang="en">
     <head>
@@ -92,8 +94,18 @@
                                         </div>
                                         <div class="content">
                                             <ul class="auth">
-                                                <li><a href="#">${news.authorName}</a></li>
-                                                <li><a href="#">${news.updateDate}</a></li>
+                                                <li><a href="#">${not empty news.authorName ? news.authorName : 'Unknown'}</a></li>
+                                                <li><a href="#">
+                                                    <%
+                                                        Date newsDate = ((model.News)pageContext.getAttribute("news")).getUpdateDate();
+                                                        if(newsDate != null) {
+                                                            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy, HH:mm");
+                                                            out.print(sdf.format(newsDate));
+                                                        } else {
+                                                            out.print("Unknown Date");
+                                                        }
+                                                    %>
+                                                </a></li>
                                             </ul>
                                             <h2><a href="newsDetail?id=${news.nId}">${news.title} </a></h2>
                                         </div>

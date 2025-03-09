@@ -135,6 +135,25 @@ public class StaffAccountDBContext extends DBContext<Staff> {
         return staff;
     }
 
+    public int getStaffIdByUsername(String username) {
+        int staffId = 0;
+        try {
+            String sql = "SELECT staff_id FROM Staff WHERE username = ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, username);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                staffId = rs.getInt(1);
+            }
+            rs.close();
+            stm.close();
+        } catch (Exception e) {
+            System.out.println("Error in getStaffIdByUsername: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return staffId;
+    }
+
     @Override
     public void insert(Staff model) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody

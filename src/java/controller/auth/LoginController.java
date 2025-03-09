@@ -75,6 +75,9 @@ public class LoginController extends HttpServlet {
             session.setAttribute("account", account);
             session.setAttribute("email", email);
 
+            // Thêm staffId vào session
+            session.setAttribute("staffId", account.getId());
+
             boolean hasValidRole = false;
             Integer roleId = null;
             String redirectAfterOTP = null;
@@ -93,12 +96,12 @@ public class LoginController extends HttpServlet {
                     break;
                 } else if (role.getId() == 3) { // Head of Staff
                     roleId = role.getId();
-                    redirectAfterOTP = "managerContracts";
+                    redirectAfterOTP = "contractApproval";
                     hasValidRole = true;
                     break;
                 } else if (role.getId() == 4) { // Accountant
                     roleId = role.getId();
-                    redirectAfterOTP = "managerContracts";
+                    redirectAfterOTP = "contractApproval";
                     hasValidRole = true;
                     break;
                 }

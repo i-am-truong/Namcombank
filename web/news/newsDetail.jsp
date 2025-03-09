@@ -1,4 +1,4 @@
-<%-- 
+<%--
     Document   : newsList
     Created on : 25/05/2024, 4:26:04 PM
     Author     : ADMIN
@@ -6,6 +6,9 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="java.util.Date" %>
+<%@ page import="Utils.DateFormatter" %>
 
 <!DOCTYPE html>
 <html  class="no-js" lang="en">
@@ -28,6 +31,35 @@
     <link rel="stylesheet" href="assets/css/style.css">
 	<link rel="stylesheet" href="assets/css/responsive.css">
 
+	<!-- CSS để xử lý hiển thị ảnh trong nội dung bài viết -->
+	<style>
+		.news-content img {
+			max-width: 100%;
+			height: auto;
+			display: block;
+			margin: 1rem auto;
+		}
+
+		.news-content figure {
+			max-width: 100%;
+			margin: 1rem 0;
+		}
+
+		.news-content figure img {
+			max-width: 100%;
+			height: auto;
+		}
+
+		.news-content figcaption {
+			text-align: center;
+			font-style: italic;
+			margin-top: 0.5rem;
+		}
+
+		.news-content * {
+			max-width: 100%;
+		}
+	</style>
 </head>
 <body>
 	<div id="preloader" class="preeloader">
@@ -50,7 +82,7 @@
 	<!-- Header -->
 	<header class="header">
 		<!-- Header Top -->
-		
+
 		<!-- Header Middle -->
 		<%@include file="../homepage/header.jsp" %>
 		<!-- Header Bottom -->
@@ -60,15 +92,15 @@
 
 	<!-- Start Mobile Menu Area -->
 	<div class="mobile-menu-area">
-		
+
 		<!--offcanvas menu area start-->
 	    <div class="off_canvars_overlay">
-	                
+
 	    </div>
 	    <div class="offcanvas_menu">
 	        <div class="offcanvas_menu_wrapper">
 	            <div class="canvas_close">
-	                <a href="javascript:void(0)"><i class="fas fa-times"></i></a>  
+	                <a href="javascript:void(0)"><i class="fas fa-times"></i></a>
 	            </div>
 	            <div class="mobile-logo">
 	            	<h2><a href="index.html"><img src="assets/img/logo.png"></a></h2>
@@ -159,7 +191,7 @@
 	                        </ul>
 	                    </li>
 	                    <li class="menu-item-has-children">
-	                        <a href="contact.html"> Contact Us</a> 
+	                        <a href="contact.html"> Contact Us</a>
 	                    </li>
 	                </ul>
 	            </div>
@@ -176,7 +208,7 @@
 					<div class="breadcrumb-content">
 						<h2>News Details</h2>
 						<ul>
-							<li><a href="index.html">Home</a></li>
+							<li><a href="newsList">Back to News</a></li>
 							<li class="active">News Details</li>
 						</ul>
 					</div>
@@ -191,45 +223,47 @@
 		<div class="container">
 			<div class="row">
 				<!-- Blog -->
-				<div class="col-lg-8">
+				<div class="col-lg-12">
 					<div class="blog-details">
 						<div class="blog-item">
-							
+
 							<div class="content">
 								<ul class="auth">
-									<li><a href="#">by ${news.authorName}</a></li>
-									<li><a href="#">${news.updateDate}</a></li>
-								</ul>
+									<li><a href="#">by ${not empty news.authorName ? news.authorName : 'Unknown'}</a></li>
+									<li><a href="#">${DateFormatter.formatDefault(news.updateDate)}</a></li>
                                                                         <h1>${news.title}</h1>
-                                                                ${news.body}
+                                    <!-- Thêm class news-content để áp dụng CSS cho nội dung bài viết -->
+                                    <div class="news-content">
+                                        ${news.body}
+                                    </div>
 							</div>
 						</div>
-						
-						
+
+
 					</div>
 				</div>
 				<!-- Siderbar -->
 				<div class="col-lg-4">
 					<!-- Single -->
-					
+
 					<!-- Single -->
-					
+
 					<!-- Single -->
-				
+
 					<!-- Single -->
-					
+
 					<!-- Single -->
-					
+
 				</div>
 			</div>
 		</div>
 	</section>
 	<!-- End Blog Area -->
-	
+
 	<!-- Start Footer Area -->
 	<%@include file="../homepage/footer.jsp" %>
 	<!-- End Footer Area -->
-	
+
 
 
 	<div class="scroll-area">
