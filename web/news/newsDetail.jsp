@@ -1,4 +1,4 @@
-<%-- 
+<%--
     Document   : newsList
     Created on : 25/05/2024, 4:26:04 PM
     Author     : ADMIN
@@ -6,6 +6,9 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="java.util.Date" %>
+<%@ page import="Utils.DateFormatter" %>
 
 <!DOCTYPE html>
 <html  class="no-js" lang="en">
@@ -50,7 +53,7 @@
 	<!-- Header -->
 	<header class="header">
 		<!-- Header Top -->
-		
+
 		<!-- Header Middle -->
 		<%@include file="../homepage/header.jsp" %>
 		<!-- Header Bottom -->
@@ -60,15 +63,15 @@
 
 	<!-- Start Mobile Menu Area -->
 	<div class="mobile-menu-area">
-		
+
 		<!--offcanvas menu area start-->
 	    <div class="off_canvars_overlay">
-	                
+
 	    </div>
 	    <div class="offcanvas_menu">
 	        <div class="offcanvas_menu_wrapper">
 	            <div class="canvas_close">
-	                <a href="javascript:void(0)"><i class="fas fa-times"></i></a>  
+	                <a href="javascript:void(0)"><i class="fas fa-times"></i></a>
 	            </div>
 	            <div class="mobile-logo">
 	            	<h2><a href="index.html"><img src="assets/img/logo.png"></a></h2>
@@ -159,7 +162,7 @@
 	                        </ul>
 	                    </li>
 	                    <li class="menu-item-has-children">
-	                        <a href="contact.html"> Contact Us</a> 
+	                        <a href="contact.html"> Contact Us</a>
 	                    </li>
 	                </ul>
 	            </div>
@@ -194,42 +197,41 @@
 				<div class="col-lg-8">
 					<div class="blog-details">
 						<div class="blog-item">
-							
+
 							<div class="content">
 								<ul class="auth">
-									<li><a href="#">by ${news.authorName}</a></li>
-									<li><a href="#">${news.updateDate}</a></li>
-								</ul>
+									<li><a href="#">by ${not empty news.authorName ? news.authorName : 'Unknown'}</a></li>
+									<li><a href="#">${DateFormatter.formatDefault(news.updateDate)}</a></li>
                                                                         <h1>${news.title}</h1>
                                                                 ${news.body}
 							</div>
 						</div>
-						
-						
+
+
 					</div>
 				</div>
 				<!-- Siderbar -->
 				<div class="col-lg-4">
 					<!-- Single -->
-					
+
 					<!-- Single -->
-					
+
 					<!-- Single -->
-				
+
 					<!-- Single -->
-					
+
 					<!-- Single -->
-					
+
 				</div>
 			</div>
 		</div>
 	</section>
 	<!-- End Blog Area -->
-	
+
 	<!-- Start Footer Area -->
 	<%@include file="../homepage/footer.jsp" %>
 	<!-- End Footer Area -->
-	
+
 
 
 	<div class="scroll-area">

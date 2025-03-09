@@ -183,7 +183,7 @@
                         // integration to choose the right communication channel. This example uses
                         // a POST request with JSON as a data structure but your configuration
                         // could be different.
-                        xhr.open('POST', 'http://localhost:9998/clothesShop/imageUploader', true);
+                        xhr.open('POST', 'http://localhost:8080/Namcombank/imageUploader', true);
                         xhr.responseType = 'json';
                         console.log(xhr.response);
                     }

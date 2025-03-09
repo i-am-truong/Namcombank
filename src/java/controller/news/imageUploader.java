@@ -22,7 +22,7 @@ import java.io.PrintWriter;
 @MultipartConfig
 public class imageUploader extends HttpServlet {
    private static final long serialVersionUID = 1L;
-    /** 
+    /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
      * @param response servlet response
@@ -37,17 +37,17 @@ public class imageUploader extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet imageUploader</title>");  
+            out.println("<title>Servlet imageUploader</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet imageUploader at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
-    } 
+    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /** 
+    /**
      * Handles the HTTP <code>GET</code> method.
      * @param request servlet request
      * @param response servlet response
@@ -58,9 +58,9 @@ public class imageUploader extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         processRequest(request, response);
-    } 
+    }
 
-    /** 
+    /**
      * Handles the HTTP <code>POST</code> method.
      * @param request servlet request
      * @param response servlet response
@@ -104,7 +104,7 @@ public class imageUploader extends HttpServlet {
 //        }
 //        return "";
 //        }
-    /** 
+    /**
      * Returns a short description of the servlet.
      * @return a String containing servlet description
      */
