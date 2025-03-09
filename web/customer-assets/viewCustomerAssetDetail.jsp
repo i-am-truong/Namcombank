@@ -7,7 +7,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <title>Namcombank - Chi Tiết Tài Sản</title>
+        <title>Namcombank - Asset Details</title>
 
         <!-- Custom styles -->
         <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
@@ -15,7 +15,8 @@
         <link href="assets/css/bootstrap.min.css" rel="stylesheet">
 
         <style>
-            .detail-card {
+            /* Keep your existing styles */
+.detail-card {
                 background: #fff;
                 padding: 20px;
                 border-radius: 8px;
@@ -116,6 +117,7 @@
                 width: 100%;
             }
         </style>
+        </style>
     </head>
 
     <body id="page-top">
@@ -126,9 +128,9 @@
                     <%@include file="../homepage/header_admin.jsp" %>
                     <div class="container-fluid">
                         <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                            <h1 class="h3 mb-0 text-gray-800">Chi Tiết Tài Sản</h1>
+                            <h1 class="h3 mb-0 text-gray-800">Asset Details</h1>
                             <a href="assets-filter" class="btn btn-secondary btn-sm">
-                                <i class="fas fa-arrow-left"></i> Quay lại danh sách
+                                <i class="fas fa-arrow-left"></i> Back to List
                             </a>
                         </div>
 
@@ -157,13 +159,13 @@
                                 <h4>${asset.assetName}</h4>
                                 <c:choose>
                                     <c:when test="${asset.status eq 'PENDING'}">
-                                        <span class="status-badge badge-pending"><i class="fas fa-clock"></i> Chờ duyệt</span>
+                                        <span class="status-badge badge-pending"><i class="fas fa-clock"></i> Pending</span>
                                     </c:when>
                                     <c:when test="${asset.status eq 'APPROVED'}">
-                                        <span class="status-badge badge-approved"><i class="fas fa-check-circle"></i> Đã duyệt</span>
+                                        <span class="status-badge badge-approved"><i class="fas fa-check-circle"></i> Approved</span>
                                     </c:when>
                                     <c:when test="${asset.status eq 'REJECTED'}">
-                                        <span class="status-badge badge-rejected"><i class="fas fa-times-circle"></i> Từ chối</span>
+                                        <span class="status-badge badge-rejected"><i class="fas fa-times-circle"></i> Rejected</span>
                                     </c:when>
                                 </c:choose>
                             </div>
@@ -171,37 +173,37 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="detail-section">
-                                        <h5><i class="fas fa-info-circle"></i> Thông Tin Cơ Bản</h5>
+                                        <h5><i class="fas fa-info-circle"></i> Basic Information</h5>
                                         <div class="detail-row">
-                                            <div class="detail-label">Loại Tài Sản:</div>
+                                            <div class="detail-label">Asset Type:</div>
                                             <div class="detail-value">${asset.assetTypeDisplay}</div>
                                         </div>
                                         <div class="detail-row">
-                                            <div class="detail-label">Giá Trị:</div>
+                                            <div class="detail-label">Value:</div>
                                             <div class="detail-value"><fmt:formatNumber value="${asset.assetValue}" type="currency" currencySymbol="" maxFractionDigits="0"/> VND</div>
                                         </div>
                                         <div class="detail-row">
-                                            <div class="detail-label">Mô Tả:</div>
+                                            <div class="detail-label">Description:</div>
                                             <div class="detail-value">${asset.description}</div>
                                         </div>
                                     </div>
 
                                     <div class="detail-section">
-                                        <h5><i class="fas fa-user"></i> Thông Tin Khách Hàng</h5>
+                                        <h5><i class="fas fa-user"></i> Customer Information</h5>
                                         <div class="detail-row">
-                                            <div class="detail-label">ID Khách Hàng:</div>
+                                            <div class="detail-label">Customer ID:</div>
                                             <div class="detail-value">${asset.customerId}</div>
                                         </div>
                                         <div class="detail-row">
-                                            <div class="detail-label">Tên Khách Hàng:</div>
+                                            <div class="detail-label">Customer Name:</div>
                                             <div class="detail-value">${asset.customerName}</div>
                                         </div>
                                         <div class="detail-row">
-                                            <div class="detail-label">CCCD:</div>
+                                            <div class="detail-label">ID Card:</div>
                                             <div class="detail-value">${customer.cid}</div>
                                         </div>
                                         <div class="detail-row">
-                                            <div class="detail-label">Số Điện Thoại:</div>
+                                            <div class="detail-label">Phone Number:</div>
                                             <div class="detail-value">${customer.phonenumber}</div>
                                         </div>
                                     </div>
@@ -209,36 +211,36 @@
 
                                 <div class="col-md-6">
                                     <div class="detail-section">
-                                        <h5><i class="fas fa-clipboard-list"></i> Thông Tin Đăng Ký</h5>
+                                        <h5><i class="fas fa-clipboard-list"></i> Registration Information</h5>
                                         <div class="detail-row">
-                                            <div class="detail-label">Người Tạo:</div>
+                                            <div class="detail-label">Created By:</div>
                                             <div class="detail-value">${asset.staffName}</div>
                                         </div>
                                         <div class="detail-row">
-                                            <div class="detail-label">Ngày Tạo:</div>
-                                            <div class="detail-value"><fmt:formatDate value="${asset.createdDate}" pattern="dd/MM/yyyy HH:mm"/></div>
+                                            <div class="detail-label">Creation Date:</div>
+                                            <div class="detail-value"><fmt:formatDate value="${asset.createdDate}" pattern="MM/dd/yyyy HH:mm"/></div>
                                         </div>
                                     </div>
 
                                     <div class="detail-section">
-                                        <h5><i class="fas fa-user-check"></i> Thông Tin Duyệt</h5>
+                                        <h5><i class="fas fa-user-check"></i> Approval Information</h5>
                                         <c:choose>
                                             <c:when test="${asset.status eq 'PENDING'}">
                                                 <div class="pending-message">
-                                                    <i class="fas fa-info-circle"></i> Tài sản này đang chờ duyệt
+                                                    <i class="fas fa-info-circle"></i> This asset is pending approval
                                                 </div>
                                             </c:when>
                                             <c:otherwise>
                                                 <div class="detail-row">
-                                                    <div class="detail-label">Người Duyệt:</div>
+                                                    <div class="detail-label">Approved By:</div>
                                                     <div class="detail-value">${not empty asset.approverName ? asset.approverName : 'N/A'}</div>
                                                 </div>
                                                 <div class="detail-row">
-                                                    <div class="detail-label">Ngày Duyệt:</div>
+                                                    <div class="detail-label">Approval Date:</div>
                                                     <div class="detail-value">
                                                         <c:choose>
                                                             <c:when test="${not empty asset.approvedDate}">
-                                                                <fmt:formatDate value="${asset.approvedDate}" pattern="dd/MM/yyyy HH:mm"/>
+                                                                <fmt:formatDate value="${asset.approvedDate}" pattern="MM/dd/yyyy HH:mm"/>
                                                             </c:when>
                                                             <c:otherwise>N/A</c:otherwise>
                                                         </c:choose>
@@ -247,7 +249,7 @@
 
                                                 <c:if test="${asset.status eq 'APPROVED' && not empty asset.notes}">
                                                     <div class="detail-row">
-                                                        <div class="detail-label">Ghi Chú:</div>
+                                                        <div class="detail-label">Notes:</div>
                                                         <div class="detail-value">
                                                             <div class="approval-note">
                                                                 <i class="fas fa-comment-dots mr-2"></i> ${asset.notes}
@@ -258,7 +260,7 @@
 
                                                 <c:if test="${asset.status eq 'REJECTED' && not empty asset.notes}">
                                                     <div class="detail-row">
-                                                        <div class="detail-label">Lý Do Từ Chối:</div>
+                                                        <div class="detail-label">Rejection Reason:</div>
                                                         <div class="detail-value">
                                                             <div class="rejection-reason">
                                                                 <i class="fas fa-exclamation-circle mr-2"></i> ${asset.notes}
@@ -269,71 +271,66 @@
                                             </c:otherwise>
                                         </c:choose>
                                     </div>
+                                    
+                                    <!-- Delete Asset Button -->
+                                    <c:if test="${canApprove}">
+                                        <div class="detail-section">
+                                            <h5><i class="fas fa-trash-alt"></i> Asset Management</h5>
+                                            <form action="asset-detail" method="POST" id="deleteAssetForm">
+                                                <input type="hidden" name="asset_id" value="${asset.assetId}"/>
+                                                <input type="hidden" name="action" value="delete"/>
+                                                <button type="button" class="btn btn-danger btn-block" onclick="confirmDelete()">
+                                                    <i class="fas fa-trash-alt"></i> Delete Asset
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </c:if>
                                 </div>
                             </div>
-                            
-                            <!-- Hiển thị form duyệt/từ chối chỉ khi người dùng có quyền và tài sản đang ở trạng thái chờ duyệt -->
+
+                            <!-- Display approval/rejection form only if user has permission and asset is pending -->
                             <c:if test="${canApprove && asset.status eq 'PENDING'}">
-                                <div class="approval-section mt-4">
-                                    <h5 class="mb-4"><i class="fas fa-check-double"></i> Quyết Định Duyệt</h5>
-                                    
+                                <div class="approval-section mt-4" id="approval-section">
+                                    <h5 class="mb-4"><i class="fas fa-check-double"></i> Approval Decision</h5>
+
                                     <form action="asset-detail" method="POST" id="assetActionForm" class="mb-2">
                                         <input type="hidden" name="asset_id" value="${asset.assetId}"/>
                                         <input type="hidden" name="action" id="actionType" value=""/>
-                                        
+
                                         <div class="row">
-                                            <!-- Cột bên trái - Duyệt -->
+                                            <!-- Left column - Approve -->
                                             <div class="col-md-6">
                                                 <div class="approval-col approval-col-approve p-3">
                                                     <div class="col-title">
-                                                        <i class="fas fa-check-circle text-success"></i> Duyệt Tài Sản
+                                                        <i class="fas fa-check-circle text-success"></i> Approve Asset
                                                     </div>
                                                     <div class="form-group">
-                                                        <label for="note">Ghi Chú (tùy chọn):</label>
-                                                        <textarea id="note" name="note" class="form-control" rows="3" placeholder="Nhập ghi chú khi duyệt (nếu cần)"></textarea>
+                                                        <label for="note">Notes (optional):</label>
+                                                        <textarea id="note" name="note" class="form-control" rows="3" placeholder="Enter approval notes (if needed)"></textarea>
                                                     </div>
                                                     <button type="button" class="btn btn-success btn-block" onclick="submitAction('approve')">
-                                                        <i class="fas fa-check"></i> Duyệt Tài Sản
+                                                        <i class="fas fa-check"></i> Approve Asset
                                                     </button>
                                                 </div>
                                             </div>
-                                            
-                                            <!-- Cột bên phải - Từ chối -->
+
+                                            <!-- Right column - Reject -->
                                             <div class="col-md-6">
                                                 <div class="approval-col approval-col-reject p-3">
                                                     <div class="col-title">
-                                                        <i class="fas fa-times-circle text-danger"></i> Từ Chối Tài Sản
+                                                        <i class="fas fa-times-circle text-danger"></i> Reject Asset
                                                     </div>
                                                     <div class="form-group">
-                                                        <label for="reason"><span class="text-danger">*</span> Lý Do Từ Chối:</label>
-                                                        <textarea id="reason" name="reason" class="form-control" rows="3" placeholder="Nhập lý do từ chối (bắt buộc)"></textarea>
-                                                        <small class="form-text text-muted">Lý do từ chối là bắt buộc.</small>
+                                                        <label for="reason"><span class="text-danger">*</span> Rejection Reason:</label>
+                                                        <textarea id="reason" name="reason" class="form-control" rows="3" placeholder="Enter rejection reason (required)"></textarea>
+                                                        <small class="form-text text-muted">Rejection reason is required.</small>
                                                     </div>
                                                     <button type="button" class="btn btn-danger btn-block" onclick="submitReject()">
-                                                        <i class="fas fa-times"></i> Từ Chối Tài Sản
+                                                        <i class="fas fa-times"></i> Reject Asset
                                                     </button>
                                                 </div>
                                             </div>
                                         </div>
-                                    </form>
-                                </div>
-                            </c:if>
-                            
-                            <!-- Thêm nút xóa tài sản dành cho người có quyền duyệt -->
-                            <c:if test="${canApprove}">
-                                <div class="delete-section">
-                                    <h5><i class="fas fa-trash-alt"></i> Quản Lý Tài Sản</h5>
-                                    <form action="asset-detail" method="POST" id="deleteAssetForm">
-                                        <input type="hidden" name="asset_id" value="${asset.assetId}"/>
-                                        <input type="hidden" name="action" value="delete"/>
-                                        
-                                        <div class="alert alert-warning">
-                                            <i class="fas fa-exclamation-triangle"></i> Lưu ý: Việc xóa tài sản là không thể hoàn tác
-                                        </div>
-                                        
-                                        <button type="button" class="btn btn-delete" onclick="confirmDelete()">
-                                            <i class="fas fa-trash-alt"></i> Xóa Tài Sản
-                                        </button>
                                     </form>
                                 </div>
                             </c:if>
@@ -352,52 +349,61 @@
 
         <!-- Custom scripts for all pages-->
         <script src="adminassets/js/sb-admin-2.min.js"></script>
-        
+
         <script>
             function submitAction(action) {
                 const form = document.getElementById('assetActionForm');
                 const actionInput = document.getElementById('actionType');
-                
+
                 actionInput.value = action;
-                
+
                 if (action === 'approve') {
-                    // Xác nhận duyệt
-                    if (!confirm('Bạn có chắc chắn muốn duyệt tài sản này?')) {
+                    // Confirm approval
+                    if (!confirm('Are you sure you want to approve this asset?')) {
                         return;
                     }
                 }
-                
+
                 form.submit();
             }
-            
+
             function submitReject() {
                 const form = document.getElementById('assetActionForm');
                 const actionInput = document.getElementById('actionType');
                 const reasonInput = document.getElementById('reason');
-                
-                // Thiết lập hành động
+
+                // Set action
                 actionInput.value = 'reject';
-                
-                // Kiểm tra lý do từ chối
+
+                // Check rejection reason
                 if (!reasonInput.value.trim()) {
-                    alert('Vui lòng nhập lý do từ chối.');
+                    alert('Please enter a rejection reason.');
                     reasonInput.focus();
                     return;
                 }
-                
-                // Xác nhận từ chối
-                if (!confirm('Bạn có chắc chắn muốn từ chối tài sản này?')) {
+
+                // Confirm rejection
+                if (!confirm('Are you sure you want to reject this asset?')) {
                     return;
                 }
-                
+
                 form.submit();
             }
             
             function confirmDelete() {
-                if (confirm('CẢNH BÁO: Bạn sắp xóa tài sản này. Hành động này không thể hoàn tác. Bạn có chắc chắn muốn tiếp tục?')) {
+                if (confirm('Are you sure you want to delete this asset? This action cannot be undone.')) {
                     document.getElementById('deleteAssetForm').submit();
                 }
             }
+
+            // Auto-scroll to approval section if hash in URL
+            $(document).ready(function () {
+                if (window.location.hash === '#approval-section') {
+                    $('html, body').animate({
+                        scrollTop: $('#approval-section').offset().top - 100
+                    }, 1000);
+                }
+            });
         </script>
     </body>
 </html>

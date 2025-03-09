@@ -1,8 +1,10 @@
 package model;
 
 import java.util.Date;
+import model.auth.Staff;
 
 public class LoanRequest {
+
     private int requestId;
     private int customerId;
     private int packageId;
@@ -13,6 +15,63 @@ public class LoanRequest {
     private Date approvalDate;
     private String approvedBy;
     private String notes;
+    private String start_date;
+    private String end_date;
+
+    private Staff staff;
+    private LoanPackage loanPackage;
+    private Customer customer;
+    private Asset asset;
+
+    public String getStart_date() {
+        return start_date;
+    }
+
+    public void setStart_date(String start_date) {
+        this.start_date = start_date;
+    }
+
+    public String getEnd_date() {
+        return end_date;
+    }
+
+    public void setEnd_date(String end_date) {
+        this.end_date = end_date;
+    }
+
+    public Staff getStaff() {
+        return staff;
+    }
+
+    public void setStaff(Staff staff) {
+        this.staff = staff;
+    }
+
+    public LoanPackage getLoanPackage() {
+        return loanPackage;
+    }
+
+    public void setLoanPackage(LoanPackage loanPackage) {
+        this.loanPackage = loanPackage;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public Asset getAsset() {
+        return asset;
+    }
+
+    public void setAsset(Asset asset) {
+        this.asset = asset;
+    }
+    
+    
 
     public LoanRequest() {
     }
@@ -110,5 +169,4 @@ public class LoanRequest {
         this.notes = notes;
     }
 
-    
 }

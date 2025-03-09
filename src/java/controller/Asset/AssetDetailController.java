@@ -16,8 +16,9 @@ import java.util.logging.Logger;
 import model.Customer;
 
 /**
- * Controller để hiển thị chi tiết tài sản và xử lý phê duyệt/từ chối tài sản
+ * Controller to display asset details and handle approval/rejection/deletion of assets
  */
+@WebServlet(name = "AssetDetailController", urlPatterns = {"/asset-detail"}) // Added WebServlet annotation
 public class AssetDetailController extends BaseRBACControlller {
 
     private static final Logger LOGGER = Logger.getLogger(AssetDetailController.class.getName());
@@ -27,83 +28,87 @@ public class AssetDetailController extends BaseRBACControlller {
     @Override
     public void init() {
         assetDAO = new AssetDAO();
-        customerDAO = new CustomerDAO(); // Khởi tạo CustomerDAO
+        customerDAO = new CustomerDAO();
     }
 
     @Override
     protected void doAuthorizedPost(HttpServletRequest request, HttpServletResponse response, Staff account) throws ServletException, IOException {
         try {
-            // Lấy các tham số từ form
+            // Get parameters from form
             String assetIdParam = request.getParameter("asset_id");
             String action = request.getParameter("action");
 
-            // Kiểm tra các tham số bắt buộc
+            LOGGER.info("Processing POST request: asset_id=" + assetIdParam + ", action=" + action);
+
+            // Validate required parameters
             if (assetIdParam == null || assetIdParam.isEmpty() || action == null || action.isEmpty()) {
-                request.getSession().setAttribute("errorMessage", "Dữ liệu không hợp lệ.");
+                request.getSession().setAttribute("errorMessage", "Invalid data.");
                 response.sendRedirect("assets-filter");
                 return;
             }
 
-            // Parse ID tài sản
+            // Parse asset ID
             int assetId;
             try {
                 assetId = Integer.parseInt(assetIdParam);
             } catch (NumberFormatException e) {
-                request.getSession().setAttribute("errorMessage", "ID tài sản không hợp lệ.");
+                request.getSession().setAttribute("errorMessage", "Invalid asset ID.");
                 response.sendRedirect("assets-filter");
                 return;
             }
             
-            // Lấy thông tin tài sản
+            // Get asset information
             Asset asset = assetDAO.get(assetId);
             if (asset == null) {
-                request.getSession().setAttribute("errorMessage", "Tài sản không tồn tại.");
+                request.getSession().setAttribute("errorMessage", "Asset does not exist.");
                 response.sendRedirect("assets-filter");
                 return;
             }
 
-            // Lấy roleId từ session hoặc từ đối tượng account
+            // Get roleId from session or account object
             HttpSession session = request.getSession();
             Integer roleId = (Integer) session.getAttribute("roleId");
 
-            // Nếu vẫn không có roleId, đặt giá trị mặc định
+            // Set default value if roleId is still null
             if (roleId == null) {
-                roleId = 0; // Giá trị mặc định không có quyền
+                roleId = 0; // Default value with no permissions
             }
 
-            // Xác định quyền duyệt hoặc xóa
+            // Determine approval or deletion rights
             boolean canApprove = (roleId == 1 || roleId == 3);
             boolean canDeletePending = canApprove && "PENDING".equals(asset.getStatus());
-            boolean canDelete = canApprove; // Admin và HeadOfStaff có thể xóa tất cả tài sản
+            boolean canDelete = canApprove; // Admin and HeadOfStaff can delete all assets
             
             if (("approve".equals(action) || "reject".equals(action)) && !canApprove) {
-                response.sendError(HttpServletResponse.SC_FORBIDDEN, "Bạn không có quyền thực hiện hành động này");
+                response.sendError(HttpServletResponse.SC_FORBIDDEN, "You don't have permission to perform this action");
                 return;
             }
             
             if ("delete".equals(action) && !canDelete) {
-                response.sendError(HttpServletResponse.SC_FORBIDDEN, "Bạn không có quyền xóa tài sản");
+                response.sendError(HttpServletResponse.SC_FORBIDDEN, "You don't have permission to delete assets");
                 return;
             }
             
             boolean success = false;
 
-            // Xử lý phê duyệt, từ chối hoặc xóa
+            // Handle approval, rejection, or deletion
             if ("approve".equals(action)) {
                 String note = request.getParameter("note");
-
+                LOGGER.info("Approving asset ID: " + assetId + " with note: " + note);
+                
                 success = assetDAO.approveAsset(assetId, account.getId(), note);
 
                 if (success) {
-                    request.getSession().setAttribute("successMessage", "Tài sản đã được phê duyệt thành công.");
+                    request.getSession().setAttribute("successMessage", "Asset has been approved successfully.");
                 } else {
-                    request.getSession().setAttribute("errorMessage", "Không thể phê duyệt tài sản. Vui lòng thử lại.");
+                    request.getSession().setAttribute("errorMessage", "Could not approve asset. Please try again.");
                 }
             } else if ("reject".equals(action)) {
                 String reason = request.getParameter("reason");
+                LOGGER.info("Rejecting asset ID: " + assetId + " with reason: " + reason);
 
                 if (reason == null || reason.trim().isEmpty()) {
-                    request.getSession().setAttribute("errorMessage", "Lý do từ chối không được để trống.");
+                    request.getSession().setAttribute("errorMessage", "Rejection reason cannot be empty.");
                     response.sendRedirect("asset-detail?id=" + assetId);
                     return;
                 }
@@ -111,30 +116,37 @@ public class AssetDetailController extends BaseRBACControlller {
                 success = assetDAO.rejectAsset(assetId, account.getId(), reason);
 
                 if (success) {
-                    request.getSession().setAttribute("successMessage", "Tài sản đã bị từ chối.");
+                    request.getSession().setAttribute("successMessage", "Asset has been rejected.");
                 } else {
-                    request.getSession().setAttribute("errorMessage", "Không thể từ chối tài sản. Vui lòng thử lại.");
+                    request.getSession().setAttribute("errorMessage", "Could not reject asset. Please try again.");
                 }
             } else if ("delete".equals(action)) {
-                // Thực hiện xóa tài sản
+                // Perform asset deletion
+                LOGGER.info("Deleting asset ID: " + assetId);
                 success = assetDAO.deleteAsset(assetId);
                 
                 if (success) {
-                    request.getSession().setAttribute("successMessage", "Tài sản đã được xóa thành công.");
+                    request.getSession().setAttribute("successMessage", "Asset has been deleted successfully.");
+                    // Redirect to assets list after deletion
+                    response.sendRedirect("assets-filter");
+                    return;
                 } else {
-                    request.getSession().setAttribute("errorMessage", "Không thể xóa tài sản. Vui lòng thử lại.");
+                    request.getSession().setAttribute("errorMessage", "Could not delete asset. Please try again.");
                 }
             } else {
-                request.getSession().setAttribute("errorMessage", "Hành động không hợp lệ.");
+                request.getSession().setAttribute("errorMessage", "Invalid action.");
             }
 
-            // QUAN TRỌNG: Chuyển hướng về trang filter thay vì trang chi tiết
-            // Thêm tham số timestamp để tránh cache
-            response.sendRedirect("assets-filter?t=" + System.currentTimeMillis());
+            // Redirect back to asset detail page or asset list
+            if ("delete".equals(action) && success) {
+                response.sendRedirect("assets-filter");
+            } else {
+                response.sendRedirect("asset-detail?id=" + assetId);
+            }
 
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Lỗi khi xử lý yêu cầu: ", e);
-            request.getSession().setAttribute("errorMessage", "Lỗi: " + e.getMessage());
+            LOGGER.log(Level.SEVERE, "Error processing request: ", e);
+            request.getSession().setAttribute("errorMessage", "Error: " + e.getMessage());
             response.sendRedirect("assets-filter");
         }
     }
@@ -144,8 +156,8 @@ public class AssetDetailController extends BaseRBACControlller {
         try {
             String assetIdParam = request.getParameter("id");
             if (assetIdParam == null || assetIdParam.isEmpty()) {
-                request.getSession().setAttribute("errorMessage", "ID tài sản không được cung cấp.");
-                response.sendRedirect("assets");
+                request.getSession().setAttribute("errorMessage", "Asset ID was not provided.");
+                response.sendRedirect("assets-filter");
                 return;
             }
 
@@ -153,19 +165,19 @@ public class AssetDetailController extends BaseRBACControlller {
             try {
                 assetId = Integer.parseInt(assetIdParam);
             } catch (NumberFormatException e) {
-                request.getSession().setAttribute("errorMessage", "ID tài sản không hợp lệ: " + assetIdParam);
-                response.sendRedirect("assets");
+                request.getSession().setAttribute("errorMessage", "Invalid asset ID: " + assetIdParam);
+                response.sendRedirect("assets-filter");
                 return;
             }
 
             Asset asset = assetDAO.get(assetId);
             if (asset == null) {
-                request.getSession().setAttribute("errorMessage", "Tài sản không tồn tại.");
-                response.sendRedirect("assets");
+                request.getSession().setAttribute("errorMessage", "Asset does not exist.");
+                response.sendRedirect("assets-filter");
                 return;
             }
             
-            // Lấy thông tin chi tiết của khách hàng
+            // Get customer details
             Customer customer = customerDAO.getCustomerDetail(asset.getCustomerId());
             if (customer != null) {
                 request.setAttribute("customer", customer);
@@ -188,9 +200,9 @@ public class AssetDetailController extends BaseRBACControlller {
             request.getRequestDispatcher("/customer-assets/viewCustomerAssetDetail.jsp").forward(request, response);
 
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Lỗi khi hiển thị chi tiết tài sản: ", e);
-            request.getSession().setAttribute("errorMessage", "Lỗi: " + e.getMessage());
-            response.sendRedirect("assets");
+            LOGGER.log(Level.SEVERE, "Error displaying asset details: ", e);
+            request.getSession().setAttribute("errorMessage", "Error: " + e.getMessage());
+            response.sendRedirect("assets-filter");
         }
     }
 }

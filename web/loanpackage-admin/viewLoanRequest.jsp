@@ -7,7 +7,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <title>Namcombank - Asset Management</title>
+        <title>Namcombank - Loan Request Management</title>
 
         <!-- Custom styles -->
         <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
@@ -94,91 +94,89 @@
                     <div class="container-fluid">
                         <div class="table-wrapper">
                             <!-- Debug information -->
-                            <c:if test="${not empty assets}">
+                            <c:if test="${not empty loanRequests}">
                                 <div class="alert alert-info">
-                                    Assets found: ${assets.size()}
+                                    Number of loan requests found: ${loanRequests.size()}
                                 </div>
                             </c:if>
 
                             <!-- Search Filters Form -->
-                            <form action="${pageContext.request.contextPath}/assets-filter" method="GET" id="searchForm">
+                            <form action="${pageContext.request.contextPath}/loan-requests-auth" method="GET" id="searchForm">
                                 <div class="search-filters">
-                                    <h4 class="mb-3">Search Assets</h4>
+                                    <h4 class="mb-3">Search Loan Requests</h4>
 
                                     <div class="search-grid">
                                         <div class="form-group">
-                                            <label for="assetName">Asset Name</label>
-                                            <input type="text" id="assetName" name="assetName" class="form-control" 
-                                                   value="${param.assetName}" placeholder="Asset name">
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label for="assetType">Asset Type</label>
-                                            <select id="assetType" name="assetType" class="form-control">
-                                                <option value="" ${param.assetType == null || param.assetType == '' ? 'selected' : ''}>All</option>
-                                                <option value="REAL_ESTATE" ${param.assetType == 'REAL_ESTATE' ? 'selected' : ''}>Real Estate</option>
-                                                <option value="VEHICLE" ${param.assetType == 'VEHICLE' ? 'selected' : ''}>Vehicle</option>
-                                                <option value="INCOME" ${param.assetType == 'INCOME' ? 'selected' : ''}>Income</option>
-                                                <option value="OTHER" ${param.assetType == 'OTHER' ? 'selected' : ''}>Other</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="form-group">
                                             <label for="customerName">Customer Name</label>
                                             <input type="text" id="customerName" name="customerName" class="form-control" 
-                                                   value="${param.customerName}" placeholder="Customer name">
+                                                   value="${customerName}" placeholder="Customer name">
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="minValue">Minimum Value</label>
-                                            <input type="number" id="minValue" name="minValue" class="form-control" 
-                                                   value="${param.minValue}" placeholder="Minimum value">
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label for="maxValue">Maximum Value</label>
-                                            <input type="number" id="maxValue" name="maxValue" class="form-control" 
-                                                   value="${param.maxValue}" placeholder="Maximum value">
+                                            <label for="packageName">Loan Package</label>
+                                            <input type="text" id="packageName" name="packageName" class="form-control" 
+                                                   value="${packageName}" placeholder="Loan package name">
                                         </div>
 
                                         <div class="form-group">
                                             <label for="status">Status</label>
                                             <select id="status" name="status" class="form-control">
-                                                <option value="" ${param.status == null || param.status == '' ? 'selected' : ''}>All</option>
-                                                <option value="PENDING" ${param.status == 'PENDING' ? 'selected' : ''}>Pending</option>
-                                                <option value="APPROVED" ${param.status == 'APPROVED' ? 'selected' : ''}>Approved</option>
-                                                <option value="REJECTED" ${param.status == 'REJECTED' ? 'selected' : ''}>Rejected</option>
+                                                <option value="" ${status == null || status == '' ? 'selected' : ''}>All</option>
+                                                <option value="Pending" ${status == 'Pending' ? 'selected' : ''}>Pending</option>
+                                                <option value="Approved" ${status == 'Approved' ? 'selected' : ''}>Approved</option>
+                                                <option value="Rejected" ${status == 'Rejected' ? 'selected' : ''}>Rejected</option>
                                             </select>
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="createdDateFrom">Created From</label>
-                                            <input type="date" id="createdDateFrom" name="createdDateFrom" class="form-control" 
-                                                   value="${param.createdDateFrom}">
+                                            <label for="minAmount">Amount From</label>
+                                            <input type="number" id="minAmount" name="minAmount" class="form-control" 
+                                                   value="${minAmount}" placeholder="Minimum amount">
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="createdDateTo">Created To</label>
-                                            <input type="date" id="createdDateTo" name="createdDateTo" class="form-control" 
-                                                   value="${param.createdDateTo}">
+                                            <label for="maxAmount">Amount To</label>
+                                            <input type="number" id="maxAmount" name="maxAmount" class="form-control" 
+                                                   value="${maxAmount}" placeholder="Maximum amount">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="hasAsset">Collateral</label>
+                                            <select id="hasAsset" name="hasAsset" class="form-control">
+                                                <option value="" ${hasAsset == null || hasAsset == '' ? 'selected' : ''}>All</option>
+                                                <option value="1" ${hasAsset == '1' ? 'selected' : ''}>With collateral</option>
+                                                <option value="0" ${hasAsset == '0' ? 'selected' : ''}>Without collateral</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="requestDateFrom">Request Date From</label>
+                                            <input type="date" id="requestDateFrom" name="requestDateFrom" class="form-control" 
+                                                   value="${requestDateFrom}">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="requestDateTo">Request Date To</label>
+                                            <input type="date" id="requestDateTo" name="requestDateTo" class="form-control" 
+                                                   value="${requestDateTo}">
                                         </div>
 
                                         <div class="form-group">
                                             <label for="approvedBy">Approved By</label>
                                             <input type="text" id="approvedBy" name="approvedBy" class="form-control" 
-                                                   value="${param.approvedBy}" placeholder="Approver name/ID">
+                                                   value="${approvedBy}" placeholder="Approver name/ID">
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="approvedDateFrom">Approved From</label>
-                                            <input type="date" id="approvedDateFrom" name="approvedDateFrom" class="form-control" 
-                                                   value="${param.approvedDateFrom}">
+                                            <label for="approvalDateFrom">Approval Date From</label>
+                                            <input type="date" id="approvalDateFrom" name="approvalDateFrom" class="form-control" 
+                                                   value="${approvalDateFrom}">
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="approvedDateTo">Approved To</label>
-                                            <input type="date" id="approvedDateTo" name="approvedDateTo" class="form-control" 
-                                                   value="${param.approvedDateTo}">
+                                            <label for="approvalDateTo">Approval Date To</label>
+                                            <input type="date" id="approvalDateTo" name="approvalDateTo" class="form-control" 
+                                                   value="${approvalDateTo}">
                                         </div>
                                     </div>
 
@@ -191,7 +189,6 @@
                                         </button>
                                     </div>
                                 </div>
-
                             </form>
 
                             <!-- Status Summary Cards -->
@@ -202,8 +199,8 @@
                                             <div class="row no-gutters align-items-center">
                                                 <div class="col mr-2">
                                                     <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                        Total Assets</div>
-                                                    <div class="h5 mb-0 font-weight-bold text-gray-800">${totalAssets}</div>
+                                                        Total Loan Requests</div>
+                                                    <div class="h5 mb-0 font-weight-bold text-gray-800">${totalRequests}</div>
                                                 </div>
                                                 <div class="col-auto">
                                                     <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
@@ -220,7 +217,7 @@
                                                 <div class="col mr-2">
                                                     <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
                                                         Pending</div>
-                                                    <div class="h5 mb-0 font-weight-bold text-gray-800">${pendingAssets}</div>
+                                                    <div class="h5 mb-0 font-weight-bold text-gray-800">${pendingRequests}</div>
                                                 </div>
                                                 <div class="col-auto">
                                                     <i class="fas fa-clock fa-2x text-gray-300"></i>
@@ -237,7 +234,7 @@
                                                 <div class="col mr-2">
                                                     <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                                                         Approved</div>
-                                                    <div class="h5 mb-0 font-weight-bold text-gray-800">${approvedAssets}</div>
+                                                    <div class="h5 mb-0 font-weight-bold text-gray-800">${approvedRequests}</div>
                                                 </div>
                                                 <div class="col-auto">
                                                     <i class="fas fa-check-circle fa-2x text-gray-300"></i>
@@ -254,7 +251,7 @@
                                                 <div class="col mr-2">
                                                     <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
                                                         Rejected</div>
-                                                    <div class="h5 mb-0 font-weight-bold text-gray-800">${rejectedAssets}</div>
+                                                    <div class="h5 mb-0 font-weight-bold text-gray-800">${rejectedRequests}</div>
                                                 </div>
                                                 <div class="col-auto">
                                                     <i class="fas fa-times-circle fa-2x text-gray-300"></i>
@@ -265,64 +262,90 @@
                                 </div>
                             </div>
 
-                            <!-- Assets Table -->
+                            <!-- LoanRequests Table -->
                             <div class="table-responsive">
-                                <table class="table table-bordered" id="assetTable">
+                                <table class="table table-bordered" id="loanRequestTable">
                                     <thead>
                                         <tr>
-                                            <th>Asset Name</th>
-                                            <th>Type</th>
+                                            <th>Request ID</th>
                                             <th>Customer</th>
-                                            <th>Value</th>
-                                            <th>Created By</th>
-                                            <th>Created Date</th>
+                                            <th>Loan Package</th>
+                                            <th>Amount</th>
+                                            <th>Request Date</th>
                                             <th>Status</th>
+                                            <th>Collateral</th>
                                             <th>Approved By</th>
                                             <th>Approval Date</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <c:choose>
-                                            <c:when test="${not empty assets && assets.size() > 0}">
-                                                <c:forEach items="${assets}" var="asset">
-                                                    <tr class="clickable-row" onclick="window.location.href = 'asset-detail?id=${asset.assetId}'">
-                                                        <td>${asset.assetName}</td>
-                                                        <td>${asset.assetTypeDisplay}</td>
-                                                        <td>${asset.customerName}</td>
-                                                        <td><fmt:formatNumber value="${asset.assetValue}" type="currency" currencySymbol="" maxFractionDigits="0"/> VND</td>
-                                                        <td>${asset.staffName}</td>
-                                                        <td><fmt:formatDate value="${asset.createdDate}" pattern="MM/dd/yyyy HH:mm"/></td>
+                                            <c:when test="${not empty loanRequests && loanRequests.size() > 0}">
+                                                <c:forEach items="${loanRequests}" var="request">
+                                                    <tr class="clickable-row" onclick="window.location.href = 'loan-request-detail?id=${request.requestId}'">
+                                                        <td>${request.requestId}</td>
+                                                        <td>${request.customer.fullname}</td>
+                                                        <td>${request.loanPackage.packageName}</td>
+                                                        <td><fmt:formatNumber value="${request.amount}" type="currency" currencySymbol="" maxFractionDigits="0"/> VND</td>
+                                                        <td><fmt:formatDate value="${request.requestDate}" pattern="MM/dd/yyyy"/></td>
                                                         <td>
                                                             <c:choose>
-                                                                <c:when test="${asset.status eq 'PENDING'}">
+                                                                <c:when test="${request.status eq 'Pending'}">
                                                                     <span class="status-pending"><i class="fas fa-clock"></i> Pending</span>
                                                                 </c:when>
-                                                                <c:when test="${asset.status eq 'APPROVED'}">
+                                                                <c:when test="${request.status eq 'Approved'}">
                                                                     <span class="status-approved"><i class="fas fa-check-circle"></i> Approved</span>
                                                                 </c:when>
-                                                                <c:when test="${asset.status eq 'REJECTED'}">
+                                                                <c:when test="${request.status eq 'Rejected'}">
                                                                     <span class="status-rejected"><i class="fas fa-times-circle"></i> Rejected</span>
                                                                 </c:when>
                                                                 <c:otherwise>
-                                                                    ${asset.status}
+                                                                    ${request.status}
                                                                 </c:otherwise>
                                                             </c:choose>
                                                         </td>
-                                                        <td>${asset.approverName}</td>
-                                                        <td><fmt:formatDate value="${asset.approvedDate}" pattern="dd/mm/yyyy HH:mm"/></td>
+                                                        <td>
+                                                            <c:choose>
+                                                                <c:when test="${not empty request.asset}">
+                                                                    <i class="fas fa-check-circle text-success"></i> ${request.asset.assetName}
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <i class="fas fa-times-circle text-danger"></i> None
+                                                                </c:otherwise>
+                                                            </c:choose>
+                                                        </td>
+                                                        <td>
+                                                            <c:choose>
+                                                                <c:when test="${not empty request.staff && not empty request.staff.fullname}">
+                                                                    ${request.staff.fullname}
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <span class="text-muted">Not yet</span>
+                                                                </c:otherwise>
+                                                            </c:choose>
+                                                        </td>
+                                                        <td>
+                                                            <c:choose>
+                                                                <c:when test="${not empty request.approvalDate}">
+                                                                    <fmt:formatDate value="${request.approvalDate}" pattern="MM/dd/yyyy"/>
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <span class="text-muted">Not yet</span>
+                                                                </c:otherwise>
+                                                            </c:choose>
+                                                        </td>
                                                     </tr>
                                                 </c:forEach>
                                             </c:when>
                                             <c:otherwise>
                                                 <tr>
-                                                    <td colspan="10" class="text-center">No assets found</td>
+                                                    <td colspan="9" class="text-center">No loan requests found</td>
                                                 </tr>
                                             </c:otherwise>
                                         </c:choose>
                                     </tbody>
                                 </table>
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -338,22 +361,24 @@
 
         <!-- Custom scripts for all pages-->
         <script src="adminassets/js/sb-admin-2.min.js"></script>
-
         <script>
             // Clear filters functionality
             document.getElementById('clearFiltersBtn').addEventListener('click', function () {
                 // Reset all form fields
-                document.getElementById('assetName').value = '';
-                document.getElementById('assetType').value = '';
                 document.getElementById('customerName').value = '';
-                document.getElementById('minValue').value = '';
-                document.getElementById('maxValue').value = '';
+                document.getElementById('packageName').value = '';
                 document.getElementById('status').value = '';
-                document.getElementById('createdDateFrom').value = '';
-                document.getElementById('createdDateTo').value = '';
+                document.getElementById('minAmount').value = '';
+                document.getElementById('maxAmount').value = '';
+                document.getElementById('hasAsset').value = '';
+                document.getElementById('requestDateFrom').value = '';
+                document.getElementById('requestDateTo').value = '';
+                document.getElementById('approvedBy').value = '';
+                document.getElementById('approvalDateFrom').value = '';
+                document.getElementById('approvalDateTo').value = '';
 
-                // Redirect to assets page without search parameters
-                window.location.href = 'assets-filter';
+                // Redirect to loan-requests-auth without search parameters
+                window.location.href = 'loan-requests-auth';
             });
         </script>
     </body>

@@ -100,6 +100,13 @@
             </a>
         </div>
     </li>
+    <!-- manage contracts -->
+    <li class="nav-item active">
+        <a class="nav-link" href="loan-requests-auth">
+            <i class="fas fa-fw fa-table"></i>
+            <span>Loan Require Filter</span>
+        </a>
+    </li>
     <!-- feedback cua admin -->
 
     <li class="nav-item active">
