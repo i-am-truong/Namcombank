@@ -318,6 +318,10 @@
         <servlet-name>updateSaving</servlet-name>
         <servlet-class>controller.saving.updateSaving</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>SavingPay</servlet-name>
+        <servlet-class>controller.saving.SavingPay</servlet-class>
+    </servlet>    
     <servlet-mapping>
         <servlet-name>viewCustomerDetail</servlet-name>
         <url-pattern>/viewCustomerDetail</url-pattern>
@@ -632,6 +636,10 @@
     <servlet-mapping>
         <servlet-name>updateSaving</servlet-name>
         <url-pattern>/updateSaving</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SavingPay</servlet-name>
+        <url-pattern>/SavingPay</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

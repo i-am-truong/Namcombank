@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import model.Saving;
 import model.SavingPackage;
 import model.SavingPackage_id;
 import model.SavingRequest;
@@ -540,6 +541,43 @@ public class SavingDao extends DBContext {
             ps.setInt(6, saving_request_id);
             ps.setInt(7, staff_id);
             ps.setString(8, money_get_date);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<Saving> getAllSaving() {
+        String query = "SELECT * FROM Saving WHERE money_get_date <= GETDATE() AND status = 'Active'";
+        List<Saving> list = new ArrayList<>();
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Saving saving = new Saving();
+                saving.setSavings_id(rs.getInt("savings_id"));
+                saving.setCustomer_id(rs.getInt("customer_id"));
+                saving.setAmount(rs.getDouble("amount"));
+                saving.setInterest_rate(rs.getFloat("interest_rate"));
+                saving.setTerm_months(rs.getInt("term_months"));
+                saving.setOpened_date(rs.getString("opened_date"));
+                saving.setStatus(rs.getString("status"));
+                saving.setSaving_request_id(rs.getInt("saving_request_id"));
+                saving.setStaff_id(rs.getInt("staff_id"));
+                saving.setMoney_get_date(rs.getString("money_get_date"));
+
+                list.add(saving);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public void SavingPay(int savings_id) {
+        String query = "UPDATE [Saving]  SET status='paid' WHERE savings_id= ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, savings_id);
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

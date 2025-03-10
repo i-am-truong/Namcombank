@@ -1,3 +1,7 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
+ */
 package controller.saving;
 
 import context.SavingDao;
@@ -5,20 +9,19 @@ import controller.auth.BaseRBACControlller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
-import model.SavingPackage_id;
+import model.Saving;
 import model.auth.Staff;
 
 /**
  *
  * @author admin
  */
-public class updateSaving extends BaseRBACControlller {
+public class SavingPay extends BaseRBACControlller {
 
     private final SavingDao dao = new SavingDao();
 
@@ -39,10 +42,10 @@ public class updateSaving extends BaseRBACControlller {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet updateSaving</title>");
+            out.println("<title>Servlet SavingClose</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet updateSaving at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet SavingClose at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -55,22 +58,9 @@ public class updateSaving extends BaseRBACControlller {
             response.sendRedirect("admin.login");
             return;
         }
-
-        String saving_package_idStr = request.getParameter("saving_package_id");
-        String action = request.getParameter("action");
-        int saving_package_id = Integer.parseInt(saving_package_idStr);
-
-        String saving_package_updated_at = getCurrentDate();
-        if ("approved".equals(action)) {
-            dao.acceptSavingPackageRequest(saving_package_updated_at, saving_package_id);
-
-        } else if ("rejected".equals(action)) {
-            dao.rejectSavingPackageRequest(saving_package_updated_at, saving_package_id);
-        }
-        List<SavingPackage_id> list = dao.getAllSavingPackageRequest();
+        List<Saving> list = dao.getAllSaving();
         request.setAttribute("list", list);
-//        request.getRequestDispatcher("updateSaving").forward(request, response);
-        response.sendRedirect("updateSaving");
+        request.getRequestDispatcher("saving/SavingPay.jsp").forward(request, response);
     }
 
     @Override
@@ -80,15 +70,12 @@ public class updateSaving extends BaseRBACControlller {
             response.sendRedirect("admin.login");
             return;
         }
-
-        List<SavingPackage_id> list = dao.getAllSavingPackageRequest();
+        String savings_idStr = request.getParameter("savings_id");
+        int savings_id = Integer.parseInt(savings_idStr);
+        dao.SavingPay(savings_id);
+        List<Saving> list = dao.getAllSaving();
         request.setAttribute("list", list);
-        request.getRequestDispatcher("saving/updateSaving.jsp").forward(request, response);
+        request.getRequestDispatcher("saving/SavingPay.jsp").forward(request, response);
     }
 
-    private String getCurrentDate() {
-        LocalDate currentDate = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        return currentDate.format(formatter);
-    }
 }
