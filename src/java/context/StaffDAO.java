@@ -46,7 +46,7 @@ public class StaffDAO extends DBContext<Staff> {
     // Method to send the password via email
     public void sendEmail(String recipientEmail, String password, String username) {
         String subject = "Your New Account Password";
-        String body = "Hello,\n\nYour account has been created successfully.Your username is: " + username + "  Your password is: " + password + "\n\nPlease change it upon your first login.";
+        String body = "Hello,\n\nYour account has been created successfully.\nYour username is: " + username + "\nYour password is: " + password + "\n\nPlease change it upon your first login.";
 
         // Set up email properties
         Properties properties = new Properties();

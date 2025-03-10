@@ -19,6 +19,7 @@ import java.sql.Date;
 import model.auth.Staff;
 import jakarta.mail.internet.InternetAddress;
 import context.CustomerDAO;
+import context.StaffDAO;
 
 /**
  *
@@ -27,6 +28,7 @@ import context.CustomerDAO;
 public class addCustomer extends BaseRBACControlller {
 
     private final CustomerDAO cdao = new CustomerDAO();
+    private final StaffDAO sdao = new StaffDAO();
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -165,8 +167,9 @@ public class addCustomer extends BaseRBACControlller {
                     // Hash it once here
                     String hashedPassword = cdao.toSHA1(plainPassword);
 
-                    cdao.registerCustomer(fullname, email, phonenumber, address, hashedPassword, gender);  // Thêm tham số gender
-                    request.setAttribute("suc", "Customer account created successfully! Default password is: " + plainPassword);
+                    cdao.registerCustomer(fullname, email, phonenumber, address, hashedPassword, gender);  
+                    sdao.sendEmail(email, plainPassword, email.substring(0, email.indexOf("@")));
+                    request.setAttribute("suc", "Customer account created successfully! Password sent via email.");
 
                     // Clear form after successful submission
                     request.removeAttribute("fullnameC");

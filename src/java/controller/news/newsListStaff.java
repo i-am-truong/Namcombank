@@ -5,6 +5,7 @@
 package controller.news;
 
 import context.NewsDAO;
+import controller.auth.BaseRBACControlller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -15,51 +16,25 @@ import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
 import model.Customer;
 import model.News;
+import model.auth.Staff;
 
 /**
  *
  * @author ADMIN
  */
-public class newsListStaff extends HttpServlet {
+public class newsListStaff extends BaseRBACControlller {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet newsListStaff</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet newsListStaff at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
+    private final NewsDAO dao = new NewsDAO();
+
+    @Override
+    protected void doAuthorizedPost(HttpServletRequest request, HttpServletResponse response, Staff account) throws ServletException, IOException {
+
+        int nId = Integer.parseInt(request.getParameter("nId"));
+        dao.deleteNews(nId);
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doAuthorizedGet(HttpServletRequest request, HttpServletResponse response, Staff account) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
 
         // Kiểm tra xem có session hay không
@@ -75,7 +50,6 @@ public class newsListStaff extends HttpServlet {
         if (session.getAttribute("staffId") != null) {
             staffId = (int) session.getAttribute("staffId");
         } else if (session.getAttribute("account") != null) {
-            model.auth.Staff account = (model.auth.Staff) session.getAttribute("account");
             staffId = account.getId();
         }
 
@@ -93,7 +67,6 @@ public class newsListStaff extends HttpServlet {
         System.out.println("Request type parameter: " + type);
         System.out.println("Request view parameter: " + view);
 
-        NewsDAO dao = new NewsDAO();
         ArrayList<News> n = new ArrayList<News>();
         int pages = 1;
 
@@ -114,8 +87,7 @@ public class newsListStaff extends HttpServlet {
                 pages = count == 0 ? 1 : (count % 4 != 0) ? (count / 4) + 1 : count / 4;
                 request.setAttribute("type", "News");
             }
-        }
-        // Nếu là role khác, hiển thị theo quyền
+        } // Nếu là role khác, hiển thị theo quyền
         else {
             if (view != null && view.equals("myNews") && staffId > 0) {
                 // Hiển thị tin cá nhân đã đăng (có thể chỉnh sửa/xóa)
@@ -159,31 +131,5 @@ public class newsListStaff extends HttpServlet {
         // Forward to JSP page
         request.getRequestDispatcher("news/newsListStaff.jsp").forward(request, response);
     }
-
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        NewsDAO dao = new NewsDAO();
-        int nId = Integer.parseInt(request.getParameter("nId"));
-        dao.deleteNews(nId);
-    }
-
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
 
 }

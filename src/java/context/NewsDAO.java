@@ -354,6 +354,37 @@ public class NewsDAO extends DBContext {
         return 0;
     }
 
+    /**
+     * Lấy danh sách 3 tin tức mới nhất đã được phê duyệt
+     * @return ArrayList<News> chứa 3 tin tức mới nhất
+     */
+    public ArrayList<News> getRecentNews() {
+        ArrayList<News> recentNews = new ArrayList<>();
+        try {
+            // Lấy 3 tin tức mới nhất đã phê duyệt (status = 1)
+            String sql = "SELECT TOP 3 * FROM News WHERE status = 1 ORDER BY updateDate DESC";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                recentNews.add(new News(
+                    rs.getInt(1),            // news_id
+                    rs.getString(3),         // title
+                    rs.getString(4),         // description
+                    rs.getInt(2),            // staff_id
+                    rs.getTimestamp(6),      // updateDate
+                    rs.getBoolean(5),        // status
+                    getAuthorByid(rs.getInt(2))  // authorName
+                ));
+            }
+            rs.close();
+            stm.close();
+        } catch (Exception e) {
+            System.out.println("Error in getRecentNews: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return recentNews;
+    }
+
     public static void main(String[] args) {
         NewsDAO dao = new NewsDAO();
         News news = new News("tesst", "tessssst", 1, new Date(), false);
