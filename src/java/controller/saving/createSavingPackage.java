@@ -116,7 +116,7 @@ public class createSavingPackage extends BaseRBACControlller {
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("error", "Có lỗi xảy ra, vui lòng thử lại.");
-            request.getRequestDispatcher("saving/listSavingPackages.jsp").forward(request, response);
+            request.getRequestDispatcher("Saving/listSavingPackages.jsp").forward(request, response);
 
         }
     }
@@ -128,7 +128,7 @@ public class createSavingPackage extends BaseRBACControlller {
             response.sendRedirect("admin.login");
             return;
         }
-        request.getRequestDispatcher("saving/createSavingPackage.jsp").forward(request, response);
+        request.getRequestDispatcher("Saving/createSavingPackage.jsp").forward(request, response);
     }
 
     private String getCurrentDate() {

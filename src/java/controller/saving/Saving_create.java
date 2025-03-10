@@ -84,7 +84,7 @@ public class Saving_create extends HttpServlet {
             request.setAttribute("currentDate", currentDate);
 
             request.setAttribute("list", list);
-            request.getRequestDispatcher("saving/Saving_create_type.jsp").forward(request, response);
+            request.getRequestDispatcher("Saving/Saving_create_type.jsp").forward(request, response);
         }
     }
 
@@ -126,7 +126,7 @@ public class Saving_create extends HttpServlet {
 
             request.setAttribute("message", "Yêu cầu của bạn đã được gửi. Vui lòng chờ xác nhận từ ngân hàng.");
 
-            request.getRequestDispatcher("saving/Saving_create_type.jsp").forward(request, response);
+            request.getRequestDispatcher("Saving/Saving_create_type.jsp").forward(request, response);
         }
     }
 

@@ -90,7 +90,7 @@ public class savingMoney extends BaseRBACControlller {
         }
         List<SavingRequest_id> list = dao.getAllSavingRequestMoneyPending();
         request.setAttribute("list", list);
-        request.getRequestDispatcher("saving/SavingMoney.jsp").forward(request, response);
+        request.getRequestDispatcher("Saving/SavingMoney.jsp").forward(request, response);
 
     }
 
@@ -105,7 +105,7 @@ public class savingMoney extends BaseRBACControlller {
         List<SavingRequest_id> list = dao.getAllSavingRequestMoneyPending();
 
         request.setAttribute("list", list);
-        request.getRequestDispatcher("saving/SavingMoney.jsp").forward(request, response);
+        request.getRequestDispatcher("Saving/SavingMoney.jsp").forward(request, response);
 
     }
 

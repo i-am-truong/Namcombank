@@ -69,7 +69,7 @@ public class managerSaving extends BaseRBACControlller {
         SavingDao dao = new SavingDao();
         List<SavingPackage_id> list = dao.getAllSavingPackage();
         request.setAttribute("list", list);
-        request.getRequestDispatcher("saving/managerSaving.jsp").forward(request, response);
+        request.getRequestDispatcher("Saving/managerSaving.jsp").forward(request, response);
     }
 
     @Override
@@ -82,7 +82,7 @@ public class managerSaving extends BaseRBACControlller {
         SavingDao dao = new SavingDao();
         List<SavingPackage_id> list = dao.getAllSavingPackage();
         request.setAttribute("list", list);
-        request.getRequestDispatcher("saving/managerSaving.jsp").forward(request, response);
+        request.getRequestDispatcher("Saving/managerSaving.jsp").forward(request, response);
     }
 
 }
