@@ -9,6 +9,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -170,6 +172,21 @@ public class SavingDao extends DBContext {
         return null;
     }
 
+    public int selectSaving_package_term_months(int saving_package_id) {
+        String query = "SELECT saving_package_term_months FROM SavingPackage WHERE saving_package_id=?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, saving_package_id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("saving_package_term_months");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
     public void insertSavingRequest(int customer_id, int saving_package_id, Double money, String created_at, double amount, String saving_package_name) {
         String query = "INSERT INTO SavingRequest "
                 + "(customer_id, saving_package_id, staff_id, money, saving_approval_status, "
@@ -316,18 +333,19 @@ public class SavingDao extends DBContext {
 
     }
 
-//select * from SavingRequest where staff_id is NULL and saving_date is null and money_approval_status ='pending'
-    public void acceptMoney(String money_approval_status, String saving_approval_date, int saving_request_id, int staff_id) {
+    public boolean acceptMoney(String money_approval_status, String saving_approval_date, int saving_request_id, int staff_id) {
         String query = "UPDATE SavingRequest SET money_approval_status = ?, saving_approval_date = ?, staff_id=? WHERE saving_request_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, money_approval_status);
             ps.setString(2, saving_approval_date);
             ps.setInt(3, staff_id);
             ps.setInt(4, saving_request_id);
-            ps.executeUpdate();
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;  // Trả về true nếu có ít nhất 1 dòng được cập nhật
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return false;  // Nếu có lỗi, trả về false
     }
 
     public void insertSavingPackage(int staff_id, String saving_package_name, String saving_package_description,
@@ -419,11 +437,109 @@ public class SavingDao extends DBContext {
         }
     }
 
-    public void AddSavingFinal(int customer_id, double amount, double interest_rate, int term_months, String opened_date, String status, int saving_request_id, int staff_id, String money_get_date) {
-        String query = "INSERT INTO Saving (customer_id, amount, interest_rate, term_months, opened_date, status, saving_request_id, staff_id, money_get_date) " +
-             "VALUES (1, 500000.00, 5.30, 6, '2025-03-10', 'active', 3, 1, '2025-09-10')";
+    public int selectCustomer_id(int saving_request_id) {
+        String query = "select customer_id  from SavingRequest where saving_request_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, saving_request_id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("customer_id");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
 
+    public double selectAmount(int saving_request_id) {
+        String query = "select amount  from SavingRequest where saving_request_id = ? ";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, saving_request_id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getDouble("amount");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    public int selectSaving_package_id(int saving_request_id) {
+        String query = "select saving_package_id  from SavingRequest where saving_request_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, saving_request_id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("saving_package_id");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    public String selectSaving_package_interest_rate(int saving_package_id) {
+        String query = "select saving_package_interest_rate  from SavingPackage where saving_package_id= ? ";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, saving_package_id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("saving_package_interest_rate");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public int selectStaff_id(int saving_request_id) {
+        String query = "select staff_id  from SavingRequest where saving_request_id =  ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, saving_request_id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("staff_id");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    public String select_openDate(int saving_request_id) {
+        String query = "select saving_approval_date  from SavingRequest where saving_request_id = ? ";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, saving_request_id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("saving_approval_date");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+//select staff_id  from SavingRequest where saving_request_id = 
+    public void AddSavingFinal(int customer_id, double amount, double interest_rate, int term_months, String opened_date, int saving_request_id, int staff_id, String money_get_date) {
+        String query = "INSERT INTO Saving (customer_id, amount, interest_rate, term_months, opened_date, status, saving_request_id, staff_id, money_get_date) "
+                + "VALUES (?, ?, ?, ?, ?, 'active', ?, ?, ?)";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, customer_id);
+            ps.setDouble(2, amount);
+            ps.setDouble(3, interest_rate);
+            ps.setInt(4, term_months);
+            ps.setString(5, opened_date);
+            ps.setInt(6, saving_request_id);
+            ps.setInt(7, staff_id);
+            ps.setString(8, money_get_date);
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -431,22 +547,13 @@ public class SavingDao extends DBContext {
     }
 
     public static void main(String[] args) throws ParseException {
-        String createdAt = "2025-03-10"; // Ngày gốc
-        int monthsToAdd = 6; // Số tháng muốn cộng
-
-        // Định dạng ngày
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        Date date = sdf.parse(createdAt);
-
-        // Sử dụng Calendar để cộng tháng
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        cal.add(Calendar.MONTH, monthsToAdd);
-
-        // Lấy ngày mới
-        String newDate = sdf.format(cal.getTime());
-
-        System.out.println("Ngày sau khi cộng: " + newDate);
+        int saving_request_id = 7;
+        String opened_date = "2025-02-02";
+        int term_months = 5;
+        LocalDate openedLocalDate = LocalDate.parse(opened_date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        LocalDate moneyGetLocalDate = openedLocalDate.plusMonths(term_months);
+        String money_get_date = moneyGetLocalDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        System.out.println(money_get_date);
     }
 
     @Override

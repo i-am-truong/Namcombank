@@ -113,7 +113,12 @@ public class Saving_create extends HttpServlet {
             double rate = dao.selectRate(saving_package_id) / 100.0; // Chuyển lãi suất từ số bình thường sang phần trăm
             int term = dao.selectTerm(saving_package_id); // Lấy số tháng kỳ hạn của gói tiết kiệm
             String name = dao.selectName(saving_package_id);
-            double amount = money + money * rate * term;
+            int saving_package_term_months = dao.selectSaving_package_term_months(saving_package_id);
+
+            double amount = 0; // Giá trị mặc định
+            if (saving_package_term_months > 0) {
+                amount = money + money * rate * term / 12;
+            }
 
             Integer customer_id = (Integer) session.getAttribute("customer_id");
 
@@ -123,7 +128,6 @@ public class Saving_create extends HttpServlet {
 
             request.getRequestDispatcher("saving/Saving_create_type.jsp").forward(request, response);
         }
-
     }
 
     /**
