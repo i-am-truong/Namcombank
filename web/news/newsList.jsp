@@ -146,27 +146,69 @@
                     <div class="col-lg-4">
                         <!-- Single -->
                         <div class="sidebar-widgets">
-                            <h4 class="title">Recent News</h4>
-                            <form actd="get">
-                                <ul>
-                                    <li><a href="#">Top 5 Savings Plans for 2025</a></li>
-                                    <li><a href="#">How to Apply for a Personal Loan Online</a></li>
-                                    <li><a href="#">5 Tips to Manage Your Loan Repayments Effectively UK</a></li>
-                                    <li><a href="#">Why Fixed Deposits are Still a Great Investment Option</a></li>
-                                </ul>
-                                <input type="search" name="search" placeholder="Search Here..">
+                            <h4 class="title">Search News</h4>
+                            <form action="newsList" method="get">
+                                <input type="search" name="search" placeholder="Search Here.." value="${param.search}">
                                 <button type="submit"><i class="fas fa-search"></i></button>
                             </form>
                         </div>
                         <!-- Single -->
 
-
+                        <!-- Recent News Section -->
+                        <div class="sidebar-widgets">
+                            <h4 class="title">Recent News</h4>
+                            <ul class="recent-post">
+                                <c:forEach items="${recentNews}" var="recent">
+                                    <li>
+                                        <div class="recent-news-item" style="display: flex; margin-bottom: 20px;">
+                                            <!-- Ảnh bên trái -->
+                                            <div class="recent-news-thumb" style="flex: 0 0 100px; margin-right: 15px;">
+                                                <a href="newsDetail?id=${recent.nId}">
+                                                    <img src="${recent.thumbnail}" alt="thumbnail"
+                                                         style="width: 100px; height: 75px; object-fit: cover; border-radius: 4px;">
+                                                </a>
+                                            </div>
+                                            <!-- Nội dung bên phải -->
+                                            <div class="recent-news-content" style="flex: 1;">
+                                                <!-- Tiêu đề ở phía trên -->
+                                                <h5 style="margin: 0 0 8px; font-size: 15px; font-weight: 600; line-height: 1.3;">
+                                                    <a href="newsDetail?id=${recent.nId}" style="color: #333; text-decoration: none;">
+                                                        ${recent.title}
+                                                    </a>
+                                                </h5>
+                                                <!-- Tên tác giả và thời gian ở phía dưới -->
+                                                <div class="meta" style="font-size: 12px; color: #777;">
+                                                    <span style="margin-right: 10px;">
+                                                        <i class="fas fa-user" style="margin-right: 3px;"></i>
+                                                        ${not empty recent.authorName ? recent.authorName : 'Unknown'}
+                                                    </span>
+                                                    <span>
+                                                        <i class="fas fa-calendar-alt" style="margin-right: 3px;"></i>
+                                                        <%
+                                                            Date recentDate = ((model.News)pageContext.getAttribute("recent")).getUpdateDate();
+                                                            if(recentDate != null) {
+                                                                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy, HH:mm");
+                                                                out.print(sdf.format(recentDate));
+                                                            } else {
+                                                                out.print("Unknown Date");
+                                                            }
+                                                        %>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </c:forEach>
+                                <c:if test="${empty recentNews}">
+                                    <li style="padding: 15px 0; text-align: center; color: #777;">No recent news available</li>
+                                </c:if>
+                            </ul>
+                        </div>
 
                         <!-- Single -->
-
-                        <!-- Single -->
-
+                        <!-- ...existing code... -->
                     </div>
+
                 </div>
             </div>
         </section>
