@@ -280,10 +280,6 @@
         <servlet-name>LoanRequestDetailServlet</servlet-name>
         <servlet-class>controller.loanrequest.LoanRequestDetailServlet</servlet-class>
     </servlet>
-    <servlet>
-        <servlet-name>LoanRequestServlet</servlet-name>
-        <servlet-class>controller.loanrequest.LoanRequestServlet</servlet-class>
-    </servlet>
     <servlet-mapping>
         <servlet-name>viewCustomerDetail</servlet-name>
         <url-pattern>/viewCustomerDetail</url-pattern>

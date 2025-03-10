@@ -137,32 +137,46 @@
                                     >
                             </div>
 
-                            <!--<div class="col-md-9">
+                            <div class="col-md-9">
                                 <label>Department:</label>
-                                <select class="form-control" name="did">
-                            <c:forEach var="dept" items="${depts}">
-                                <option value="${dept.id}" ${staff.dept.id == dept.id ? 'selected' : ''}>${dept.name}</option>
-                            </c:forEach>
-                        </select>
-                    </div>
+                                <select class="form-control" name="did" disabled>
+                                    <c:forEach var="dept" items="${depts}">
+                                        <option value="${dept.id}" ${staff.dept != null && staff.dept.id == dept.id ? 'selected' : ''}>
+                                            ${dept.name}
+                                        </option>
+                                    </c:forEach>
+                                </select>
+                                <!-- Trường ẩn để giữ giá trị khi gửi form -->
+                                <input type="hidden" name="did" value="${staff.dept != null ? staff.dept.id : ''}">
+                            </div>
 
-                    <div class="role-wrapper mt-3">
-                        <label class="role-title">Roles</label>
-                        <div class="role-options">
-                            <c:forEach var="role" items="${allRoles}">
-                                <div class="form-check">
-                                    <input type="checkbox" 
-                                           class="form-check-input" 
-                                           name="roleIds" 
-                                           value="${role.id}"
-                                <c:forEach var="staffRole" items="${staff.roles}">
-                                    <c:if test="${role.id eq staffRole.id}">checked</c:if>
-                                </c:forEach>>
-                         <label class="form-check-label">${role.name}</label>
-                     </div>
-                            </c:forEach>
-                        </div>
-                    </div>  -->
+
+                            <div class="role-wrapper mt-3">
+                                <label class="role-title">Roles</label>
+                                <div class="role-options">
+                                    <c:forEach var="role" items="${allRoles}">
+                                        <div class="form-check">
+                                            <input type="checkbox" 
+                                                   class="form-check-input" 
+                                                   name="roleIds" 
+                                                   value="${role.id}" 
+                                                   disabled
+                                                   <c:forEach var="staffRole" items="${staff.roles}">
+                                                       <c:if test="${role.id eq staffRole.id}">checked</c:if>
+                                                   </c:forEach>>
+                                            <label class="form-check-label">${role.name}</label>
+
+                                            <!-- Trường ẩn để gửi giá trị checkbox khi form submit -->
+                                            <c:forEach var="staffRole" items="${staff.roles}">
+                                                <c:if test="${role.id eq staffRole.id}">
+                                                    <input type="hidden" name="roleIds" value="${role.id}">
+                                                </c:if>
+                                            </c:forEach>
+                                        </div>
+                                    </c:forEach>
+                                </div>
+                            </div>
+
 
                             <!-- Upload Avatar Section -->
 
@@ -176,7 +190,6 @@
 
                             <div class="mt-3 text-left">
                                 <button class="btn btn-primary profile-button" type="submit">Save Profile</button>
-                                <a href="staffFilter">Back</a>
                             </div>
                         </form>
                     </div>
