@@ -1,16 +1,26 @@
 <%@ page import="java.util.List" %>
 <%@ page import="model.LoanPackage" %>
 <%@ page import="context.LoanPackageDAO" %>
+<%@ page import="model.Customer" %>
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Loan Package List</title>
         <script src="https://cdn.tailwindcss.com"></script>
     </head>
     <body class="bg-gray-100 text-gray-900">
         <div class="container mx-auto p-6">
             <h1 class="text-4xl font-bold text-center text-blue-600 mb-6">Loan Package List</h1>
+
+            <!-- Success message if redirected from successful loan request -->
+            <% if (request.getParameter("success") != null) { %>
+            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+                <strong class="font-bold">Success!</strong>
+                <span class="block sm:inline">Your loan request has been submitted successfully.</span>
+            </div>
+            <% } %>
 
             <div class="overflow-x-auto shadow-lg rounded-lg">
                 <table class="w-full bg-white rounded-lg shadow-md">
@@ -34,6 +44,8 @@
                             LoanPackageDAO dao = new LoanPackageDAO();
                             List<LoanPackage> loanPackages = dao.getAllLoanPackages();
 
+                            Customer customer = (Customer) session.getAttribute("customer"); // Get Customer from Session
+
                             for (LoanPackage loanPackage : loanPackages) {
                         %>
                         <tr class="border-b hover:bg-gray-100">
@@ -47,19 +59,26 @@
                                 <%= String.format("%,.0f", loanPackage.getMaxAmount()) %> VND
                             </td>
                             <td class="px-4 py-3 text-center font-semibold text-red-600">
-                                <%= String.format("%,.0f", loanPackage.getMinAmount()) %> VND 
+                                <%= String.format("%,.0f", loanPackage.getMinAmount()) %> VND
                             </td>
                             <td class="px-4 py-3 text-center"><%= loanPackage.getLoanTerm() %> months</td>
                             <td class="px-4 py-3 text-center"><%= loanPackage.getCreatedDate() %></td>
                             <td class="px-4 py-3 flex flex-col space-y-2">
                                 <a href="loanpackage-detail.jsp?id=<%= loanPackage.getPackageId() %>"
-                                   class="bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 transition">
+                                   class="text-center bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 transition">
                                     View Details
-                                </a>    
-                                <a href="../loanrequest/loan-request-create.jsp?packageId=<%= loanPackage.getPackageId() %>"
-                                   class="bg-green-500 text-white px-3 py-1 rounded-md hover:bg-green-600 transition">
+                                </a>
+                                <% if (customer != null) { %>  
+                                <a href="../create-loan-request?packageId=<%= loanPackage.getPackageId() %>&customerId=<%= customer.getCustomerId() %>"
+                                   class="text-center bg-green-500 text-white px-3 py-1 rounded-md hover:bg-green-600 transition">
                                     Get a loan
-                                </a>   
+                                </a>
+                                <% } else { %>
+                                <a href="../login" onclick="alert('Please log in to get a loan.')"
+                                   class="text-center bg-gray-400 text-white px-3 py-1 rounded-md cursor-not-allowed">
+                                    Get a loan
+                                </a>
+                                <% } %>
                             </td>
                         </tr>
                         <%
@@ -73,9 +92,8 @@
                 <a href="../Home"
                    class="bg-gray-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-green-600 transition">
                     Back
-                </a> 
+                </a>
             </div>
-
         </div>
     </body>
 </html>

@@ -80,6 +80,24 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
         return loanRequests;
     }
 
+    public boolean insertLoanRequest(int customerId, int packageId, double amount, Integer assetId, String status) throws SQLException {
+        String query = "INSERT INTO LoanRequests (customer_id, package_id, amount, request_date, status, asset_id) VALUES (?, ?, ?, GETDATE(), 'Pending', ?)";
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, customerId);
+            statement.setInt(2, packageId);
+            statement.setDouble(3, amount);
+            statement.setString(4, status);
+            if (assetId != null) {
+                statement.setInt(5, assetId);
+            } else {
+                statement.setNull(5, java.sql.Types.INTEGER);
+            }
+            int rowsInserted = statement.executeUpdate();
+            return rowsInserted > 0;
+        }
+    }
+
     @Override
     public void insert(LoanRequest loan) {
         String sql = "INSERT INTO LoanRequests (customer_id, package_id, amount, request_date, status) VALUES (?, ?, ?, GETDATE(), 'pending')";
@@ -141,7 +159,11 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
     @Override
     public ArrayList<LoanRequest> list() {
         ArrayList<LoanRequest> list = new ArrayList<>();
-        String sql = "SELECT * FROM LoanRequests";
+        String sql = "SELECT r.*, c.fullname, p.package_name "
+                + "FROM LoanRequests r "
+                + "INNER JOIN Customer c ON r.customer_id = c.customer_id "
+                + "INNER JOIN LoanPackages p ON r.package_id = p.package_id";
+
         try (PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 LoanRequest loan = new LoanRequest();
@@ -151,6 +173,17 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
                 loan.setAmount(rs.getDouble("amount"));
                 loan.setRequestDate(rs.getDate("request_date"));
                 loan.setStatus(rs.getString("status"));
+
+                Customer customer = new Customer();
+                customer.setCustomerId(rs.getInt("customer_id"));
+                customer.setFullname(rs.getString("fullname"));
+                loan.setCustomer(customer);
+
+                LoanPackage loanPackage = new LoanPackage();
+                loanPackage.setPackageId(rs.getInt("package_id"));
+                loanPackage.setPackageName(rs.getString("package_name"));
+                loan.setLoanPackage(loanPackage);
+                
                 list.add(loan);
             }
         } catch (SQLException e) {
@@ -187,7 +220,7 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
             String requestDateFrom, String requestDateTo,
             String approvedBy, String approvalDateFrom, String approvalDateTo,
             Boolean hasAsset) {
-        
+
         ArrayList<LoanRequest> loanRequests = new ArrayList<>();
         StringBuilder sql = new StringBuilder(
                 "SELECT r.request_id, r.staff_id, r.package_id, r.customer_id, r.request_date, r.amount, "
@@ -307,7 +340,7 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
                     if (assetIdObj != null) {
                         Asset asset = new Asset();
                         asset.setAssetId(rs.getInt("asset_id"));
-                        
+
                         String assetName = rs.getString("asset_name");
                         if (assetName != null) {
                             asset.setAssetName(assetName);
@@ -315,13 +348,13 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
                             asset.setAssetValue(rs.getBigDecimal("asset_value"));
                             asset.setDescription(rs.getString("description"));
                         }
-                        
+
                         loanRequest.setAsset(asset);
                     }
 
                     loanRequests.add(loanRequest);
                     count++;
-                    
+
                 } catch (Exception e) {
                     System.err.println("Lỗi khi mapping loan request: " + e.getMessage());
                     e.printStackTrace();
@@ -329,7 +362,7 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
             }
 
             System.out.println("Tìm thấy " + count + " yêu cầu vay");
-            
+
         } catch (SQLException e) {
             System.err.println("Lỗi SQL: " + e.getMessage());
             e.printStackTrace();
@@ -407,8 +440,10 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
      * Helper method để chuyển đổi mã trạng thái thành văn bản hiển thị
      */
     private String getStatusDisplay(String status) {
-        if (status == null) return "";
-        
+        if (status == null) {
+            return "";
+        }
+
         switch (status) {
             case "Pending":
                 return "Chờ duyệt";
@@ -427,8 +462,7 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
     public int countAllLoanRequests() {
         try {
             String query = "SELECT COUNT(*) FROM LoanRequests";
-            try (PreparedStatement stmt = connection.prepareStatement(query);
-                 ResultSet rs = stmt.executeQuery()) {
+            try (PreparedStatement stmt = connection.prepareStatement(query); ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     return rs.getInt(1);
                 }
@@ -485,10 +519,9 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     LoanRequest loanRequest = new LoanRequest();
-                    
+
                     // Ánh xạ thông tin từ ResultSet vào đối tượng LoanRequest
                     // Tương tự như trong phương thức searchLoanRequests
-                    
                     // Thiết lập thông tin cơ bản
                     loanRequest.setRequestId(rs.getInt("request_id"));
                     loanRequest.setCustomerId(rs.getInt("customer_id"));
@@ -500,13 +533,13 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
                     loanRequest.setApprovalDate(rs.getDate("approval_date"));
                     loanRequest.setApprovedBy(rs.getString("approved_by"));
                     loanRequest.setNotes(rs.getString("approved_note"));
-                    
+
                     // Thiết lập thông tin Staff
                     Staff staff = new Staff();
                     staff.setId(rs.getInt("staff_id"));
                     staff.setFullname(rs.getString("staff_name"));
                     loanRequest.setStaff(staff);
-                    
+
                     // Thiết lập thông tin Customer
                     Customer customer = new Customer();
                     customer.setCustomerId(rs.getInt("customer_id"));
@@ -515,7 +548,7 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
                     customer.setPhonenumber(rs.getString("phonenumber"));
                     customer.setEmail(rs.getString("email"));
                     loanRequest.setCustomer(customer);
-                    
+
                     // Thiết lập thông tin LoanPackage
                     LoanPackage loanPackage = new LoanPackage();
                     loanPackage.setPackageId(rs.getInt("package_id"));
@@ -523,7 +556,7 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
                     loanPackage.setInterestRate(rs.getBigDecimal("interest_rate"));
                     loanPackage.setDescription(rs.getString("package_description"));
                     loanRequest.setLoanPackage(loanPackage);
-                    
+
                     // Thiết lập thông tin Asset (nếu có)
                     Object assetIdObj = rs.getObject("asset_id");
                     if (assetIdObj != null) {
@@ -535,7 +568,7 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
                         asset.setDescription(rs.getString("description"));
                         loanRequest.setAsset(asset);
                     }
-                    
+
                     return loanRequest;
                 }
             }
@@ -543,7 +576,7 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
             System.err.println("Lỗi khi lấy chi tiết yêu cầu vay: " + e.getMessage());
             e.printStackTrace();
         }
-        
+
         return null;
     }
 
@@ -556,10 +589,10 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
                 + "WHERE request_id = ?";
 
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            
+
             stmt.setString(1, notes);
             stmt.setInt(1, requestId);
-            
+
             int rowsAffected = stmt.executeUpdate();
             return rowsAffected > 0;
         } catch (SQLException e) {
@@ -581,7 +614,7 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
             stmt.setInt(1, staffId);
             stmt.setString(2, notes);
             stmt.setInt(3, requestId);
-            
+
             int rowsAffected = stmt.executeUpdate();
             return rowsAffected > 0;
         } catch (SQLException e) {
@@ -619,7 +652,7 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
                     asset.setCreatedDate(rs.getTimestamp("created_date"));
                     asset.setApprovedDate(rs.getTimestamp("approved_date"));
                     asset.setNotes(rs.getString("note"));
-                    
+
                     assets.add(asset);
                 }
             }
@@ -627,8 +660,8 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
             System.err.println("Lỗi khi lấy danh sách tài sản của khách hàng: " + e.getMessage());
             e.printStackTrace();
         }
-        
+
         return assets;
     }
-    
+
 }

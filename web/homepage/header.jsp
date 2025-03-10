@@ -125,7 +125,7 @@
                                 <select class="form-select" name="loanPackages" style="height: 40px;">
                                     <option value="0" selected>All Loan Packages</option>
                                     <c:forEach var="loan" items="${loanPackages}">
-                                        <option value="${loan.packageId}">${loan.packageName}</option>
+                                        <option value="${loan.getPackageId()}">${loan.getPackageName()}</option>
                                     </c:forEach>
                                 </select>
                                 <input type="search" name="searchKeyword" placeholder="Search keyword here..." style="height: 40px; color: #0D4F2F">
@@ -156,8 +156,8 @@
                                 <span class="dropdown-menu" id="dropdownMenu">
                                     <a href="#">&nbsp;&nbsp;$${sessionScope.customer.balance}</a>
                                     <a href="userProfile"><i class="fas fa-user"></i>&nbsp;&nbsp;Show profile</a>
-                                    <a href="orderHistory">
-                                        <i class="fas fa-shopping-bag"></i>&nbsp;&nbsp;History Order
+                                    <a href="customer-loan-requests">
+                                        <i class="fas fa-shopping-bag"></i>&nbsp;&nbsp;History Request
                                     </a>
                                     <a href="logOut"><i class="fas fa-sign-out-alt"></i>&nbsp;&nbsp;Logout</a>
 
