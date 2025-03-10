@@ -80,21 +80,35 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
         return loanRequests;
     }
 
-    public boolean insertLoanRequest(int customerId, int packageId, double amount, Integer assetId, String status) throws SQLException {
-        String query = "INSERT INTO LoanRequests (customer_id, package_id, amount, request_date, status, asset_id) VALUES (?, ?, ?, GETDATE(), 'Pending', ?)";
+    public boolean insertLoanRequest(LoanRequest loanRequest) {
+        String sql = "INSERT INTO LoanRequests "
+                + "(staff_id, package_id, customer_id, request_date, amount, status, start_date, end_date, approval_date, approved_by, approved_note) "
+                + "VALUES (?, ?, ?, ?, ?, 'pending', ?, ?, ?, ?, ?)";
 
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, customerId);
-            statement.setInt(2, packageId);
-            statement.setDouble(3, amount);
-            statement.setString(4, status);
-            if (assetId != null) {
-                statement.setInt(5, assetId);
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+            stmt.setInt(1, loanRequest.getStaffId());
+            stmt.setInt(2, loanRequest.getPackageId());
+            stmt.setInt(3, loanRequest.getCustomerId());
+            stmt.setDate(4, new java.sql.Date(loanRequest.getRequestDate().getTime()));
+            stmt.setDouble(5, loanRequest.getAmount());
+            stmt.setString(6, loanRequest.getStart_date());
+            stmt.setString(7, loanRequest.getEnd_date());
+
+            if (loanRequest.getApprovalDate() != null) {
+                stmt.setDate(8, new java.sql.Date(loanRequest.getApprovalDate().getTime()));
             } else {
-                statement.setNull(5, java.sql.Types.INTEGER);
+                stmt.setNull(8, java.sql.Types.DATE);
             }
-            int rowsInserted = statement.executeUpdate();
-            return rowsInserted > 0;
+
+            stmt.setString(9, loanRequest.getApprovedBy());
+            stmt.setString(10, loanRequest.getNotes());
+
+            return stmt.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
         }
     }
 
@@ -105,6 +119,7 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
             ps.setInt(1, loan.getCustomerId());
             ps.setInt(2, loan.getPackageId());
             ps.setDouble(3, loan.getAmount());
+            ps.setString(4, loan.getStatus());
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -159,16 +174,17 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
     @Override
     public ArrayList<LoanRequest> list() {
         ArrayList<LoanRequest> list = new ArrayList<>();
-        String sql = "SELECT r.*, c.fullname, p.package_name "
-                + "FROM LoanRequests r "
-                + "INNER JOIN Customer c ON r.customer_id = c.customer_id "
-                + "INNER JOIN LoanPackages p ON r.package_id = p.package_id";
+        String sql = "SELECT r.*, c.fullname AS customer_name, p.package_name, \n"
+                + "       COALESCE(s.fullname, 'Not yet') AS approved_by\n"
+                + "FROM LoanRequests r\n"
+                + "INNER JOIN Customer c ON r.customer_id = c.customer_id\n"
+                + "INNER JOIN LoanPackages p ON r.package_id = p.package_id\n"
+                + "LEFT JOIN Staff s ON s.staff_id = r.staff_id;";
 
         try (PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 LoanRequest loan = new LoanRequest();
                 loan.setRequestId(rs.getInt("request_id"));
-                loan.setCustomerId(rs.getInt("customer_id"));
                 loan.setPackageId(rs.getInt("package_id"));
                 loan.setAmount(rs.getDouble("amount"));
                 loan.setRequestDate(rs.getDate("request_date"));
@@ -176,14 +192,20 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
 
                 Customer customer = new Customer();
                 customer.setCustomerId(rs.getInt("customer_id"));
-                customer.setFullname(rs.getString("fullname"));
+                customer.setFullname(rs.getString("customer_name"));
                 loan.setCustomer(customer);
 
                 LoanPackage loanPackage = new LoanPackage();
                 loanPackage.setPackageId(rs.getInt("package_id"));
                 loanPackage.setPackageName(rs.getString("package_name"));
                 loan.setLoanPackage(loanPackage);
-                
+
+                Staff staff = new Staff();
+                staff.setId(rs.getInt("staff_id"));
+                staff.setFullname(rs.getString("approved_by"));
+
+                loan.setStaff(staff);
+
                 list.add(loan);
             }
         } catch (SQLException e) {
