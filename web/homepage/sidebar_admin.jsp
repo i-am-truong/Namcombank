@@ -82,8 +82,8 @@
             <a class="nav-link sub-menu" href="managerSaving">
                 <i class="fas fa-fw fa-table"></i> Manager Saving
             </a>
-            <a class="nav-link sub-menu" href="repaymentSchedule">
-                <i class="fas fa-fw fa-table"></i> ?
+            <a class="nav-link sub-menu" href="updateSaving">
+                <i class="fas fa-fw fa-table"></i> Request
             </a>
             <a class="nav-link sub-menu" href="savingInterest">
                 <i class="fas fa-fw fa-table"></i> ?

@@ -50,7 +50,7 @@
             <%@include file="../homepage/sidebar_admin.jsp" %>
 
             <div class="container">
-                <h2 class="text-center">Customer Saving Requests</h2>
+                <h2 class="text-center">Customer Saving Money</h2>
                 <table class="table">
                     <thead>
                         <tr>
@@ -62,7 +62,7 @@
                             <th>Approval Status</th>
                             <th>Created At</th>
                             <th>Approval Date</th>
-                            <th>Saving Date</th>
+                            <!--<th>Saving Date</th>-->
                             <th>Staff ID</th>
                             <th>Money status</th>
                             <th>Amount</th>
@@ -80,7 +80,7 @@
                                 <td>${sr.saving_approval_status}</td>
                                 <td>${sr.created_at}</td>
                                 <td>${sr.saving_approval_date}</td>
-                                <td>${sr.saving_date}</td>
+                                <!--<td>$/{sr.saving_date}</td>-->
                                 <td>${sr.staff_id}</td>
                                 <td>${sr.money_approval_status}</td>
                                 <td>${String.format("%.2f", sr.amount)}</td>

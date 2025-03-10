@@ -70,10 +70,10 @@ public class savingMoney extends BaseRBACControlller {
         int saving_request_id = Integer.parseInt(saving_request_idStr);
         String money_approval_status = request.getParameter("money_approval_status");
 
-        String saving_date = getCurrentDate();
+        String saving_approval_date = getCurrentDate();
         Staff staff = (Staff) request.getSession().getAttribute("account");
         int staff_id = staff.getId();
-        dao.acceptMoney(money_approval_status, saving_date, saving_request_id, staff_id);
+        dao.acceptMoney(money_approval_status, saving_approval_date, saving_request_id, staff_id);
 
         List<SavingRequest_id> list = dao.getAllSavingRequestMoneyPending();
         request.setAttribute("list", list);

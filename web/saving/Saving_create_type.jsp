@@ -47,8 +47,6 @@
 
             <input type="date" name="created_at" id="created_at" value="${currentDate}" readonly>
 
-            <input type="text" id="saving_package_name" name="saving_package_name" hidden>
-
             <button type="submit">Gửi yêu cầu</button>
 
             <%-- In thông báo nếu có --%>

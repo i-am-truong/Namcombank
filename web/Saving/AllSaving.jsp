@@ -60,7 +60,7 @@
 
         <div class="button-container">    
             <button onclick="showPage('withdrawable')">Gói Không Rút Trước Hạn</button>
-            <button onclick="showPage('nonWithdrawable')">Gói Rút Trước Hạn</button>
+            <button onclick="showPage('nonWithdrawable')">Gói Linh Hoạt</button>
 
             <button onclick="showPage('Saving_create')">Tạo Gói Tiết Kiệm</button>
         </div>

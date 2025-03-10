@@ -314,6 +314,10 @@
         <servlet-name>LoanPackageDetail</servlet-name>
         <servlet-class>controller.loanpackage.LoanPackageDetail</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>updateSaving</servlet-name>
+        <servlet-class>controller.saving.updateSaving</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>viewCustomerDetail</servlet-name>
         <url-pattern>/viewCustomerDetail</url-pattern>
@@ -624,6 +628,10 @@
     <servlet-mapping>
         <servlet-name>createSavingPackage</servlet-name>
         <url-pattern>/createSavingPackage</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>updateSaving</servlet-name>
+        <url-pattern>/updateSaving</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

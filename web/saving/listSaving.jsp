@@ -62,7 +62,7 @@
                             <th>Approval Status</th>
                             <th>Created At</th>
                             <th>Approval Date</th>
-                            <th>Saving Date</th>
+                            <!--<th>Saving Date</th>-->
                             <th>Staff ID</th>
                             <th>Amount</th>
                             <th>Thao tác</th>
@@ -79,7 +79,7 @@
                                 <td>${sr.saving_approval_status}</td>
                                 <td>${sr.created_at}</td>
                                 <td>${sr.saving_approval_date}</td>
-                                <td>${sr.saving_date}</td>
+                                <!--<td>$/{sr.saving_date}</td>-->
                                 <td>${sr.staff_id}</td>
                                 <td>${String.format("%.2f", sr.amount)}</td>
                                 <td>

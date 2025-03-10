@@ -18,7 +18,6 @@ public class SavingRequest_id {
     private String saving_approval_status;
     private String saving_approval_date;
     private String money_approval_status;
-    private String saving_date;
     private Double amount;
     private String created_at;
     private String saving_package_name;
@@ -26,7 +25,7 @@ public class SavingRequest_id {
     public SavingRequest_id() {
     }
 
-    public SavingRequest_id(int saving_request_id, int customer_id, int saving_package_id, Integer staff_id, Double money, String saving_approval_status, String saving_approval_date, String money_approval_status, String saving_date, Double amount, String created_at, String saving_package_name) {
+    public SavingRequest_id(int saving_request_id, int customer_id, int saving_package_id, Integer staff_id, Double money, String saving_approval_status, String saving_approval_date, String money_approval_status, Double amount, String created_at, String saving_package_name) {
         this.saving_request_id = saving_request_id;
         this.customer_id = customer_id;
         this.saving_package_id = saving_package_id;
@@ -35,7 +34,6 @@ public class SavingRequest_id {
         this.saving_approval_status = saving_approval_status;
         this.saving_approval_date = saving_approval_date;
         this.money_approval_status = money_approval_status;
-        this.saving_date = saving_date;
         this.amount = amount;
         this.created_at = created_at;
         this.saving_package_name = saving_package_name;
@@ -103,14 +101,6 @@ public class SavingRequest_id {
 
     public void setMoney_approval_status(String money_approval_status) {
         this.money_approval_status = money_approval_status;
-    }
-
-    public String getSaving_date() {
-        return saving_date;
-    }
-
-    public void setSaving_date(String saving_date) {
-        this.saving_date = saving_date;
     }
 
     public Double getAmount() {

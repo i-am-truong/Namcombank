@@ -7,7 +7,11 @@ package context;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import model.SavingPackage;
 import model.SavingPackage_id;
@@ -151,11 +155,26 @@ public class SavingDao extends DBContext {
         return -1;
     }
 
+    public String selectName(int saving_package_id) {
+        String query = "SELECT saving_package_name FROM SavingPackage WHERE saving_package_id=?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, saving_package_id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("saving_package_name");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public void insertSavingRequest(int customer_id, int saving_package_id, Double money, String created_at, double amount, String saving_package_name) {
         String query = "INSERT INTO SavingRequest "
                 + "(customer_id, saving_package_id, staff_id, money, saving_approval_status, "
-                + "saving_approval_date, money_approval_status, saving_date, amount, created_at, saving_package_name) "
-                + "VALUES (?, ?, NULL, ?, 'pending', NULL, 'pending', NULL, ?, ?, ?)";
+                + "saving_approval_date, money_approval_status, amount, created_at, saving_package_name) "
+                + "VALUES (?, ?, NULL, ?, 'pending', NULL, 'pending', ?, ?, ?)";
 
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, customer_id);
@@ -165,19 +184,30 @@ public class SavingDao extends DBContext {
             ps.setString(5, created_at);
             ps.setString(6, saving_package_name);
 
-            int rowsInserted = ps.executeUpdate(); // Đúng cho INSERT
+            int rowsInserted = ps.executeUpdate();
             if (rowsInserted > 0) {
-                return;
+                System.out.println("Insert thành công!");
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
-    //SELECT * FROM SavingRequest WHERE staff_id IS NULL AND saving_approval_date IS NULL AND saving_date IS NULL;
 
+//     <td>${sr.saving_request_id}</td>
+//                                <td>${sr.saving_package_id}</td>
+//                                <td>${sr.customer_id}</td>
+//                                <td>${sr.saving_package_name}</td>
+//                                <td>${String.format("%.2f", sr.money)}</td>
+//                                <td>${sr.saving_approval_status}</td>
+//                                <td>${sr.created_at}</td>
+//                                <td>${sr.saving_approval_date}</td>
+//                                <td>${sr.saving_date}</td>
+//                                <td>${sr.staff_id}</td>
+//                                <td>${String.format("%.2f", sr.amount)}</td>
+    //SELECT * FROM SavingRequest WHERE staff_id IS NULL AND saving_approval_date IS NULL AND saving_date IS NULL;
     public List<SavingRequest_id> getAllSavingRequestPending() {
         List<SavingRequest_id> list = new ArrayList<>();
-        String query = "SELECT * FROM SavingRequest WHERE staff_id IS NULL AND saving_approval_date IS NULL AND saving_date IS NULL;";
+        String query = "SELECT * FROM SavingRequest WHERE staff_id IS NULL AND saving_approval_date IS NULL AND money_approval_status='pending';";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -190,7 +220,6 @@ public class SavingDao extends DBContext {
                 sr.setSaving_approval_status(rs.getString("saving_approval_status")); // Bổ sung
                 sr.setSaving_approval_date(rs.getString("saving_approval_date"));
                 sr.setMoney_approval_status(rs.getString("money_approval_status")); // Bổ sung
-                sr.setSaving_date(rs.getString("saving_date"));
                 sr.setAmount(rs.getDouble("amount")); // Bổ sung
                 sr.setCreated_at(rs.getString("created_at")); // Nếu `created_at` có time, dùng `Timestamp`
                 sr.setSaving_package_name(rs.getString("saving_package_name")); // Bổ sung
@@ -204,7 +233,7 @@ public class SavingDao extends DBContext {
 
     }
 
-    public void acceptSaving(String saving_approval_status, String saving_approval_date, int saving_request_id) {
+    public void acceptSavingRequest(String saving_approval_status, String saving_approval_date, int saving_request_id) {
         String query = "UPDATE SavingRequest SET saving_approval_status = ?, saving_approval_date = ? WHERE saving_request_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, saving_approval_status);
@@ -217,7 +246,7 @@ public class SavingDao extends DBContext {
     }
 
     public List<SavingPackage_id> getAllSavingPackage() {
-        String query = "select * from SavingPackage";
+        String query = "select * from SavingPackage where saving_package_status='active' and saving_package_approval_status='approved'";
         List<SavingPackage_id> list = new ArrayList<>();
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ResultSet rs = ps.executeQuery();
@@ -261,7 +290,7 @@ public class SavingDao extends DBContext {
 
     public List<SavingRequest_id> getAllSavingRequestMoneyPending() {
         List<SavingRequest_id> list = new ArrayList<>();
-        String query = "select * from SavingRequest where staff_id is NULL and saving_date is null and money_approval_status ='pending' and saving_approval_status='approved';";
+        String query = "select * from SavingRequest where staff_id is NULL and money_approval_status ='pending' and saving_approval_status='approved';";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -274,7 +303,6 @@ public class SavingDao extends DBContext {
                 sr.setSaving_approval_status(rs.getString("saving_approval_status")); // Bổ sung
                 sr.setSaving_approval_date(rs.getString("saving_approval_date"));
                 sr.setMoney_approval_status(rs.getString("money_approval_status")); // Bổ sung
-                sr.setSaving_date(rs.getString("saving_date"));
                 sr.setAmount(rs.getDouble("amount")); // Bổ sung
                 sr.setCreated_at(rs.getString("created_at"));
                 sr.setSaving_package_name(rs.getString("saving_package_name")); // Bổ sung
@@ -289,11 +317,11 @@ public class SavingDao extends DBContext {
     }
 
 //select * from SavingRequest where staff_id is NULL and saving_date is null and money_approval_status ='pending'
-    public void acceptMoney(String money_approval_status, String saving_date, int saving_request_id, int staff_id) {
-        String query = "UPDATE SavingRequest SET money_approval_status = ?, saving_date = ?, staff_id=? WHERE saving_request_id = ?";
+    public void acceptMoney(String money_approval_status, String saving_approval_date, int saving_request_id, int staff_id) {
+        String query = "UPDATE SavingRequest SET money_approval_status = ?, saving_approval_date = ?, staff_id=? WHERE saving_request_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, money_approval_status);
-            ps.setString(2, saving_date);
+            ps.setString(2, saving_approval_date);
             ps.setInt(3, staff_id);
             ps.setInt(4, saving_request_id);
             ps.executeUpdate();
@@ -339,30 +367,86 @@ public class SavingDao extends DBContext {
         }
     }
 
-    public static void main(String[] args) {
-        SavingDao dao = new SavingDao();
+    public List<SavingPackage_id> getAllSavingPackageRequest() {
+        String query = "select * from SavingPackage where saving_package_status='Inactive' and saving_package_approval_status='pending'";
+        List<SavingPackage_id> list = new ArrayList<>();
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ResultSet rs = ps.executeQuery();
 
-        int staff_id = 1;
-        String saving_package_name = "Premium Savings";
-        String saving_package_description = "High-interest savings package";
-        String saving_package_created_at = "2025-03-06";
-        String saving_package_updated_at = "2025-03-06";
-        double saving_package_interest_rate = 5.5;
-        int saving_package_term_months = 12;
-        double saving_package_min_deposit = 5000.0;
-        double saving_package_max_deposit = 50000.0;
-        String saving_package_status = "Active";
-        int saving_package_withdrawable = 1;
-        String saving_package_approval_status = "Pending";
+            while (rs.next()) {
 
-        dao.insertSavingPackage(
-                staff_id, saving_package_name, saving_package_description,
-                saving_package_created_at, saving_package_updated_at,
-                saving_package_interest_rate, saving_package_term_months,
-                saving_package_min_deposit, saving_package_max_deposit,
-                saving_package_status, saving_package_withdrawable,
-                saving_package_approval_status
-        );
+                SavingPackage_id saving = new SavingPackage_id();
+                saving.setSaving_package_id(rs.getInt("saving_package_id"));
+                saving.setStaff_id(rs.getInt("staff_id"));
+                saving.setSaving_package_name(rs.getString("saving_package_name"));
+                saving.setSaving_package_description(rs.getString("saving_package_description"));
+                saving.setSaving_package_interest_rate(rs.getDouble("saving_package_interest_rate"));
+                saving.setSaving_package_term_months(rs.getInt("saving_package_term_months"));
+                saving.setSaving_package_min_deposit(rs.getDouble("saving_package_min_deposit"));
+                saving.setSaving_package_max_deposit(rs.getObject("saving_package_max_deposit") != null ? rs.getDouble("saving_package_max_deposit") : null);
+                saving.setSaving_package_status(rs.getString("saving_package_status"));
+                saving.setSaving_package_created_at(rs.getString("saving_package_created_at"));
+                saving.setSaving_package_updated_at(rs.getString("saving_package_updated_at"));
+                saving.setSaving_withdrawable(rs.getBoolean("saving_package_withdrawable"));
+                saving.setSaving_package_approval_status(rs.getString("saving_package_approval_status"));
+                list.add(saving);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public void acceptSavingPackageRequest(String saving_package_updated_at, int saving_package_id) {
+        String query = "UPDATE SavingPackage SET saving_package_status = 'Active', saving_package_approval_status = 'approved',saving_package_updated_at=? WHERE saving_package_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, saving_package_updated_at);
+            ps.setInt(2, saving_package_id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void rejectSavingPackageRequest(String saving_package_updated_at, int saving_package_id) {
+        String query = "UPDATE SavingPackage SET saving_package_status = 'Active', saving_package_approval_status = 'pending',saving_package_updated_at=? WHERE saving_package_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, saving_package_updated_at);
+            ps.setInt(2, saving_package_id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void AddSavingFinal(int customer_id, double amount, double interest_rate, int term_months, String opened_date, String status, int saving_request_id, int staff_id, String money_get_date) {
+        String query = "INSERT INTO Saving (customer_id, amount, interest_rate, term_months, opened_date, status, saving_request_id, staff_id, money_get_date) " +
+             "VALUES (1, 500000.00, 5.30, 6, '2025-03-10', 'active', 3, 1, '2025-09-10')";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void main(String[] args) throws ParseException {
+        String createdAt = "2025-03-10"; // Ngày gốc
+        int monthsToAdd = 6; // Số tháng muốn cộng
+
+        // Định dạng ngày
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = sdf.parse(createdAt);
+
+        // Sử dụng Calendar để cộng tháng
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.MONTH, monthsToAdd);
+
+        // Lấy ngày mới
+        String newDate = sdf.format(cal.getTime());
+
+        System.out.println("Ngày sau khi cộng: " + newDate);
     }
 
     @Override

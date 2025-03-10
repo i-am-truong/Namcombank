@@ -106,7 +106,6 @@
                     <div >
                         <label for="saving_package_status" class="form-label">Status</label>
                         <select id="saving_package_status" name="saving_package_status" class="form-control" required>
-                            <option value="Active">Active</option>
                             <option value="Inactive">Inactive</option>
                         </select>
                     </div>
@@ -115,8 +114,7 @@
                         <label for="saving_package_approval_status" class="form-label">Approval Status</label>
                         <select id="saving_package_approval_status" name="saving_package_approval_status" class="form-control" required>
                             <option value="pending">Pending</option>
-                            <option value="approved">Approved</option>
-                            <option value="rejected">Rejected</option>
+
                         </select>
                     </div>
 

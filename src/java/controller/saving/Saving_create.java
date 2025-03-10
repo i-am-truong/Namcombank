@@ -15,6 +15,7 @@ import jakarta.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import model.Customer;
 import model.SavingPackage_id;
 
 /**
@@ -103,19 +104,20 @@ public class Saving_create extends HttpServlet {
             response.sendRedirect("login");
             return;
         } else {
-            Integer customer_id = Integer.parseInt(session.getAttribute("customer_id").toString());
+
             Integer saving_package_id = Integer.parseInt(request.getParameter("saving_package_id"));
             double money = Double.parseDouble(request.getParameter("money"));
             String created_at = request.getParameter("created_at");
-            String saving_package_name = request.getParameter("saving_package_name");
             SavingDao dao = new SavingDao();
 
             double rate = dao.selectRate(saving_package_id) / 100.0; // Chuyển lãi suất từ số bình thường sang phần trăm
             int term = dao.selectTerm(saving_package_id); // Lấy số tháng kỳ hạn của gói tiết kiệm
+            String name = dao.selectName(saving_package_id);
+            double amount = money + money * rate * term;
 
-            double amount = money * Math.pow(1 + (rate / 12), term);
+            Integer customer_id = (Integer) session.getAttribute("customer_id");
 
-            dao.insertSavingRequest(customer_id, saving_package_id, money, created_at, amount, saving_package_name);
+            dao.insertSavingRequest(customer_id, saving_package_id, money, created_at, amount, name);
 
             request.setAttribute("message", "Yêu cầu của bạn đã được gửi. Vui lòng chờ xác nhận từ ngân hàng.");
 
