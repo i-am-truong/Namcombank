@@ -2,27 +2,30 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controller.saving;
+package controller.feedback;
 
-import context.SavingDao;
+import context.SavingFeedbackDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import model.Customer;
-import model.SavingPackage_id;
+import jakarta.servlet.http.Part;
+import java.io.InputStream;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 /**
  *
  * @author admin
  */
-public class Saving_create extends HttpServlet {
+@MultipartConfig
+public class SavingFeedback extends HttpServlet {
+
+    private final SavingFeedbackDAO dao = new SavingFeedbackDAO();
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -41,10 +44,10 @@ public class Saving_create extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet Saving_create</title>");
+            out.println("<title>Servlet SavingFeedback</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet Saving_create at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet SavingFeedback at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -66,26 +69,11 @@ public class Saving_create extends HttpServlet {
         if (session.getAttribute("customer") == null) {
             response.sendRedirect("login");
             return;
-        } else {
-
-            Integer customer_id = Integer.parseInt(session.getAttribute("customer_id").toString());
-            request.setAttribute("customer_is", customer_id);
-            SavingDao dao = new SavingDao();
-
-            String saving_package_withdrawableStr = request.getParameter("saving_package_withdrawable");
-            if (saving_package_withdrawableStr == null || saving_package_withdrawableStr.isEmpty()) {
-                request.getRequestDispatcher("Saving/Saving_create.jsp").forward(request, response);
-            }
-            int saving_package_withdrawable = Integer.parseInt(saving_package_withdrawableStr);
-
-            List<SavingPackage_id> list = dao.get_saving_package_withdrawable(saving_package_withdrawable);
-
-            String currentDate = getCurrentDate();
-            request.setAttribute("currentDate", currentDate);
-
-            request.setAttribute("list", list);
-            request.getRequestDispatcher("Saving/Saving_create_type.jsp").forward(request, response);
         }
+        String savings_idStr = request.getParameter("savings_id");
+        int savings_id = Integer.parseInt(savings_idStr);
+        request.setAttribute("savings_id", savings_id);
+        request.getRequestDispatcher("Saving/SavingFeedback_create.jsp").forward(request, response);
     }
 
     /**
@@ -103,31 +91,30 @@ public class Saving_create extends HttpServlet {
         if (session.getAttribute("customer") == null) {
             response.sendRedirect("login");
             return;
-        } else {
-
-            Integer saving_package_id = Integer.parseInt(request.getParameter("saving_package_id"));
-            double money = Double.parseDouble(request.getParameter("money"));
-            String created_at = request.getParameter("created_at");
-            SavingDao dao = new SavingDao();
-
-            double rate = dao.selectRate(saving_package_id) / 100.0; // Chuyển lãi suất từ số bình thường sang phần trăm
-            int term = dao.selectTerm(saving_package_id); // Lấy số tháng kỳ hạn của gói tiết kiệm
-            String name = dao.selectName(saving_package_id);
-            int saving_package_term_months = dao.selectSaving_package_term_months(saving_package_id);
-
-            double amount = 0; // Giá trị mặc định
-            if (saving_package_term_months > 0) {
-                amount = money + money * rate * term / 12;
-            }
-
-            Integer customer_id = (Integer) session.getAttribute("customer_id");
-
-            dao.insertSavingRequest(customer_id, saving_package_id, money, created_at, amount, name);
-
-            request.setAttribute("message", "Yêu cầu của bạn đã được gửi. Vui lòng chờ xác nhận từ ngân hàng.");
-
-            request.getRequestDispatcher("Saving/Saving_create_type.jsp").forward(request, response);
         }
+        int savings_id = Integer.parseInt(request.getParameter("savings_id"));
+
+        String content = request.getParameter("content");
+        String feedbackType = request.getParameter("feedback_type");
+        String attachment = request.getParameter("attachment");  // Đọc đường dẫn ảnh từ form
+
+        // Kiểm tra dữ liệu nhập
+        if (!checkContent(content)) {
+            request.setAttribute("errorC", "Vui lòng không nhập kí tự đặc biệt");
+            request.getRequestDispatcher("Saving/SavingFeedback_create.jsp").forward(request, response);
+            return;
+        } else if (attachment == null || attachment.isEmpty()) {
+            request.setAttribute("errorA", "Vui lòng nhập đường dẫn ảnh");
+            request.getRequestDispatcher("Saving/SavingFeedback_create.jsp").forward(request, response);
+            return;
+        }
+
+        String submittedAt = getCurrentDate();
+        dao.insertSavingFeedback(content, submittedAt, savings_id, feedbackType, attachment);
+
+        request.setAttribute("savings_id", savings_id);
+        request.setAttribute("success", true);  // Hiển thị thông báo thành công
+        request.getRequestDispatcher("Saving/SavingFeedback_create.jsp").forward(request, response);
     }
 
     /**
@@ -140,9 +127,13 @@ public class Saving_create extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    private String getCurrentDate() {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        return formatter.format(new Date());
+    public boolean checkContent(String content) {
+        return content.matches("^[\\p{L}0-9\\s.,!?]*$");
     }
 
+    private String getCurrentDate() {
+        LocalDate currentDate = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return currentDate.format(formatter);
+    }
 }

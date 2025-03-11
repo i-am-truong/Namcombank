@@ -322,6 +322,26 @@
         <servlet-name>SavingPay</servlet-name>
         <servlet-class>controller.saving.SavingPay</servlet-class>
     </servlet>    
+    <servlet>
+        <servlet-name>SavingCustomer</servlet-name>
+        <servlet-class>controller.feedback.SavingCustomer</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SavingCustomerActive</servlet-name>
+        <servlet-class>controller.feedback.SavingCustomerActive</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SavingFeedback</servlet-name>
+        <servlet-class>controller.feedback.SavingFeedback</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SavingFeedbackAnswer</servlet-name>
+        <servlet-class>controller.feedback.SavingFeedbackAnswer</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SavingFeedbackAnswerCustomer</servlet-name>
+        <servlet-class>controller.feedback.SavingFeedbackAnswerCustomer</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>viewCustomerDetail</servlet-name>
         <url-pattern>/viewCustomerDetail</url-pattern>
@@ -640,6 +660,26 @@
     <servlet-mapping>
         <servlet-name>SavingPay</servlet-name>
         <url-pattern>/SavingPay</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SavingCustomer</servlet-name>
+        <url-pattern>/SavingCustomer</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SavingCustomerActive</servlet-name>
+        <url-pattern>/SavingCustomerActive</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SavingFeedback</servlet-name>
+        <url-pattern>/SavingFeedback</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SavingFeedbackAnswer</servlet-name>
+        <url-pattern>/SavingFeedbackAnswer</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SavingFeedbackAnswerCustomer</servlet-name>
+        <url-pattern>/SavingFeedbackAnswerCustomer</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

@@ -172,9 +172,9 @@
                             </li>
                             <li><a href="AllSaving">Saving<i class="fa fa-angle-down"></i></a>
                                 <ul class="submenu-item">
-<!--                                    <li><a href="AllSaving">All Savings</a></li>-->
-<!--                                    <li><a href="SavingTerm">Term Savings</a></li>
-                                    <li><a href="SavingWIthoutTerm">Savings without term</a></li>-->
+                                    <li><a href="SavingCustomer">Saving Requesting</a></li>
+                                    <!--                                    <li><a href="SavingTerm">Term Savings</a></li>
+                                                                        <li><a href="SavingWIthoutTerm">Savings without term</a></li>-->
                                 </ul>
                             </li>
                             <li class="menu-item-has-children">

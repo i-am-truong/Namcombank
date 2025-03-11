@@ -35,7 +35,8 @@
                             </li>
                             <li><a href="AllSaving">Savings <i class="fa fa-angle-down"></i></a>
                                 <ul class="submenu-item">
-                                    <!--<li><a href="AllSaving">All Savings</a></li>-->
+                                    <li><a href="SavingCustomer">Saving Requesting</a></li>
+                                    <li><a href="SavingCustomerActive">Saving</a></li>
 <!--                                    <li><a href="SavingTerm">Term Savings</a></li>
                                     <li><a href="SavingWIthoutTerm">Savings without term</a></li>-->
 

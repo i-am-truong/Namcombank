@@ -594,6 +594,90 @@ public class SavingDao extends DBContext {
         System.out.println(money_get_date);
     }
 
+    public List<SavingRequest> getAllSavingRequestCustomer(int customer_id) {
+        List<SavingRequest> list = new ArrayList<>();
+        String query = "select * from SavingRequest where staff_id is NULL and money_approval_status ='pending' and saving_approval_status='pending' and customer_id = ? ;";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, customer_id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                SavingRequest sr = new SavingRequest();
+                sr.setCustomer_id(rs.getInt("customer_id"));
+                sr.setSaving_package_id(rs.getInt("saving_package_id")); // Bổ sung
+                sr.setStaff_id(rs.getObject("staff_id") != null ? rs.getInt("staff_id") : null); // Xử lý NULL
+                sr.setMoney(rs.getDouble("money"));
+                sr.setSaving_approval_status(rs.getString("saving_approval_status")); // Bổ sung
+                sr.setSaving_approval_date(rs.getString("saving_approval_date"));
+                sr.setMoney_approval_status(rs.getString("money_approval_status")); // Bổ sung
+                sr.setAmount(rs.getDouble("amount")); // Bổ sung
+                sr.setCreated_at(rs.getString("created_at"));
+                sr.setSaving_package_name(rs.getString("saving_package_name")); // Bổ sung
+                list.add(sr);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public List<SavingRequest> getAllSavingRequestCustomerAccepted(int customer_id) {
+        List<SavingRequest> list = new ArrayList<>();
+        String query = "select * from SavingRequest where money_approval_status ='pending' and saving_approval_status='approved' and customer_id = ?;";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, customer_id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                SavingRequest sr = new SavingRequest();
+                sr.setCustomer_id(rs.getInt("customer_id"));
+                sr.setSaving_package_id(rs.getInt("saving_package_id")); // Bổ sung
+                sr.setStaff_id(rs.getObject("staff_id") != null ? rs.getInt("staff_id") : null); // Xử lý NULL
+                sr.setMoney(rs.getDouble("money"));
+                sr.setSaving_approval_status(rs.getString("saving_approval_status")); // Bổ sung
+                sr.setSaving_approval_date(rs.getString("saving_approval_date"));
+                sr.setMoney_approval_status(rs.getString("money_approval_status")); // Bổ sung
+                sr.setAmount(rs.getDouble("amount")); // Bổ sung
+                sr.setCreated_at(rs.getString("created_at"));
+                sr.setSaving_package_name(rs.getString("saving_package_name")); // Bổ sung
+                list.add(sr);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public List<Saving> getAllSavings(int customer_id) {
+        List<Saving> list = new ArrayList<>();
+        String query = "SELECT * FROM Saving WHERE status='active' AND customer_id=?";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, customer_id);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Saving sr = new Saving();
+                sr.setSavings_id(rs.getInt("savings_id"));
+                sr.setCustomer_id(rs.getInt("customer_id"));
+                sr.setAmount(rs.getDouble("amount"));
+                sr.setInterest_rate(rs.getDouble("interest_rate"));
+                sr.setTerm_months(rs.getInt("term_months"));
+                sr.setOpened_date(rs.getString("opened_date"));
+                sr.setStatus(rs.getString("status"));
+                sr.setSaving_request_id(rs.getInt("saving_request_id"));
+                sr.setStaff_id(rs.getInt("staff_id"));
+                sr.setMoney_get_date(rs.getString("money_get_date"));
+
+                list.add(sr);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    //select * from SavingRequest where saving_approval_status='approved' and money_approval_status='pending'
     @Override
     public void insert(Object model) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody

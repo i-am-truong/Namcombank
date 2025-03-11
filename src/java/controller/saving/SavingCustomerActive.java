@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controller.saving;
+package controller.feedback;
 
 import context.SavingDao;
 import java.io.IOException;
@@ -11,14 +11,18 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.util.List;
-import model.SavingPackage;
+import model.Saving;
+import model.SavingRequest;
 
 /**
  *
  * @author admin
  */
-public class AllSaving extends HttpServlet {
+public class SavingCustomerActive extends HttpServlet {
+
+    private final SavingDao dao = new SavingDao();
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -37,10 +41,10 @@ public class AllSaving extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet AllSaving</title>");
+            out.println("<title>Servlet SavingCustomerActive</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet AllSaving at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet SavingCustomerActive at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -58,14 +62,15 @@ public class AllSaving extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        SavingDao dao = new SavingDao();
-        List<SavingPackage> list = dao.getSavingsWithdrawable();
-        List<SavingPackage> listW = dao.getSavingsNoWithdrawable();
-
-        request.setAttribute("withdrawableList", list);
-        request.setAttribute("nonWithdrawableList", listW);
-        request.getRequestDispatcher("Saving/AllSaving.jsp").forward(request, response);
-
+        HttpSession session = request.getSession();
+        if (session.getAttribute("customer") == null) {
+            response.sendRedirect("login");
+            return;
+        }
+        Integer customer_id = Integer.parseInt(session.getAttribute("customer_id").toString());
+        List<Saving> list = dao.getAllSavings(customer_id);
+        request.setAttribute("list", list);
+        request.getRequestDispatcher("Saving/SavingCustomerActive.jsp").forward(request, response);
     }
 
     /**
@@ -79,14 +84,15 @@ public class AllSaving extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        SavingDao dao = new SavingDao();
-        List<SavingPackage> list = dao.getSavingsWithdrawable();
-        List<SavingPackage> listW = dao.getSavingsNoWithdrawable();
-
-        request.setAttribute("withdrawableList", list);
-        request.setAttribute("nonWithdrawableList", listW);
-        request.getRequestDispatcher("Saving/AllSaving.jsp").forward(request, response);
-
+        HttpSession session = request.getSession();
+        if (session.getAttribute("customer") == null) {
+            response.sendRedirect("login");
+            return;
+        }
+        Integer customer_id = Integer.parseInt(session.getAttribute("customer_id").toString());
+        List<Saving> list = dao.getAllSavings(customer_id);
+        request.setAttribute("list", list);
+        request.getRequestDispatcher("Saving/SavingCustomerActive.jsp").forward(request, response);
     }
 
     /**

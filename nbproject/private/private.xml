@@ -25,10 +25,13 @@
             <file>file:/C:/Users/admin/Documents/GitHub/Namcombank/web/saving/AllSaving.jsp</file>
             <file>file:/C:/Users/admin/Documents/GitHub/Namcombank/web/Saving/SavingPay.jsp</file>
             <file>file:/C:/Users/admin/Documents/GitHub/Namcombank/web/Saving/Saving_create_type.jsp</file>
-            <file>file:/C:/Users/admin/Documents/GitHub/Namcombank/web/Saving/createSavingPackage.jsp</file>
+            <file>
+                file:/C:/Users/admin/Documents/GitHub/Namcombank/web/Saving/createSavingPackage.jsp</file>
             <file>file:/C:/Users/admin/Documents/GitHub/Namcombank/web/Saving/managerSaving.jsp</file>
             <file>file:/C:/Users/admin/Documents/GitHub/Namcombank/web/Saving/updateSaving.jsp</file>
             <file>file:/C:/Users/admin/Documents/GitHub/Namcombank/web/Saving/WithdrawableSaving.jsp</file>
+            <file>file:/C:/Users/admin/Documents/GitHub/Namcombank/web/Saving/SavingCustomer.jsp</file>
+            <file>file:/C:/Users/admin/Documents/GitHub/Namcombank/web/Saving/SavingFeedbackAnswer.jsp</file>
         </group>
     </open-files>
 </project-private>
