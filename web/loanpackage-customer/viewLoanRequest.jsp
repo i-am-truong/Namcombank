@@ -1,5 +1,5 @@
 <%-- 
-    Document   : viewLoanPackage
+    Document   : viewLoanRequest
     Created on : Mar 9, 2025, 11:28:14 PM
     Author     : lenovo
 --%>
@@ -199,6 +199,7 @@
                                         <th>Collateral</th>
                                         <th>Approved By</th>
                                         <th>Approval Date</th>
+                                        <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -257,6 +258,20 @@
                                                             </c:otherwise>
                                                         </c:choose>
                                                     </td>
+                                                    <td>
+                                                        <c:choose>
+                                                            <c:when test="${request.status eq 'Pending'}">
+                                                                <a href="delete-loan-request?id=${request.requestId}" class="btn btn-danger btn-sm"
+                                                                   onclick="return confirm('Are you sure you want to delete this loan request?');">
+                                                                    <i class="fas fa-trash-alt"></i> Delete
+                                                                </a>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <span class="text-muted">Active</span>
+                                                            </c:otherwise>
+                                                        </c:choose>
+                                                    </td>
+
                                                 </tr>
                                             </c:forEach>
                                         </c:when>
@@ -286,25 +301,25 @@
     <!-- Custom scripts for all pages-->
     <script src="adminassets/js/sb-admin-2.min.js"></script>
     <script>
-                                                    // Clear filters functionality
-                                                    document.getElementById('clearFiltersBtn').addEventListener('click', function () {
-                                                        // Reset all form fields
-                                                        document.getElementById('customerName').value = '';
-                                                        document.getElementById('packageName').value = '';
-                                                        document.getElementById('status').value = '';
-                                                        document.getElementById('minAmount').value = '';
-                                                        document.getElementById('maxAmount').value = '';
-                                                        document.getElementById('hasAsset').value = '';
-                                                        document.getElementById('requestDateFrom').value = '';
-                                                        document.getElementById('requestDateTo').value = '';
-                                                        document.getElementById('approvedBy').value = '';
-                                                        document.getElementById('approvedDate').value = '';
-                                                        document.getElementById('approvalDateFrom').value = '';
-                                                        document.getElementById('approvalDateTo').value = '';
+                                                                       // Clear filters functionality
+                                                                       document.getElementById('clearFiltersBtn').addEventListener('click', function () {
+                                                                           // Reset all form fields
+                                                                           document.getElementById('customerName').value = '';
+                                                                           document.getElementById('packageName').value = '';
+                                                                           document.getElementById('status').value = '';
+                                                                           document.getElementById('minAmount').value = '';
+                                                                           document.getElementById('maxAmount').value = '';
+                                                                           document.getElementById('hasAsset').value = '';
+                                                                           document.getElementById('requestDateFrom').value = '';
+                                                                           document.getElementById('requestDateTo').value = '';
+                                                                           document.getElementById('approvedBy').value = '';
+                                                                           document.getElementById('approvedDate').value = '';
+                                                                           document.getElementById('approvalDateFrom').value = '';
+                                                                           document.getElementById('approvalDateTo').value = '';
 
-                                                        // Redirect to customer-loan-requests without search parameters
-                                                        window.location.href = 'customer-loan-requests';
-                                                    });
+                                                                           // Redirect to customer-loan-requests without search parameters
+                                                                           window.location.href = 'customer-loan-requests';
+                                                                       });
     </script>
 </body>
 </html>

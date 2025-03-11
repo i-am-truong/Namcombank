@@ -174,8 +174,20 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
         }
     }
 
+    public boolean deleteLoanRequest(int requestId) {
+        String sql = "DELETE FROM LoanRequests WHERE request_id = ? AND status = 'Pending'";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, requestId);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     @Override
-    public void delete(LoanRequest loan) {
+    public void delete(LoanRequest loan
+    ) {
         String sql = "DELETE FROM LoanRequests WHERE request_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, loan.getRequestId());
