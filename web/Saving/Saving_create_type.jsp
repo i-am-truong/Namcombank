@@ -55,5 +55,8 @@
             <p style="color: green;"><%= message %></p>
             <% } %>
         </form>
-    </body>
+    <c:if test="${not empty errorMessage}">
+        <div style="color: red; font-weight: bold;">${errorMessage}</div>
+    </c:if>
+</body>
 </html>

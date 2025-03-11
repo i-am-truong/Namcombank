@@ -1,4 +1,5 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="vi">
@@ -78,8 +79,14 @@
                                 <td>${sr.saving_package_name}</td>
                                 <td>${String.format("%.2f", sr.money)}</td>
                                 <td>${sr.saving_approval_status}</td>
-                                <td>${sr.created_at}</td>
-                                <td>${sr.saving_approval_date}</td>
+                                <td>
+                                    <fmt:parseDate value="${sr.created_at}" pattern="yyyy-MM-dd" var="parsedDate" type="date"/>
+                                    <fmt:formatDate value="${parsedDate}" pattern="dd/MM/yyyy"/>
+                                </td>
+                                <td>
+                                    <fmt:parseDate value="${sr.saving_approval_date}" pattern="yyyy-MM-dd" var="parsedDate" type="date"/>
+                                    <fmt:formatDate value="${parsedDate}" pattern="dd/MM/yyyy"/>
+                                </td>
                                 <!--<td>$/{sr.saving_date}</td>-->
                                 <td>${sr.staff_id}</td>
                                 <td>${sr.money_approval_status}</td>

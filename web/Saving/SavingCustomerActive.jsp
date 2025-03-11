@@ -61,10 +61,17 @@
                             <td><fmt:formatNumber value="${s.amount}" type="currency"/></td>
                             <td>${s.interest_rate}</td>
                             <td>${s.term_months}</td>
-                            <td>${s.opened_date}</td>
+                            <td>
+                                <fmt:parseDate value="${s.opened_date}" pattern="yyyy-MM-dd" var="parsedDate" type="date"/>
+                                <fmt:formatDate value="${parsedDate}" pattern="dd/MM/yyyy"/>
+                            </td>
                             <td>${s.status}</td>
                             <td>${s.staff_id}</td>
-                            <td>${s.money_get_date}</td>
+
+                            <td>
+                                <fmt:parseDate value="${s.money_get_date}" pattern="yyyy-MM-dd" var="parsedDate" type="date"/>
+                                <fmt:formatDate value="${parsedDate}" pattern="dd/MM/yyyy"/>
+                            </td>
                             <td>
                                 <form action="SavingFeedback" method="get">
                                     <input type="hidden" name="savings_id" value="${s.savings_id}">

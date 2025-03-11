@@ -1,4 +1,5 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="vi">
@@ -67,7 +68,10 @@
                             <tr>
                                 <td>${feedback.feedback_id}</td>
                                 <td>${feedback.content}</td>
-                                <td>${feedback.submitted_at}</td>
+                                <td>
+                                    <fmt:parseDate value="${feedback.submitted_at}" pattern="yyyy-MM-dd" var="parsedDate" type="date"/>
+                                    <fmt:formatDate value="${parsedDate}" pattern="dd/MM/yyyy"/>
+                                </td>
                                 <td>${feedback.feedback_type}</td>
                                 <td>
                                     <c:choose>
@@ -84,7 +88,7 @@
                                         </c:otherwise>
                                     </c:choose>
                                 </td>
-                               
+
                                 <td>
                                     <c:choose>
                                         <c:when test="${not empty feedback.attachment}">

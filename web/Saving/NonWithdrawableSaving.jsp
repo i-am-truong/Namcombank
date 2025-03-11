@@ -138,7 +138,7 @@
                     <c:set var="deposit" value="${param.amount}" />
                     <c:set var="interestRate" value="${saving.saving_package_interest_rate / 100}" />
                     <c:set var="months" value="${saving.saving_package_term_months}" />
-                    <c:set var="interest" value="${deposit * interestRate * (months / 12)}" />
+                    <c:set var="interest" value="${deposit * interestRate * (1 / 12)}" />
                     <tr>
                         <td>${saving.saving_package_name}</td>
                         <td>${saving.saving_package_term_months} tháng</td>

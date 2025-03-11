@@ -22,6 +22,7 @@
             table {
                 width: 100%;
                 border-collapse: collapse;
+                border: 5px solid #81c784;
             }
             th, td {
                 padding: 12px;
@@ -66,7 +67,10 @@
                             <td>${r.saving_approval_date}</td>
                             <td>${r.money_approval_status}</td>
                             <td><fmt:formatNumber value="${r.amount}" type="currency"/></td>
-                            <td>${r.created_at}</td>
+                            <td>
+                                <fmt:parseDate value="${r.created_at}" pattern="yyyy-MM-dd" var="parsedDate" type="date"/>
+                                <fmt:formatDate value="${parsedDate}" pattern="dd/MM/yyyy"/>
+                            </td>
                             <td>${r.saving_package_name}</td>
                         </tr>
                     </c:forEach>
@@ -100,7 +104,10 @@
                             <td>${p.saving_approval_date}</td>
                             <td>${p.money_approval_status}</td>
                             <td><fmt:formatNumber value="${p.amount}" type="currency"/></td>
-                            <td>${p.created_at}</td>
+                            <td>
+                                <fmt:parseDate value="${p.created_at}" pattern="yyyy-MM-dd" var="parsedDateP" type="date"/>
+                                <fmt:formatDate value="${parsedDateP}" pattern="dd/MM/yyyy"/>
+                            </td>
                             <td>${p.saving_package_name}</td>
                         </tr>
                     </c:forEach>

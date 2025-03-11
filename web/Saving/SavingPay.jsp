@@ -73,8 +73,14 @@
                                 <td><fmt:formatNumber value="${saving.amount}" type="number" /></td>
                                 <td><fmt:formatNumber value="${saving.interest_rate}" type="number" maxFractionDigits="3"/></td>
                                 <td>${saving.term_months}</td>
-                                <td>${saving.opened_date}</td>
-                                <td>${saving.money_get_date}</td>
+                                <td>
+                                    <fmt:parseDate value="${saving.opened_date}" pattern="yyyy-MM-dd" var="parsedDate" type="date"/>
+                                    <fmt:formatDate value="${parsedDate}" pattern="dd/MM/yyyy"/>
+                                </td>
+                                <td>
+                                    <fmt:parseDate value="${saving.money_get_date}" pattern="yyyy-MM-dd" var="parsedDate" type="date"/>
+                                    <fmt:formatDate value="${parsedDate}" pattern="dd/MM/yyyy"/>
+                                </td>
                                 <td>${saving.status}</td>
                                 <td>
                                     <form action="SavingPay" method="post">

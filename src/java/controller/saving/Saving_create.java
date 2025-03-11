@@ -78,6 +78,12 @@ public class Saving_create extends HttpServlet {
             }
             int saving_package_withdrawable = Integer.parseInt(saving_package_withdrawableStr);
 
+            if (saving_package_withdrawable == 5) {
+                request.setAttribute("errorMessage", "Vui lòng chọn gói tiết kiệm hợp lệ.");
+                request.getRequestDispatcher("Saving/Saving_create_type.jsp").forward(request, response);
+                return;
+            }
+
             List<SavingPackage_id> list = dao.get_saving_package_withdrawable(saving_package_withdrawable);
 
             String currentDate = getCurrentDate();
@@ -104,8 +110,13 @@ public class Saving_create extends HttpServlet {
             response.sendRedirect("login");
             return;
         } else {
-
-            Integer saving_package_id = Integer.parseInt(request.getParameter("saving_package_id"));
+            String saving_package_idStr = request.getParameter("saving_package_id");
+            if (saving_package_idStr == null || saving_package_idStr.trim().isEmpty()) {
+                request.setAttribute("errorMessage", "Vui lòng chọn gói tiết kiệm.");
+                request.getRequestDispatcher("Saving/Saving_create.jsp").forward(request, response);
+                return;
+            }
+            int saving_package_id = Integer.parseInt(saving_package_idStr);
             double money = Double.parseDouble(request.getParameter("money"));
             String created_at = request.getParameter("created_at");
             SavingDao dao = new SavingDao();
@@ -115,9 +126,11 @@ public class Saving_create extends HttpServlet {
             String name = dao.selectName(saving_package_id);
             int saving_package_term_months = dao.selectSaving_package_term_months(saving_package_id);
 
-            double amount = 0; // Giá trị mặc định
+            double amount;
             if (saving_package_term_months > 0) {
                 amount = money + money * rate * term / 12;
+            } else {
+                amount = money; // Nếu kỳ hạn bằng 0, amount sẽ bằng tiền gốc
             }
 
             Integer customer_id = (Integer) session.getAttribute("customer_id");

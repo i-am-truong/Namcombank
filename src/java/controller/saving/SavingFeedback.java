@@ -101,10 +101,12 @@ public class SavingFeedback extends HttpServlet {
         // Kiểm tra dữ liệu nhập
         if (!checkContent(content)) {
             request.setAttribute("errorC", "Vui lòng không nhập kí tự đặc biệt");
+                    request.setAttribute("savings_id", savings_id);
             request.getRequestDispatcher("Saving/SavingFeedback_create.jsp").forward(request, response);
             return;
         } else if (attachment == null || attachment.isEmpty()) {
             request.setAttribute("errorA", "Vui lòng nhập đường dẫn ảnh");
+                    request.setAttribute("savings_id", savings_id);
             request.getRequestDispatcher("Saving/SavingFeedback_create.jsp").forward(request, response);
             return;
         }

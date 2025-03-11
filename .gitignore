@@ -7,3 +7,5 @@ dist/
 nbdist/
 .nb-gradle/
 src/java/context/DBContext.java
+.idea/workspace.xml
+*.xml

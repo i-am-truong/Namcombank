@@ -1,4 +1,5 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="vi">
@@ -12,7 +13,7 @@
             <h2>Gửi Phản Hồi Tiết Kiệm</h2>
             <form action="SavingFeedback" method="post">
                 <div class="mb-3">
-                    <input type="text" name="savings_id" value="${savings_id}">
+                    <input type="text" name="savings_id" value="${savings_id}" hidden>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Nội dung phản hồi:</label>
@@ -29,7 +30,6 @@
                     <label class="form-label">Đường dẫn ảnh (nếu có):</label>
                     <input type="text" name="attachment" class="form-control">
                 </div>
-                <a href="SavingCustomerActive">Quay lại</a>
                 <button type="submit" class="btn btn-primary">Gửi Phản Hồi</button>
 
             </form>
