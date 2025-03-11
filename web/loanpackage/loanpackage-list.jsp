@@ -49,14 +49,13 @@
                             <td class="px-4 py-3 text-center font-semibold text-red-600">
                                 <%= String.format("%,.0f", loanPackage.getMinAmount()) %> VND
                             </td>
-
                             <td class="px-4 py-3 text-center"><%= loanPackage.getLoanTerm() %> months</td>
                             <td class="px-4 py-3 text-center"><%= loanPackage.getCreatedDate() %></td>
-                            <td class="px-4 py-3 flex justify-center space-x-2">
+                            <td class="px-4 py-3 flex flex-col space-y-2">
                                 <a href="loanpackage-detail.jsp?id=<%= loanPackage.getPackageId() %>"
                                    class="bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 transition">
                                     View Details
-                                </a>
+                                </a>    
                                 <a href="loanpackage-update.jsp?id=<%= loanPackage.getPackageId() %>"
                                    class="bg-yellow-500 text-white px-3 py-1 rounded-md hover:bg-yellow-600 transition">
                                     Edit
@@ -65,7 +64,7 @@
                                    class="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 transition"
                                    onclick="return confirm('Are you sure you want to delete this package?');">
                                     Delete
-                                </a>
+                                </button>
                             </td>
                         </tr>
                         <%
@@ -86,7 +85,7 @@
                 <a href="../staffFilter"
                    class="bg-gray-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-green-600 transition">
                     Back
-                </a>   
+                </a> 
             </div>
 
         </div>

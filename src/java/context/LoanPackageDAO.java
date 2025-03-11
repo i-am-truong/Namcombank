@@ -163,33 +163,33 @@ public class LoanPackageDAO extends DBContext {
 
     }
 
-    public List<LoanPackage> getAllLoanPackages() {
-        List<LoanPackage> loanPackages = new ArrayList<>();
-        String query = "SELECT * FROM LoanPackages";
+        public List<LoanPackage> getAllLoanPackages() {
+            List<LoanPackage> loanPackages = new ArrayList<>();
+            String query = "SELECT * FROM LoanPackages";
 
-        try (PreparedStatement pstmt = connection.prepareStatement(query); ResultSet rs = pstmt.executeQuery()) {
+            try (PreparedStatement pstmt = connection.prepareStatement(query); ResultSet rs = pstmt.executeQuery()) {
 
-            while (rs.next()) {
-                LoanPackage loanPackage = new LoanPackage(
-                        rs.getInt("package_id"),
-                        rs.getInt("staff_id"),
-                        rs.getString("package_name"),
-                        rs.getString("loan_type"),
-                        rs.getString("description"),
-                        rs.getBigDecimal("interest_rate"),
-                        rs.getBigDecimal("max_amount"),
-                        rs.getBigDecimal("min_amount"),
-                        rs.getInt("loan_term"),
-                        rs.getDate("created_date")
-                );
-                loanPackages.add(loanPackage);
+                while (rs.next()) {
+                    LoanPackage loanPackage = new LoanPackage(
+                            rs.getInt("package_id"),
+                            rs.getInt("staff_id"),
+                            rs.getString("package_name"),
+                            rs.getString("loan_type"),
+                            rs.getString("description"),
+                            rs.getBigDecimal("interest_rate"),
+                            rs.getBigDecimal("max_amount"),
+                            rs.getBigDecimal("min_amount"),
+                            rs.getInt("loan_term"),
+                            rs.getDate("created_date")
+                    );
+                    loanPackages.add(loanPackage);
+                }
+
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
+            return loanPackages;
         }
-        return loanPackages;
-    }
 
     public void insertLoanPackage(LoanPackage loanPackage) {
         String query = "INSERT INTO LoanPackages (staff_id, package_name, loan_type, description, interest_rate, max_amount, min_amount, loan_term, created_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";

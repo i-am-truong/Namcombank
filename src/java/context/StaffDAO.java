@@ -46,7 +46,7 @@ public class StaffDAO extends DBContext<Staff> {
     // Method to send the password via email
     public void sendEmail(String recipientEmail, String password, String username) {
         String subject = "Your New Account Password";
-        String body = "Hello,\n\nYour account has been created successfully.Your username is: " + username + "  Your password is: " + password + "\n\nPlease change it upon your first login.";
+        String body = "Hello,\n\nYour account has been created successfully.\nYour username is: " + username + "\nYour password is: " + password + "\n\nPlease change it upon your first login.";
 
         // Set up email properties
         Properties properties = new Properties();
@@ -117,7 +117,7 @@ public class StaffDAO extends DBContext<Staff> {
                 + "      ,[gender] = ?\n"
                 + "      ,[phonenumber] = ?\n"
                 + "      ,[citizen_identification_card] = ?\n"
-                + "      ,[address] = ?\n"
+                + "      ,[address] = ?\n"  
                 + " WHERE staff_id = ?";
 
         String sql_delete_roles = "DELETE FROM [dbo].[StaffRoles] WHERE staff_id = ?";
@@ -204,11 +204,12 @@ public class StaffDAO extends DBContext<Staff> {
                 if (staff == null) {
                     staff = new Staff();
                     staff.setId(rs.getInt("staff_id"));
-                    staff.setFullname(rs.getNString("fullname"));
+                    staff.setFullname(rs.getString("fullname"));
+                    staff.setPhonenumber(rs.getNString("phonenumber"));
                     staff.setEmail(rs.getString("email"));
                     staff.setDob(rs.getDate("dob"));
                     staff.setGender(rs.getBoolean("gender"));
-                    staff.setPhonenumber(rs.getString("phonenumber"));
+                    
                     staff.setCitizenId(rs.getString("citizen_identification_card"));
                     staff.setAddress(rs.getNString("address"));
 

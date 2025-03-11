@@ -7,7 +7,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <title>Namcombank - Quản Lý Tài Sản</title>
+        <title>Namcombank - Asset Management</title>
 
         <!-- Custom styles -->
         <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
@@ -93,86 +93,105 @@
                     <%@include file="../homepage/header_admin.jsp" %>
                     <div class="container-fluid">
                         <div class="table-wrapper">
-                            <!-- Thêm thông tin debug -->
+                            <!-- Debug information -->
                             <c:if test="${not empty assets}">
                                 <div class="alert alert-info">
-                                    Số tài sản tìm thấy: ${assets.size()}
+                                    Assets found: ${assets.size()}
                                 </div>
                             </c:if>
-                            
-                            <!-- Search Filters Form - Sửa method thành GET và action thành assets -->
+
+                            <!-- Search Filters Form -->
                             <form action="${pageContext.request.contextPath}/assets-filter" method="GET" id="searchForm">
                                 <div class="search-filters">
-                                    <h4 class="mb-3">Tìm kiếm tài sản</h4>
+                                    <h4 class="mb-3">Search Assets</h4>
 
                                     <div class="search-grid">
                                         <div class="form-group">
-                                            <label for="assetName">Tên tài sản</label>
+                                            <label for="assetName">Asset Name</label>
                                             <input type="text" id="assetName" name="assetName" class="form-control" 
-                                                   value="${param.assetName}" placeholder="Tên tài sản">
+                                                   value="${param.assetName}" placeholder="Asset name">
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="assetType">Loại tài sản</label>
+                                            <label for="assetType">Asset Type</label>
                                             <select id="assetType" name="assetType" class="form-control">
-                                                <option value="" ${param.assetType == null || param.assetType == '' ? 'selected' : ''}>Tất cả</option>
-                                                <option value="REAL_ESTATE" ${param.assetType == 'REAL_ESTATE' ? 'selected' : ''}>Bất động sản</option>
-                                                <option value="VEHICLE" ${param.assetType == 'VEHICLE' ? 'selected' : ''}>Phương tiện</option>
-                                                <option value="INCOME" ${param.assetType == 'INCOME' ? 'selected' : ''}>Thu nhập</option>
-                                                <option value="OTHER" ${param.assetType == 'OTHER' ? 'selected' : ''}>Khác</option>
+                                                <option value="" ${param.assetType == null || param.assetType == '' ? 'selected' : ''}>All</option>
+                                                <option value="REAL_ESTATE" ${param.assetType == 'REAL_ESTATE' ? 'selected' : ''}>Real Estate</option>
+                                                <option value="VEHICLE" ${param.assetType == 'VEHICLE' ? 'selected' : ''}>Vehicle</option>
+                                                <option value="INCOME" ${param.assetType == 'INCOME' ? 'selected' : ''}>Income</option>
+                                                <option value="OTHER" ${param.assetType == 'OTHER' ? 'selected' : ''}>Other</option>
                                             </select>
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="customerName">Tên khách hàng</label>
+                                            <label for="customerName">Customer Name</label>
                                             <input type="text" id="customerName" name="customerName" class="form-control" 
-                                                   value="${param.customerName}" placeholder="Tên khách hàng">
+                                                   value="${param.customerName}" placeholder="Customer name">
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="minValue">Giá trị tối thiểu</label>
+                                            <label for="minValue">Minimum Value</label>
                                             <input type="number" id="minValue" name="minValue" class="form-control" 
-                                                   value="${param.minValue}" placeholder="Giá trị tối thiểu">
+                                                   value="${param.minValue}" placeholder="Minimum value">
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="maxValue">Giá trị tối đa</label>
+                                            <label for="maxValue">Maximum Value</label>
                                             <input type="number" id="maxValue" name="maxValue" class="form-control" 
-                                                   value="${param.maxValue}" placeholder="Giá trị tối đa">
+                                                   value="${param.maxValue}" placeholder="Maximum value">
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="status">Trạng thái</label>
+                                            <label for="status">Status</label>
                                             <select id="status" name="status" class="form-control">
-                                                <option value="" ${param.status == null || param.status == '' ? 'selected' : ''}>Tất cả</option>
-                                                <option value="PENDING" ${param.status == 'PENDING' ? 'selected' : ''}>Chờ duyệt</option>
-                                                <option value="APPROVED" ${param.status == 'APPROVED' ? 'selected' : ''}>Đã duyệt</option>
-                                                <option value="REJECTED" ${param.status == 'REJECTED' ? 'selected' : ''}>Từ chối</option>
+                                                <option value="" ${param.status == null || param.status == '' ? 'selected' : ''}>All</option>
+                                                <option value="PENDING" ${param.status == 'PENDING' ? 'selected' : ''}>Pending</option>
+                                                <option value="APPROVED" ${param.status == 'APPROVED' ? 'selected' : ''}>Approved</option>
+                                                <option value="REJECTED" ${param.status == 'REJECTED' ? 'selected' : ''}>Rejected</option>
                                             </select>
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="createdDateFrom">Ngày tạo từ</label>
+                                            <label for="createdDateFrom">Created From</label>
                                             <input type="date" id="createdDateFrom" name="createdDateFrom" class="form-control" 
                                                    value="${param.createdDateFrom}">
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="createdDateTo">Ngày tạo đến</label>
+                                            <label for="createdDateTo">Created To</label>
                                             <input type="date" id="createdDateTo" name="createdDateTo" class="form-control" 
                                                    value="${param.createdDateTo}">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="approvedBy">Approved By</label>
+                                            <input type="text" id="approvedBy" name="approvedBy" class="form-control" 
+                                                   value="${param.approvedBy}" placeholder="Approver name/ID">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="approvedDateFrom">Approved From</label>
+                                            <input type="date" id="approvedDateFrom" name="approvedDateFrom" class="form-control" 
+                                                   value="${param.approvedDateFrom}">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="approvedDateTo">Approved To</label>
+                                            <input type="date" id="approvedDateTo" name="approvedDateTo" class="form-control" 
+                                                   value="${param.approvedDateTo}">
                                         </div>
                                     </div>
 
                                     <div class="search-buttons">
                                         <button type="submit" class="btn btn-primary">
-                                            <i class="fas fa-search"></i> Tìm kiếm
+                                            <i class="fas fa-search"></i> Search
                                         </button>
                                         <button type="button" id="clearFiltersBtn" class="btn btn-secondary">
-                                            <i class="fas fa-undo"></i> Xóa bộ lọc
+                                            <i class="fas fa-undo"></i> Clear Filters
                                         </button>
                                     </div>
                                 </div>
+
                             </form>
 
                             <!-- Status Summary Cards -->
@@ -183,7 +202,7 @@
                                             <div class="row no-gutters align-items-center">
                                                 <div class="col mr-2">
                                                     <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                        Tổng tài sản</div>
+                                                        Total Assets</div>
                                                     <div class="h5 mb-0 font-weight-bold text-gray-800">${totalAssets}</div>
                                                 </div>
                                                 <div class="col-auto">
@@ -200,7 +219,7 @@
                                             <div class="row no-gutters align-items-center">
                                                 <div class="col mr-2">
                                                     <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                                        Chờ duyệt</div>
+                                                        Pending</div>
                                                     <div class="h5 mb-0 font-weight-bold text-gray-800">${pendingAssets}</div>
                                                 </div>
                                                 <div class="col-auto">
@@ -217,7 +236,7 @@
                                             <div class="row no-gutters align-items-center">
                                                 <div class="col mr-2">
                                                     <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                                        Đã duyệt</div>
+                                                        Approved</div>
                                                     <div class="h5 mb-0 font-weight-bold text-gray-800">${approvedAssets}</div>
                                                 </div>
                                                 <div class="col-auto">
@@ -234,7 +253,7 @@
                                             <div class="row no-gutters align-items-center">
                                                 <div class="col mr-2">
                                                     <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
-                                                        Từ chối</div>
+                                                        Rejected</div>
                                                     <div class="h5 mb-0 font-weight-bold text-gray-800">${rejectedAssets}</div>
                                                 </div>
                                                 <div class="col-auto">
@@ -251,16 +270,15 @@
                                 <table class="table table-bordered" id="assetTable">
                                     <thead>
                                         <tr>
-                                            <th>ID</th>
-                                            <th>Tên tài sản</th>
-                                            <th>Loại</th>
-                                            <th>Khách hàng</th>
-                                            <th>Giá trị</th>
-                                            <th>Người tạo</th>
-                                            <th>Ngày tạo</th>
-                                            <th>Trạng thái</th>
-                                            <th>Người duyệt</th>
-                                            <th>Ngày duyệt</th>
+                                            <th>Asset Name</th>
+                                            <th>Type</th>
+                                            <th>Customer</th>
+                                            <th>Value</th>
+                                            <th>Created By</th>
+                                            <th>Created Date</th>
+                                            <th>Status</th>
+                                            <th>Approved By</th>
+                                            <th>Approval Date</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -268,23 +286,22 @@
                                             <c:when test="${not empty assets && assets.size() > 0}">
                                                 <c:forEach items="${assets}" var="asset">
                                                     <tr class="clickable-row" onclick="window.location.href = 'asset-detail?id=${asset.assetId}'">
-                                                        <td>${asset.assetId}</td>
                                                         <td>${asset.assetName}</td>
                                                         <td>${asset.assetTypeDisplay}</td>
                                                         <td>${asset.customerName}</td>
                                                         <td><fmt:formatNumber value="${asset.assetValue}" type="currency" currencySymbol="" maxFractionDigits="0"/> VND</td>
                                                         <td>${asset.staffName}</td>
-                                                        <td><fmt:formatDate value="${asset.createdDate}" pattern="dd/MM/yyyy HH:mm"/></td>
+                                                        <td><fmt:formatDate value="${asset.createdDate}" pattern="MM/dd/yyyy HH:mm"/></td>
                                                         <td>
                                                             <c:choose>
                                                                 <c:when test="${asset.status eq 'PENDING'}">
-                                                                    <span class="status-pending"><i class="fas fa-clock"></i> Chờ duyệt</span>
+                                                                    <span class="status-pending"><i class="fas fa-clock"></i> Pending</span>
                                                                 </c:when>
                                                                 <c:when test="${asset.status eq 'APPROVED'}">
-                                                                    <span class="status-approved"><i class="fas fa-check-circle"></i> Đã duyệt</span>
+                                                                    <span class="status-approved"><i class="fas fa-check-circle"></i> Approved</span>
                                                                 </c:when>
                                                                 <c:when test="${asset.status eq 'REJECTED'}">
-                                                                    <span class="status-rejected"><i class="fas fa-times-circle"></i> Từ chối</span>
+                                                                    <span class="status-rejected"><i class="fas fa-times-circle"></i> Rejected</span>
                                                                 </c:when>
                                                                 <c:otherwise>
                                                                     ${asset.status}
@@ -292,13 +309,13 @@
                                                             </c:choose>
                                                         </td>
                                                         <td>${asset.approverName}</td>
-                                                        <td><fmt:formatDate value="${asset.approvedDate}" pattern="dd/MM/yyyy HH:mm"/></td>
+                                                        <td><fmt:formatDate value="${asset.approvedDate}" pattern="dd/mm/yyyy HH:mm"/></td>
                                                     </tr>
                                                 </c:forEach>
                                             </c:when>
                                             <c:otherwise>
                                                 <tr>
-                                                    <td colspan="10" class="text-center">Không tìm thấy tài sản nào</td>
+                                                    <td colspan="10" class="text-center">No assets found</td>
                                                 </tr>
                                             </c:otherwise>
                                         </c:choose>
@@ -306,63 +323,6 @@
                                 </table>
                             </div>
 
-                            <!-- Pagination - Cập nhật để duy trì tham số tìm kiếm -->
-                            <c:if test="${not empty assets && assets.size() > 0 && totalPages > 1}">
-                                <div class="d-flex justify-content-center mt-4">
-                                    <nav aria-label="Page navigation">
-                                        <ul class="pagination">
-                                            <c:if test="${currentPage > 1}">
-                                                <li class="page-item">
-                                                    <a class="page-link" href="assets?page=${currentPage - 1}
-                                                        <c:if test="${not empty param.assetName}">&assetName=${param.assetName}</c:if>
-                                                        <c:if test="${not empty param.assetType}">&assetType=${param.assetType}</c:if>
-                                                        <c:if test="${not empty param.customerName}">&customerName=${param.customerName}</c:if>
-                                                        <c:if test="${not empty param.minValue}">&minValue=${param.minValue}</c:if>
-                                                        <c:if test="${not empty param.maxValue}">&maxValue=${param.maxValue}</c:if>
-                                                        <c:if test="${not empty param.status}">&status=${param.status}</c:if>
-                                                        <c:if test="${not empty param.createdDateFrom}">&createdDateFrom=${param.createdDateFrom}</c:if>
-                                                        <c:if test="${not empty param.createdDateTo}">&createdDateTo=${param.createdDateTo}</c:if>
-                                                    " aria-label="Previous">
-                                                        <span aria-hidden="true">&laquo;</span>
-                                                    </a>
-                                                </li>
-                                            </c:if>
-
-                                            <c:forEach begin="1" end="${totalPages}" var="i">
-                                                <li class="page-item ${currentPage == i ? 'active' : ''}">
-                                                    <a class="page-link" href="assets?page=${i}
-                                                        <c:if test="${not empty param.assetName}">&assetName=${param.assetName}</c:if>
-                                                        <c:if test="${not empty param.assetType}">&assetType=${param.assetType}</c:if>
-                                                        <c:if test="${not empty param.customerName}">&customerName=${param.customerName}</c:if>
-                                                        <c:if test="${not empty param.minValue}">&minValue=${param.minValue}</c:if>
-                                                        <c:if test="${not empty param.maxValue}">&maxValue=${param.maxValue}</c:if>
-                                                        <c:if test="${not empty param.status}">&status=${param.status}</c:if>
-                                                        <c:if test="${not empty param.createdDateFrom}">&createdDateFrom=${param.createdDateFrom}</c:if>
-                                                        <c:if test="${not empty param.createdDateTo}">&createdDateTo=${param.createdDateTo}</c:if>
-                                                    ">${i}</a>
-                                                </li>
-                                            </c:forEach>
-
-                                            <c:if test="${currentPage < totalPages}">
-                                                <li class="page-item">
-                                                    <a class="page-link" href="assets?page=${currentPage + 1}
-                                                        <c:if test="${not empty param.assetName}">&assetName=${param.assetName}</c:if>
-                                                        <c:if test="${not empty param.assetType}">&assetType=${param.assetType}</c:if>
-                                                        <c:if test="${not empty param.customerName}">&customerName=${param.customerName}</c:if>
-                                                        <c:if test="${not empty param.minValue}">&minValue=${param.minValue}</c:if>
-                                                        <c:if test="${not empty param.maxValue}">&maxValue=${param.maxValue}</c:if>
-                                                        <c:if test="${not empty param.status}">&status=${param.status}</c:if>
-                                                        <c:if test="${not empty param.createdDateFrom}">&createdDateFrom=${param.createdDateFrom}</c:if>
-                                                        <c:if test="${not empty param.createdDateTo}">&createdDateTo=${param.createdDateTo}</c:if>
-                                                    " aria-label="Next">
-                                                        <span aria-hidden="true">&raquo;</span>
-                                                    </a>
-                                                </li>
-                                            </c:if>
-                                        </ul>
-                                    </nav>
-                                </div>
-                            </c:if>
                         </div>
                     </div>
                 </div>
@@ -392,7 +352,7 @@
                 document.getElementById('createdDateFrom').value = '';
                 document.getElementById('createdDateTo').value = '';
 
-                // Chuyển hướng đến trang assets mà không có tham số tìm kiếm
+                // Redirect to assets page without search parameters
                 window.location.href = 'assets-filter';
             });
         </script>

@@ -1,26 +1,20 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model;
 
-/**
- *
- * @author lenovo
- */
+import java.util.Date;
+
 public class Loan {
     private int loanId;
     private int customerId;
     private int packageId;
     private double amount;
-    private String startDate;
-    private String endDate;
+    private Date startDate;
+    private Date endDate;
     private String status;
-
+    
     public Loan() {
     }
-
-    public Loan(int loanId, int customerId, int packageId, double amount, String startDate, String endDate, String status) {
+    
+    public Loan(int loanId, int customerId, int packageId, double amount, Date startDate, Date endDate, String status) {
         this.loanId = loanId;
         this.customerId = customerId;
         this.packageId = packageId;
@@ -62,19 +56,19 @@ public class Loan {
         this.amount = amount;
     }
 
-    public String getStartDate() {
+    public Date getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(String startDate) {
+    public void setStartDate(Date startDate) {
         this.startDate = startDate;
     }
 
-    public String getEndDate() {
+    public Date getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(String endDate) {
+    public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
 
@@ -85,6 +79,4 @@ public class Loan {
     public void setStatus(String status) {
         this.status = status;
     }
-    
-    
 }

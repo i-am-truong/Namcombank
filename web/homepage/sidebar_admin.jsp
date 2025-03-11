@@ -140,6 +140,13 @@
             </a>
         </div>
     </li>
+    <!-- manage contracts -->
+    <li class="nav-item active">
+        <a class="nav-link" href="loan-requests-auth">
+            <i class="fas fa-fw fa-table"></i>
+            <span>Loan Require Filter</span>
+        </a>
+    </li>
     <!-- feedback cua admin -->
 
     <li class="nav-item active">
@@ -164,12 +171,6 @@
             <span>News Manager</span></a>
     </li>
 
-    <li class="nav-item active">
-        <a class="nav-link" href="addNews">
-            <i class="fas fa-fw fa-table"></i>
-            <span> News Manager</span></a>
-    </li>
-
 
 
     <!--    <li class="nav-item active">
@@ -180,17 +181,11 @@
 
 
 
-    -->    <li class="nav-item active">
-        <a class="nav-link" href="newsList">
-            <i class="fas fa-fw fa-table"></i>
-            <span> News</span></a>
-    </li>
-
-    <li class="nav-item active">
+-->    <li class="nav-item active">
         <a class="nav-link" href="manageCustomerVer2">
             <i class="fas fa-fw fa-table"></i>
-            <span> Manage Customer Ver 2</span></a>
-    </li>
+            <span> Manage Customer</span></a>
+    </li><!--
 
 
     <!-- Divider -->

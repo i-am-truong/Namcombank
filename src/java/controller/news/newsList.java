@@ -20,8 +20,8 @@ import model.News;
  * @author ADMIN
  */
 public class newsList extends HttpServlet {
-   
-    /** 
+
+    /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
      * @param response servlet response
@@ -30,11 +30,11 @@ public class newsList extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        
-    } 
+
+    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /** 
+    /**
      * Handles the HTTP <code>GET</code> method.
      * @param request servlet request
      * @param response servlet response
@@ -64,9 +64,9 @@ public class newsList extends HttpServlet {
              else{
              n = dao.pagging(1);
              }
-             
+
            }
-            
+
         int count = dao.count(searchQuery);
         int pages = 0;
          if(count % 4 != 0){
@@ -76,12 +76,16 @@ public class newsList extends HttpServlet {
               pages = count/4;
         request.setAttribute("n", n);
         request.setAttribute("pages", pages);
-        
+
+        // Lấy 3 tin tức mới nhất để hiển thị ở sidebar
+        ArrayList<News> recentNews = dao.getRecentNews();
+        request.setAttribute("recentNews", recentNews);
+
         request.getRequestDispatcher("news/newsList.jsp").forward(request, response);
-    } 
-   
-        
-    /** 
+    }
+
+
+    /**
      * Handles the HTTP <code>POST</code> method.
      * @param request servlet request
      * @param response servlet response
@@ -94,7 +98,7 @@ public class newsList extends HttpServlet {
         processRequest(request, response);
     }
 
-    /** 
+    /**
      * Returns a short description of the servlet.
      * @return a String containing servlet description
      */

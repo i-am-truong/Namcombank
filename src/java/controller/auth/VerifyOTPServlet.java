@@ -46,7 +46,6 @@ public class VerifyOTPServlet extends HttpServlet {
         request.getRequestDispatcher("admin.login/two-factor-auth.jsp").forward(request, response);
     }
 
-
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -67,14 +66,12 @@ public class VerifyOTPServlet extends HttpServlet {
 
                 // Store OTP in session with expiry time (1 minute)
                 session.setAttribute("otp", otpValue);
-                session.setAttribute("otpExpiry", System.currentTimeMillis() + 60000);
+                session.setAttribute("otpExpiry", System.currentTimeMillis() + 300000);
                 session.setAttribute("otpSent", true);
 
                 // Set success message
                 request.setAttribute("success", "Mã OTP mới đã được gửi đến email của bạn.");
                 request.setAttribute("otpSent", true);
-
-                LOGGER.log(Level.INFO, "New OTP sent to {0}", staffEmail);
 
                 // Forward back to the OTP verification page
                 request.getRequestDispatcher("admin.login/two-factor-auth.jsp").forward(request, response);
@@ -128,14 +125,13 @@ public class VerifyOTPServlet extends HttpServlet {
             session.removeAttribute("otpExpiry");
             session.removeAttribute("otpSent");
 
-            LOGGER.log(Level.INFO, "OTP verification successful. Redirecting to {0}", redirectAfterOTP);
 
             // Redirect to appropriate page based on role
             if (redirectAfterOTP != null && !redirectAfterOTP.isEmpty()) {
                 response.sendRedirect(redirectAfterOTP);
             } else {
                 // Default redirect if no specific page
-                response.sendRedirect("dashboard");
+                response.sendRedirect("403.html");
             }
         } else {
             // Invalid OTP
@@ -188,15 +184,74 @@ public class VerifyOTPServlet extends HttpServlet {
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
 
             // Set subject
-            message.setSubject("Mã OTP Xác Thực Tài Khoản", "UTF-8");
+            message.setSubject("Namcombank - Xác thực tài khoản", "UTF-8");
 
-            // Set content
-            String body = "Chào bạn,\n\n"
-                    + "Mã OTP để xác thực tài khoản của bạn là: " + otpvalue + "\n"
-                    + "Mã này sẽ hết hạn sau 5 phút.\n\n"
-                    + "Trân trọng,\n"
-                    + "Đội ngũ hỗ trợ";
-            message.setText(body, "UTF-8");
+            // Tạo nội dung email giống mẫu
+            String htmlBody = "<!DOCTYPE html>"
+                    + "<html>"
+                    + "<head>"
+                    + "    <meta charset='UTF-8'>"
+                    + "    <style>"
+                    + "        body {"
+                    + "            font-family: Arial, sans-serif;"
+                    + "            line-height: 1.6;"
+                    + "            color: #333333;"
+                    + "            max-width: 600px;"
+                    + "            margin: 0 auto;"
+                    + "            padding: 20px;"
+                    + "        }"
+                    + "        .container {"
+                    + "            border: 1px solid #e0e0e0;"
+                    + "            border-radius: 5px;"
+                    + "            padding: 20px 30px;"
+                    + "        }"
+                    + "        .header {"
+                    + "            text-align: center;"
+                    + "            color: #2e7d32;"
+                    + "            font-size: 20px;"
+                    + "            font-weight: bold;"
+                    + "            margin-bottom: 20px;"
+                    + "        }"
+                    + "        .otp-container {"
+                    + "            background-color: #f5f5f5;"
+                    + "            padding: 15px;"
+                    + "            text-align: center;"
+                    + "            margin: 20px 0;"
+                    + "            border-radius: 5px;"
+                    + "        }"
+                    + "        .otp-code {"
+                    + "            font-size: 24px;"
+                    + "            font-weight: bold;"
+                    + "            color: #2e7d32;"
+                    + "            letter-spacing: 5px;"
+                    + "        }"
+                    + "        p {"
+                    + "            margin: 10px 0;"
+                    + "        }"
+                    + "        .footer {"
+                    + "            margin-top: 20px;"
+                    + "        }"
+                    + "    </style>"
+                    + "</head>"
+                    + "<body>"
+                    + "    <div class='container'>"
+                    + "        <div class='header'>Namcombank - Xác thực tài khoản</div>"
+                    + "        <p>Chào bạn,</p>"
+                    + "        <p>Chúng tôi đã nhận được yêu cầu đăng nhập vào hệ thống của Namcombank. Để hoàn tất quá trình đăng nhập, vui lòng sử dụng mã xác thực dưới đây:</p>"
+                    + "        <div class='otp-container'>"
+                    + "            <div class='otp-code'>" + otpvalue + "</div>"
+                    + "        </div>"
+                    + "        <p>Mã này sẽ hết hạn sau 5 phút</p>"
+                    + "        <p>Nếu bạn không thực hiện yêu cầu này, vui lòng bỏ qua email này hoặc liên hệ với bộ phận hỗ trợ.</p>"
+                    + "        <div class='footer'>"
+                    + "            <p>Trân trọng,<br>Đội ngũ hỗ trợ Namcombank</p>"
+                    + "        </div>"
+                    + "    </div>"
+                    + "</body>"
+                    + "</html>";
+
+            // Thiết lập nội dung HTML
+            message.setContent(htmlBody, "text/html; charset=UTF-8");
 
             // Send email
             Transport.send(message);

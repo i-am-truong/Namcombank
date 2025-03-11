@@ -1,4 +1,4 @@
-<%-- 
+<%--
     Document   : newsList
     Created on : 25/05/2024, 4:26:04 PM
     Author     : ADMIN
@@ -6,6 +6,8 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="java.util.Date" %>
 <!DOCTYPE html>
 <html  class="no-js" lang="en">
     <head>
@@ -58,116 +60,6 @@
         </header>
         <!-- Header -->
 
-        <!-- Start Mobile Menu Area -->
-        <div class="mobile-menu-area">
-
-            <!--offcanvas menu area start-->
-            <div class="off_canvars_overlay">
-
-            </div>
-            <div class="offcanvas_menu">
-                <div class="offcanvas_menu_wrapper">
-                    <div class="canvas_close">
-                        <a href="javascript:void(0)"><i class="fas fa-times"></i></a>  
-                    </div>
-                    <div class="mobile-logo">
-                        <h2><a href="index.html"><img src="assets/img/logo.png"></a></h2>
-                    </div>
-                    <div id="menu" class="text-left ">
-                        <ul class="offcanvas_main_menu">
-                            <li class="menu-item-has-children">
-                                <a href="index.html">Home</a>
-                            </li>
-                            <li class="menu-item-has-children">
-                                <a href="about.html">about Us</a>
-                            </li>
-                            <li class="menu-item-has-children">
-                                <a href="#">Page</a>
-                                <ul class="sub-menu">
-                                    <li><a href="cart.html">Cart</a></li>
-                                    <li><a href="wishlist.html"> Wishlist</a></li>
-                                    <li><a href="checkout.html">Checkout</a></li>
-                                    <li><a href="login.html">Login</a></li>
-                                    <li><a href="register.html">Register</a></li>
-                                    <li><a href="reset-password.html">Reset Password</a></li>
-                                    <li><a href="privacy-policy.html">Privacy Policy</a></li>
-                                    <li><a href="terms-condition.html">Terms & Condition</a></li>
-                                    <li><a href="404.html">404 Error</a></li>
-                                    <li><a href="faq.html">Faq</a></li>
-                                </ul>
-                            </li>
-                            <li class="menu-item-has-children">
-                                <a href="#">Shop</a>
-                                <ul class="sub-menu">
-                                    <li><a href="shop.html">Shop</a></li>
-                                    <li><a href="shop2-columns.html">Shop 2 Columns</a></li>
-                                    <li><a href="shop-grid.html">Shop Grid</a></li>
-                                    <li><a href="shop-left-sidebar.html">Shop Left Sidebar</a></li>
-                                    <li><a href="shop-list.html">Shop List</a></li>
-                                </ul>
-                            </li>
-                            <li class="menu-item-has-children">
-                                <a href="#">Elements</a>
-                                <ul class="sub-menu">
-                                    <li class="menu-item-has-children">
-                                        <a href="#">Elements</a>
-                                        <ul class="sub-menu">
-                                            <li><a href="element-infobox.html">Element Info Box</a></li>
-                                            <li><a href="element-breadcrumb.html">Element Breadcrum</a></li>
-                                            <li><a href="element-heading.html">Element Headding</a></li>
-                                            <li><a href="element-post.html">Element Post Element</a></li>
-                                            <li><a href="element-pricing.html">Element Pricing</a></li>
-                                        </ul>
-                                    </li>
-                                    <li class="menu-item-has-children">
-                                        <a href="#">Elements</a>
-                                        <ul class="sub-menu">
-                                            <li><a href="element-product-category.html">Element Product Category</a></li>
-                                            <li><a href="element-product-style.html">Element Product Style</a></li>
-                                            <li><a href="element-product-tab.html">Element Product Tab</a></li>
-                                            <li><a href="element-team-style.html">Element Team</a></li>
-                                            <li><a href="element-testimonial.html">Element Testimonial</a></li>
-                                        </ul>
-                                    </li>
-                                    <li class="menu-item-has-children">
-                                        <a href="#">Elements</a>
-                                        <ul class="sub-menu">
-                                            <li><a href="shop.html">Element Shop</a></li>
-                                            <li><a href="shop2-columns.html">Element Shop 2 Columns</a></li>
-                                            <li><a href="shop-grid.html">Element Shop Grid</a></li>
-                                            <li><a href="shop-left-sidebar.html">Element Shop Left Sidebar</a></li>
-                                            <li><a href="shop-list.html">Element Shop List</a></li>
-                                        </ul>
-                                    </li>
-                                    <li class="menu-item-has-children">
-                                        <a href="#">Elements</a>
-                                        <ul class="sub-menu">
-                                            <li><a href="product-details.html">Element Shop Single</a></li>
-                                            <li><a href="cart.html">Element Cart Page</a></li>
-                                            <li><a href="checkout.html">Element CheckOut Page</a></li>
-                                            <li><a href="wishlist.html">Element Wishlist</a></li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="menu-item-has-children">
-                                <a href="#">Blog</a>
-                                <ul class="sub-menu">
-                                    <li><a href="blog.html">Blog</a></li>
-                                    <li><a href="blog-grid.html">Blog Grid</a></li>
-                                    <li><a href="single.html">Blog Single</a></li>
-                                </ul>
-                            </li>
-                            <li class="menu-item-has-children">
-                                <a href="contact.html"> Contact Us</a> 
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!--offcanvas menu area end-->
-        <!-- End Mobile Menu Area -->
         <!-- Start BreadCrumb Area -->
         <div class="breadcrumb-area pt-100 pb-100" style="background-image: url('assets/img/breadcrumb.jpg');">
             <div class="container">
@@ -176,7 +68,7 @@
                         <div class="breadcrumb-content">
                             <h2>News</h2>
                             <ul>
-                                <li><a href="index.html">Home</a></li>
+                                <li><a>Home</a></li>
                                 <li class="active">News</li>
                             </ul>
                         </div>
@@ -202,8 +94,18 @@
                                         </div>
                                         <div class="content">
                                             <ul class="auth">
-                                                <li><a href="#">${news.authorName}</a></li>
-                                                <li><a href="#">${news.updateDate}</a></li>
+                                                <li><a href="#">${not empty news.authorName ? news.authorName : 'Unknown'}</a></li>
+                                                <li><a href="#">
+                                                    <%
+                                                        Date newsDate = ((model.News)pageContext.getAttribute("news")).getUpdateDate();
+                                                        if(newsDate != null) {
+                                                            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy, HH:mm");
+                                                            out.print(sdf.format(newsDate));
+                                                        } else {
+                                                            out.print("Unknown Date");
+                                                        }
+                                                    %>
+                                                </a></li>
                                             </ul>
                                             <h2><a href="newsDetail?id=${news.nId}">${news.title} </a></h2>
                                         </div>
@@ -219,7 +121,7 @@
                                 <div class="page-pagination text-center">
                                     <ul>
                                         <c:forEach begin="1" end = "${pages}" var = "i">
-                                            <li> 
+                                            <li>
                                                 <c:if test="${not empty param.search}">
                                                     <a href="newsList?index=${i}&search=${param.search}">${i}</a>
                                                 </c:if>
@@ -244,27 +146,69 @@
                     <div class="col-lg-4">
                         <!-- Single -->
                         <div class="sidebar-widgets">
-                            <h4 class="title">Recent News</h4>
+                            <h4 class="title">Search News</h4>
                             <form action="newsList" method="get">
-                                <ul>
-                                    <li><a href="#">Top 5 Savings Plans for 2025</a></li>
-                                    <li><a href="#">How to Apply for a Personal Loan Online</a></li>
-                                    <li><a href="#">5 Tips to Manage Your Loan Repayments Effectively UK</a></li>
-                                    <li><a href="#">Why Fixed Deposits are Still a Great Investment Option</a></li>
-                                </ul>
-                                <input type="search" name="search" placeholder="Search Here..">
+                                <input type="search" name="search" placeholder="Search Here.." value="${param.search}">
                                 <button type="submit"><i class="fas fa-search"></i></button>
                             </form>
                         </div>
                         <!-- Single -->
 
-
+                        <!-- Recent News Section -->
+                        <div class="sidebar-widgets">
+                            <h4 class="title">Recent News</h4>
+                            <ul class="recent-post">
+                                <c:forEach items="${recentNews}" var="recent">
+                                    <li>
+                                        <div class="recent-news-item" style="display: flex; margin-bottom: 20px;">
+                                            <!-- Ảnh bên trái -->
+                                            <div class="recent-news-thumb" style="flex: 0 0 100px; margin-right: 15px;">
+                                                <a href="newsDetail?id=${recent.nId}">
+                                                    <img src="${recent.thumbnail}" alt="thumbnail"
+                                                         style="width: 100px; height: 75px; object-fit: cover; border-radius: 4px;">
+                                                </a>
+                                            </div>
+                                            <!-- Nội dung bên phải -->
+                                            <div class="recent-news-content" style="flex: 1;">
+                                                <!-- Tiêu đề ở phía trên -->
+                                                <h5 style="margin: 0 0 8px; font-size: 15px; font-weight: 600; line-height: 1.3;">
+                                                    <a href="newsDetail?id=${recent.nId}" style="color: #333; text-decoration: none;">
+                                                        ${recent.title}
+                                                    </a>
+                                                </h5>
+                                                <!-- Tên tác giả và thời gian ở phía dưới -->
+                                                <div class="meta" style="font-size: 12px; color: #777;">
+                                                    <span style="margin-right: 10px;">
+                                                        <i class="fas fa-user" style="margin-right: 3px;"></i>
+                                                        ${not empty recent.authorName ? recent.authorName : 'Unknown'}
+                                                    </span>
+                                                    <span>
+                                                        <i class="fas fa-calendar-alt" style="margin-right: 3px;"></i>
+                                                        <%
+                                                            Date recentDate = ((model.News)pageContext.getAttribute("recent")).getUpdateDate();
+                                                            if(recentDate != null) {
+                                                                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy, HH:mm");
+                                                                out.print(sdf.format(recentDate));
+                                                            } else {
+                                                                out.print("Unknown Date");
+                                                            }
+                                                        %>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </c:forEach>
+                                <c:if test="${empty recentNews}">
+                                    <li style="padding: 15px 0; text-align: center; color: #777;">No recent news available</li>
+                                </c:if>
+                            </ul>
+                        </div>
 
                         <!-- Single -->
-
-                        <!-- Single -->
-
+                        <!-- ...existing code... -->
                     </div>
+
                 </div>
             </div>
         </section>

@@ -19,7 +19,7 @@ import model.auth.Staff;
  *
  * @author Asus
  */
-@WebServlet("/approve-asset")
+
 public class AssetApproveController extends HttpServlet {
 
     private AssetDAO assetDAO;
@@ -44,11 +44,6 @@ public class AssetApproveController extends HttpServlet {
                 return;
             }
 
-            if (!isHeadOfStaff(staff)) {
-                request.getSession().setAttribute("errorMessage", "Bạn không có quyền duyệt tài sản!");
-                response.sendRedirect("assets");
-                return;
-            }
 
             boolean success = assetDAO.approveAsset(assetId, staff.getId(), note);
 
@@ -62,15 +57,7 @@ public class AssetApproveController extends HttpServlet {
             request.getSession().setAttribute("errorMessage", "Lỗi: " + e.getMessage());
         }
 
-        response.sendRedirect("assets");
+        request.getRequestDispatcher("/customer-assets/viewCustomerAssetApprove.jsp").forward(request, response);
     }
 
-    private boolean isHeadOfStaff(Staff staff) {
-        for (Role role : staff.getRoles()) {
-            if ("Head of Staff".equals(role.getName())) {
-                return true;
-            }
-        }
-        return false;
-    }
 }

@@ -14,6 +14,59 @@ import java.math.BigDecimal;
  */
 public class AssetDAO extends DBContext<Asset> {
 
+    // Trong AssetDAO
+    public boolean insertAsset(Asset asset) {
+        PreparedStatement stm = null;
+
+        boolean success = false;
+
+        try {
+
+            String sql = "INSERT INTO CustomerAssets (customer_id, staff_id, asset_type, asset_name, asset_value, description, status, created_date) "
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP);";
+
+            stm = connection.prepareStatement(sql);
+            stm.setInt(1, asset.getCustomerId());
+            stm.setInt(2, asset.getStaffId());
+            stm.setString(3, asset.getAssetType());
+            stm.setString(4, asset.getAssetName());
+            stm.setBigDecimal(5, asset.getAssetValue());
+            stm.setString(6, asset.getDescription());
+            stm.setString(7, asset.getStatus());
+
+            int rowsAffected = stm.executeUpdate();
+            success = rowsAffected > 0;
+
+        } catch (SQLException ex) {
+            System.out.println("Error inserting asset: " + ex.getMessage());
+        } finally {
+            try {
+                if (stm != null) {
+                    stm.close();
+                }
+            } catch (SQLException ex) {
+                System.out.println("Error closing resources: " + ex.getMessage());
+            }
+        }
+
+        return success;
+    }
+    public boolean deleteAsset(int assetId) {
+    String sql = "DELETE FROM CustomerAssets WHERE asset_id = ?";
+    
+    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        
+        ps.setInt(1, assetId);
+        int rowsAffected = ps.executeUpdate();
+        
+        return rowsAffected > 0;
+        
+    } catch (SQLException e) {
+        System.out.println("Error closing resources: " + e.getMessage());
+        return false;
+    }
+}
+
     @Override
     public void insert(Asset model) {
         PreparedStatement stm = null;
@@ -305,23 +358,24 @@ public class AssetDAO extends DBContext<Asset> {
         return asset;
     }
 
-    // Phương thức bổ sung: Duyệt tài sản
     public boolean approveAsset(int assetId, int staffId, String note) {
         PreparedStatement stm = null;
         boolean success = false;
 
         try {
             String sql = "UPDATE CustomerAssets SET status = 'APPROVED', "
-                    + "approved_by = ?, approved_date = GETDATE(), note = ? "
+                    + "approved_by = ?, approved_date = CURRENT_TIMESTAMP, note = ? "
                     + "WHERE asset_id = ? AND status = 'PENDING'";
 
             stm = connection.prepareStatement(sql);
-            stm.setString(1, String.valueOf(staffId)); // Chuyển int thành String vì kiểu dữ liệu là nchar(10)
+            stm.setInt(1, staffId);
             stm.setString(2, note);
             stm.setInt(3, assetId);
 
             int rowsAffected = stm.executeUpdate();
             success = rowsAffected > 0;
+
+            System.out.println("Approve Asset ID: " + assetId + ", Rows affected: " + rowsAffected);
 
         } catch (SQLException ex) {
             System.out.println("Error approving asset: " + ex.getMessage());
@@ -338,23 +392,24 @@ public class AssetDAO extends DBContext<Asset> {
         return success;
     }
 
-    // Phương thức bổ sung: Từ chối tài sản
     public boolean rejectAsset(int assetId, int staffId, String reason) {
         PreparedStatement stm = null;
         boolean success = false;
 
         try {
             String sql = "UPDATE CustomerAssets SET status = 'REJECTED', "
-                    + "approved_by = ?, approved_date = GETDATE(), note = ? "
+                    + "approved_by = ?, approved_date = CURRENT_TIMESTAMP, note = ? "
                     + "WHERE asset_id = ? AND status = 'PENDING'";
 
             stm = connection.prepareStatement(sql);
-            stm.setString(1, String.valueOf(staffId)); // Chuyển int thành String vì kiểu dữ liệu là nchar(10)
+            stm.setInt(1, staffId);
             stm.setString(2, reason);
             stm.setInt(3, assetId);
 
             int rowsAffected = stm.executeUpdate();
             success = rowsAffected > 0;
+
+            System.out.println("Reject Asset ID: " + assetId + ", Rows affected: " + rowsAffected);
 
         } catch (SQLException ex) {
             System.out.println("Error rejecting asset: " + ex.getMessage());
@@ -644,35 +699,47 @@ public class AssetDAO extends DBContext<Asset> {
     }
 
     public ArrayList<Asset> searchAssets(String assetName, String assetType, String customerName,
-                                    BigDecimal minValue, BigDecimal maxValue, String status,
-                                    String createdDateFrom, String createdDateTo) {
-            ArrayList<Asset> assets = new ArrayList<>();
-            StringBuilder sql = new StringBuilder(
-            "SELECT a.asset_id, a.customer_id, a.staff_id, a.asset_type, a.asset_name, " +
-            "a.asset_value, a.description, a.approved_by, a.status, a.created_date, " +
-            "a.approved_date, a.note, c.fullname AS customer_name, " +  // Sửa notes thành note
-            "s.fullname AS staff_name, s2.fullname AS approver_name " +
-            "FROM CustomerAssets a " +
-            "LEFT JOIN Customer c ON a.customer_id = c.customer_id " +
-            "LEFT JOIN Staff s ON s.staff_id = a.staff_id " +
-            "LEFT JOIN Staff s2 ON s2.staff_id = a.approved_by " +
-            "WHERE 1=1");
+            BigDecimal minValue, BigDecimal maxValue, String status,
+            String createdDateFrom, String createdDateTo,
+            String approvedBy, String approvedDateFrom, String approvedDateTo) {
+        ArrayList<Asset> assets = new ArrayList<>();
+        StringBuilder sql = new StringBuilder(
+                "SELECT a.asset_id, a.customer_id, a.staff_id, a.asset_type, a.asset_name, "
+                + "a.asset_value, a.description, a.approved_by, a.status, a.created_date, "
+                + "a.approved_date, a.note, c.fullname AS customer_name, "
+                + "s.fullname AS staff_name, s2.fullname AS approver_name "
+                + "FROM CustomerAssets a "
+                + "LEFT JOIN Customer c ON a.customer_id = c.customer_id "
+                + "LEFT JOIN Staff s ON s.staff_id = a.staff_id "
+                + "LEFT JOIN Staff s2 ON s2.staff_id = a.approved_by "
+                + "WHERE 1=1");
 
         ArrayList<Object> params = new ArrayList<>();
 
-        // Thêm điều kiện tìm kiếm
-        addSearchConditions(sql, params, assetName, assetType, customerName, 
-                           minValue, maxValue, status, createdDateFrom, createdDateTo);
+        // Thêm điều kiện tìm kiếm cơ bản
+        addSearchConditions(sql, params, assetName, assetType, customerName,
+                minValue, maxValue, status, createdDateFrom, createdDateTo, approvedDateFrom, approvedDateTo);
+
+        // Thêm điều kiện tìm kiếm cho người duyệt
+        if (approvedBy != null && !approvedBy.isEmpty()) {
+            sql.append(" AND (s2.fullname LIKE ? OR s2.staff_id = ?)");
+            params.add("%" + approvedBy + "%");
+            try {
+                int approvedById = Integer.parseInt(approvedBy);
+                params.add(approvedById);
+            } catch (NumberFormatException e) {
+                params.add(-1); // Giá trị không hợp lệ nếu không phải số
+            }
+        }
 
         // In câu SQL để debug
         System.out.println("Search SQL: " + sql.toString());
+        System.out.println("Search params: " + params);
 
         // Thêm sắp xếp
         sql.append(" ORDER BY a.created_date DESC");
 
-        try (
-             PreparedStatement stmt = connection.prepareStatement(sql.toString())) {
-
+        try (PreparedStatement stmt = connection.prepareStatement(sql.toString())) {
             // Thiết lập tham số
             for (int i = 0; i < params.size(); i++) {
                 stmt.setObject(i + 1, params.get(i));
@@ -685,7 +752,10 @@ public class AssetDAO extends DBContext<Asset> {
                     Asset asset = new Asset();
                     // Map dữ liệu từ ResultSet vào đối tượng Asset
                     int assetId = rs.getInt("asset_id");
-                    System.out.println("Đang xử lý asset ID: " + assetId);
+                    String assetStatus = rs.getString("status");
+                    String noteValue = rs.getString("note");
+
+                    System.out.println("Đang xử lý asset ID: " + assetId + ", Status: " + assetStatus + ", Note: " + noteValue);
 
                     asset.setAssetId(assetId);
                     asset.setCustomerId(rs.getInt("customer_id"));
@@ -698,19 +768,27 @@ public class AssetDAO extends DBContext<Asset> {
                     // Xử lý các trường có thể NULL
                     Object approvedByObj = rs.getObject("approved_by");
                     if (approvedByObj != null) {
-                        asset.setApprovedBy((Integer)approvedByObj);
+                        if (approvedByObj instanceof String) {
+                            try {
+                                asset.setApprovedBy(Integer.parseInt((String) approvedByObj));
+                            } catch (NumberFormatException e) {
+                                System.err.println("Lỗi chuyển đổi approved_by: " + e.getMessage());
+                            }
+                        } else {
+                            asset.setApprovedBy((Integer) approvedByObj);
+                        }
                     }
 
-                    asset.setStatus(rs.getString("status"));
+                    asset.setStatus(assetStatus);
                     asset.setCreatedDate(rs.getTimestamp("created_date"));
 
-                    Timestamp approvedDate = rs.getTimestamp("approved_date");
-                    if (approvedDate != null) {
-                        asset.setApprovedDate(approvedDate);
+                    java.sql.Timestamp approvedDateValue = rs.getTimestamp("approved_date");
+                    if (approvedDateValue != null) {
+                        asset.setApprovedDate(approvedDateValue);
                     }
 
-                    // Sửa ở đây - sử dụng cột note từ DB nhưng gọi phương thức setNotes
-                    asset.setNotes(rs.getString("note"));
+                    asset.setNotes(noteValue);
+
                     asset.setCustomerName(rs.getString("customer_name"));
                     asset.setStaffName(rs.getString("staff_name"));
                     asset.setApproverName(rs.getString("approver_name"));
@@ -723,7 +801,6 @@ public class AssetDAO extends DBContext<Asset> {
                 }
             }
 
-            // In số lượng kết quả để debug
             System.out.println("Tìm thấy " + count + " assets");
         } catch (SQLException e) {
             System.err.println("Lỗi SQL: " + e.getMessage());
@@ -733,69 +810,78 @@ public class AssetDAO extends DBContext<Asset> {
         return assets;
     }
 
-
     // Helper method to convert asset type codes to display text
-        private String getAssetTypeDisplay(String assetType) {
-            switch (assetType) {
-                case "REAL_ESTATE":
-                    return "Bất động sản";
-                case "VEHICLE":
-                    return "Phương tiện";
-                case "INCOME":
-                    return "Thu nhập";
-                case "OTHER":
-                    return "Khác";
-                default:
-                    return assetType;
-            }
+    private String getAssetTypeDisplay(String assetType) {
+        switch (assetType) {
+            case "REAL_ESTATE":
+                return "Bất động sản";
+            case "VEHICLE":
+                return "Phương tiện";
+            case "INCOME":
+                return "Thu nhập";
+            case "OTHER":
+                return "Khác";
+            default:
+                return assetType;
+        }
+    }
+
+    private void addSearchConditions(
+            StringBuilder sql, ArrayList<Object> params,
+            String assetName, String assetType, String customerName,
+            BigDecimal minValue, BigDecimal maxValue, String status,
+            String createdDateFrom, String createdDateTo,
+            String approvedDateFrom, String approvedDateTo) {
+
+        if (assetName != null && !assetName.isEmpty()) {
+            sql.append(" AND a.asset_name LIKE ?");
+            params.add("%" + assetName + "%");
         }
 
-        private void addSearchConditions(
-                StringBuilder sql, ArrayList<Object> params,
-                String assetName, String assetType, String customerName,
-                BigDecimal minValue, BigDecimal maxValue, String status,
-                String createdDateFrom, String createdDateTo) {
-
-            if (assetName != null && !assetName.isEmpty()) {
-                sql.append(" AND a.asset_name LIKE ?");
-                params.add("%" + assetName + "%");
-            }
-
-            if (assetType != null && !assetType.isEmpty()) {
-                sql.append(" AND a.asset_type = ?");
-                params.add(assetType);
-            }
-
-            if (customerName != null && !customerName.isEmpty()) {
-                sql.append(" AND c.fullname LIKE ?");
-                params.add("%" + customerName + "%");
-            }
-
-            if (minValue != null) {
-                sql.append(" AND a.asset_value >= ?");
-                params.add(minValue);
-            }
-
-            if (maxValue != null) {
-                sql.append(" AND a.asset_value <= ?");
-                params.add(maxValue);
-            }
-
-            if (status != null && !status.isEmpty()) {
-                sql.append(" AND a.status = ?");
-                params.add(status);
-            }
-
-            if (createdDateFrom != null && !createdDateFrom.isEmpty()) {
-                sql.append(" AND a.created_date >= ?");
-                params.add(createdDateFrom);
-            }
-
-            if (createdDateTo != null && !createdDateTo.isEmpty()) {
-                sql.append(" AND a.created_date <= ?");
-                params.add(createdDateTo);
-            }
+        if (assetType != null && !assetType.isEmpty()) {
+            sql.append(" AND a.asset_type = ?");
+            params.add(assetType);
         }
 
-    
+        if (customerName != null && !customerName.isEmpty()) {
+            sql.append(" AND c.fullname LIKE ?");
+            params.add("%" + customerName + "%");
+        }
+
+        if (minValue != null) {
+            sql.append(" AND a.asset_value >= ?");
+            params.add(minValue);
+        }
+
+        if (maxValue != null) {
+            sql.append(" AND a.asset_value <= ?");
+            params.add(maxValue);
+        }
+
+        if (status != null && !status.isEmpty()) {
+            sql.append(" AND a.status = ?");
+            params.add(status);
+        }
+
+        if (createdDateFrom != null && !createdDateFrom.isEmpty()) {
+            sql.append(" AND a.created_date >= ?");
+            params.add(createdDateFrom);
+        }
+
+        if (createdDateTo != null && !createdDateTo.isEmpty()) {
+            sql.append(" AND a.created_date <= ?");
+            params.add(createdDateTo);
+        }
+
+        if (approvedDateFrom != null && !approvedDateFrom.isEmpty()) {
+            sql.append(" AND a.approved_date >= ?");
+            params.add(approvedDateFrom);
+        }
+
+        if (approvedDateTo != null && !approvedDateTo.isEmpty()) {
+            sql.append(" AND a.approved_date <= ?");
+            params.add(approvedDateTo);
+        }
+    }
+
 }

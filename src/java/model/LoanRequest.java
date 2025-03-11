@@ -1,42 +1,105 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model;
 
-
+import java.math.BigDecimal;
 import java.util.Date;
-
+import model.auth.Staff;
 
 public class LoanRequest {
 
     private int requestId;
-    private int loanId;
-    private int staffId;
     private int customerId;
-    private String approvalStatus;
+    private int packageId;
+    private BigDecimal amount;
+    private Date requestDate;
+    private String status;
+    private int staffId;
     private Date approvalDate;
     private String approvedBy;
+    private String notes;
+    private Date startDate;
+    private Date endDate;
 
-    // Các thông tin bổ sung để hiển thị
-    private String customerName;
-    private double loanAmount;
-    private String staffName;
+    private Staff staff;
+    private LoanPackage loanPackage;
+    private Customer customer;
+    private Asset asset;
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    
+
+    public Staff getStaff() {
+        return staff;
+    }
+
+    public void setStaff(Staff staff) {
+        this.staff = staff;
+    }
+
+    public LoanPackage getLoanPackage() {
+        return loanPackage;
+    }
+
+    public void setLoanPackage(LoanPackage loanPackage) {
+        this.loanPackage = loanPackage;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public Asset getAsset() {
+        return asset;
+    }
+
+    public void setAsset(Asset asset) {
+        this.asset = asset;
+    }
 
     public LoanRequest() {
     }
 
-    public LoanRequest(int requestId, int loanId, int staffId, int customerId, String approvalStatus, Date approvalDate, String approvedBy, String customerName, double loanAmount, String staffName) {
-        this.requestId = requestId;
-        this.loanId = loanId;
-        this.staffId = staffId;
+    // Constructor dành cho việc tạo yêu cầu vay mới (chưa có duyệt)
+    public LoanRequest(int customerId, int packageId, BigDecimal amount, Date requestDate, String status) {
         this.customerId = customerId;
-        this.approvalStatus = approvalStatus;
+        this.packageId = packageId;
+        this.amount = amount;
+        this.requestDate = requestDate;
+        this.status = status;
+    }
+
+    // Constructor đầy đủ (dùng khi lấy từ database)
+    public LoanRequest(int requestId, int customerId, int packageId, BigDecimal amount, Date requestDate, String status, int staffId, Date approvalDate, String approvedBy, String notes, Date start_date, Date endDate) {
+        this.requestId = requestId;
+        this.customerId = customerId;
+        this.packageId = packageId;
+        this.amount = amount;
+        this.requestDate = requestDate;
+        this.status = status;
+        this.staffId = staffId;
         this.approvalDate = approvalDate;
         this.approvedBy = approvedBy;
-        this.customerName = customerName;
-        this.loanAmount = loanAmount;
-        this.staffName = staffName;
+        this.notes = notes;
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     public int getRequestId() {
@@ -47,22 +110,6 @@ public class LoanRequest {
         this.requestId = requestId;
     }
 
-    public int getLoanId() {
-        return loanId;
-    }
-
-    public void setLoanId(int loanId) {
-        this.loanId = loanId;
-    }
-
-    public int getStaffId() {
-        return staffId;
-    }
-
-    public void setStaffId(int staffId) {
-        this.staffId = staffId;
-    }
-
     public int getCustomerId() {
         return customerId;
     }
@@ -71,12 +118,44 @@ public class LoanRequest {
         this.customerId = customerId;
     }
 
-    public String getApprovalStatus() {
-        return approvalStatus;
+    public int getPackageId() {
+        return packageId;
     }
 
-    public void setApprovalStatus(String approvalStatus) {
-        this.approvalStatus = approvalStatus;
+    public void setPackageId(int packageId) {
+        this.packageId = packageId;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    public Date getRequestDate() {
+        return requestDate;
+    }
+
+    public void setRequestDate(Date requestDate) {
+        this.requestDate = requestDate;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public int getStaffId() {
+        return staffId;
+    }
+
+    public void setStaffId(int staffId) {
+        this.staffId = staffId;
     }
 
     public Date getApprovalDate() {
@@ -95,30 +174,12 @@ public class LoanRequest {
         this.approvedBy = approvedBy;
     }
 
-    public String getCustomerName() {
-        return customerName;
+    public String getNotes() {
+        return notes;
     }
 
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 
-    public double getLoanAmount() {
-        return loanAmount;
-    }
-
-    public void setLoanAmount(double loanAmount) {
-        this.loanAmount = loanAmount;
-    }
-
-    public String getStaffName() {
-        return staffName;
-    }
-
-    public void setStaffName(String staffName) {
-        this.staffName = staffName;
-    }
-
-    
-    
 }
