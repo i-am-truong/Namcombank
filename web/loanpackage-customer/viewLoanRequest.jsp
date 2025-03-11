@@ -98,8 +98,11 @@
                     <div class="container-fluid">
                         <div class="table-wrapper">
                             <div class="text-right mb-3">
-                                <a href="loanpackage-customer/loanpackage-list.jsp" class="btn btn-success">
-                                    <i class="fas fa-plus"></i> Tạo Yêu Cầu Vay Mới
+                                <a href="Home" class="btn btn-primary">
+                                    <i class="fas fa-home"></i> Home
+                                </a>
+                                <a href="loanpackage-customer/loan_packages.jsp" class="btn btn-success">
+                                    <i class="fas fa-plus"></i> Xem các gói vay có sẵn
                                 </a>
                             </div>
                             <!-- Debug information -->
@@ -202,7 +205,7 @@
                                     <c:choose>
                                         <c:when test="${not empty loanRequests && loanRequests.size() > 0}">
                                             <c:forEach items="${loanRequests}" var="request">
-                                                <tr class="clickable-row" onclick="window.location.href = 'loan-request-detail?id=${request.requestId}'">
+                                                <tr class="clickable-row" onclick="window.location.href = 'customer-loan-request-detail?id=${request.requestId}'">
                                                     <td>${request.requestId}</td>
                                                     <td>${request.customer.fullname}</td>
                                                     <td>${request.loanPackage.packageName}</td>
@@ -264,6 +267,7 @@
                                         </c:otherwise>
                                     </c:choose>
                                 </tbody>
+
                             </table>
                         </div>
                     </div>
@@ -294,10 +298,11 @@
                                                         document.getElementById('requestDateFrom').value = '';
                                                         document.getElementById('requestDateTo').value = '';
                                                         document.getElementById('approvedBy').value = '';
+                                                        document.getElementById('approvedDate').value = '';
                                                         document.getElementById('approvalDateFrom').value = '';
                                                         document.getElementById('approvalDateTo').value = '';
 
-                                                        // Redirect to loan-requests-auth without search parameters
+                                                        // Redirect to customer-loan-requests without search parameters
                                                         window.location.href = 'customer-loan-requests';
                                                     });
     </script>

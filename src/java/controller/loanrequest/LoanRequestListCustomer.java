@@ -42,6 +42,7 @@ public class LoanRequestListCustomer extends HttpServlet {
             String requestDateFrom = request.getParameter("requestDateFrom");
             String requestDateTo = request.getParameter("requestDateTo");
             String approvedBy = request.getParameter("approvedBy");
+            String approvedDate = request.getParameter("approvedDate");
             String approvalDateFrom = request.getParameter("approvalDateFrom");
             String approvalDateTo = request.getParameter("approvalDateTo");
             String hasAssetStr = request.getParameter("hasAsset");
@@ -95,6 +96,7 @@ public class LoanRequestListCustomer extends HttpServlet {
             request.setAttribute("requestDateFrom", requestDateFrom);
             request.setAttribute("requestDateTo", requestDateTo);
             request.setAttribute("approvedBy", approvedBy);
+            request.setAttribute("approvedDate", approvedDate);
             request.setAttribute("approvalDateFrom", approvalDateFrom);
             request.setAttribute("approvalDateTo", approvalDateTo);
             request.setAttribute("hasAsset", hasAssetStr);

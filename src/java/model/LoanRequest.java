@@ -1,5 +1,6 @@
 package model;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import model.auth.Staff;
 
@@ -8,36 +9,38 @@ public class LoanRequest {
     private int requestId;
     private int customerId;
     private int packageId;
-    private double amount;
+    private BigDecimal amount;
     private Date requestDate;
     private String status;
     private int staffId;
     private Date approvalDate;
     private String approvedBy;
     private String notes;
-    private String start_date;
-    private String end_date;
+    private Date startDate;
+    private Date endDate;
 
     private Staff staff;
     private LoanPackage loanPackage;
     private Customer customer;
     private Asset asset;
 
-    public String getStart_date() {
-        return start_date;
+    public Date getStartDate() {
+        return startDate;
     }
 
-    public void setStart_date(String start_date) {
-        this.start_date = start_date;
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
     }
 
-    public String getEnd_date() {
-        return end_date;
+    public Date getEndDate() {
+        return endDate;
     }
 
-    public void setEnd_date(String end_date) {
-        this.end_date = end_date;
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
+
+    
 
     public Staff getStaff() {
         return staff;
@@ -70,13 +73,21 @@ public class LoanRequest {
     public void setAsset(Asset asset) {
         this.asset = asset;
     }
-    
-    
 
     public LoanRequest() {
     }
 
-    public LoanRequest(int requestId, int customerId, int packageId, double amount, Date requestDate, String status, int staffId, Date approvalDate, String approvedBy, String notes) {
+    // Constructor dành cho việc tạo yêu cầu vay mới (chưa có duyệt)
+    public LoanRequest(int customerId, int packageId, BigDecimal amount, Date requestDate, String status) {
+        this.customerId = customerId;
+        this.packageId = packageId;
+        this.amount = amount;
+        this.requestDate = requestDate;
+        this.status = status;
+    }
+
+    // Constructor đầy đủ (dùng khi lấy từ database)
+    public LoanRequest(int requestId, int customerId, int packageId, BigDecimal amount, Date requestDate, String status, int staffId, Date approvalDate, String approvedBy, String notes, Date start_date, Date endDate) {
         this.requestId = requestId;
         this.customerId = customerId;
         this.packageId = packageId;
@@ -87,6 +98,8 @@ public class LoanRequest {
         this.approvalDate = approvalDate;
         this.approvedBy = approvedBy;
         this.notes = notes;
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     public int getRequestId() {
@@ -113,11 +126,11 @@ public class LoanRequest {
         this.packageId = packageId;
     }
 
-    public double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 

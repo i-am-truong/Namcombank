@@ -23,11 +23,9 @@
                                 <nav>
                                     <ul>
                                         <li><a href="/Namcombank/Home">Home</a></li>
-                                        <li><a href="/Namcombank/loanpackage-customer/loanpackage-list.jsp">Loan Packages <i class="fa fa-angle-down"></i></a>
+                                        <li><a href="/Namcombank/loanpackage-customer/loan_packages.jsp">Loan Packages <i class="fa fa-angle-down"></i></a>
                                             <ul class="submenu-item">
-                                                <li><a href="/Namcombank/loanpackage-customer/loanpackage-list.jsp">All Loan Packages</a></li>
-                                                <li><a href="unsecured-loans">Unsecured Loans</a></li>
-                                                <li><a href=secured-loans">Secured Loan
+                                                <li><a href="/Namcombank/loanpackage-customer/loan_packages.jsp">All Loan Packages</a></li>
                                             </ul>
                                         </li>
                                         <li><a href="/Namcombank/allSavings">Savings <i class="fa fa-angle-down"></i></a>

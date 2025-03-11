@@ -36,7 +36,7 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
                 loanRequest.setCustomerId(rs.getInt("customer_id"));
                 loanRequest.setPackageId(rs.getInt("package_id"));
                 loanRequest.setStaffId(rs.getInt("staff_id"));
-                loanRequest.setAmount(rs.getDouble("amount"));
+                loanRequest.setAmount(rs.getBigDecimal("amount"));
                 loanRequest.setRequestDate(rs.getDate("request_date"));
                 loanRequest.setStatus(rs.getString("status"));
                 loanRequest.setApprovalDate(rs.getDate("approval_date"));
@@ -80,49 +80,84 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
         return loanRequests;
     }
 
-    public boolean insertLoanRequest(LoanRequest loanRequest) {
-        String sql = "INSERT INTO LoanRequests "
-                + "(staff_id, package_id, customer_id, request_date, amount, status, start_date, end_date, approval_date, approved_by, approved_note) "
-                + "VALUES (?, ?, ?, ?, ?, 'pending', ?, ?, ?, ?, ?)";
+//    public boolean insertLoanRequest(LoanRequest request) {
+//        String sql = "INSERT INTO LoanRequests (customer_id, package_id, amount, request_date, status, start_date, end_date, staff_id, approval_date, approved_by, notes) "
+//                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+//
+//        try ( // Lấy kết nối từ DBContext
+//                PreparedStatement stmt = connection.prepareStatement(sql)) {
+//
+//            stmt.setInt(1, request.getCustomerId());
+//            stmt.setInt(2, request.getPackageId());
+//            stmt.setDouble(3, request.getAmount());
+//            stmt.setDate(4, new java.sql.Date(request.getRequestDate().getTime()));
+//            stmt.setString(5, request.getStatus());
+//
+//            // Xử lý start_date
+//            if (request.getStart_date() != null) {
+//                stmt.setDate(6, new java.sql.Date(request.getStart_date().getTime()));
+//            } else {
+//                stmt.setNull(6, java.sql.Types.DATE);
+//            }
+//
+//            // Xử lý end_date
+//            if (request.getEnd_date() != null) {
+//                stmt.setDate(7, new java.sql.Date(request.getEnd_date().getTime()));
+//            } else {
+//                stmt.setNull(7, java.sql.Types.DATE);
+//            }
+//
+//            // Xử lý staff_id
+//            if (request.getStaffId() > 0) {
+//                stmt.setInt(8, request.getStaffId());
+//            } else {
+//                stmt.setNull(8, java.sql.Types.INTEGER);
+//            }
+//
+//            // Xử lý approval_date
+//            if (request.getApprovalDate() != null) {
+//                stmt.setDate(9, new java.sql.Date(request.getApprovalDate().getTime()));
+//            } else {
+//                stmt.setNull(9, java.sql.Types.DATE);
+//            }
+//
+//            // Xử lý approved_by
+//            if (request.getApprovedBy() != null) {
+//                stmt.setString(10, request.getApprovedBy());
+//            } else {
+//                stmt.setNull(10, java.sql.Types.VARCHAR);
+//            }
+//
+//            // Xử lý notes
+//            if (request.getNotes() != null) {
+//                stmt.setString(11, request.getNotes());
+//            } else {
+//                stmt.setNull(11, java.sql.Types.VARCHAR);
+//            }
+//
+//            return stmt.executeUpdate() > 0;
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            return false;
+//        }
+//    }
+    @Override
+    public void insert(LoanRequest model) {
+        String sql = "INSERT INTO LoanRequests (customer_id, package_id, amount, request_date, status) "
+                + "VALUES (?, ?, ?, ?, ?)";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, model.getCustomerId());
+            stmt.setInt(2, model.getPackageId());
+            stmt.setBigDecimal(3, model.getAmount());
+            stmt.setDate(4, new java.sql.Date(model.getRequestDate().getTime()));
+            stmt.setString(5, model.getStatus());
 
-            stmt.setInt(1, loanRequest.getStaffId());
-            stmt.setInt(2, loanRequest.getPackageId());
-            stmt.setInt(3, loanRequest.getCustomerId());
-            stmt.setDate(4, new java.sql.Date(loanRequest.getRequestDate().getTime()));
-            stmt.setDouble(5, loanRequest.getAmount());
-            stmt.setString(6, loanRequest.getStart_date());
-            stmt.setString(7, loanRequest.getEnd_date());
-
-            if (loanRequest.getApprovalDate() != null) {
-                stmt.setDate(8, new java.sql.Date(loanRequest.getApprovalDate().getTime()));
-            } else {
-                stmt.setNull(8, java.sql.Types.DATE);
-            }
-
-            stmt.setString(9, loanRequest.getApprovedBy());
-            stmt.setString(10, loanRequest.getNotes());
-
-            return stmt.executeUpdate() > 0;
-
+            stmt.executeUpdate();
+            System.out.println("✅ Dữ liệu đã được lưu vào database!");
         } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    @Override
-    public void insert(LoanRequest loan) {
-        String sql = "INSERT INTO LoanRequests (customer_id, package_id, amount, request_date, status) VALUES (?, ?, ?, GETDATE(), 'pending')";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, loan.getCustomerId());
-            ps.setInt(2, loan.getPackageId());
-            ps.setDouble(3, loan.getAmount());
-            ps.setString(4, loan.getStatus());
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
+            e.printStackTrace(); // In lỗi chi tiết
+            System.out.println("❌ Lỗi khi lưu dữ liệu vào database: " + e.getMessage());
         }
     }
 
@@ -130,7 +165,7 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
     public void update(LoanRequest loan) {
         String sql = "UPDATE LoanRequests SET amount = ?, status = ? WHERE request_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setDouble(1, loan.getAmount());
+            ps.setBigDecimal(1, loan.getAmount());
             ps.setString(2, loan.getStatus());
             ps.setInt(3, loan.getRequestId());
             ps.executeUpdate();
@@ -186,7 +221,7 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
                 LoanRequest loan = new LoanRequest();
                 loan.setRequestId(rs.getInt("request_id"));
                 loan.setPackageId(rs.getInt("package_id"));
-                loan.setAmount(rs.getDouble("amount"));
+                loan.setAmount(rs.getBigDecimal("amount"));
                 loan.setRequestDate(rs.getDate("request_date"));
                 loan.setStatus(rs.getString("status"));
 
@@ -225,7 +260,7 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
                 loan.setRequestId(rs.getInt("request_id"));
                 loan.setCustomerId(rs.getInt("customer_id"));
                 loan.setPackageId(rs.getInt("package_id"));
-                loan.setAmount(rs.getDouble("amount"));
+                loan.setAmount(rs.getBigDecimal("amount"));
                 loan.setRequestDate(rs.getDate("request_date"));
                 loan.setStatus(rs.getString("status"));
                 return loan;
@@ -308,7 +343,7 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
                     loanRequest.setCustomerId(rs.getInt("customer_id"));
                     loanRequest.setPackageId(rs.getInt("package_id"));
                     loanRequest.setStaffId(rs.getInt("staff_id"));
-                    loanRequest.setAmount(rs.getDouble("amount"));
+                    loanRequest.setAmount(rs.getBigDecimal("amount"));
                     loanRequest.setStatus(loanStatus);
                     loanRequest.setNotes(noteValue);
 
@@ -549,7 +584,7 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
                     loanRequest.setCustomerId(rs.getInt("customer_id"));
                     loanRequest.setPackageId(rs.getInt("package_id"));
                     loanRequest.setStaffId(rs.getInt("staff_id"));
-                    loanRequest.setAmount(rs.getDouble("amount"));
+                    loanRequest.setAmount(rs.getBigDecimal("amount"));
                     loanRequest.setStatus(rs.getString("status"));
                     loanRequest.setRequestDate(rs.getDate("request_date"));
                     loanRequest.setApprovalDate(rs.getDate("approval_date"));
