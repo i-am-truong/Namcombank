@@ -99,7 +99,7 @@ public class addCustomer extends BaseRBACControlller {
             String email = normalizeWhitespace(request.getParameter("emailC"));
             String address = normalizeWhitespace(request.getParameter("addressC"));
             int gender = Integer.parseInt(request.getParameter("genderC"));
-            
+
             fullname = SearchUtils.preprocessFullname(fullname);
             address = SearchUtils.preprocessFullname(address);
 
@@ -123,8 +123,6 @@ public class addCustomer extends BaseRBACControlller {
             // Email validation
             if (email.isEmpty()) {
                 errorMessage.append("Email is required.<br>");
-            } else if (!hasMinimumWords(fullname, 2)) {
-                errorMessage.append("Full name must contain at least 2 words.<br>");
             } else {
                 try {
                     InternetAddress emailAddr = new InternetAddress(email);
@@ -167,15 +165,10 @@ public class addCustomer extends BaseRBACControlller {
                     // Hash it once here
                     String hashedPassword = cdao.toSHA1(plainPassword);
 
-                    cdao.registerCustomer(fullname, email, phonenumber, address, hashedPassword, gender);  
+                    cdao.registerCustomer(fullname, email, phonenumber, address, hashedPassword, gender);
                     sdao.sendEmail(email, plainPassword, email.substring(0, email.indexOf("@")));
                     request.setAttribute("suc", "Customer account created successfully! Password sent via email.");
 
-                    // Clear form after successful submission
-                    request.removeAttribute("fullnameC");
-                    request.removeAttribute("emailC");
-                    request.removeAttribute("phonenumberC");
-                    request.removeAttribute("addressC");
                 } catch (Exception e) {
                     request.setAttribute("error", "An error occurred while creating the account. Please try again.");
                     // Preserve form data in case of error

@@ -158,13 +158,16 @@
                                                 <div class="form-floating mb-3">
                                                     <input type="text" class="form-control"
                                                            name="fullnameC" id="fullname" placeholder="Full Name"
-                                                           value="${param.fullnameC != null ? param.fullnameC : ''}" required>
+                                                           value="${not empty error ? param.fullnameC : ''}" required>
                                                     <label for="fullname" class="form-label">Full Name</label>
                                                 </div>
                                             </div>
                                             <div class="col-12">
                                                 <div class="form-floating mb-3">
-                                                    <input type="email" class="form-control" name="emailC" id="email" placeholder="name@example.com" value="${param.emailC != null ? param.emailC : ''}" required pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" title="Enter a valid email.">
+                                                    <input type="email" class="form-control" name="emailC" id="email" placeholder="name@example.com"
+                                                           value="${not empty error ? param.emailC : ''}"
+                                                           required pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                                                           title="Enter a valid email.">
                                                     <label for="email" class="form-label">Email</label>
                                                 </div>
                                             </div>
@@ -172,8 +175,8 @@
                                                 <div class="form-floating mb-3">
                                                     <select class="form-select" name="genderC" id="gender" required>
                                                         <option value="">Select Gender</option>
-                                                        <option value="1" ${param.genderC == "1" ? "selected" : ""}>Male</option>
-                                                        <option value="0" ${param.genderC == "0" ? "selected" : ""}>Female</option>
+                                                        <option value="1" ${not empty error && param.genderC == "1" ? "selected" : ""}>Male</option>
+                                                        <option value="0" ${not empty error && param.genderC == "0" ? "selected" : ""}>Female</option>
                                                     </select>
                                                     <label for="gender" class="form-label">Gender</label>
                                                 </div>
@@ -181,14 +184,16 @@
                                             <div class="col-12">
                                                 <div class="form-floating mb-3">
                                                     <input type="tel" class="form-control" name="phonenumberC" id="phonenumber"
-                                                           value="${param.phonenumberC != null ? param.phonenumberC : ''}" required pattern="^0[0-9]{9}$" title="Phone number must start with 0 and have exactly 10 digits." maxlength="10">
+                                                           value="${not empty error ? param.phonenumberC : ''}"
+                                                           required pattern="^0[0-9]{9}$"
+                                                           title="Phone number must start with 0 and have exactly 10 digits." maxlength="10">
                                                     <label for="phonenumber" class="form-label">Phone Number</label>
                                                 </div>
                                             </div>
                                             <div class="col-12">
                                                 <div class="form-floating mb-3">
                                                     <input type="address" class="form-control" name="addressC" id="address" placeholder="Address"
-                                                           value="${param.addressC != null ? param.addressC : ''}">
+                                                           value="${not empty error ? param.addressC : ''}">
                                                     <label for="address" class="form-label">Address</label>
                                                 </div>
                                             </div>
