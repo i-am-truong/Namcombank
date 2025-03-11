@@ -323,6 +323,8 @@
     <servlet>
         <servlet-name>SavingFeedbackAnswerCustomer</servlet-name>
         <servlet-class>controller.feedback.SavingFeedbackAnswerCustomer</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>LoanRequestDetailServlet</servlet-name>
         <servlet-class>controller.loanrequest.LoanRequestDetailServlet</servlet-class>
     </servlet>
