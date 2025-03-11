@@ -65,39 +65,7 @@
                                                     </div>
                                                 </div>
                                             </div>-->
-    <div class="menu">
-        <nav>
-            <ul>
-                <li><a href="/Namcombank/Home">Home</a></li>
-                <li><a href="/Namcombank/loanpackage/loanpackage-list.jsp">Loan Packages <i
-                            class="fa fa-angle-down"></i></a>
-                    <ul class="submenu-item">
-                        <li><a href="/Namcombank/loanpackage/loanpackage-list.jsp">All Loan Packages</a></li>
-                        <li><a href="persional-loans">Personal Loans</a></li>
-                        <li><a href="bussiness-loans">Business Loans</a></li>
-                        <li><a href="unsecured-loans">Unsecured Loans</a></li>
-                        <li><a href=secured-loans">Secured Loans</a></li>
 
-                    </ul>
-                </li>
-                <li><a href="AllSaving">Savings <i class="fa fa-angle-down"></i></a>
-                    <ul class="submenu-item">
-                        <li><a href="SavingCustomer">Saving Requesting</a></li>
-                        <li><a href="SavingCustomerActive">Saving</a></li>
-                        <!--                                    <li><a href="SavingTerm">Term Savings</a></li>
-                                    <li><a href="SavingWIthoutTerm">Savings without term</a></li>-->
-
-                    </ul>
-                </li>
-                <li><a href="viewWishList">Wish list</a>
-                </li>
-                <li><a href="newsList">News <i class="fa fa-angle-down"></i></a>
-                </li>
-                <li><a href="viewFeedback?customer_id=<%= session.getAttribute(" customer_id") %>">Feedback <i></i></a>
-                </li>
-            </ul>
-        </nav>
-    </div>
 
 </div>
 </div>
