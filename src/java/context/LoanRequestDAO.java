@@ -295,7 +295,7 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
                 "SELECT r.request_id, r.staff_id, r.package_id, r.customer_id, r.request_date, r.amount, "
                 + "r.status, r.start_date, r.end_date, r.approval_date, r.approved_by, r.approved_note, r.asset_id, "
                 + "s.fullname AS staff_name, "
-                + "p.package_name, p.interest_rate, "
+                + "p.package_name, p.interest_rate,p.loan_term, "
                 + "c.fullname AS customer_name, c.citizen_identification_card AS cic, "
                 + "cs.asset_name, cs.asset_value, cs.asset_type, cs.description, "
                 + "s2.fullname AS approver_name "
@@ -402,6 +402,7 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
                     loanPackage.setPackageId(rs.getInt("package_id"));
                     loanPackage.setPackageName(rs.getString("package_name"));
                     loanPackage.setInterestRate(rs.getBigDecimal("interest_rate"));
+                    loanPackage.setLoanTerm(rs.getInt("loan_term"));
                     loanRequest.setLoanPackage(loanPackage);
 
                     // Khởi tạo và ánh xạ Asset (nếu có)
