@@ -175,7 +175,7 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
     }
 
     public boolean deleteLoanRequest(int requestId) {
-        String sql = "DELETE FROM LoanRequests WHERE request_id = ? AND status = 'Pending'";
+        String sql = "DELETE FROM LoanRequests WHERE request_id = ? ";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, requestId);
             return stmt.executeUpdate() > 0;
@@ -326,10 +326,6 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
             }
         }
 
-        // In câu SQL để debug
-        System.out.println("Search SQL: " + sql.toString());
-        System.out.println("Search params: " + params);
-
         // Thêm sắp xếp
         sql.append(" ORDER BY r.request_date DESC");
 
@@ -348,8 +344,6 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
                     int requestId = rs.getInt("request_id");
                     String loanStatus = rs.getString("status");
                     String noteValue = rs.getString("approved_note");
-
-                    System.out.println("Đang xử lý request ID: " + requestId + ", Status: " + loanStatus + ", Note: " + noteValue);
 
                     loanRequest.setRequestId(requestId);
                     loanRequest.setCustomerId(rs.getInt("customer_id"));
@@ -382,7 +376,16 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
                         loanRequest.setApprovalDate(approvalDate);
                     }
 
-                    loanRequest.setApprovedBy(rs.getString("approved_by"));
+                    // Trong phương thức searchLoanRequests và getLoanRequestById
+                    String approverName = rs.getString("approver_name");
+                    if (approverName != null && !approverName.isEmpty()) {
+                        loanRequest.setApprovedBy(approverName); // Lưu tên người duyệt vào approvedBy
+                    } else {
+                        Object approvedByObj = rs.getObject("approved_by");
+                        if (approvedByObj != null) {
+                            loanRequest.setApprovedBy("Staff ID: " + rs.getString("approved_by"));
+                        }
+                    }
 
                     // Khởi tạo và ánh xạ Staff
                     Staff staff = new Staff();
@@ -425,14 +428,10 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
                     loanRequests.add(loanRequest);
                     count++;
 
-                } catch (Exception e) { 
-                    System.err.println("Lỗi khi mapping loan request: " + e.getMessage());
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-
-            System.out.println("Tìm thấy " + count + " yêu cầu vay");
-
         } catch (SQLException e) {
             System.err.println("Lỗi SQL: " + e.getMessage());
             e.printStackTrace();
@@ -572,10 +571,10 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
         String query = "SELECT r.request_id, r.staff_id, r.package_id, r.customer_id, r.request_date, r.amount, "
                 + "r.status, r.start_date, r.end_date, r.approval_date, r.approved_by, r.approved_note, r.asset_id, "
                 + "s.fullname AS staff_name, "
-                + "p.package_name, p.interest_rate, p.description AS package_description, "
-                + "c.fullname AS customer_name, c.citizen_identification_card AS cic, c.phonenumber, c.email, "
+                + "p.package_name, p.interest_rate, p.loan_term, p.description AS package_description, "
+                + "c.fullname AS customer_name, c.citizen_identification_card AS cic, c.phonenumber, c.email, c.address, "
                 + "cs.asset_name, cs.asset_value, cs.asset_type, cs.description, "
-                + "s2.fullname AS approver_name "
+                + "s2.fullname AS approver_name, s2.staff_id AS approver_id "
                 + "FROM LoanRequests r "
                 + "LEFT JOIN Staff s ON r.staff_id = s.staff_id "
                 + "LEFT JOIN LoanPackages p ON p.package_id = r.package_id "
@@ -586,25 +585,61 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
 
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setInt(1, requestId);
+
+            System.out.println("Executing query for request ID: " + requestId);
+
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     LoanRequest loanRequest = new LoanRequest();
 
-                    // Ánh xạ thông tin từ ResultSet vào đối tượng LoanRequest
-                    // Tương tự như trong phương thức searchLoanRequests
                     // Thiết lập thông tin cơ bản
-                    loanRequest.setRequestId(rs.getInt("request_id"));
+                    int reqId = rs.getInt("request_id");
+                    String loanStatus = rs.getString("status");
+                    String noteValue = rs.getString("approved_note");
+
+                    System.out.println("Processing request ID: " + reqId + ", Status: " + loanStatus + ", Note: " + noteValue);
+
+                    loanRequest.setRequestId(reqId);
                     loanRequest.setCustomerId(rs.getInt("customer_id"));
                     loanRequest.setPackageId(rs.getInt("package_id"));
                     loanRequest.setStaffId(rs.getInt("staff_id"));
                     loanRequest.setAmount(rs.getBigDecimal("amount"));
-                    loanRequest.setStatus(rs.getString("status"));
-                    loanRequest.setRequestDate(rs.getDate("request_date"));
-                    loanRequest.setApprovalDate(rs.getDate("approval_date"));
-                    loanRequest.setApprovedBy(rs.getString("approved_by"));
-                    loanRequest.setNotes(rs.getString("approved_note"));
+                    loanRequest.setStatus(loanStatus);
+                    loanRequest.setNotes(noteValue);
 
-                    // Thiết lập thông tin Staff
+                    // Xử lý các trường ngày tháng có thể NULL
+                    java.sql.Date requestDate = rs.getDate("request_date");
+                    if (requestDate != null) {
+                        loanRequest.setRequestDate(requestDate);
+                    }
+
+                    java.sql.Date startDate = rs.getDate("start_date");
+                    if (startDate != null) {
+                    }
+                    java.sql.Date endDate = rs.getDate("end_date");
+                    if (endDate != null) {
+                    }
+
+                    java.sql.Date approvalDate = rs.getDate("approval_date");
+                    if (approvalDate != null) {
+                        loanRequest.setApprovalDate(approvalDate);
+                    }
+
+                    // Xử lý thông tin người duyệt
+                    Object approvedByObj = rs.getObject("approved_by");
+                    if (approvedByObj != null) {
+                        int approvedById = rs.getInt("approved_by");
+                        String approverName = rs.getString("approver_name");
+                        loanRequest.setApprovedBy(approverName != null ? approverName : String.valueOf(approvedById));
+                        // Nếu có thông tin người duyệt, tạo đối tượng Staff cho người duyệt
+                        if (approverName != null) {
+                            Staff approver = new Staff();
+                            approver.setId(approvedById);
+                            approver.setFullname(approverName);
+                        }
+                    }
+
+                    // Thiết lập thông tin Staff (người tạo)
                     Staff staff = new Staff();
                     staff.setId(rs.getInt("staff_id"));
                     staff.setFullname(rs.getString("staff_name"));
@@ -617,6 +652,7 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
                     customer.setCid(rs.getString("cic"));
                     customer.setPhonenumber(rs.getString("phonenumber"));
                     customer.setEmail(rs.getString("email"));
+                    customer.setAddress(rs.getString("address"));
                     loanRequest.setCustomer(customer);
 
                     // Thiết lập thông tin LoanPackage
@@ -624,6 +660,7 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
                     loanPackage.setPackageId(rs.getInt("package_id"));
                     loanPackage.setPackageName(rs.getString("package_name"));
                     loanPackage.setInterestRate(rs.getBigDecimal("interest_rate"));
+                    loanPackage.setLoanTerm(rs.getInt("loan_term"));
                     loanPackage.setDescription(rs.getString("package_description"));
                     loanRequest.setLoanPackage(loanPackage);
 
@@ -632,18 +669,25 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
                     if (assetIdObj != null) {
                         Asset asset = new Asset();
                         asset.setAssetId(rs.getInt("asset_id"));
-                        asset.setAssetName(rs.getString("asset_name"));
-                        asset.setAssetType(rs.getString("asset_type"));
-                        asset.setAssetValue(rs.getBigDecimal("asset_value"));
-                        asset.setDescription(rs.getString("description"));
+
+                        String assetName = rs.getString("asset_name");
+                        if (assetName != null) {
+                            asset.setAssetName(assetName);
+                            asset.setAssetType(rs.getString("asset_type"));
+                            asset.setAssetValue(rs.getBigDecimal("asset_value"));
+                            asset.setDescription(rs.getString("description"));
+                        }
+
                         loanRequest.setAsset(asset);
                     }
 
                     return loanRequest;
+                } else {
+                    System.out.println("No loan request found with ID: " + requestId);
                 }
             }
         } catch (SQLException e) {
-            System.err.println("Lỗi khi lấy chi tiết yêu cầu vay: " + e.getMessage());
+            System.err.println("Error getting loan request details: " + e.getMessage());
             e.printStackTrace();
         }
 

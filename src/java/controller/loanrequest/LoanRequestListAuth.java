@@ -106,7 +106,7 @@ public class LoanRequestListAuth extends HttpServlet {
             request.setAttribute("hasAsset", hasAssetStr);
 
             // Chuyển đến trang danh sách yêu cầu vay
-            request.getRequestDispatcher("/loanpackage-admin/viewLoanRequest.jsp").forward(request, response);
+            request.getRequestDispatcher("/loanrequire-admin/viewLoanRequest.jsp").forward(request, response);
 
         } catch (Exception e) {
             System.err.println("Lỗi Controller: " + e.getMessage());
