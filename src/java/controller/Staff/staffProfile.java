@@ -3,8 +3,8 @@ package controller.Staff;
 import context.DepartmentDAO;
 import context.RoleDAO;
 import context.StaffDAO;
+import controller.auth.BaseRBACControlller;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import model.Department;
 import model.auth.Role;
@@ -19,7 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
-public class staffProfile extends HttpServlet {
+public class staffProfile extends BaseRBACControlller {
 
     private static final Logger logger = Logger.getLogger(staffProfile.class.getName());
 
@@ -28,130 +28,6 @@ public class staffProfile extends HttpServlet {
     private static final Pattern EMAIL_REGEX = Pattern.compile("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
     private static final Pattern ADDRESS_REGEX = Pattern.compile("^[\\p{L}0-9\\s,.\\-'/()]{3,}$");
     private static final Pattern FULLNAME_REGEX = Pattern.compile("^\\p{L}+(?:\\s\\p{L}+)+$");
-
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        Staff staff = (Staff) session.getAttribute("account");
-
-        if (staff == null) {
-            logger.warning("No staff found in session. Redirecting to login.");
-            response.sendRedirect("admin.login");
-            return;
-        }
-
-        try {
-            // Get fresh staff data from database
-            StaffDAO dao = new StaffDAO();
-            Staff freshStaffData = dao.getById(staff.getId());
-
-            if (freshStaffData != null) {
-                // Update session with fresh data
-                session.setAttribute("account", freshStaffData);
-
-                // Get departments and roles
-                DepartmentDAO dbDept = new DepartmentDAO();
-                RoleDAO roleDAO = new RoleDAO();
-
-                request.setAttribute("depts", dbDept.list());
-                request.setAttribute("allRoles", roleDAO.getAllRoles());
-                request.setAttribute("staff", freshStaffData);
-
-                logger.info("Loading profile page for staff ID: " + freshStaffData.getId());
-                request.getRequestDispatcher("/staff/profileStaff.jsp").forward(request, response);
-            } else {
-                logger.warning("Could not retrieve staff data for ID: " + staff.getId());
-                response.sendRedirect("error.jsp");
-            }
-        } catch (Exception e) {
-            logger.log(Level.SEVERE, "Error loading staff profile", e);
-            response.sendRedirect("error.jsp");
-        }
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        try {
-            // Get current staff from session
-            HttpSession session = request.getSession();
-            Staff currentStaff = (Staff) session.getAttribute("account");
-
-            if (currentStaff == null) {
-                response.sendRedirect("admin.login");
-                return;
-            }
-
-            // Get form parameters
-            String fullName = request.getParameter("fullName");
-            String phoneNumber = request.getParameter("phoneS");
-            String email = request.getParameter("emailS");
-            String address = request.getParameter("addressS");
-            String cic = request.getParameter("cicS");
-            String dob = request.getParameter("dobS");
-            String gender = request.getParameter("genderS");
-            String departmentId = request.getParameter("did");
-            String[] roleIds = request.getParameterValues("roleIds");
-
-            // Validate input
-            String errorMessage = validateInput(fullName, phoneNumber, email, address, cic, dob);
-            if (errorMessage != null) {
-                request.setAttribute("errorMessage", errorMessage);
-                doGet(request, response);
-                return;
-            }
-
-            // Update staff object
-            Staff updatedStaff = new Staff();
-            updatedStaff.setId(currentStaff.getId());
-            updatedStaff.setFullname(fullName);
-            updatedStaff.setPhonenumber(phoneNumber);
-            updatedStaff.setEmail(email);
-            updatedStaff.setAddress(address);
-            updatedStaff.setCitizenId(cic);
-            updatedStaff.setDob(Date.valueOf(dob));
-            updatedStaff.setGender("1".equals(gender));
-
-            // Set department
-            Department dept = new Department();
-            dept.setId(Integer.parseInt(departmentId));
-            updatedStaff.setDept(dept);
-
-            // Set roles
-            ArrayList<Role> roles = new ArrayList<>();
-            if (roleIds != null) {
-                for (String roleId : roleIds) {
-                    Role role = new Role();
-                    role.setId(Integer.parseInt(roleId));
-                    roles.add(role);
-                }
-            }
-            updatedStaff.setRoles(roles);
-
-            // Update in database
-            StaffDAO staffDAO = new StaffDAO();
-            boolean isUpdated = staffDAO.updateStaff(updatedStaff);
-
-            if (isUpdated) {
-                // Refresh session data
-                Staff refreshedStaff = staffDAO.getById(currentStaff.getId());
-                session.setAttribute("account", refreshedStaff);
-                session.setAttribute("address", refreshedStaff.getAddress());
-                request.setAttribute("successMessage", "Profile updated successfully!");
-            } else {
-                request.setAttribute("errorMessage", "Failed to update profile.");
-            }
-
-            // Reload the page with updated data
-            doGet(request, response);
-
-        } catch (Exception e) {
-            logger.log(Level.SEVERE, "Error updating staff profile", e);
-            request.setAttribute("errorMessage", "An unexpected error occurred: " + e.getMessage());
-            doGet(request, response);
-        }
-    }
 
     private String validateInput(String fullName, String phoneNumber, String email, String address, String cic, String dob) {
         if (!FULLNAME_REGEX.matcher(fullName).matches()) {
@@ -166,11 +42,10 @@ public class staffProfile extends HttpServlet {
         if (!ADDRESS_REGEX.matcher(address).matches()) {
             return "Invalid address format";
         }
-        if (!CIC_REGEX.matcher(cic).matches()) { // 🆕 Kiểm tra CIC hợp lệ
-        return "CIC must be exactly 12 digits.";
-    }
+        if (!CIC_REGEX.matcher(cic).matches()) {
+            return "CIC must be exactly 12 digits.";
+        }
 
-        // Kiểm tra ngày sinh phải từ 18 tuổi trở lên
         try {
             LocalDate birthDate = LocalDate.parse(dob);
             if (Period.between(birthDate, LocalDate.now()).getYears() < 18) {
@@ -181,6 +56,140 @@ public class staffProfile extends HttpServlet {
         }
 
         return null;
+    }
+
+    @Override
+    protected void doAuthorizedPost(HttpServletRequest request, HttpServletResponse response, Staff account) throws ServletException, IOException {
+        try {
+            int staffId = account.getId();
+
+            // Lấy tham số từ form
+            String fullName = request.getParameter("fullName");
+            String phoneNumber = request.getParameter("phoneS");
+            String email = request.getParameter("emailS");
+            String address = request.getParameter("addressS");
+            String cic = request.getParameter("cicS");
+            String dob = request.getParameter("dobS");
+            String gender = request.getParameter("genderS");
+
+            String errorMessage = validateInput(fullName, phoneNumber, email, address, cic, dob);
+            if (errorMessage != null) {
+                request.setAttribute("errorMessage", errorMessage);
+                doAuthorizedGet(request, response, account);
+                return;
+            }
+
+            Staff updatedStaff = new Staff();
+            updatedStaff.setId(staffId);
+            updatedStaff.setFullname(fullName);
+            updatedStaff.setPhonenumber(phoneNumber);
+            updatedStaff.setEmail(email);
+            updatedStaff.setAddress(address);
+            updatedStaff.setCitizenId(cic);
+            updatedStaff.setDob(Date.valueOf(dob));
+            updatedStaff.setGender("1".equals(gender));
+            updatedStaff.setUsername(account.getUsername());
+
+            // Giữ nguyên phòng ban và vai trò
+            if (account.getDept() != null) {
+                Department dept = new Department();
+                dept.setId(account.getDept().getId());
+                updatedStaff.setDept(dept);
+            }
+
+            // Kiểm tra null cho vai trò và khởi tạo danh sách trống nếu cần
+            if (account.getRoles() != null) {
+                updatedStaff.setRoles(new ArrayList<>(account.getRoles()));
+            } else {
+                updatedStaff.setRoles(new ArrayList<>());
+            }
+
+            // Cập nhật trong cơ sở dữ liệu
+            StaffDAO staffDAO = new StaffDAO();
+            boolean isUpdated = staffDAO.updateStaff(updatedStaff);
+
+            if (isUpdated) {
+                Staff refreshedStaff = staffDAO.getById(staffId);
+
+                if (refreshedStaff != null) {
+                    request.getSession().setAttribute("account", refreshedStaff);
+                    request.setAttribute("staff", refreshedStaff);
+                    request.setAttribute("successMessage", "Cập nhật thông tin thành công!");
+                    logger.info("Cập nhật hồ sơ thành công cho nhân viên ID: " + staffId);
+                } else {
+                    request.setAttribute("errorMessage", "Không thể lấy thông tin đã cập nhật.");
+                    logger.warning("Không thể lấy dữ liệu nhân viên đã cập nhật cho ID: " + staffId);
+                }
+            } else {
+                request.setAttribute("errorMessage", "Không thể cập nhật thông tin. Vui lòng thử lại sau.");
+                logger.warning("Không thể cập nhật hồ sơ cho nhân viên ID: " + staffId);
+            }
+
+            doAuthorizedGet(request, response, account);
+
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Lỗi khi cập nhật hồ sơ nhân viên", e);
+            request.setAttribute("errorMessage", "Đã xảy ra lỗi: " + e.getMessage());
+            doAuthorizedGet(request, response, account);
+        }
+    }
+
+    @Override
+    protected void doAuthorizedGet(HttpServletRequest request, HttpServletResponse response, Staff account) throws ServletException, IOException {
+        try {
+            // Lấy thông tin nhân viên từ session
+            int staffId = account.getId();
+
+            // Lấy thông tin chi tiết của nhân viên từ DB
+            StaffDAO dao = new StaffDAO();
+            Staff staffData = dao.getById(staffId);
+
+            if (staffData != null) {
+                // Log thông tin nhân viên để debug
+                logger.info("Retrieved staff data: ID=" + staffData.getId()
+                        + ", Name=" + staffData.getFullname()
+                        + ", Phone=" + (staffData.getPhonenumber() != null ? staffData.getPhonenumber() : "N/A")
+                        + ", Email=" + (staffData.getEmail() != null ? staffData.getEmail() : "N/A"));
+
+                // Kiểm tra và log thông tin phòng ban
+                if (staffData.getDept() != null) {
+                    logger.info("Staff department: ID=" + staffData.getDept().getId()
+                            + ", Name=" + staffData.getDept().getName());
+                } else {
+                    logger.warning("No department found for staff ID: " + staffId);
+                    // Không cần khởi tạo Department vì JSP đã có kiểm tra null
+                }
+
+                // Kiểm tra và log thông tin vai trò
+                if (staffData.getRoles() != null && !staffData.getRoles().isEmpty()) {
+                    logger.info("Staff has " + staffData.getRoles().size() + " roles");
+                } else {
+                    logger.warning("No roles found for staff ID: " + staffId);
+                    // Khởi tạo danh sách vai trò trống nếu null
+                    staffData.setRoles(new ArrayList<>());
+                }
+
+                // Cập nhật cả request và session
+                request.setAttribute("staff", staffData);
+                request.getSession().setAttribute("staff", staffData);
+
+                // Lấy danh sách phòng ban và vai trò
+                DepartmentDAO dbDept = new DepartmentDAO();
+                RoleDAO roleDAO = new RoleDAO();
+
+                request.setAttribute("depts", dbDept.list());
+                request.setAttribute("allRoles", roleDAO.getAllRoles());
+
+                logger.info("Loading profile page for staff ID: " + staffId);
+                request.getRequestDispatcher("/staff/profileStaff.jsp").forward(request, response);
+            } else {
+                logger.warning("Could not retrieve staff data for ID: " + staffId);
+                response.sendRedirect("error.jsp");
+            }
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error loading staff profile: " + e.getMessage(), e);
+            response.sendRedirect("error.jsp");
+        }
     }
 
 }

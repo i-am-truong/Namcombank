@@ -23,6 +23,7 @@
         <!-- Header -->
         <%@include file="../homepage/header_admin.jsp" %>
 
+        <!-- Kiểm tra xác thực -->
         <c:if test="${sessionScope.account == null}">
             <c:redirect url="admin.login"/>
         </c:if>
@@ -34,9 +35,9 @@
                             <div class="card-body">
                                 <div class="d-flex flex-column align-items-center text-center">
                                     <div class="mt-3">
-                                        <h4>${sessionScope.account.fullname}</h4>
-                                        <button class="btn btn-danger">Follow</button>
-                                        <button class="btn btn-outline-danger">Message</button>
+                                        <h4>${staff.fullname}</h4>
+                                        <button type="button" class="btn btn-danger">Follow</button>
+                                        <button type="button" class="btn btn-outline-danger">Message</button>
                                         <hr class="my-4">
                                     </div>
                                 </div>
@@ -44,7 +45,7 @@
                         </div>
                     </div>
                     <div class="col-lg-6 container" style="margin-left: 100px">
-                        <form id="profile-form" action="staffProfile" method="post" enctype="">
+                        <form id="profile-form" action="staffProfile" method="post">
                             <div class="col-md-9">
                                 <label class="labels">Full Name</label>
                                 <input
@@ -54,9 +55,9 @@
                                     class="form-control"
                                     placeholder="enter full name"
                                     maxlength="50"
-                                    pattern=".+\S+.*"
-                                    title="Full Name cannot be just spaces."
-                                    value="${sessionScope.account.fullname}"
+                                    pattern="\p{L}+(\s\p{L}+)+"
+                                    title="Please enter a valid full name (first and last name)"
+                                    value="${staff.fullname}"
                                     >
                             </div>
 
@@ -70,7 +71,7 @@
                                     placeholder="enter phone number"
                                     pattern="^0[0-9]{9,10}$"
                                     title="Please enter a valid phone number starting with 0"
-                                    value="${sessionScope.account.phonenumber}"
+                                    value="${staff.phonenumber}"
                                     >
                             </div>
 
@@ -83,7 +84,7 @@
                                     placeholder="enter email"
                                     required
                                     maxlength="50"
-                                    value="${sessionScope.account.email}"
+                                    value="${staff.email}"
                                     >
                             </div>
 
@@ -96,9 +97,9 @@
                                     class="form-control"
                                     placeholder="enter address"
                                     maxlength="50"
-                                    pattern=".+\S+.*"
-                                    title="Address cannot be just spaces."
-                                    value="${sessionScope.account.address}"
+                                    pattern="[\p{L}0-9\s,.'\-/()]{3,}"
+                                    title="Address must be at least 3 characters long"
+                                    value="${staff.address}"
                                     >
                             </div>
 
@@ -113,15 +114,15 @@
                                     maxlength="12"
                                     pattern="^\d{12}$"
                                     title="CIC must be exactly 12 digits."
-                                    value="${sessionScope.account.citizenId}"
+                                    value="${staff.citizenId}"
                                     >
                             </div>
 
                             <div class="col-md-9">
                                 <label class="labels">Gender</label>
                                 <select name="genderS" class="form-control" required>
-                                    <option value="1" ${sessionScope.account.gender ? "selected" : ""}>Male</option>
-                                    <option value="0" ${!sessionScope.account.gender ? "selected" : ""}>Female</option>
+                                    <option value="1" ${staff.gender ? "selected" : ""}>Male</option>
+                                    <option value="0" ${!staff.gender ? "selected" : ""}>Female</option>
                                 </select>
                             </div>
 
@@ -132,60 +133,64 @@
                                     required
                                     type="date"
                                     class="form-control"
-                                    value="${sessionScope.account.dob}"
-                                    max="<%= new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date()) %>"
+                                    value="${staff.dob}"
+                                    max="<%= java.time.LocalDate.now().minusYears(18) %>"
+                                    title="You must be at least 18 years old"
                                     >
                             </div>
 
                             <div class="col-md-9">
                                 <label>Department:</label>
-                                <select class="form-control" name="did" disabled>
+                                <select class="form-control" disabled>
                                     <c:forEach var="dept" items="${depts}">
                                         <option value="${dept.id}" ${staff.dept != null && staff.dept.id == dept.id ? 'selected' : ''}>
                                             ${dept.name}
                                         </option>
                                     </c:forEach>
                                 </select>
+
                                 <!-- Trường ẩn để giữ giá trị khi gửi form -->
-                                <input type="hidden" name="did" value="${staff.dept != null ? staff.dept.id : ''}">
+                                <c:choose>
+                                    <c:when test="${staff.dept != null}">
+                                        <input type="hidden" name="did" value="${staff.dept.id}">
+                                    </c:when>
+                                    <c:otherwise>
+                                        <input type="hidden" name="did" value="">
+                                    </c:otherwise>
+                                </c:choose>
                             </div>
 
-
-                            <div class="role-wrapper mt-3">
+                            <div class="col-md-9 mt-3">
                                 <label class="role-title">Roles</label>
                                 <div class="role-options">
                                     <c:forEach var="role" items="${allRoles}">
                                         <div class="form-check">
                                             <input type="checkbox" 
                                                    class="form-check-input" 
-                                                   name="roleIds" 
-                                                   value="${role.id}" 
                                                    disabled
-                                                   <c:forEach var="staffRole" items="${staff.roles}">
-                                                       <c:if test="${role.id eq staffRole.id}">checked</c:if>
-                                                   </c:forEach>>
+                                                   <c:if test="${staff.roles != null}">
+                                                       <c:forEach var="staffRole" items="${staff.roles}">
+                                                           <c:if test="${role.id eq staffRole.id}">checked</c:if>
+                                                       </c:forEach>
+                                                   </c:if>>
                                             <label class="form-check-label">${role.name}</label>
-
-                                            <!-- Trường ẩn để gửi giá trị checkbox khi form submit -->
-                                            <c:forEach var="staffRole" items="${staff.roles}">
-                                                <c:if test="${role.id eq staffRole.id}">
-                                                    <input type="hidden" name="roleIds" value="${role.id}">
-                                                </c:if>
-                                            </c:forEach>
                                         </div>
                                     </c:forEach>
                                 </div>
+
+                                <!-- Trường ẩn để gửi tất cả vai trò hiện tại -->
+                                <c:if test="${staff.roles != null}">
+                                    <c:forEach var="staffRole" items="${staff.roles}">
+                                        <input type="hidden" name="roleIds" value="${staffRole.id}">
+                                    </c:forEach>
+                                </c:if>
                             </div>
 
-
-                            <!-- Upload Avatar Section -->
-
-
-                            <c:if test="${not empty errorMessage}">
-                                <div class="alert alert-danger mt-3">${errorMessage}</div>
+                            <c:if test="${not empty requestScope.errorMessage}">
+                                <div class="alert alert-danger mt-3">${requestScope.errorMessage}</div>
                             </c:if>
-                            <c:if test="${not empty successMessage}">
-                                <div class="alert alert-success mt-3">${successMessage}</div>
+                            <c:if test="${not empty requestScope.successMessage}">
+                                <div class="alert alert-success mt-3">${requestScope.successMessage}</div>
                             </c:if>
 
                             <div class="mt-3 text-left">
@@ -197,8 +202,6 @@
             </div>
         </div>
 
-
-
         <!-- Footer -->
         <%@include file="../homepage/footer.jsp" %>
 
@@ -207,5 +210,33 @@
         <script src="assets/js/popper.min.js"></script>
         <script src="assets/js/bootstrap.min.js"></script>
         <script src="assets/js/script.js"></script>
+
+        <!-- Thêm xác thực tuổi ở phía client -->
+        <script>
+            document.getElementById('profile-form').addEventListener('submit', function (event) {
+                var dobInput = document.querySelector('input[name="dobS"]');
+                var dob = new Date(dobInput.value);
+                var today = new Date();
+                var age = today.getFullYear() - dob.getFullYear();
+
+                // Kiểm tra ngày sinh đã qua chưa trong năm hiện tại
+                if (today.getMonth() < dob.getMonth() ||
+                        (today.getMonth() === dob.getMonth() && today.getDate() < dob.getDate())) {
+                    age--;
+                }
+
+                if (age < 18) {
+                    alert('Bạn phải đủ 18 tuổi trở lên.');
+                    event.preventDefault();
+                }
+            });
+
+            // Tự động ẩn thông báo thành công sau 5 giây
+            $(document).ready(function () {
+                setTimeout(function () {
+                    $('.alert-success').fadeOut('slow');
+                }, 5000);
+            });
+        </script>
     </body>
 </html>
