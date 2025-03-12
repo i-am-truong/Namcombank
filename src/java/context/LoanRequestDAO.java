@@ -429,6 +429,8 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
                     count++;
 
                 } catch (Exception e) {
+        System.err.println("Lỗi khi mapping loan request: " + e.getMessage());
+
                     e.printStackTrace();
                 }
             }
@@ -538,6 +540,85 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
             }
         } catch (SQLException e) {
             System.err.println("Lỗi khi đếm tổng số yêu cầu vay: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public ArrayList<LoanRequest> getLoanRequestsByCustomerId(int customerId) {
+        ArrayList<LoanRequest> loanRequests = new ArrayList<>();
+        String sql = "SELECT lr.request_id, lr.package_id, lr.amount, lr.request_date, lr.status, "
+                + "c.customer_id, c.fullname AS customer_name, "
+                + "lp.package_id, lp.package_name, "
+                + "s.staff_id, s.fullname AS approved_by "
+                + "FROM LoanRequests lr "
+                + "JOIN Customer c ON lr.customer_id = c.customer_id "
+                + "JOIN LoanPackages lp ON lr.package_id = lp.package_id "
+                + "LEFT JOIN Staff s ON lr.staff_id = s.staff_id "
+                + // LEFT JOIN vì có thể chưa có nhân viên duyệt
+                "WHERE lr.customer_id = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, customerId);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                LoanRequest loan = new LoanRequest();
+                loan.setRequestId(rs.getInt("request_id"));
+                loan.setPackageId(rs.getInt("package_id"));
+                loan.setAmount(rs.getBigDecimal("amount"));
+                loan.setRequestDate(rs.getDate("request_date"));
+                loan.setStatus(rs.getString("status"));
+
+                Customer customer = new Customer();
+                customer.setCustomerId(rs.getInt("customer_id"));
+                customer.setFullname(rs.getString("customer_name"));
+                loan.setCustomer(customer);
+
+                LoanPackage loanPackage = new LoanPackage();
+                loanPackage.setPackageId(rs.getInt("package_id"));
+                loanPackage.setPackageName(rs.getString("package_name"));
+                loan.setLoanPackage(loanPackage);
+
+                // Kiểm tra nếu chưa có nhân viên duyệt thì không set Staff
+                if (rs.getObject("staff_id") != null) {
+                    Staff staff = new Staff();
+                    staff.setId(rs.getInt("staff_id"));
+                    staff.setFullname(rs.getString("approved_by"));
+                    loan.setStaff(staff);
+                }
+
+                loanRequests.add(loan);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return loanRequests;
+    }
+
+    public int countLoanRequestsByCustomer(int customerId) {
+        String sql = "SELECT COUNT(*) FROM LoanRequests WHERE customer_id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, customerId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public int countLoanRequestsByStatusAndCustomer(String status, int customerId) {
+        String sql = "SELECT COUNT(*) FROM LoanRequests WHERE status = ? AND customer_id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, status);
+            stmt.setInt(2, customerId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return 0;

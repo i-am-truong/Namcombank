@@ -272,6 +272,7 @@
                                                         </c:choose>
                                                     </td>
 
+
                                                 </tr>
                                             </c:forEach>
                                         </c:when>
@@ -282,6 +283,12 @@
                                         </c:otherwise>
                                     </c:choose>
                                 </tbody>
+                                <c:if test="${not empty requestScope.errorMessage}">
+                                    <div class="alert alert-danger mt-3">${requestScope.errorMessage}</div>
+                                </c:if>
+                                <c:if test="${not empty requestScope.successMessage}">
+                                    <div class="alert alert-success mt-3">${requestScope.successMessage}</div>
+                                </c:if>
 
                             </table>
                         </div>
