@@ -9,7 +9,7 @@
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="java.util.Date" %>
 <!DOCTYPE html>
-<html  class="no-js" lang="en">
+<html class="no-js" lang="en">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,6 +29,113 @@
         <link rel="stylesheet" href="assets/css/style.css">
         <link rel="stylesheet" href="assets/css/responsive.css">
 
+        <style>
+            .news-item {
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+
+            .news-item:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            }
+
+            .news-item .card {
+                border: 1px solid rgba(0,0,0,0.08);
+                border-radius: 8px;
+                overflow: hidden;
+                height: 100%;
+            }
+
+            .news-item .card-title {
+                font-size: 1.2rem;
+                font-weight: 600;
+                line-height: 1.3;
+                margin-bottom: 10px;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+            }
+
+            .news-item .card-text {
+                color: #555;
+            }
+
+            .news-item .card-body {
+                padding: 1.25rem;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .news-item .btn-outline-primary {
+                margin-top: auto;
+                align-self: flex-start;
+            }
+
+            .pagination-container .page-item.active .page-link {
+                background-color: #0b5ed7;
+                border-color: #0a58ca;
+            }
+
+            @media (max-width: 767px) {
+                .news-item .card-img {
+                    height: 200px;
+                    border-radius: 4px 4px 0 0;
+                }
+            }
+
+            /* Make sidebar sticky */
+            .sticky-sidebar {
+                position: sticky;
+                top: 20px;
+            }
+
+            /* Fix for layout issues at different page sizes */
+            /* Force the columns to maintain their position side by side */
+            .row.news-container {
+                display: flex;
+                flex-wrap: nowrap;
+            }
+
+            .news-main-column {
+                width: 67%;
+                padding-right: 15px;
+                flex: 0 0 67%;
+            }
+
+            .news-sidebar-column {
+                width: 33%;
+                padding-left: 15px;
+                flex: 0 0 33%;
+            }
+
+            /* Make sure sidebar sticks properly */
+            .sticky-sidebar {
+                position: sticky;
+                top: 20px;
+                height: fit-content;
+            }
+
+            /* Ensure responsiveness */
+            @media (max-width: 991px) {
+                .row.news-container {
+                    flex-wrap: wrap;
+                }
+
+                .news-main-column,
+                .news-sidebar-column {
+                    width: 100%;
+                    flex: 0 0 100%;
+                    padding-left: 15px;
+                    padding-right: 15px;
+                }
+
+                .news-sidebar-column {
+                    margin-top: 30px;
+                }
+            }
+        </style>
     </head>
     <body>
         <div id="preloader" class="preeloader">
@@ -48,15 +155,13 @@
             </div>
         </div>
         <div class="off_canvars_overlay"></div>
+
         <!-- Header -->
         <header class="header">
-            <!-- Header Top -->
-
             <!-- Header Middle -->
             <%@include file="../homepage/header.jsp" %>
             <!-- Header Bottom -->
             <%@include file="../homepage/header_bottom.jsp" %>
-
         </header>
         <!-- Header -->
 
@@ -81,9 +186,10 @@
         <!-- Start Blog Area -->
         <section class="blog-area pt-70 pb-70">
             <div class="container">
-                <div class="row">
-                    <!-- Blog -->
-                    <div class="col-lg-8">
+                <!-- Replace the default "row" with our custom "row news-container" -->
+                <div class="row news-container">
+                    <!-- Main News Column - Use our custom class -->
+                    <div class="news-main-column">
                         <!-- Combined Filter Section -->
                         <div class="combined-filter mb-4 p-3" style="background-color: #f9f9f9; border-radius: 5px; border: 1px solid #e9e9e9;">
                             <form id="newsFilterForm" action="newsList" method="get" class="row align-items-center">
@@ -139,30 +245,65 @@
                             </div>
                         </c:if>
 
-                        <div class="row">
-                            <!-- Single -->
+                        <!-- Page Size and Results Count -->
+                        <c:if test="${not empty n}">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div>
+                                    <span class="text-muted">Found ${count} news items</span>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <label for="pageSize" class="text-nowrap mr-2 mb-0">Items per page:</label>
+                                    <select id="pageSize" class="form-control form-control-sm" style="width: auto;" onchange="changePageSize()">
+                                        <c:forEach items="${pagination.listPageSize}" var="size">
+                                            <option value="${size}" ${pagination.pageSize eq size ? 'selected' : ''}>${size}</option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+                            </div>
+                        </c:if>
+
+                        <!-- News List Content -->
+                        <div class="news-list">
                             <c:forEach var="news" items="${n}">
-                                <div class="col-md-6 mb-30">
-                                    <div class="blog-item">
-                                        <div class="thumnail">
-                                            <a  href="newsDetail?id=${news.nId}"><img style="width: 416px;height: 260px;display: block;margin: 0 auto;" src="${news.thumbnail}" alt="blog"></a>
-                                        </div>
-                                        <div class="content">
-                                            <ul class="auth">
-                                                <li><a href="#">${not empty news.authorName ? news.authorName : 'Unknown'}</a></li>
-                                                <li><a href="#">
-                                                    <%
-                                                        Date newsDate = ((model.News)pageContext.getAttribute("news")).getUpdateDate();
-                                                        if(newsDate != null) {
-                                                            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy, HH:mm");
-                                                            out.print(sdf.format(newsDate));
-                                                        } else {
-                                                            out.print("Unknown Date");
-                                                        }
-                                                    %>
-                                                </a></li>
-                                            </ul>
-                                            <h2><a href="newsDetail?id=${news.nId}">${news.title} </a></h2>
+                                <div class="news-item mb-4">
+                                    <div class="card">
+                                        <div class="row no-gutters">
+                                            <!-- Image Column -->
+                                            <div class="col-md-4">
+                                                <a href="newsDetail?id=${news.nId}">
+                                                    <img src="${news.thumbnail}" class="card-img" alt="News thumbnail"
+                                                         style="height: 100%; object-fit: cover; border-radius: 4px 0 0 4px;">
+                                                </a>
+                                            </div>
+                                            <!-- Content Column -->
+                                            <div class="col-md-8">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">
+                                                        <a href="newsDetail?id=${news.nId}" class="text-dark text-decoration-none">
+                                                            ${news.title}
+                                                        </a>
+                                                    </h5>
+                                                    <p class="card-text">
+                                                        <small class="text-muted">
+                                                            <i class="fas fa-user mr-1"></i> ${not empty news.authorName ? news.authorName : 'Unknown'} |
+                                                            <i class="fas fa-calendar-alt mr-1"></i>
+                                                            <%
+                                                                Date newsDate = ((model.News)pageContext.getAttribute("news")).getUpdateDate();
+                                                                if(newsDate != null) {
+                                                                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy, HH:mm");
+                                                                    out.print(sdf.format(newsDate));
+                                                                } else {
+                                                                    out.print("Unknown Date");
+                                                                }
+                                                            %>
+                                                        </small>
+                                                    </p>
+                                                    <p class="card-text text-truncate mb-2">
+                                                        ${news.description.length() > 150 ? news.description.substring(0, 150).concat('...') : news.description}
+                                                    </p>
+                                                    <a href="newsDetail?id=${news.nId}" class="btn btn-sm btn-outline-primary">Read More</a>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -177,49 +318,38 @@
                             </div>
                         </c:if>
 
-                        <!-- Pagination - Only show if we have results -->
+                        <!-- Dynamic Pagination - Only show if we have results -->
                         <c:if test="${not empty n}">
-                            <div class="row">
-                                <div class="col-12 mb-30">
-                                    <div class="page-pagination text-center">
-                                        <ul>
-                                            <c:forEach begin="1" end = "${pages}" var = "i">
-                                                <li>
-                                                    <a href="newsList?index=${i}${not empty param.search ? '&search='.concat(param.search) : ''}${not empty param.author ? '&author='.concat(param.author) : ''}${not empty param.sort ? '&sort='.concat(param.sort) : ''}&searchType=combined">${i}</a>
-                                                </li>
-                                            </c:forEach>
-                                        </ul>
-                                    </div>
-                                </div>
+                            <div class="pagination-container my-4">
+                                <%@include file="../homepage/pagination.jsp" %>
                             </div>
                         </c:if>
                     </div>
 
-                    <!-- Siderbar -->
-                    <div class="col-lg-4">
-                        <!-- Recent News Section (remove old search forms) -->
-                        <div class="sidebar-widgets">
+                    <!-- Sidebar - Recent News - Use our custom class -->
+                    <div class="news-sidebar-column">
+                        <div class="sidebar-widgets sticky-sidebar">
                             <h4 class="title">Recent News</h4>
                             <ul class="recent-post">
                                 <c:forEach items="${recentNews}" var="recent">
                                     <li>
                                         <div class="recent-news-item" style="display: flex; margin-bottom: 20px;">
-                                            <!-- Ảnh bên trái -->
+                                            <!-- Thumbnail on the left -->
                                             <div class="recent-news-thumb" style="flex: 0 0 100px; margin-right: 15px;">
                                                 <a href="newsDetail?id=${recent.nId}">
                                                     <img src="${recent.thumbnail}" alt="thumbnail"
                                                          style="width: 100px; height: 75px; object-fit: cover; border-radius: 4px;">
                                                 </a>
                                             </div>
-                                            <!-- Nội dung bên phải -->
+                                            <!-- Content on the right -->
                                             <div class="recent-news-content" style="flex: 1;">
-                                                <!-- Tiêu đề ở phía trên -->
+                                                <!-- Title at the top -->
                                                 <h5 style="margin: 0 0 8px; font-size: 15px; font-weight: 600; line-height: 1.3;">
                                                     <a href="newsDetail?id=${recent.nId}" style="color: #333; text-decoration: none;">
                                                         ${recent.title}
                                                     </a>
                                                 </h5>
-                                                <!-- Tên tác giả và thời gian ở phía dưới -->
+                                                <!-- Author and date at the bottom -->
                                                 <div class="meta" style="font-size: 12px; color: #777;">
                                                     <span style="margin-right: 10px;">
                                                         <i class="fas fa-user" style="margin-right: 3px;"></i>
@@ -247,11 +377,7 @@
                                 </c:if>
                             </ul>
                         </div>
-
-                        <!-- Single -->
-                        <!-- ...existing code... -->
                     </div>
-
                 </div>
             </div>
         </section>
@@ -261,12 +387,9 @@
         <%@include file="../homepage/footer.jsp" %>
         <!-- End Footer Area -->
 
-
-
         <div class="scroll-area">
             <i class="fa fa-angle-up"></i>
         </div>
-
 
         <!-- Js File -->
         <script src="assets/js/modernizr.min.js"></script>
@@ -280,5 +403,23 @@
         <script src="assets/js/wow.min.js"></script>
         <script src="assets/js/script.js"></script>
         <script src="assets/js/mobile-menu.js"></script>
+
+        <!-- JavaScript for page size changing -->
+        <script>
+            function changePageSize() {
+                const pageSize = document.getElementById('pageSize').value;
+                // Get current URL
+                let currentUrl = new URL(window.location.href);
+
+                // Set page size parameter
+                currentUrl.searchParams.set('page-size', pageSize);
+
+                // Reset to first page when changing page size
+                currentUrl.searchParams.set('page', '1');
+
+                // Navigate to new URL
+                window.location.href = currentUrl.toString();
+            }
+        </script>
     </body>
 </html>

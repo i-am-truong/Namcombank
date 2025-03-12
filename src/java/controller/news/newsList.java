@@ -7,13 +7,14 @@ package controller.news;
 
 import context.NewsDAO;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.Arrays;
 import model.News;
+import model.Pagination;
 
 /**
  *
@@ -44,23 +45,59 @@ public class newsList extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        String indexPage = request.getParameter("index");
+        // Get parameters: use 'page' instead of 'index' to match pagination component
+        String pageStr = request.getParameter("page");
         String searchQuery = request.getParameter("search");
-        String authorQuery = request.getParameter("author"); // New parameter for author search
+        String authorQuery = request.getParameter("author");
         String sortOrder = request.getParameter("sort");
-        String searchType = request.getParameter("searchType"); // New parameter to distinguish search types
+        String searchType = request.getParameter("searchType");
+        String pageSizeStr = request.getParameter("page-size");
 
+        // Initialize DAO and news list
         NewsDAO dao = new NewsDAO();
-        ArrayList<News> n = new ArrayList<News>();
+        ArrayList<News> n = new ArrayList<>();
+
+        // Set up pagination object
+        Pagination pagination = new Pagination();
+
+        // Parse and set current page
+        int page = 1;
+        if (pageStr != null && !pageStr.isEmpty()) {
+            try {
+                page = Integer.parseInt(pageStr);
+                if (page < 1) page = 1;
+            } catch (NumberFormatException e) {
+                page = 1;
+            }
+        }
+        pagination.setCurrentPage(page);
+
+        // Parse and set page size
+        int pageSize = 5; // Default
+        if (pageSizeStr != null && !pageSizeStr.isEmpty()) {
+            try {
+                pageSize = Integer.parseInt(pageSizeStr);
+                if (pageSize < 1) pageSize = 5;
+            } catch (NumberFormatException e) {
+                pageSize = 5;
+            }
+        }
+        pagination.setPageSize(pageSize);
+
+        // Configure pagination settings
+        pagination.setTotalPagesToShow(5);
+        pagination.setUrlPattern("/newsList");
 
         // Log request parameters for debugging
-        System.out.println("Request search parameter: " + searchQuery);
-        System.out.println("Request author parameter: " + authorQuery);
-        System.out.println("Request searchType parameter: " + searchType);
-        System.out.println("Request sort parameter: " + sortOrder);
+        System.out.println("Request page: " + pageStr);
+        System.out.println("Request search: " + searchQuery);
+        System.out.println("Request author: " + authorQuery);
+        System.out.println("Request searchType: " + searchType);
+        System.out.println("Request sort: " + sortOrder);
+        System.out.println("Request page size: " + pageSizeStr);
 
+        // Process request based on parameters
         int count = 0;
-        int index = indexPage != null ? Integer.parseInt(indexPage) : 1;
         boolean hasSearch = searchQuery != null && !searchQuery.trim().isEmpty();
         boolean hasAuthor = authorQuery != null && !authorQuery.trim().isEmpty();
 
@@ -68,33 +105,33 @@ public class newsList extends HttpServlet {
         if ("combined".equals(searchType) || (hasSearch && hasAuthor)) {
             // Both title and author search
             if (hasSearch && hasAuthor) {
-                n = dao.getNewsByTitleAndAuthor(searchQuery, authorQuery, index, sortOrder);
+                n = dao.getNewsByTitleAndAuthor(searchQuery, authorQuery, page, sortOrder, pageSize);
                 count = dao.countNewsByTitleAndAuthor(searchQuery, authorQuery);
             }
             // Only author search
             else if (hasAuthor) {
                 if (sortOrder != null && (sortOrder.equals("newest") || sortOrder.equals("oldest"))) {
-                    n = dao.getNewsByAuthorSorted(authorQuery, index, sortOrder);
+                    n = dao.getNewsByAuthorSorted(authorQuery, page, sortOrder, pageSize);
                 } else {
-                    n = dao.getNewsByAuthor(authorQuery, index);
+                    n = dao.getNewsByAuthor(authorQuery, page, pageSize);
                 }
                 count = dao.countNewsByAuthor(authorQuery);
             }
             // Only title search
             else if (hasSearch) {
                 if (sortOrder != null && (sortOrder.equals("newest") || sortOrder.equals("oldest"))) {
-                    n = dao.getNewByTitleSortedByDate(searchQuery, index, sortOrder);
+                    n = dao.getNewByTitleSortedByDate(searchQuery, page, sortOrder, pageSize);
                 } else {
-                    n = dao.getNewByTitle(searchQuery, index);
+                    n = dao.getNewByTitle(searchQuery, page, pageSize);
                 }
                 count = dao.count(searchQuery);
             }
             // No search criteria, just sorting
             else {
                 if (sortOrder != null && (sortOrder.equals("newest") || sortOrder.equals("oldest"))) {
-                    n = dao.getNewsSortedByDate(index, sortOrder);
+                    n = dao.getNewsSortedByDate(page, sortOrder, pageSize);
                 } else {
-                    n = dao.pagging(index);
+                    n = dao.pagging(page, pageSize);
                 }
                 count = dao.count("");
             }
@@ -102,40 +139,78 @@ public class newsList extends HttpServlet {
         // Backward compatibility for old search types
         else if ("author".equals(searchType) && hasAuthor) {
             if (sortOrder != null && (sortOrder.equals("newest") || sortOrder.equals("oldest"))) {
-                n = dao.getNewsByAuthorSorted(authorQuery, index, sortOrder);
+                n = dao.getNewsByAuthorSorted(authorQuery, page, sortOrder, pageSize);
             } else {
-                n = dao.getNewsByAuthor(authorQuery, index);
+                n = dao.getNewsByAuthor(authorQuery, page, pageSize);
             }
             count = dao.countNewsByAuthor(authorQuery);
         }
         else if (hasSearch) {
             if (sortOrder != null && (sortOrder.equals("newest") || sortOrder.equals("oldest"))) {
-                n = dao.getNewByTitleSortedByDate(searchQuery, index, sortOrder);
+                n = dao.getNewByTitleSortedByDate(searchQuery, page, sortOrder, pageSize);
             } else {
-                n = dao.getNewByTitle(searchQuery, index);
+                n = dao.getNewByTitle(searchQuery, page, pageSize);
             }
             count = dao.count(searchQuery);
         }
         else {
             if (sortOrder != null && (sortOrder.equals("newest") || sortOrder.equals("oldest"))) {
-                n = dao.getNewsSortedByDate(index, sortOrder);
+                n = dao.getNewsSortedByDate(page, sortOrder, pageSize);
             } else {
-                n = dao.pagging(index);
+                n = dao.pagging(page, pageSize);
             }
             count = dao.count("");
         }
 
-        int pages = count == 0 ? 1 : (count % 4 != 0) ? (count / 4) + 1 : count / 4;
+        // Set total pages in pagination
+        int totalPages = count == 0 ? 1 : (count % pageSize != 0) ? (count / pageSize) + 1 : count / pageSize;
+        pagination.setTotalPages(totalPages);
 
+        // Build search parameters for pagination
+        ArrayList<String> searchFields = new ArrayList<>();
+        ArrayList<String> searchValues = new ArrayList<>();
+
+        if (hasSearch) {
+            searchFields.add("search");
+            searchValues.add(searchQuery);
+        }
+
+        if (hasAuthor) {
+            searchFields.add("author");
+            searchValues.add(authorQuery);
+        }
+
+        if (sortOrder != null && !sortOrder.isEmpty()) {
+            searchFields.add("sort");
+            searchValues.add(sortOrder);
+        }
+
+        if (searchType != null && !searchType.isEmpty()) {
+            searchFields.add("searchType");
+            searchValues.add(searchType);
+        }
+
+        // Only set search fields if we have any
+        if (!searchFields.isEmpty()) {
+            pagination.setSearchFields(searchFields.toArray(new String[0]));
+            pagination.setSearchValues(searchValues.toArray(new String[0]));
+        }
+
+        // Generate list of available page sizes based on total count
+        pagination.setListPageSize(count);
+
+        // Set attributes for the JSP
         request.setAttribute("n", n);
-        request.setAttribute("pages", pages);
+        request.setAttribute("pagination", pagination);
+        request.setAttribute("count", count);
         request.setAttribute("sortOrder", sortOrder);
-        request.setAttribute("searchType", searchType); // Pass search type to view
+        request.setAttribute("searchType", searchType);
 
-        // Lấy 3 tin tức mới nhất để hiển thị ở sidebar
+        // Get recent news for sidebar
         ArrayList<News> recentNews = dao.getRecentNews();
         request.setAttribute("recentNews", recentNews);
 
+        // Forward to JSP
         request.getRequestDispatcher("news/newsList.jsp").forward(request, response);
     }
 

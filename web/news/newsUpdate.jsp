@@ -48,7 +48,7 @@
                         },
                         success: function (data) {
                             showAlert("Approve News successfully", 3000);
-                             setTimeout(() => {
+                            setTimeout(() => {
                                 window.location.href = 'newsListStaff'; // Thay 'newsList' bằng URL đúng của servlet
                             }, 1000);
                         },
@@ -63,9 +63,9 @@
             }
             ;
             function saveUpdate(functionName) {
-              if (!/[A-Za-z0-9]/.test($('#title').val()) || !/[A-Za-z0-9]/.test(window.editor.getData())) {
-    showError('All field must be filled', 3000);
-} else {
+                if (!/[A-Za-z0-9]/.test($('#title').val()) || !/[A-Za-z0-9]/.test(window.editor.getData())) {
+                    showError('All field must be filled', 3000);
+                } else {
                     var body = window.editor.getData();
 
 
@@ -105,7 +105,7 @@
 
                             showAlert('Delete successfully', 3000);
 
-                           setTimeout(() => {
+                            setTimeout(() => {
                                 window.location.href = 'newsListStaff'; // Thay 'newsList' bằng URL đúng của servlet
                             }, 1000);
                         },
@@ -274,8 +274,8 @@
         <!-- Page Wrapper -->
         <div id="wrapper">
 
-                <!-- Sidebar -->
-          <%@include file="../homepage/sidebar_admin.jsp" %>
+            <!-- Sidebar -->
+            <%@include file="../homepage/sidebar_admin.jsp" %>
             <!-- End of Sidebar -->
 
             <!-- Content Wrapper -->
@@ -283,36 +283,21 @@
                 <!-- Main Content -->
                 <div id="content">
 
-                       <!-- Topbar -->
+                    <!-- Topbar -->
                     <%@include file="../homepage/header_admin.jsp" %>
                     <!-- End of Topbar -->
 
                     <!-- Begin Page Content -->
                     <div class="container-fluid">
                         <div class="container" style="background-color:whitesmoke;height:auto;overflow: auto;">
-
                             <div class="row">
                                 <div class="col-3">
                                     <h3 style="padding-left:40px; margin-top:20px;white-space: nowrap">News</h3>
                                 </div>
                                 <div class="col-9">
-                                    <a href="addNews" class="btn btn-info" style="float:right;margin-top:20px" >Create News</a>
-
-
-                                </div>
-                            </div>
-
-                            <div class="row" style="margin-top:50px;margin-left:50px;margin-bottom:20px">
-
-                                <div class="col-3">
-                                    <a  class="btn btn-link" style="height:20px;color:royalblue;width:160px;font-size:18px;height: 36px" href="newsListStaff?type=News">News</a>
+                                    <a href="newsListStaff" class="btn btn-info" style="float:right;margin-top:20px" >Back to News</a>
 
                                 </div>
-                                 <c:if test="${sessionScope.roleId== 1}">
-                                <div class="col-3">
-                                    <a  class="btn btn-link" style="height:20px;color:royalblue;width:160px;font-size:18px;height: 36px" href="newsListStaff?type=WaitingNews">Waiting News</a>
-                                </div>
-                                </c:if>
                             </div>
                             <div id="box" class="row" style="   min-width: 500px;max-width: 1060px;position: relative;margin-left:40px;border:solid;height:auto;background-color:white;min-height: 350px;border-radius: 7px;overflow: auto;">
                                 <div id="createBlog" class="col">
