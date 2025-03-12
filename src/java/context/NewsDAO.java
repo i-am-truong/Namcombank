@@ -141,6 +141,32 @@ public class NewsDAO extends DBContext {
         return b;
     }
 
+    // Method to get news by title and sort by date
+    public ArrayList<News> getNewByTitleSortedByDate(String title, int index, String sortOrder) {
+        ArrayList<News> b = new ArrayList<>();
+        try {
+            // Default to DESC (newest first) if sortOrder is not specified or invalid
+            String order = "DESC"; // Default newest first
+            if (sortOrder != null && sortOrder.equalsIgnoreCase("oldest")) {
+                order = "ASC";
+            }
+
+            String searchTitle = "%" + title + "%";
+            String sql = "select * from News WHERE title LIKE ? AND status = 1 order by updateDate " + order + " OFFSET ? ROWS FETCH NEXT 4 ROWS ONLY";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, searchTitle);
+            stm.setInt(2, (index - 1) * 4);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                b.add(new News(rs.getInt(1), rs.getString(3), rs.getString(4), rs.getInt(2), rs.getTimestamp(6), rs.getBoolean(5), getAuthorByid(rs.getInt(2))));
+            }
+        } catch (Exception e) {
+            System.out.println("Error in getNewByTitleSortedByDate: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return b;
+    }
+
     public News detail(int newsId) {
         News b = new News();
         try {
@@ -383,6 +409,299 @@ public class NewsDAO extends DBContext {
             e.printStackTrace();
         }
         return recentNews;
+    }
+
+    // Method to get news sorted by date (newest or oldest first)
+    public ArrayList<News> getNewsSortedByDate(int index, String sortOrder) {
+        ArrayList<News> b = new ArrayList<>();
+        try {
+            // Default to DESC (newest first) if sortOrder is not specified or invalid
+            String order = "DESC"; // Default newest first
+            if (sortOrder != null && sortOrder.equalsIgnoreCase("oldest")) {
+                order = "ASC";
+            }
+
+            String sql = "select * from News WHERE status = '1' order by updateDate " + order + " OFFSET ? ROWS FETCH NEXT 4 ROWS ONLY";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, (index - 1) * 4);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                b.add(new News(rs.getInt(1), rs.getString(3), rs.getString(4), rs.getInt(2), rs.getTimestamp(6), rs.getBoolean(5), getAuthorByid(rs.getInt(2))));
+            }
+        } catch (Exception e) {
+            System.out.println("Error in getNewsSortedByDate: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return b;
+    }
+
+    // Method to get waiting news sorted by date
+    public ArrayList<News> getWaitingNewsSortedByDate(int index, String sortOrder) {
+        ArrayList<News> b = new ArrayList<>();
+        try {
+            // Default to DESC (newest first) if sortOrder is not specified or invalid
+            String order = "DESC"; // Default newest first
+            if (sortOrder != null && sortOrder.equalsIgnoreCase("oldest")) {
+                order = "ASC";
+            }
+
+            String sql = "select * from News WHERE status = 0 order by updateDate " + order + " OFFSET ? ROWS FETCH NEXT 4 ROWS ONLY";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, (index - 1) * 4);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                b.add(new News(rs.getInt(1), rs.getString(3), rs.getString(4), rs.getInt(2),
+                            rs.getTimestamp(6), rs.getBoolean(5), getAuthorByid(rs.getInt(2))));
+            }
+        } catch (Exception e) {
+            System.out.println("Error in getWaitingNewsSortedByDate: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return b;
+    }
+
+    // Method to get role news sorted by date
+    public ArrayList<News> getRoleNewsSortedByDate(int roleId, int index, String sortOrder) {
+        ArrayList<News> b = new ArrayList<>();
+        try {
+            // Default to DESC (newest first) if sortOrder is not specified or invalid
+            String order = "DESC"; // Default newest first
+            if (sortOrder != null && sortOrder.equalsIgnoreCase("oldest")) {
+                order = "ASC";
+            }
+
+            String sql = "SELECT n.* FROM News n " +
+                         "INNER JOIN Staff s ON n.staff_id = s.staff_id " +
+                         "INNER JOIN StaffRoles sr ON s.staff_id = sr.staff_id " +
+                         "WHERE sr.role_id = ? AND n.status = 1 " +
+                         "ORDER BY n.updateDate " + order + " OFFSET ? ROWS FETCH NEXT 4 ROWS ONLY";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, roleId);
+            stm.setInt(2, (index - 1) * 4);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                b.add(new News(rs.getInt(1), rs.getString(3), rs.getString(4), rs.getInt(2),
+                            rs.getTimestamp(6), rs.getBoolean(5), getAuthorByid(rs.getInt(2))));
+            }
+        } catch (Exception e) {
+            System.out.println("Error in getRoleNewsSortedByDate: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return b;
+    }
+
+    // Method to get staff news sorted by date
+    public ArrayList<News> getStaffNewsSortedByDate(int staffId, int index, String sortOrder) {
+        ArrayList<News> b = new ArrayList<>();
+        try {
+            // Default to DESC (newest first) if sortOrder is not specified or invalid
+            String order = "DESC"; // Default newest first
+            if (sortOrder != null && sortOrder.equalsIgnoreCase("oldest")) {
+                order = "ASC";
+            }
+
+            String sql = "SELECT * FROM News WHERE staff_id = ? ORDER BY updateDate " + order + " OFFSET ? ROWS FETCH NEXT 4 ROWS ONLY";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, staffId);
+            stm.setInt(2, (index - 1) * 4);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                b.add(new News(rs.getInt(1), rs.getString(3), rs.getString(4), rs.getInt(2),
+                            rs.getTimestamp(6), rs.getBoolean(5), getAuthorByid(rs.getInt(2))));
+            }
+        } catch (Exception e) {
+            System.out.println("Error in getStaffNewsSortedByDate: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return b;
+    }
+
+    // Method to get pending staff news sorted by date
+    public ArrayList<News> getPendingStaffNewsSortedByDate(int staffId, int index, String sortOrder) {
+        ArrayList<News> b = new ArrayList<>();
+        try {
+            // Default to DESC (newest first) if sortOrder is not specified or invalid
+            String order = "DESC"; // Default newest first
+            if (sortOrder != null && sortOrder.equalsIgnoreCase("oldest")) {
+                order = "ASC";
+            }
+
+            String sql = "SELECT * FROM News WHERE staff_id = ? AND status = 0 ORDER BY updateDate " + order + " OFFSET ? ROWS FETCH NEXT 4 ROWS ONLY";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, staffId);
+            stm.setInt(2, (index - 1) * 4);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                b.add(new News(rs.getInt(1), rs.getString(3), rs.getString(4), rs.getInt(2),
+                            rs.getTimestamp(6), rs.getBoolean(5), getAuthorByid(rs.getInt(2))));
+            }
+        } catch (Exception e) {
+            System.out.println("Error in getPendingStaffNewsSortedByDate: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return b;
+    }
+
+    /**
+     * Get news by author name with pagination
+     * @param authorName The author name to search for
+     * @param index The page index (starting from 1)
+     * @return List of news written by authors matching the search term
+     */
+    public ArrayList<News> getNewsByAuthor(String authorName, int index) {
+        ArrayList<News> b = new ArrayList<>();
+        try {
+            String searchName = "%" + authorName + "%";
+            String sql = "SELECT n.* FROM News n " +
+                         "INNER JOIN Staff s ON n.staff_id = s.staff_id " +
+                         "WHERE s.fullname LIKE ? AND n.status = 1 " +
+                         "ORDER BY n.news_id DESC OFFSET ? ROWS FETCH NEXT 4 ROWS ONLY";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, searchName);
+            stm.setInt(2, (index - 1) * 4);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                b.add(new News(rs.getInt(1), rs.getString(3), rs.getString(4), rs.getInt(2),
+                      rs.getTimestamp(6), rs.getBoolean(5), getAuthorByid(rs.getInt(2))));
+            }
+        } catch (Exception e) {
+            System.out.println("Error in getNewsByAuthor: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return b;
+    }
+
+    /**
+     * Get news by author name with pagination and sorting
+     * @param authorName The author name to search for
+     * @param index The page index (starting from 1)
+     * @param sortOrder Sort order ("newest" or "oldest")
+     * @return List of news written by authors matching the search term, sorted by date
+     */
+    public ArrayList<News> getNewsByAuthorSorted(String authorName, int index, String sortOrder) {
+        ArrayList<News> b = new ArrayList<>();
+        try {
+            // Default to DESC (newest first) if sortOrder is not specified or invalid
+            String order = "DESC"; // Default newest first
+            if (sortOrder != null && sortOrder.equalsIgnoreCase("oldest")) {
+                order = "ASC";
+            }
+
+            String searchName = "%" + authorName + "%";
+            String sql = "SELECT n.* FROM News n " +
+                         "INNER JOIN Staff s ON n.staff_id = s.staff_id " +
+                         "WHERE s.fullname LIKE ? AND n.status = 1 " +
+                         "ORDER BY n.updateDate " + order + " OFFSET ? ROWS FETCH NEXT 4 ROWS ONLY";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, searchName);
+            stm.setInt(2, (index - 1) * 4);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                b.add(new News(rs.getInt(1), rs.getString(3), rs.getString(4), rs.getInt(2),
+                      rs.getTimestamp(6), rs.getBoolean(5), getAuthorByid(rs.getInt(2))));
+            }
+        } catch (Exception e) {
+            System.out.println("Error in getNewsByAuthorSorted: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return b;
+    }
+
+    /**
+     * Count news written by authors matching the search term
+     * @param authorName The author name to search for
+     * @return Count of news items
+     */
+    public int countNewsByAuthor(String authorName) {
+        try {
+            String searchName = "%" + authorName + "%";
+            String sql = "SELECT COUNT(*) FROM News n " +
+                         "INNER JOIN Staff s ON n.staff_id = s.staff_id " +
+                         "WHERE s.fullname LIKE ? AND n.status = 1";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, searchName);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception e) {
+            System.out.println("Error in countNewsByAuthor: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    /**
+     * Search for news by both title and author name with pagination
+     * @param title Search term for title
+     * @param authorName Search term for author name
+     * @param index Page index
+     * @param sortOrder Sort order (newest/oldest)
+     * @return List of matching news items
+     */
+    public ArrayList<News> getNewsByTitleAndAuthor(String title, String authorName, int index, String sortOrder) {
+        ArrayList<News> b = new ArrayList<>();
+        try {
+            // Default to DESC (newest first) if sortOrder is not specified or invalid
+            String order = "DESC"; // Default newest first
+            if (sortOrder != null && sortOrder.equalsIgnoreCase("oldest")) {
+                order = "ASC";
+            }
+
+            String searchTitle = "%" + title + "%";
+            String searchName = "%" + authorName + "%";
+
+            // Query to search by both title and author
+            String sql = "SELECT n.* FROM News n " +
+                         "INNER JOIN Staff s ON n.staff_id = s.staff_id " +
+                         "WHERE n.title LIKE ? AND s.fullname LIKE ? AND n.status = 1 " +
+                         "ORDER BY n.updateDate " + order + " OFFSET ? ROWS FETCH NEXT 4 ROWS ONLY";
+
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, searchTitle);
+            stm.setString(2, searchName);
+            stm.setInt(3, (index - 1) * 4);
+
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                b.add(new News(rs.getInt(1), rs.getString(3), rs.getString(4), rs.getInt(2),
+                      rs.getTimestamp(6), rs.getBoolean(5), getAuthorByid(rs.getInt(2))));
+            }
+        } catch (Exception e) {
+            System.out.println("Error in getNewsByTitleAndAuthor: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return b;
+    }
+
+    /**
+     * Count news items matching both title and author search criteria
+     * @param title Search term for title
+     * @param authorName Search term for author name
+     * @return Count of matching news items
+     */
+    public int countNewsByTitleAndAuthor(String title, String authorName) {
+        try {
+            String searchTitle = "%" + title + "%";
+            String searchName = "%" + authorName + "%";
+
+            String sql = "SELECT COUNT(*) FROM News n " +
+                         "INNER JOIN Staff s ON n.staff_id = s.staff_id " +
+                         "WHERE n.title LIKE ? AND s.fullname LIKE ? AND n.status = 1";
+
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, searchTitle);
+            stm.setString(2, searchName);
+
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception e) {
+            System.out.println("Error in countNewsByTitleAndAuthor: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return 0;
     }
 
     public static void main(String[] args) {

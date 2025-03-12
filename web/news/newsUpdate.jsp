@@ -1,4 +1,4 @@
-<%-- 
+<%--
     Document   : AddNews
     Created on : 16/06/2024, 2:48:30 PM
     Author     : ADMIN
@@ -35,7 +35,7 @@
         <script src="${pageContext.request.contextPath}/assets/js/jquery-3.5.1.min.js" type="text/javascript"></script>
         <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
         <script type="text/javascript">
-         
+
             function approveNews(functionName) {
                 if (window.editor.getData() === "") {
                     showError('All field must be filled', 3000);
@@ -304,11 +304,11 @@
 
                             <div class="row" style="margin-top:50px;margin-left:50px;margin-bottom:20px">
 
-                                <div class="col-3">            
+                                <div class="col-3">
                                     <a  class="btn btn-link" style="height:20px;color:royalblue;width:160px;font-size:18px;height: 36px" href="newsListStaff?type=News">News</a>
 
                                 </div>
-                                 <c:if test="${sessionScope.user.rid == 1}">
+                                 <c:if test="${sessionScope.roleId== 1}">
                                 <div class="col-3">
                                     <a  class="btn btn-link" style="height:20px;color:royalblue;width:160px;font-size:18px;height: 36px" href="newsListStaff?type=WaitingNews">Waiting News</a>
                                 </div>
@@ -326,7 +326,7 @@
                                     </div>
                                     <div>
                                         <button onclick="saveUpdate('updateFunction')" type="button" id="updatebtn" class="btn btn-primary" style="margin-bottom:20px; margin-top:10px">Update</button>
-                                        <c:if test="${!news.status}">
+                                        <c:if test="${!news.status && sessionScope.roleId == 1}">
                                             <button type="button" onclick="approveNews('approveFunction')" id="approvebtn" class="btn btn-success" style="margin-left:10px; margin-bottom:20px; margin-top:10px">Approve</button>
                                         </c:if>
 

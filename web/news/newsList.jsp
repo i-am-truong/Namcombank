@@ -84,6 +84,61 @@
                 <div class="row">
                     <!-- Blog -->
                     <div class="col-lg-8">
+                        <!-- Combined Filter Section -->
+                        <div class="combined-filter mb-4 p-3" style="background-color: #f9f9f9; border-radius: 5px; border: 1px solid #e9e9e9;">
+                            <form id="newsFilterForm" action="newsList" method="get" class="row align-items-center">
+                                <!-- Search by Title -->
+                                <div class="col-md-3">
+                                    <div class="form-group mb-2 mb-md-0">
+                                        <label for="search" class="small mb-1">Title</label>
+                                        <input type="text" class="form-control form-control-sm" id="search" name="search"
+                                               placeholder="Search by title" value="${param.search}">
+                                    </div>
+                                </div>
+
+                                <!-- Search by Author -->
+                                <div class="col-md-3">
+                                    <div class="form-group mb-2 mb-md-0">
+                                        <label for="author" class="small mb-1">Author</label>
+                                        <input type="text" class="form-control form-control-sm" id="author" name="author"
+                                               placeholder="Search by author" value="${param.author}">
+                                    </div>
+                                </div>
+
+                                <!-- Sort Order -->
+                                <div class="col-md-3">
+                                    <div class="form-group mb-2 mb-md-0">
+                                        <label for="sortOrderFilter" class="small mb-1">Sort by</label>
+                                        <select id="sortOrderFilter" name="sort" class="form-control form-control-sm">
+                                            <option value="" ${empty param.sort ? 'selected' : ''}>Default order</option>
+                                            <option value="newest" ${param.sort eq 'newest' ? 'selected' : ''}>Newest first</option>
+                                            <option value="oldest" ${param.sort eq 'oldest' ? 'selected' : ''}>Oldest first</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Search Button -->
+                                <div class="col-md-3">
+                                    <div class="form-group mb-0 d-flex align-items-end h-100">
+                                        <button type="submit" class="btn btn-primary btn-sm w-100" style="height: 38px;">
+                                            <i class="fas fa-search mr-1"></i> Search
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Hidden field to track that we're using combined search -->
+                                <input type="hidden" name="searchType" value="combined">
+                            </form>
+                        </div>
+
+                        <!-- No Results Message - Only show when search was performed and no results found -->
+                        <c:if test="${(not empty param.search || not empty param.author) && empty n}">
+                            <div class="alert alert-warning py-2 mb-4" style="font-size: 0.9rem;">
+                                <i class="fas fa-exclamation-triangle mr-2"></i>
+                                No news found matching your search criteria. Please try different keywords.
+                            </div>
+                        </c:if>
+
                         <div class="row">
                             <!-- Single -->
                             <c:forEach var="news" items="${n}">
@@ -112,49 +167,37 @@
                                     </div>
                                 </div>
                             </c:forEach>
-
-
                         </div>
-                        <!-- Pagination -->
-                        <div class="row">
-                            <div class="col-12 mb-30">
-                                <div class="page-pagination text-center">
-                                    <ul>
-                                        <c:forEach begin="1" end = "${pages}" var = "i">
-                                            <li>
-                                                <c:if test="${not empty param.search}">
-                                                    <a href="newsList?index=${i}&search=${param.search}">${i}</a>
-                                                </c:if>
-                                                <c:if test="${empty param.search}">
-                                                    <a href="newsList?index=${i}">${i}</a>
-                                                </c:if>
-                                            </li>
-                                        </c:forEach>
-                                        <!--	<li><a href="#"><i class="fa fa-angle-left"></i></a></li>
-                                                <li><a href="#">1</a></li>
-                                                <li><a href="#">2</a></li>
-                                                <li><span>3</span></li>
-                                                <li><a href="#">4</a></li>
-                                                <li><a href="#"><i class="fa fa-angle-right"></i></a></li>-->
-                                    </ul>
+
+                        <!-- If no results and no search criteria -->
+                        <c:if test="${empty n && empty param.search && empty param.author}">
+                            <div class="text-center py-5">
+                                <h4 class="text-muted">No news available at this time</h4>
+                                <p class="text-muted">Please check back later for updates.</p>
+                            </div>
+                        </c:if>
+
+                        <!-- Pagination - Only show if we have results -->
+                        <c:if test="${not empty n}">
+                            <div class="row">
+                                <div class="col-12 mb-30">
+                                    <div class="page-pagination text-center">
+                                        <ul>
+                                            <c:forEach begin="1" end = "${pages}" var = "i">
+                                                <li>
+                                                    <a href="newsList?index=${i}${not empty param.search ? '&search='.concat(param.search) : ''}${not empty param.author ? '&author='.concat(param.author) : ''}${not empty param.sort ? '&sort='.concat(param.sort) : ''}&searchType=combined">${i}</a>
+                                                </li>
+                                            </c:forEach>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-
+                        </c:if>
                     </div>
+
                     <!-- Siderbar -->
                     <div class="col-lg-4">
-                        <!-- Single -->
-                        <div class="sidebar-widgets">
-                            <h4 class="title">Search News</h4>
-                            <form action="newsList" method="get">
-                                <input type="search" name="search" placeholder="Search Here.." value="${param.search}">
-                                <button type="submit"><i class="fas fa-search"></i></button>
-                            </form>
-                        </div>
-                        <!-- Single -->
-
-                        <!-- Recent News Section -->
+                        <!-- Recent News Section (remove old search forms) -->
                         <div class="sidebar-widgets">
                             <h4 class="title">Recent News</h4>
                             <ul class="recent-post">

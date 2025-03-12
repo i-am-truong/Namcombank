@@ -25,7 +25,7 @@
             <input type="hidden" name="order" value="${pagination.order}">
 
             <!-- N?t ?i?u h??ng -->
-            <button type="button" class="btn btn-success ${pagination.currentPage <= 1 ? 'disabled' : ''} btn-pagination" onclick="setPage(1)">&lt;&lt;</button>
+            <button type="button" class="btn btn-success ${pagination.currentPage <= 1 ? 'disabled' : ''} btn-pagination" onclick="setPage(1)">&lt;&lt;</button>    
             <button type="button" class="btn btn-success ${pagination.currentPage <= 1 ? 'disabled' : ''} btn-pagination" onclick="setPage(${pagination.currentPage - 1})">&lt;</button>
 
             <!-- C?c s? trang -->
