@@ -63,9 +63,11 @@ public class newsListStaff extends BaseRBACControlller {
         String indexPage = request.getParameter("index");
         String type = request.getParameter("type");
         String view = request.getParameter("view"); // Thêm tham số view để phân biệt chế độ xem
+        String sortOrder = request.getParameter("sort"); // Thêm tham số sort để xác định thứ tự sắp xếp
 
         System.out.println("Request type parameter: " + type);
         System.out.println("Request view parameter: " + view);
+        System.out.println("Request sort parameter: " + sortOrder);
 
         ArrayList<News> n = new ArrayList<News>();
         int pages = 1;
@@ -75,14 +77,22 @@ public class newsListStaff extends BaseRBACControlller {
             if (type != null && type.equals("WaitingNews")) {
                 // Xử lý tin đang chờ duyệt cho Admin
                 int index = indexPage != null ? Integer.parseInt(indexPage) : 1;
-                n = dao.paggingWaitingList(index);
+                if (sortOrder != null && (sortOrder.equals("newest") || sortOrder.equals("oldest"))) {
+                    n = dao.getWaitingNewsSortedByDate(index, sortOrder);
+                } else {
+                    n = dao.paggingWaitingList(index);
+                }
                 int count = dao.countWaiting();
                 pages = count == 0 ? 1 : (count % 4 != 0) ? (count / 4) + 1 : count / 4;
                 request.setAttribute("type", "WaitingNews");
             } else {
                 // Mặc định hiển thị tất cả tin đã đăng cho Admin
                 int index = indexPage != null ? Integer.parseInt(indexPage) : 1;
-                n = dao.pagging(index);
+                if (sortOrder != null && (sortOrder.equals("newest") || sortOrder.equals("oldest"))) {
+                    n = dao.getNewsSortedByDate(index, sortOrder);
+                } else {
+                    n = dao.pagging(index);
+                }
                 int count = dao.count("");
                 pages = count == 0 ? 1 : (count % 4 != 0) ? (count / 4) + 1 : count / 4;
                 request.setAttribute("type", "News");
@@ -92,7 +102,11 @@ public class newsListStaff extends BaseRBACControlller {
             if (view != null && view.equals("myNews") && staffId > 0) {
                 // Hiển thị tin cá nhân đã đăng (có thể chỉnh sửa/xóa)
                 int index = indexPage != null ? Integer.parseInt(indexPage) : 1;
-                n = dao.getNewsByStaffId(staffId, index);
+                if (sortOrder != null && (sortOrder.equals("newest") || sortOrder.equals("oldest"))) {
+                    n = dao.getStaffNewsSortedByDate(staffId, index, sortOrder);
+                } else {
+                    n = dao.getNewsByStaffId(staffId, index);
+                }
                 int count = dao.countNewsByStaffId(staffId);
                 pages = count == 0 ? 1 : (count % 4 != 0) ? (count / 4) + 1 : count / 4;
                 request.setAttribute("type", "News");
@@ -100,7 +114,11 @@ public class newsListStaff extends BaseRBACControlller {
             } else if (view != null && view.equals("pendingNews") && staffId > 0) {
                 // Hiển thị tin cá nhân đang chờ duyệt
                 int index = indexPage != null ? Integer.parseInt(indexPage) : 1;
-                n = dao.getPendingNewsByStaffId(staffId, index);
+                if (sortOrder != null && (sortOrder.equals("newest") || sortOrder.equals("oldest"))) {
+                    n = dao.getPendingStaffNewsSortedByDate(staffId, index, sortOrder);
+                } else {
+                    n = dao.getPendingNewsByStaffId(staffId, index);
+                }
                 int count = dao.countPendingNewsByStaffId(staffId);
                 pages = count == 0 ? 1 : (count % 4 != 0) ? (count / 4) + 1 : count / 4;
                 request.setAttribute("type", "News");
@@ -108,7 +126,11 @@ public class newsListStaff extends BaseRBACControlller {
             } else if (view != null && view.equals("roleNews")) {
                 // Hiển thị tin của role tương ứng
                 int index = indexPage != null ? Integer.parseInt(indexPage) : 1;
-                n = dao.getNewsByRoleId(roleId, index);
+                if (sortOrder != null && (sortOrder.equals("newest") || sortOrder.equals("oldest"))) {
+                    n = dao.getRoleNewsSortedByDate(roleId, index, sortOrder);
+                } else {
+                    n = dao.getNewsByRoleId(roleId, index);
+                }
                 int count = dao.countNewsByRoleId(roleId);
                 pages = count == 0 ? 1 : (count % 4 != 0) ? (count / 4) + 1 : count / 4;
                 request.setAttribute("type", "News");
@@ -116,7 +138,11 @@ public class newsListStaff extends BaseRBACControlller {
             } else {
                 // Mặc định hiển thị tất cả tin đã đăng (chỉ xem)
                 int index = indexPage != null ? Integer.parseInt(indexPage) : 1;
-                n = dao.pagging(index);
+                if (sortOrder != null && (sortOrder.equals("newest") || sortOrder.equals("oldest"))) {
+                    n = dao.getNewsSortedByDate(index, sortOrder);
+                } else {
+                    n = dao.pagging(index);
+                }
                 int count = dao.count("");
                 pages = count == 0 ? 1 : (count % 4 != 0) ? (count / 4) + 1 : count / 4;
                 request.setAttribute("type", "News");
@@ -127,6 +153,7 @@ public class newsListStaff extends BaseRBACControlller {
         request.setAttribute("n", n);
         request.setAttribute("pages", pages);
         request.setAttribute("staffId", staffId);
+        request.setAttribute("sortOrder", sortOrder); // Lưu thông tin sắp xếp hiện tại
 
         // Forward to JSP page
         request.getRequestDispatcher("news/newsListStaff.jsp").forward(request, response);

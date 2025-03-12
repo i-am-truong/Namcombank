@@ -199,8 +199,8 @@
         showError('All fields must be filled with at least one alphanumeric character', 3000);
     } else {
         // Kiểm tra độ dài của tiêu đề
-        if ($('#title').val().length > 60) {
-            showError('Title cannot be more than 60 characters', 3000);
+        if ($('#title').val().length > 255) {
+            showError('Title cannot be more than 255 characters', 3000);
         } else {
             var title = $('#title').val(),
                 body = window.editor.getData(),

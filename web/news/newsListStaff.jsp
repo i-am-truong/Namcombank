@@ -121,7 +121,35 @@
                                 <div class="col-3">
                                     <h3 style="padding-left:40px; margin-top:20px;white-space: nowrap">News</h3>
                                 </div>
-                                <div class="col-9">
+                                <div class="col-6">
+                                    <!-- Thêm dropdown cho filter sort by date -->
+                                    <div class="form-group" style="margin-top:20px;">
+                                        <select class="form-control" id="sortOrder" onchange="applySortFilter()">
+                                            <option value="" ${empty sortOrder ? 'selected' : ''}>Default sort</option>
+                                            <option value="newest" ${sortOrder eq 'newest' ? 'selected' : ''}>Newest first</option>
+                                            <option value="oldest" ${sortOrder eq 'oldest' ? 'selected' : ''}>Oldest first</option>
+                                        </select>
+                                    </div>
+                                    <script>
+                                        function applySortFilter() {
+                                            const sortValue = document.getElementById('sortOrder').value;
+                                            // Lấy URL hiện tại
+                                            let currentUrl = new URL(window.location.href);
+
+                                            // Xóa param sort cũ nếu có
+                                            currentUrl.searchParams.delete('sort');
+
+                                            // Thêm param sort mới nếu người dùng chọn giá trị
+                                            if (sortValue) {
+                                                currentUrl.searchParams.set('sort', sortValue);
+                                            }
+
+                                            // Chuyển đến URL mới
+                                            window.location.href = currentUrl.toString();
+                                        }
+                                    </script>
+                                </div>
+                                <div class="col-3">
                                     <c:if test="${sessionScope.roleId != null}">
                                         <a href="addNews" class="btn btn-info" style="float:right;margin-top:20px">Create News</a>
                                     </c:if>
@@ -250,11 +278,11 @@
                                             <c:choose>
                                                 <c:when test="${sessionScope.roleId == 1}">
                                                     <!-- For Admin: no view parameter in pagination -->
-                                                    <a class="page-link" href="newsListStaff?index=${i}&type=${param.type}">${i}</a>
+                                                    <a class="page-link" href="newsListStaff?index=${i}&type=${param.type}${not empty param.sort ? '&sort='.concat(param.sort) : ''}">${i}</a>
                                                 </c:when>
                                                 <c:otherwise>
                                                     <!-- For other roles: include view parameter -->
-                                                    <a class="page-link" href="newsListStaff?index=${i}&type=${param.type}&view=${param.view}">${i}</a>
+                                                    <a class="page-link" href="newsListStaff?index=${i}&type=${param.type}&view=${param.view}${not empty param.sort ? '&sort='.concat(param.sort) : ''}">${i}</a>
                                                 </c:otherwise>
                                             </c:choose>
                                         </li>
