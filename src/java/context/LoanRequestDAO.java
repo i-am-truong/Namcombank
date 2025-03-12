@@ -301,8 +301,8 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
                 + "s2.fullname AS approver_name "
                 + "FROM LoanRequests r "
                 + "LEFT JOIN Staff s ON r.staff_id = s.staff_id "
-                + "INNER JOIN LoanPackages p ON p.package_id = r.package_id "
-                + "INNER JOIN Customer c ON c.customer_id = r.customer_id "
+                + "LEFT JOIN LoanPackages p ON p.package_id = r.package_id "
+                + "LEFT JOIN Customer c ON c.customer_id = r.customer_id "
                 + "LEFT JOIN CustomerAssets cs ON cs.asset_id = r.asset_id "
                 + "LEFT JOIN Staff s2 ON s2.staff_id = r.approved_by "
                 + "WHERE 1=1");
@@ -425,7 +425,7 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
                     loanRequests.add(loanRequest);
                     count++;
 
-                } catch (Exception e) {
+                } catch (Exception e) { 
                     System.err.println("Lỗi khi mapping loan request: " + e.getMessage());
                     e.printStackTrace();
                 }
