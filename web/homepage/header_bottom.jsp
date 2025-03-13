@@ -36,7 +36,12 @@
                                                 <li><a href="accumulated-savings">Accumulated savings</a></li>
                                             </ul>
                                         </li>
-                                        <li><a href="viewWishList">Wish list</a>
+                                        <li><a href="#">Tools and Extensions</a>
+                                            <ul class="submenu-item">
+                                                <li><a href="loanrequest/loan_interest_calculator.jsp">Tính lãi su?t vay</a></li>
+                                                <li><a href="#">Tính l?ch tr? n?</a></li>
+                                                <li><a href="#">Tính lãi su?t ti?t ki?m</a></li>
+                                            </ul>
                                         </li>
                                         <li><a href="newsList">News</a>
                                         </li>

@@ -197,8 +197,6 @@
                                         <th>Request Date</th>
                                         <th>Status</th>
                                         <th>Collateral</th>
-                                        <th>Approved By</th>
-                                        <th>Approval Date</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -238,26 +236,7 @@
                                                             </c:otherwise>
                                                         </c:choose>
                                                     </td>
-                                                    <td>
-                                                        <c:choose>
-                                                            <c:when test="${not empty request.staff && not empty request.staff.fullname}">
-                                                                ${request.staff.fullname}
-                                                            </c:when>
-                                                            <c:otherwise>
-                                                                <span class="text-muted">Not yet</span>
-                                                            </c:otherwise>
-                                                        </c:choose>
-                                                    </td>
-                                                    <td>
-                                                        <c:choose>
-                                                            <c:when test="${not empty request.approvalDate}">
-                                                                <fmt:formatDate value="${request.approvalDate}" pattern="MM/dd/yyyy"/>
-                                                            </c:when>
-                                                            <c:otherwise>
-                                                                <span class="text-muted">Not yet</span>
-                                                            </c:otherwise>
-                                                        </c:choose>
-                                                    </td>
+
                                                     <td>
                                                         <c:choose>
                                                             <c:when test="${request.status eq 'Pending'}">
@@ -267,7 +246,7 @@
                                                                 </a>
                                                             </c:when>
                                                             <c:otherwise>
-                                                                <span class="text-muted">Active</span>
+                                                                <span class="text-muted">N/A</span>
                                                             </c:otherwise>
                                                         </c:choose>
                                                     </td>

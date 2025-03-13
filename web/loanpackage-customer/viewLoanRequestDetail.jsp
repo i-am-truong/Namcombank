@@ -415,51 +415,7 @@
                             </div>
 
                             <!-- Approval section - only shown if status is pending -->
-                            <c:if test="${loanRequest.status eq 'Pending'}">
-                                <div class="approval-section mt-4" id="approval-section">
-                                    <h5 class="mb-4"><i class="fas fa-check-double"></i> Approval Decision</h5>
 
-                                    <form action="${pageContext.request.contextPath}/customer-loan-request-detail" method="post" id="loanActionForm" class="mb-2">
-                                        <input type="hidden" name="requestId" value="${loanRequest.requestId}"/>
-                                        <input type="hidden" name="action" id="actionType" value=""/>
-
-                                        <div class="row">
-                                            <!-- Left column - Approve -->
-                                            <div class="col-md-6">
-                                                <div class="approval-col approval-col-approve p-3">
-                                                    <div class="col-title">
-                                                        <i class="fas fa-check-circle text-success"></i> Approve Loan Request
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="notes">Notes (optional):</label>
-                                                        <textarea id="notes" name="notes" class="form-control" rows="3" placeholder="Enter approval notes (if needed)"></textarea>
-                                                    </div>
-                                                    <button type="button" class="btn btn-success btn-block" onclick="submitAction('approve')">
-                                                        <i class="fas fa-check"></i> Approve Loan Request
-                                                    </button>
-                                                </div>
-                                            </div>
-
-                                            <!-- Right column - Reject -->
-                                            <div class="col-md-6">
-                                                <div class="approval-col approval-col-reject p-3">
-                                                    <div class="col-title">
-                                                        <i class="fas fa-times-circle text-danger"></i> Reject Loan Request
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="rejectReason"><span class="text-danger">*</span> Rejection Reason:</label>
-                                                        <textarea id="rejectReason" name="notes" class="form-control" rows="3" placeholder="Enter rejection reason (required)"></textarea>
-                                                        <small class="form-text text-muted">Rejection reason is required.</small>
-                                                    </div>
-                                                    <button type="button" class="btn btn-danger btn-block" onclick="submitReject()">
-                                                        <i class="fas fa-times"></i> Reject Loan Request
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </c:if>
                         </div>
                     </div>
                 </div>
@@ -477,53 +433,53 @@
         <script src="adminassets/js/sb-admin-2.min.js"></script>
 
         <script>
-                                                        function submitAction(action) {
-                                                            const form = document.getElementById('loanActionForm');
-                                                            const actionInput = document.getElementById('actionType');
+            function submitAction(action) {
+                const form = document.getElementById('loanActionForm');
+                const actionInput = document.getElementById('actionType');
 
-                                                            actionInput.value = action;
+                actionInput.value = action;
 
-                                                            if (action === 'approve') {
-                                                                // Confirm approval
-                                                                if (!confirm('Are you sure you want to approve this loan request?')) {
-                                                                    return;
-                                                                }
-                                                            }
+                if (action === 'approve') {
+                    // Confirm approval
+                    if (!confirm('Are you sure you want to approve this loan request?')) {
+                        return;
+                    }
+                }
 
-                                                            form.submit();
-                                                        }
+                form.submit();
+            }
 
-                                                        function submitReject() {
-                                                            const form = document.getElementById('loanActionForm');
-                                                            const actionInput = document.getElementById('actionType');
-                                                            const reasonInput = document.getElementById('rejectReason');
+            function submitReject() {
+                const form = document.getElementById('loanActionForm');
+                const actionInput = document.getElementById('actionType');
+                const reasonInput = document.getElementById('rejectReason');
 
-                                                            // Set action
-                                                            actionInput.value = 'reject';
+                // Set action
+                actionInput.value = 'reject';
 
-                                                            // Check rejection reason
-                                                            if (!reasonInput.value.trim()) {
-                                                                alert('Please enter a rejection reason.');
-                                                                reasonInput.focus();
-                                                                return;
-                                                            }
+                // Check rejection reason
+                if (!reasonInput.value.trim()) {
+                    alert('Please enter a rejection reason.');
+                    reasonInput.focus();
+                    return;
+                }
 
-                                                            // Confirm rejection
-                                                            if (!confirm('Are you sure you want to reject this loan request?')) {
-                                                                return;
-                                                            }
+                // Confirm rejection
+                if (!confirm('Are you sure you want to reject this loan request?')) {
+                    return;
+                }
 
-                                                            form.submit();
-                                                        }
+                form.submit();
+            }
 
-                                                        // Auto-scroll to approval section if hash in URL
-                                                        $(document).ready(function () {
-                                                            if (window.location.hash === '#approval-section') {
-                                                                $('html, body').animate({
-                                                                    scrollTop: $('#approval-section').offset().top - 100
-                                                                }, 1000);
-                                                            }
-                                                        });
+            // Auto-scroll to approval section if hash in URL
+            $(document).ready(function () {
+                if (window.location.hash === '#approval-section') {
+                    $('html, body').animate({
+                        scrollTop: $('#approval-section').offset().top - 100
+                    }, 1000);
+                }
+            });
         </script>
     </body>
 </html>
