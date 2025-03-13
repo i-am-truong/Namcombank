@@ -102,7 +102,7 @@
                                     <i class="fas fa-home"></i> Home
                                 </a>
                                 <a href="loanpackage-customer/loan_packages.jsp" class="btn btn-success">
-                                    <i class="fas fa-plus"></i> Xem các gói vay có sẵn
+                                    <i class="fas fa-plus"></i> View available loan packages
                                 </a>
                             </div>
                             <!-- Debug information -->
@@ -209,7 +209,7 @@
                                                     <td>${request.customer.fullname}</td>
                                                     <td>${request.loanPackage.packageName}</td>
                                                     <td><fmt:formatNumber value="${request.amount}" type="currency" currencySymbol="" maxFractionDigits="0"/> VND</td>
-                                                    <td><fmt:formatDate value="${request.requestDate}" pattern="MM/dd/yyyy"/></td>
+                                                    <td><fmt:formatDate value="${request.requestDate}" pattern="dd/MM/yyyy"/></td>
                                                     <td>
                                                         <c:choose>
                                                             <c:when test="${request.status eq 'Pending'}">

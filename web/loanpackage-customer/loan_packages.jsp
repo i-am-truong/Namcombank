@@ -111,24 +111,24 @@
                 <div>
                     <a href="../Home" class="btn btn-warning">🏠 Home</a>
                     <% if (isLoggedIn) { %>
-                    <a href="../customer-loan-requests" class="btn btn-info">📄 Xem Yêu Cầu Vay</a>
+                    <a href="../customer-loan-requests" class="btn btn-info">📄 View Loan Request</a>
                     <% } %>
                 </div>
-                <h2 class="text-center flex-grow-1">Danh sách Gói Vay</h2>
+                <h2 class="text-center flex-grow-1">List of Loan Packages</h2>
             </div>
 
             <div class="table-responsive">
                 <table class="table table-bordered table-hover bg-green shadow">
                     <thead class="table-success text-center">
                         <tr>
-                            <th>Tên Gói</th>
-                            <th>Loại Vay</th>
-                            <th>Mô Tả</th>
-                            <th>Lãi Suất (%)</th>
-                            <th>Số Tiền Tối Thiểu</th>
-                            <th>Số Tiền Tối Đa</th>
-                            <th>Thời Hạn Vay</th>
-                            <th>Hành động</th>
+                            <th>Loan Package Name</th>
+                            <th>Loan Type</th>
+                            <th>Description</th>
+                            <th>Interest Rate (%)</th>
+                            <th>Min Amount</th>
+                            <th>Max Amount</th>
+                            <th>Loan Term</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -149,17 +149,17 @@
                                 <%= (loan.getMaxAmount() != null) ? String.format("%,.0f", loan.getMaxAmount().doubleValue()).replace(',', '.') : "N/A" %>
                             </td>
 
-                            <td><%= loan.getLoanTerm() %> tháng</td>
+                            <td><%= loan.getLoanTerm() %> months</td>
                             <td>
                                 <% if (isLoggedIn) { %>
                                 <!-- Nếu đã đăng nhập, cho phép đăng ký vay -->
                                 <form action="create-loan-request.jsp" method="GET">
                                     <input type="hidden" name="package_id" value="<%= loan.getPackageId() %>">
-                                    <button type="submit" class="btn btn-success">Đăng ký vay</button>
+                                    <button type="submit" class="btn btn-success">Apply for a loan</button>
                                 </form>
                                 <% } else { %>
                                 <!-- Nếu chưa đăng nhập, yêu cầu đăng nhập trước -->
-                                <a href="../login" class="btn btn-warning">Đăng nhập để vay</a>
+                                <a href="../login" class="btn btn-warning">You must be login</a>
                                 <% } %>
                             </td>
                         </tr>
