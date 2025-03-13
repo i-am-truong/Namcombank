@@ -97,7 +97,7 @@ public class staffProfile extends BaseRBACControlller {
 
             boolean isUpdated = staffDAO.updateStaff(updatedStaff);
             if (isUpdated) {
-                request.getSession().setAttribute("account", updatedStaff);
+                request.getSession().setAttribute("staff", updatedStaff);
                 request.setAttribute("successMessage", "Cập nhật thông tin thành công!");
                 logger.info("Hồ sơ nhân viên ID " + staffId + " đã được cập nhật thành công.");
             } else {
