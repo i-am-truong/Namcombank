@@ -19,8 +19,8 @@
                 <option value="0">Gói tiết kiệm Không Rút Trước Hạn</option>
             </select>
         </form>
-    <c:if test="${not empty errorMessage}">
-        <div style="color: red; font-weight: bold;">${errorMessage}</div>
+    <c:if test="${not empty message}">
+        <div style="color: red; font-weight: bold;">${message}</div>
     </c:if>
 </body>
 </html>

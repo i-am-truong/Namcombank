@@ -68,6 +68,9 @@
             <a class="nav-link sub-menu" href="savingMoney">
                 <i class="fas fa-fw fa-table"></i> Saving Request Money Revie
             </a>
+            <a class="nav-link sub-menu" href="SavingCancelList">
+                <i class="fas fa-fw fa-table"></i> Saving Cancel Request
+            </a>
             <a class="nav-link sub-menu" href="SavingFeedbackAnswer">
                 <i class="fas fa-fw fa-table"></i> Answer Feedback
             </a>

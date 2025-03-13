@@ -97,21 +97,22 @@ public class SavingFeedback extends HttpServlet {
         String content = request.getParameter("content");
         String feedbackType = request.getParameter("feedback_type");
         String attachment = request.getParameter("attachment");  // Đọc đường dẫn ảnh từ form
-
+        String submittedAt = getCurrentDate();
         // Kiểm tra dữ liệu nhập
         if (!checkContent(content)) {
             request.setAttribute("errorC", "Vui lòng không nhập kí tự đặc biệt");
-                    request.setAttribute("savings_id", savings_id);
+            request.setAttribute("savings_id", savings_id);
             request.getRequestDispatcher("Saving/SavingFeedback_create.jsp").forward(request, response);
             return;
-        } else if (attachment == null || attachment.isEmpty()) {
-            request.setAttribute("errorA", "Vui lòng nhập đường dẫn ảnh");
-                    request.setAttribute("savings_id", savings_id);
+        }
+        if (attachment == null || attachment.isEmpty()) {
+            dao.insertSavingFeedbackNoattachment(content, submittedAt, savings_id, feedbackType);
+            request.setAttribute("savings_id", savings_id);
+            request.setAttribute("success", true);
             request.getRequestDispatcher("Saving/SavingFeedback_create.jsp").forward(request, response);
             return;
         }
 
-        String submittedAt = getCurrentDate();
         dao.insertSavingFeedback(content, submittedAt, savings_id, feedbackType, attachment);
 
         request.setAttribute("savings_id", savings_id);

@@ -38,6 +38,26 @@ public class SavingFeedbackDAO extends DBContext<Object> {
         }
     }
 
+    public void insertSavingFeedbackNoattachment(String content, String submittedAt, int savings_id, String feedbackType) {
+        String query = "INSERT INTO SavingFeedback "
+                + "(content, submitted_at, answer, answer_at, savings_id, feedback_type) "
+                + "VALUES (?, ?, NULL, NULL, ?, ?)";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, content);
+            ps.setString(2, (submittedAt)); 
+//            ps.setString(3, answer);
+//            ps.setString(4, (answerAt));
+            ps.setInt(3, savings_id);
+            ps.setString(4, feedbackType);
+
+            ps.executeUpdate();
+            System.out.println("Feedback inserted successfully.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public List<SavingFeedback> getAllSavingFeedback() {
         List<SavingFeedback> feedbackList = new ArrayList<>();
         String query = "SELECT * FROM SavingFeedback WHERE answer IS NULL and answer_at is null;";  // Truy vấn lấy tất cả phản hồi
@@ -83,13 +103,13 @@ public class SavingFeedbackDAO extends DBContext<Object> {
         }
     }
 
-    public List<SavingFeedback> getAnswer( int savings_id) {
+    public List<SavingFeedback> getAnswer(int savings_id) {
         List<SavingFeedback> feedbackList = new ArrayList<>();
 
         String query = "SELECT * FROM SavingFeedback WHERE  [answer] IS NOT NULL and savings_id =? ";
 
         try (PreparedStatement ps = connection.prepareStatement(query)) {
-          
+
             ps.setInt(1, savings_id);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {

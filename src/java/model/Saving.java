@@ -20,11 +20,12 @@ public class Saving {
     private int saving_request_id;
     private int staff_id;
     private String money_get_date;
+    private String customer_name;
 
     public Saving() {
     }
 
-    public Saving(int savings_id, int customer_id, double amount, double interest_rate, int term_months, String opened_date, String status, int saving_request_id, int staff_id, String money_get_date) {
+    public Saving(int savings_id, int customer_id, double amount, double interest_rate, int term_months, String opened_date, String status, int saving_request_id, int staff_id, String money_get_date, String customer_name) {
         this.savings_id = savings_id;
         this.customer_id = customer_id;
         this.amount = amount;
@@ -35,6 +36,15 @@ public class Saving {
         this.saving_request_id = saving_request_id;
         this.staff_id = staff_id;
         this.money_get_date = money_get_date;
+        this.customer_name = customer_name;
+    }
+
+    public String getCustomer_name() {
+        return customer_name;
+    }
+
+    public void setCustomer_name(String customer_name) {
+        this.customer_name = customer_name;
     }
 
     public int getSavings_id() {

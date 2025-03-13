@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -23,6 +24,9 @@ import model.SavingPackage_id;
  * @author admin
  */
 public class Saving_create extends HttpServlet {
+
+    private SavingDao dao = new SavingDao();
+    DecimalFormat df = new DecimalFormat("#,###");
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -69,12 +73,12 @@ public class Saving_create extends HttpServlet {
         } else {
 
             Integer customer_id = Integer.parseInt(session.getAttribute("customer_id").toString());
-            request.setAttribute("customer_is", customer_id);
-            SavingDao dao = new SavingDao();
+            request.setAttribute("customer_id", customer_id);
 
             String saving_package_withdrawableStr = request.getParameter("saving_package_withdrawable");
             if (saving_package_withdrawableStr == null || saving_package_withdrawableStr.isEmpty()) {
                 request.getRequestDispatcher("Saving/Saving_create.jsp").forward(request, response);
+                return;
             }
             int saving_package_withdrawable = Integer.parseInt(saving_package_withdrawableStr);
 
@@ -112,34 +116,43 @@ public class Saving_create extends HttpServlet {
         } else {
             String saving_package_idStr = request.getParameter("saving_package_id");
             if (saving_package_idStr == null || saving_package_idStr.trim().isEmpty()) {
-                request.setAttribute("errorMessage", "Vui lòng chọn gói tiết kiệm.");
+                request.setAttribute("message", "Vui lòng chọn gói tiết kiệm.");
                 request.getRequestDispatcher("Saving/Saving_create.jsp").forward(request, response);
                 return;
             }
             int saving_package_id = Integer.parseInt(saving_package_idStr);
             double money = Double.parseDouble(request.getParameter("money"));
+
             String created_at = request.getParameter("created_at");
-            SavingDao dao = new SavingDao();
 
             double rate = dao.selectRate(saving_package_id) / 100.0; // Chuyển lãi suất từ số bình thường sang phần trăm
             int term = dao.selectTerm(saving_package_id); // Lấy số tháng kỳ hạn của gói tiết kiệm
             String name = dao.selectName(saving_package_id);
             int saving_package_term_months = dao.selectSaving_package_term_months(saving_package_id);
-
+            Double minMoney = dao.selectMinMoney(saving_package_id);
+            Double maxMoney = dao.selectMaxMoney(saving_package_id);
+            Integer customer_id = (Integer) session.getAttribute("customer_id");
             double amount;
             if (saving_package_term_months > 0) {
                 amount = money + money * rate * term / 12;
             } else {
-                amount = money; // Nếu kỳ hạn bằng 0, amount sẽ bằng tiền gốc
+                amount = money;
+            }
+            if (money < minMoney) {
+                request.setAttribute("message", "Số tiền quá nhỏ! Vui lòng nhập tối thiểu " + df.format(minMoney));
+                request.getRequestDispatcher("Saving/Saving_create.jsp").forward(request, response);
+                return;
+            } else if (maxMoney != null && money > maxMoney) {
+                request.setAttribute("message", "Số tiền quá lớn! Giới hạn tối đa là " + df.format(maxMoney));
+                request.getRequestDispatcher("Saving/Saving_create.jsp").forward(request, response);
+                return;
+            } else {
+                dao.insertSavingRequest(customer_id, saving_package_id, money, created_at, amount, name);
+                request.setAttribute("message", "Yêu cầu của bạn đã được gửi. Vui lòng chờ xác nhận từ ngân hàng.");
+                request.getRequestDispatcher("Saving/Saving_create.jsp").forward(request, response);
+                return;
             }
 
-            Integer customer_id = (Integer) session.getAttribute("customer_id");
-
-            dao.insertSavingRequest(customer_id, saving_package_id, money, created_at, amount, name);
-
-            request.setAttribute("message", "Yêu cầu của bạn đã được gửi. Vui lòng chờ xác nhận từ ngân hàng.");
-
-            request.getRequestDispatcher("Saving/Saving_create_type.jsp").forward(request, response);
         }
     }
 

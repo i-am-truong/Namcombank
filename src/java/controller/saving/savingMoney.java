@@ -78,15 +78,15 @@ public class savingMoney extends BaseRBACControlller {
         if (isUpdated) {
             int saving_package_id = dao.selectSaving_package_id(saving_request_id);
             int customer_id = dao.selectCustomer_id(saving_request_id);
+            String customer_name = dao.selectCustomer_fullname(customer_id);
             double amount = dao.selectAmount(saving_request_id);
             double interest_rate = dao.selectRate(saving_package_id);
             int term_months = dao.selectTerm(saving_package_id);
             String opened_date = dao.select_openDate(saving_request_id);
-
             LocalDate openedLocalDate = LocalDate.parse(opened_date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             LocalDate moneyGetLocalDate = openedLocalDate.plusMonths(term_months);
             String money_get_date = moneyGetLocalDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            dao.AddSavingFinal(customer_id, amount, interest_rate, term_months, opened_date, saving_request_id, staff_id, money_get_date);
+            dao.AddSavingFinal(customer_id, amount, interest_rate, term_months, opened_date, saving_request_id, staff_id, money_get_date, customer_name);
         }
         List<SavingRequest_id> list = dao.getAllSavingRequestMoneyPending();
         request.setAttribute("list", list);

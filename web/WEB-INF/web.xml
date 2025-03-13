@@ -303,7 +303,7 @@
     <servlet>
         <servlet-name>SavingPay</servlet-name>
         <servlet-class>controller.saving.SavingPay</servlet-class>
-    </servlet>    
+    </servlet>
     <servlet>
         <servlet-name>SavingCustomer</servlet-name>
         <servlet-class>controller.feedback.SavingCustomer</servlet-class>
@@ -327,6 +327,14 @@
     <servlet>
         <servlet-name>LoanRequestDetailServlet</servlet-name>
         <servlet-class>controller.loanrequest.LoanRequestDetailServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SavingCancelList</servlet-name>
+        <servlet-class>controller.saving.SavingCancelList</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SavingCancel</servlet-name>
+        <servlet-class>controller.saving.SavingCancel</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>viewCustomerDetail</servlet-name>
@@ -468,7 +476,6 @@
         <servlet-name>DeleteLoanPackageController</servlet-name>
         <url-pattern>/loanpackage/deleteloanpackage</url-pattern>
     </servlet-mapping>
-
     <servlet-mapping>
         <servlet-name>StaffLoginController</servlet-name>
         <url-pattern>/admin.login</url-pattern>
@@ -648,6 +655,14 @@
     <servlet-mapping>
         <servlet-name>SavingFeedbackAnswerCustomer</servlet-name>
         <url-pattern>/SavingFeedbackAnswerCustomer</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SavingCancelList</servlet-name>
+        <url-pattern>/SavingCancelList</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SavingCancel</servlet-name>
+        <url-pattern>/SavingCancel</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

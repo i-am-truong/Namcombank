@@ -30,12 +30,11 @@
                                             Packages</a></li>
                                 </ul>
                             </li>
-                            <li><a href="/Namcombank/allSavings">Savings <i class="fa fa-angle-down"></i></a>
+                            <li><a href="AllSaving">Savings <i class="fa fa-angle-down"></i></a>
                                 <ul class="submenu-item">
-                                    <li><a href="/Namcombank/allSavings">All Savings</a></li>
-                                    <li><a href="savings-without-term">Savings without term</a></li>
-                                    <li><a href="term-savings">Term Savings</a></li>
-                                    <li><a href="accumulated-savings">Accumulated savings</a></li>
+                                    <li><a href="SavingCustomer">All Savings</a></li>
+                                    <li><a href="SavingCustomerActive">Your Saving</a></li>
+                                    <!--<li><a href="SavingCustomerActive">Saving Money</a></li>-->
                                 </ul>
                             </li>
                             <li><a href="viewWishList">Wish list</a>

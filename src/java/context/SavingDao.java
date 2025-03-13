@@ -173,6 +173,40 @@ public class SavingDao extends DBContext {
         return null;
     }
 
+    public Double selectMinMoney(int saving_package_id) {
+        int saving_package_min_deposit;
+        String query = "SELECT saving_package_min_deposit FROM SavingPackage WHERE saving_package_id=?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, saving_package_id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    double value = rs.getDouble(1);
+                    return rs.wasNull() ? null : value;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public Double selectMaxMoney(int saving_package_id) {
+        int saving_package_max_deposit;
+        String query = "SELECT saving_package_max_deposit FROM SavingPackage WHERE saving_package_id=?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, saving_package_id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    double value = rs.getDouble(1);
+                    return rs.wasNull() ? null : value;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public int selectSaving_package_term_months(int saving_package_id) {
         String query = "SELECT saving_package_term_months FROM SavingPackage WHERE saving_package_id=?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
@@ -453,6 +487,21 @@ public class SavingDao extends DBContext {
         return -1;
     }
 
+    public String selectCustomer_fullname(int customer_id) {
+        String query = "select fullname  from Customer where customer_id = ? ";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, customer_id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("fullname");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public double selectAmount(int saving_request_id) {
         String query = "select amount  from SavingRequest where saving_request_id = ? ";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
@@ -529,9 +578,9 @@ public class SavingDao extends DBContext {
     }
 
 //select staff_id  from SavingRequest where saving_request_id = 
-    public void AddSavingFinal(int customer_id, double amount, double interest_rate, int term_months, String opened_date, int saving_request_id, int staff_id, String money_get_date) {
-        String query = "INSERT INTO Saving (customer_id, amount, interest_rate, term_months, opened_date, status, saving_request_id, staff_id, money_get_date) "
-                + "VALUES (?, ?, ?, ?, ?, 'active', ?, ?, ?)";
+    public void AddSavingFinal(int customer_id, double amount, double interest_rate, int term_months, String opened_date, int saving_request_id, int staff_id, String money_get_date, String customer_name) {
+        String query = "INSERT INTO Saving (customer_id, amount, interest_rate, term_months, opened_date, status, saving_request_id, staff_id, money_get_date, customer_name) "
+                + "VALUES (?, ?, ?, ?, ?, 'active', ?, ?, ?, ? )";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, customer_id);
             ps.setDouble(2, amount);
@@ -541,6 +590,7 @@ public class SavingDao extends DBContext {
             ps.setInt(6, saving_request_id);
             ps.setInt(7, staff_id);
             ps.setString(8, money_get_date);
+            ps.setString(9, customer_name);
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -677,6 +727,123 @@ public class SavingDao extends DBContext {
         return list;
     }
 
+    public int getTotalSaving() {
+        String query = "Select Count(*) from Saving where [status]='active'";
+        int total = 0;
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                total = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return total;
+    }
+
+    public int getTotalSavingName(String customer_name) {
+        String query = "Select Count(*) from Saving where customer_name like ? and [status]='active'";
+        int total = 0;
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, "%" + customer_name + "%");
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                total = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return total;
+    }
+
+//select * from saving order by opened_date OFFSET ? ROWS FETCH NEXT 8 ROWS ONLY
+    public List<Saving> pagingSaving(int index) {
+        List<Saving> list = new ArrayList<>();
+        String sql = "SELECT * FROM saving where [status]='active' ORDER BY opened_date OFFSET ? ROWS FETCH NEXT 8 ROWS ONLY ";
+
+        try (PreparedStatement stm = connection.prepareStatement(sql)) {
+            stm.setInt(1, (index - 1) * 8);
+            try (ResultSet rs = stm.executeQuery()) {
+                while (rs.next()) {
+                    Saving sr = new Saving();
+                    sr.setSavings_id(rs.getInt("savings_id"));
+                    sr.setCustomer_id(rs.getInt("customer_id"));
+                    sr.setAmount(rs.getDouble("amount"));
+                    sr.setInterest_rate(rs.getDouble("interest_rate"));
+                    sr.setTerm_months(rs.getInt("term_months"));
+                    sr.setOpened_date(rs.getString("opened_date"));
+                    sr.setStatus(rs.getString("status"));
+                    sr.setSaving_request_id(rs.getInt("saving_request_id"));
+                    sr.setStaff_id(rs.getInt("staff_id"));
+                    sr.setMoney_get_date(rs.getString("money_get_date"));
+                    sr.setCustomer_name(rs.getString("customer_name"));
+                    list.add(sr);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+//select * from saving where customer_name LIKE ? order by opened_date OFFSET ? ROWS FETCH NEXT 8 ROWS ONLY
+
+    public List<Saving> pagingSavingByName(int index, String customer_name) {
+        List<Saving> list = new ArrayList<>();
+        String sql = "select * from saving where customer_name LIKE ? and [status]='active' order by opened_date OFFSET ? ROWS FETCH NEXT 8 ROWS ONLY";
+        try (PreparedStatement stm = connection.prepareStatement(sql)) {
+            stm.setString(1, "%" + customer_name + "%");
+            stm.setInt(2, (index - 1) * 8);
+            try (ResultSet rs = stm.executeQuery()) {
+                while (rs.next()) {
+                    Saving sr = new Saving();
+                    sr.setSavings_id(rs.getInt("savings_id"));
+                    sr.setCustomer_id(rs.getInt("customer_id"));
+                    sr.setAmount(rs.getDouble("amount"));
+                    sr.setInterest_rate(rs.getDouble("interest_rate"));
+                    sr.setTerm_months(rs.getInt("term_months"));
+                    sr.setOpened_date(rs.getString("opened_date"));
+                    sr.setStatus(rs.getString("status"));
+                    sr.setSaving_request_id(rs.getInt("saving_request_id"));
+                    sr.setStaff_id(rs.getInt("staff_id"));
+                    sr.setMoney_get_date(rs.getString("money_get_date"));
+                    sr.setCustomer_name(rs.getString("customer_name"));
+                    list.add(sr);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+
+    }
+
+    public void SavingCancel(int savings_id, int staff_id) {
+        ///////////////update Saving set status='cancel' where savings_id=3 and  staff_id=2
+        String query = "UPDATE [Saving] SET [status] = 'cancel',[staff_id] = ? WHERE savings_id=?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, staff_id);
+            ps.setInt(2, savings_id);
+
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public boolean SavingCancel2(int savings_id) {
+        String query = "UPDATE Saving SET status='cancel' WHERE savings_id=?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, savings_id);
+
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+//update saving set status='cancel', staff_id=2 where savings_id=3
     //select * from SavingRequest where saving_approval_status='approved' and money_approval_status='pending'
     @Override
     public void insert(Object model) {
