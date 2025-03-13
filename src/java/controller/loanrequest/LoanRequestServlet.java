@@ -44,8 +44,11 @@ public class LoanRequestServlet extends HttpServlet {
             } catch (NumberFormatException e) {
                 errorMessages.add("Gói vay không hợp lệ.");
             }
+
             try {
-                amount = new BigDecimal(amountStr.trim());
+                // Loại bỏ dấu phân cách hàng nghìn (dấu chấm hoặc dấu phẩy)
+                String normalizedAmount = amountStr.replaceAll("[.,]", "");
+                amount = new BigDecimal(normalizedAmount);
             } catch (NumberFormatException e) {
                 errorMessages.add("Số tiền vay không hợp lệ.");
             }
@@ -58,7 +61,9 @@ public class LoanRequestServlet extends HttpServlet {
         }
 
         if (amount != null && loanPackage != null) {
-            if (amount.compareTo(BigDecimal.ZERO) <= 0 || amount.compareTo(loanPackage.getMinAmount()) < 0 || amount.compareTo(loanPackage.getMaxAmount()) > 0) {
+            if (amount.compareTo(BigDecimal.ZERO) <= 0
+                    || amount.compareTo(loanPackage.getMinAmount()) < 0
+                    || amount.compareTo(loanPackage.getMaxAmount()) > 0) {
                 errorMessages.add("Số tiền vay phải nằm trong khoảng từ " + loanPackage.getMinAmount() + " đến " + loanPackage.getMaxAmount() + ".");
             }
             if (amount.remainder(new BigDecimal("1000000")).compareTo(BigDecimal.ZERO) != 0) {

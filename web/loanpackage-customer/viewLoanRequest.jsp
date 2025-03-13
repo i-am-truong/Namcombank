@@ -98,7 +98,7 @@
                     <div class="container-fluid">
                         <div class="table-wrapper">
                             <div class="text-right mb-3">
-                                <a href="Home" class="btn btn-primary">
+                                <a href="Home" class="btn btn-info">
                                     <i class="fas fa-home"></i> Home
                                 </a>
                                 <a href="loanpackage-customer/loan_packages.jsp" class="btn btn-success">

@@ -1,41 +1,50 @@
-<%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
+    <%@ page contentType="text/html; charset=UTF-8" language="java" %>
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Tính Lãi Suất Vay</title>
         <link rel="stylesheet" href="style.css">
         <style>
-            /* Định dạng tổng thể */
             body {
                 font-family: Arial, sans-serif;
                 background: #f4f7f6;
                 margin: 0;
                 padding: 0;
                 display: flex;
-                justify-content: center;
+                flex-direction: column;
                 align-items: center;
-                height: 100vh;
+            }
+            .header {
+                width: 100%;
+                background: linear-gradient(to right, #d4eac7, #f0f5e9);
+                text-align: center;
+                padding: 80px 0;
+                font-size: 24px;
+                color: #1b5e20;
+                font-weight: bold;
             }
             .container {
-                width: 90%;
-                max-width: 500px;
+                display: flex;
+                justify-content: space-between;
+                max-width: 900px;
+                width: 100%;
+                margin-top: 20px;
                 background: white;
                 padding: 20px;
                 border-radius: 10px;
                 box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-                text-align: center;
             }
-            h2 {
-                margin-bottom: 20px;
-                color: #2c3e50;
+            .form-section, .result-section {
+                width: 48%;
+                padding-right: 20px;
+                margin: 10px;
             }
             label {
                 font-weight: bold;
                 display: block;
                 margin-top: 10px;
-                text-align: left;
             }
             input {
                 width: 100%;
@@ -43,86 +52,102 @@
                 margin-top: 5px;
                 border: 1px solid #ddd;
                 border-radius: 5px;
-                font-size: 16px;
             }
             button {
                 width: 100%;
                 padding: 12px;
                 margin-top: 20px;
-                background: #2980b9;
+                background: #2e7d32;
                 color: white;
                 border: none;
                 border-radius: 5px;
                 font-size: 16px;
                 cursor: pointer;
-                transition: 0.3s;
             }
             button:hover {
-                background: #1a5276;
+                background: #1b5e20;
             }
-            .loan-result {
-                margin-top: 20px;
+            .result-section {
+                background: #f0f5e9;
                 padding: 15px;
                 border-radius: 8px;
-                background: #ecf0f1;
             }
-            .loan-result p {
-                font-size: 18px;
-                margin: 8px 0;
+            .result-section h3 {
+                color: #388e3c;
             }
             .loan-result h3 {
                 color: #e74c3c;
             }
+            .home-btn{
+                display: inline-block;
+                width: auto;
+                padding: 10px 15px;
+                text-decoration: none;
+            }
         </style>
     </head>
+
     <body>
+        <div class="header">Tính Lãi Suất Vay</div>
+
         <div class="container">
-            <div class="loan-form">
-                <h2>Tính Lãi Suất Vay</h2>
-                <label for="amount">💰 Số tiền vay (VND)</label>
-                <input type="number" id="amount">
-
-                <label for="interest">📈 Lãi suất (%/năm)</label>
+            <div class="form-section">
+                <h3>Nhập thông tin khoản vay</h3>
+                <label for="amount">Số tiền muốn vay (VND)</label>
+                <input type="text" id="amount" oninput="formatCurrency(this)">
+                <label for="interest">Lãi suất (%/năm)</label>
                 <input type="number" id="interest" step="0.1">
-
-                <label for="months">📅 Số tháng vay</label>
+                <label for="months">Số tháng vay</label>
                 <input type="number" id="months">
-
-                <label for="startDate">📆 Ngày giải ngân</label>
+                <label for="startDate">Ngày giải ngân</label>
                 <input type="date" id="startDate">
-
-                <button onclick="calculateLoan()">📊 Tính toán</button>
+                <button onclick="calculateLoan()">Tính toán</button>
             </div>
 
-            <div class="loan-result">
-                <form action="loan-calculator" method="POST">
-                    <h2>📋 Kết Quả Tính Toán</h2>
-                    <p>Phương thức vay: <strong>Vay trung/dài hạn</strong></p>
-                    <p>📌 <strong>Số tiền trả hàng tháng:</strong> <span id="monthly-payment">0</span> VND</p>
-                    <p>💰 <strong>Tổng gốc phải trả:</strong> <span id="total-principal">0</span> VND</p>
-                    <p>💸 <strong>Tổng lãi phải trả:</strong> <span id="total-interest">0</span> VND</p>
-                    <h3>💳 Tổng số tiền cần trả: <span id="total-payment">0</span> VND</h3>
-                </form>
+            <div class="result-section">
+                <h3>Kết quả</h3>
+                <p>Phương thức vay: <strong>Dư nợ giảm dần</strong></p>
+                <p><strong>Số tiền trả hàng tháng:</strong> <span id="monthly-payment">0</span> VND</p>
+                <p><strong>Tổng gốc phải trả:</strong> <span id="total-principal">0</span> VND</p>
+                <p><strong>Tổng lãi phải trả:</strong> <span id="total-interest">0</span> VND</p>
+                <h3><strong>Tổng số tiền cần trả:</strong> <span id="total-payment">0</span> VND</h3>
 
             </div>
-            <button onclick="window.location.href = '../Home'">🏠 Trang chủ</button>
+
         </div>
 
         <script>
+            function formatCurrency(input) {
+                let value = input.value.replace(/\D/g, ""); // Loại bỏ tất cả ký tự không phải số
+                value = new Intl.NumberFormat("vi-VN").format(value); // Định dạng số tiền Việt Nam
+                input.value = value;
+            }
             function calculateLoan() {
-                let amount = parseFloat(document.getElementById('amount').value);
-                let interest = parseFloat(document.getElementById('interest').value) / 100 / 12;
+                let amount = document.getElementById('amount').value.replace(/,/g, '').replace(/\./g, '');
+                let interest = document.getElementById('interest').value.replace(',', '.');
                 let months = parseInt(document.getElementById('months').value);
+
+                amount = parseFloat(amount);
+                interest = parseFloat(interest) / 100 / 12;
+
+                if (isNaN(amount) || isNaN(interest) || isNaN(months) || months <= 0) {
+                    alert("Vui lòng nhập đầy đủ thông tin hợp lệ.");
+                    return;
+                }
 
                 let monthlyPayment = (amount * interest) / (1 - Math.pow(1 + interest, -months));
                 let totalPayment = monthlyPayment * months;
                 let totalInterest = totalPayment - amount;
 
-                document.getElementById('monthly-payment').innerText = monthlyPayment.toLocaleString();
-                document.getElementById('total-principal').innerText = amount.toLocaleString();
-                document.getElementById('total-interest').innerText = totalInterest.toLocaleString();
-                document.getElementById('total-payment').innerText = totalPayment.toLocaleString();
+                document.getElementById('monthly-payment').innerText = monthlyPayment.toLocaleString('vi-VN');
+                document.getElementById('total-principal').innerText = amount.toLocaleString('vi-VN');
+                document.getElementById('total-interest').innerText = totalInterest.toLocaleString('vi-VN');
+                document.getElementById('total-payment').innerText = totalPayment.toLocaleString('vi-VN');
+            }
+            function goHome() {
+                window.location.href = '../Home';
             }
         </script>
+        <button class="home-btn" onclick="goHome()">🏠 Trang Chủ</button>
     </body>
 </html>
