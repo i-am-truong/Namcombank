@@ -23,11 +23,11 @@ public class staffProfile extends BaseRBACControlller {
 
     private static final Logger logger = Logger.getLogger(staffProfile.class.getName());
 
-    private static final Pattern CIC_REGEX = Pattern.compile("^[0-9]{12}$");
-    private static final Pattern PHONE_REGEX = Pattern.compile("^0[0-9]{9,10}$");
-    private static final Pattern EMAIL_REGEX = Pattern.compile("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
-    private static final Pattern ADDRESS_REGEX = Pattern.compile("^[\\p{L}0-9\\s,.\\-'/()]{3,}$");
-    private static final Pattern FULLNAME_REGEX = Pattern.compile("^\\p{L}+(?:\\s\\p{L}+)+$");
+    private static final Pattern CIC_REGEX = Pattern.compile("^[0-9]{12}$"); // Chỉ chấp nhận 12 chữ số cho số căn cước công dân.
+    private static final Pattern PHONE_REGEX = Pattern.compile("^0[0-9]{9,10}$"); // Bắt đầu bằng số 0, tiếp theo là 9 hoặc 10 chữ số 
+    private static final Pattern EMAIL_REGEX = Pattern.compile("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"); // Định dạng email hợp lệ, ví dụ xxx@yyy.zzz
+    private static final Pattern ADDRESS_REGEX = Pattern.compile("^[\\p{L}0-9\\s,.\\-'/()]{3,}$"); // Chấp nhận ký tự chữ, số, dấu câu, khoảng trắng
+    private static final Pattern FULLNAME_REGEX = Pattern.compile("^\\p{L}+(?:\\s\\p{L}+)+$"); // Chỉ chấp nhận chữ cái và khoảng trắng giữa các từ
 
     private String validateInput(String fullName, String phoneNumber, String email, String address, String cic, String dob) {
         if (!FULLNAME_REGEX.matcher(fullName).matches()) {
@@ -98,15 +98,15 @@ public class staffProfile extends BaseRBACControlller {
             boolean isUpdated = staffDAO.updateStaff(updatedStaff);
             if (isUpdated) {
                 request.getSession().setAttribute("staff", updatedStaff);
-                request.setAttribute("successMessage", "Cập nhật thông tin thành công!");
-                logger.info("Hồ sơ nhân viên ID " + staffId + " đã được cập nhật thành công.");
+                request.setAttribute("successMessage", "Update profile successfully!");
+                logger.info("Employee ID Profile " + staffId + " has been updated successfully.");
             } else {
-                request.setAttribute("errorMessage", "Không thể cập nhật thông tin. Vui lòng thử lại sau.");
+                request.setAttribute("errorMessage", "Unable to update information. Please try again later.");
             }
 
             doAuthorizedGet(request, response, account);
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "Lỗi khi cập nhật hồ sơ nhân viên", e);
+            logger.log(Level.SEVERE, "Error while updating employee profile", e);
             request.setAttribute("errorMessage", "Đã xảy ra lỗi: " + e.getMessage());
             doAuthorizedGet(request, response, account);
         }

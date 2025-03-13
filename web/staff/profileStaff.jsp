@@ -55,8 +55,6 @@
                                     class="form-control"
                                     placeholder="enter full name"
                                     maxlength="50"
-                                    pattern="\p{L}+(\s\p{L}+)+"
-                                    title="Please enter a valid full name (first and last name)"
                                     value="${staff.fullname}"
                                     >
                             </div>
@@ -69,8 +67,6 @@
                                     type="text"
                                     class="form-control"
                                     placeholder="enter phone number"
-                                    pattern="^0[0-9]{9,10}$"
-                                    title="Please enter a valid phone number starting with 0"
                                     value="${staff.phonenumber}"
                                     >
                             </div>
@@ -82,8 +78,6 @@
                                     type="email"
                                     class="form-control"
                                     placeholder="enter email"
-                                    required
-                                    maxlength="50"
                                     value="${staff.email}"
                                     >
                             </div>
@@ -96,9 +90,6 @@
                                     type="text"
                                     class="form-control"
                                     placeholder="enter address"
-                                    maxlength="50"
-                                    pattern="[\p{L}0-9\s,.'\-/()]{3,}"
-                                    title="Address must be at least 3 characters long"
                                     value="${staff.address}"
                                     >
                             </div>
@@ -111,9 +102,6 @@
                                     type="text"
                                     class="form-control"
                                     placeholder="Enter CIC (12 digits)"
-                                    maxlength="12"
-                                    pattern="^\d{12}$"
-                                    title="CIC must be exactly 12 digits."
                                     value="${staff.citizenId}"
                                     >
                             </div>
@@ -134,8 +122,6 @@
                                     type="date"
                                     class="form-control"
                                     value="${staff.dob}"
-                                    max="<%= java.time.LocalDate.now().minusYears(18) %>"
-                                    title="You must be at least 18 years old"
                                     >
                             </div>
 
@@ -195,6 +181,7 @@
 
                             <div class="mt-3 text-left">
                                 <button class="btn btn-primary profile-button" type="submit">Save Profile</button>
+                                <a href="${sessionScope.previousPage != null ? sessionScope.previousPage : 'staffFilter'}" class="btn btn-secondary">Back</a>
                             </div>
                         </form>
                     </div>
