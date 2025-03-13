@@ -75,14 +75,14 @@ public class AssetAddController extends BaseRBACControlller {
                 errors.put("asset_name", "Tên tài sản không được vượt quá 100 ký tự");
             }
 
-            // Kiểm tra asset_value - đoạn này rất quan trọng
+            // Kiểm tra asset_value 
             BigDecimal assetValue = null;
             if (assetValueStr == null || assetValueStr.trim().isEmpty()) {
                 errors.put("asset_value", "Vui lòng nhập giá trị tài sản");
             } else {
                 try {
                     // Loại bỏ dấu phẩy và khoảng trắng
-                    String cleanValue = assetValueStr.replaceAll("\\s+", "").trim();
+                    String cleanValue = assetValueStr.replaceAll("[\\s.,]", "").trim();
 
                     // Kiểm tra nếu giá trị không phải số
                     if (!cleanValue.matches("^\\d+$")) {

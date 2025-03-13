@@ -309,7 +309,7 @@
                                                             </c:choose>
                                                         </td>
                                                         <td>${asset.approverName}</td>
-                                                        <td><fmt:formatDate value="${asset.approvedDate}" pattern="dd/mm/yyyy HH:mm"/></td>
+                                                        <td><fmt:formatDate value="${asset.approvedDate}" pattern="MM/dd/yyyy HH:mm"/></td>
                                                     </tr>
                                                 </c:forEach>
                                             </c:when>
