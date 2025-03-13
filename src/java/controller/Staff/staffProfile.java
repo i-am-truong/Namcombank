@@ -63,7 +63,6 @@ public class staffProfile extends BaseRBACControlller {
         try {
             int staffId = account.getId();
 
-            // Lấy tham số từ form
             String fullName = request.getParameter("fullName");
             String phoneNumber = request.getParameter("phoneS");
             String email = request.getParameter("emailS");
@@ -79,8 +78,15 @@ public class staffProfile extends BaseRBACControlller {
                 return;
             }
 
-            Staff updatedStaff = new Staff();
-            updatedStaff.setId(staffId);
+            StaffDAO staffDAO = new StaffDAO();
+            Staff updatedStaff = staffDAO.getById(staffId);
+
+            if (updatedStaff == null) {
+                request.setAttribute("errorMessage", "Không tìm thấy thông tin nhân viên.");
+                doAuthorizedGet(request, response, account);
+                return;
+            }
+
             updatedStaff.setFullname(fullName);
             updatedStaff.setPhonenumber(phoneNumber);
             updatedStaff.setEmail(email);
@@ -88,45 +94,17 @@ public class staffProfile extends BaseRBACControlller {
             updatedStaff.setCitizenId(cic);
             updatedStaff.setDob(Date.valueOf(dob));
             updatedStaff.setGender("1".equals(gender));
-            updatedStaff.setUsername(account.getUsername());
 
-            // Giữ nguyên phòng ban và vai trò
-            if (account.getDept() != null) {
-                Department dept = new Department();
-                dept.setId(account.getDept().getId());
-                updatedStaff.setDept(dept);
-            }
-
-            // Kiểm tra null cho vai trò và khởi tạo danh sách trống nếu cần
-            if (account.getRoles() != null) {
-                updatedStaff.setRoles(new ArrayList<>(account.getRoles()));
-            } else {
-                updatedStaff.setRoles(new ArrayList<>());
-            }
-
-            // Cập nhật trong cơ sở dữ liệu
-            StaffDAO staffDAO = new StaffDAO();
             boolean isUpdated = staffDAO.updateStaff(updatedStaff);
-
             if (isUpdated) {
-                Staff refreshedStaff = staffDAO.getById(staffId);
-
-                if (refreshedStaff != null) {
-                    request.getSession().setAttribute("account", refreshedStaff);
-                    request.setAttribute("staff", refreshedStaff);
-                    request.setAttribute("successMessage", "Cập nhật thông tin thành công!");
-                    logger.info("Cập nhật hồ sơ thành công cho nhân viên ID: " + staffId);
-                } else {
-                    request.setAttribute("errorMessage", "Không thể lấy thông tin đã cập nhật.");
-                    logger.warning("Không thể lấy dữ liệu nhân viên đã cập nhật cho ID: " + staffId);
-                }
+                request.getSession().setAttribute("account", updatedStaff);
+                request.setAttribute("successMessage", "Cập nhật thông tin thành công!");
+                logger.info("Hồ sơ nhân viên ID " + staffId + " đã được cập nhật thành công.");
             } else {
                 request.setAttribute("errorMessage", "Không thể cập nhật thông tin. Vui lòng thử lại sau.");
-                logger.warning("Không thể cập nhật hồ sơ cho nhân viên ID: " + staffId);
             }
 
             doAuthorizedGet(request, response, account);
-
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Lỗi khi cập nhật hồ sơ nhân viên", e);
             request.setAttribute("errorMessage", "Đã xảy ra lỗi: " + e.getMessage());
