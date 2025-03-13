@@ -66,9 +66,6 @@ public class LoanRequestServlet extends HttpServlet {
                     || amount.compareTo(loanPackage.getMaxAmount()) > 0) {
                 errorMessages.add("Số tiền vay phải nằm trong khoảng từ " + loanPackage.getMinAmount() + " đến " + loanPackage.getMaxAmount() + ".");
             }
-            if (amount.remainder(new BigDecimal("1000000")).compareTo(BigDecimal.ZERO) != 0) {
-                errorMessages.add("Số tiền vay phải là bội số của 1 triệu.");
-            }
         }
 
         if (!errorMessages.isEmpty()) {

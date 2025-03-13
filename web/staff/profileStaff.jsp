@@ -200,23 +200,6 @@
 
         <!-- Thêm xác thực tuổi ở phía client -->
         <script>
-            document.getElementById('profile-form').addEventListener('submit', function (event) {
-                var dobInput = document.querySelector('input[name="dobS"]');
-                var dob = new Date(dobInput.value);
-                var today = new Date();
-                var age = today.getFullYear() - dob.getFullYear();
-
-                // Kiểm tra ngày sinh đã qua chưa trong năm hiện tại
-                if (today.getMonth() < dob.getMonth() ||
-                        (today.getMonth() === dob.getMonth() && today.getDate() < dob.getDate())) {
-                    age--;
-                }
-
-                if (age < 18) {
-                    alert('Bạn phải đủ 18 tuổi trở lên.');
-                    event.preventDefault();
-                }
-            });
 
             // Tự động ẩn thông báo thành công sau 5 giây
             $(document).ready(function () {
