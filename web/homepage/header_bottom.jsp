@@ -38,9 +38,9 @@
                                         </li>
                                         <li><a href="#">Tools and Extensions</a>
                                             <ul class="submenu-item">
-                                                <li><a href="loanrequest/loan_interest_calculator.jsp">Loan Interest Calculation</a></li>
-                                                <li><a href="#">Tính l?ch tr? n?</a></li>
-                                                <li><a href="#">Tính lãi su?t ti?t ki?m</a></li>
+                                                <li><a href="calculator/loan_interest_calculator.jsp">Loan Interest Calculation</a></li>
+                                                <li><a href="calculator/loan_payment_schedule.jsp">Debt Repayment Schedule</a></li>
+                                                <li><a href="calculator/savings_interest_rate.jsp">Savings Interest Rate</a></li>
                                             </ul>
                                         </li>
                                         <li><a href="newsList">News</a>
