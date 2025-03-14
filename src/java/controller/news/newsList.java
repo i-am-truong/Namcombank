@@ -2,7 +2,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-
 package controller.news;
 
 import context.NewsDAO;
@@ -15,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import model.News;
 import model.Pagination;
+import Utils.SearchUtils;
 
 /**
  *
@@ -23,20 +23,23 @@ import model.Pagination;
 public class newsList extends HttpServlet {
 
     /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
 
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -44,11 +47,11 @@ public class newsList extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         // Get parameters: use 'page' instead of 'index' to match pagination component
         String pageStr = request.getParameter("page");
-        String searchQuery = request.getParameter("search");
-        String authorQuery = request.getParameter("author");
+        String searchQuery = SearchUtils.preprocessSearchQuery(request.getParameter("search"));
+        String authorQuery = SearchUtils.preprocessSearchQuery(request.getParameter("author"));
         String sortOrder = request.getParameter("sort");
         String searchType = request.getParameter("searchType");
         String pageSizeStr = request.getParameter("page-size");
@@ -65,7 +68,9 @@ public class newsList extends HttpServlet {
         if (pageStr != null && !pageStr.isEmpty()) {
             try {
                 page = Integer.parseInt(pageStr);
-                if (page < 1) page = 1;
+                if (page < 1) {
+                    page = 1;
+                }
             } catch (NumberFormatException e) {
                 page = 1;
             }
@@ -77,7 +82,9 @@ public class newsList extends HttpServlet {
         if (pageSizeStr != null && !pageSizeStr.isEmpty()) {
             try {
                 pageSize = Integer.parseInt(pageSizeStr);
-                if (pageSize < 1) pageSize = 5;
+                if (pageSize < 1) {
+                    pageSize = 5;
+                }
             } catch (NumberFormatException e) {
                 pageSize = 5;
             }
@@ -107,8 +114,7 @@ public class newsList extends HttpServlet {
             if (hasSearch && hasAuthor) {
                 n = dao.getNewsByTitleAndAuthor(searchQuery, authorQuery, page, sortOrder, pageSize);
                 count = dao.countNewsByTitleAndAuthor(searchQuery, authorQuery);
-            }
-            // Only author search
+            } // Only author search
             else if (hasAuthor) {
                 if (sortOrder != null && (sortOrder.equals("newest") || sortOrder.equals("oldest"))) {
                     n = dao.getNewsByAuthorSorted(authorQuery, page, sortOrder, pageSize);
@@ -116,8 +122,7 @@ public class newsList extends HttpServlet {
                     n = dao.getNewsByAuthor(authorQuery, page, pageSize);
                 }
                 count = dao.countNewsByAuthor(authorQuery);
-            }
-            // Only title search
+            } // Only title search
             else if (hasSearch) {
                 if (sortOrder != null && (sortOrder.equals("newest") || sortOrder.equals("oldest"))) {
                     n = dao.getNewByTitleSortedByDate(searchQuery, page, sortOrder, pageSize);
@@ -125,8 +130,7 @@ public class newsList extends HttpServlet {
                     n = dao.getNewByTitle(searchQuery, page, pageSize);
                 }
                 count = dao.count(searchQuery);
-            }
-            // No search criteria, just sorting
+            } // No search criteria, just sorting
             else {
                 if (sortOrder != null && (sortOrder.equals("newest") || sortOrder.equals("oldest"))) {
                     n = dao.getNewsSortedByDate(page, sortOrder, pageSize);
@@ -135,8 +139,7 @@ public class newsList extends HttpServlet {
                 }
                 count = dao.count("");
             }
-        }
-        // Backward compatibility for old search types
+        } // Backward compatibility for old search types
         else if ("author".equals(searchType) && hasAuthor) {
             if (sortOrder != null && (sortOrder.equals("newest") || sortOrder.equals("oldest"))) {
                 n = dao.getNewsByAuthorSorted(authorQuery, page, sortOrder, pageSize);
@@ -144,16 +147,14 @@ public class newsList extends HttpServlet {
                 n = dao.getNewsByAuthor(authorQuery, page, pageSize);
             }
             count = dao.countNewsByAuthor(authorQuery);
-        }
-        else if (hasSearch) {
+        } else if (hasSearch) {
             if (sortOrder != null && (sortOrder.equals("newest") || sortOrder.equals("oldest"))) {
                 n = dao.getNewByTitleSortedByDate(searchQuery, page, sortOrder, pageSize);
             } else {
                 n = dao.getNewByTitle(searchQuery, page, pageSize);
             }
             count = dao.count(searchQuery);
-        }
-        else {
+        } else {
             if (sortOrder != null && (sortOrder.equals("newest") || sortOrder.equals("oldest"))) {
                 n = dao.getNewsSortedByDate(page, sortOrder, pageSize);
             } else {
@@ -205,6 +206,9 @@ public class newsList extends HttpServlet {
         request.setAttribute("count", count);
         request.setAttribute("sortOrder", sortOrder);
         request.setAttribute("searchType", searchType);
+        request.setAttribute(("searchQuery"), searchQuery);
+        request.setAttribute("authorQuery", authorQuery);
+
 
         // Get recent news for sidebar
         ArrayList<News> recentNews = dao.getRecentNews();
@@ -214,9 +218,9 @@ public class newsList extends HttpServlet {
         request.getRequestDispatcher("news/newsList.jsp").forward(request, response);
     }
 
-
     /**
      * Handles the HTTP <code>POST</code> method.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -224,13 +228,14 @@ public class newsList extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         processRequest(request, response);
     }
 
     /**
      * Returns a short description of the servlet.
-     * @return a String containing servlet description
+     *
+         * @return a String containing servlet description
      */
     @Override
     public String getServletInfo() {

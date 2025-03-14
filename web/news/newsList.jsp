@@ -198,7 +198,7 @@
                                     <div class="form-group mb-2 mb-md-0">
                                         <label for="search" class="small mb-1">Title</label>
                                         <input type="text" class="form-control form-control-sm" id="search" name="search"
-                                               placeholder="Search by title" value="${param.search}">
+                                               placeholder="Search by title" value="${not empty searchQuery ? searchQuery : ''}">
                                     </div>
                                 </div>
 
@@ -207,7 +207,7 @@
                                     <div class="form-group mb-2 mb-md-0">
                                         <label for="author" class="small mb-1">Author</label>
                                         <input type="text" class="form-control form-control-sm" id="author" name="author"
-                                               placeholder="Search by author" value="${param.author}">
+                                               placeholder="Search by author" value="${not empty authorQuery ? authorQuery : ''}">
                                     </div>
                                 </div>
 
@@ -403,23 +403,6 @@
         <script src="assets/js/wow.min.js"></script>
         <script src="assets/js/script.js"></script>
         <script src="assets/js/mobile-menu.js"></script>
-
-        <!-- JavaScript for page size changing -->
-        <script>
-            function changePageSize() {
-                const pageSize = document.getElementById('pageSize').value;
-                // Get current URL
-                let currentUrl = new URL(window.location.href);
-
-                // Set page size parameter
-                currentUrl.searchParams.set('page-size', pageSize);
-
-                // Reset to first page when changing page size
-                currentUrl.searchParams.set('page', '1');
-
-                // Navigate to new URL
-                window.location.href = currentUrl.toString();
-            }
-        </script>
+        <script src="${pageContext.request.contextPath}/adminassets/js/format-input.js"></script>
     </body>
 </html>
