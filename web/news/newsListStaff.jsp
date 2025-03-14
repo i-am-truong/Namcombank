@@ -235,7 +235,7 @@
                                             <th style="width: 85%;">
                                                 <div style="min-width: 500px;max-width: 916px;height:109.4px;padding-left:20px;padding-top:13px; white-space: nowrap;">
                                                     <h3 style="font-size: 20px;display: inline-block; vertical-align: top;margin-top: 17px;text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">
-                                                        <a href="">${news.title}</a>
+                                                        <a href="ViewNewsDetail?nId=${news.nId}">${news.title}</a>
                                                     </h3>
 
                                                     <!-- Chỉ hiển thị nút Delete nếu là Admin hoặc chính người tạo -->

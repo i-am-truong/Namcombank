@@ -280,6 +280,10 @@
         <servlet-name>LoanRequestDetailServlet</servlet-name>
         <servlet-class>controller.loanrequest.LoanRequestDetailServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ViewNewsDetail</servlet-name>
+        <servlet-class>controller.news.ViewNewsDetail</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>viewCustomerDetail</servlet-name>
         <url-pattern>/viewCustomerDetail</url-pattern>
@@ -551,6 +555,10 @@
     <servlet-mapping>
         <servlet-name>UpdateLoanPackageController</servlet-name>
         <url-pattern>/loanpackage/updateloanpackage</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ViewNewsDetail</servlet-name>
+        <url-pattern>/ViewNewsDetail</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
