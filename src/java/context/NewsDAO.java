@@ -912,6 +912,39 @@ public class NewsDAO extends DBContext {
         return 0;
     }
 
+    /**
+     * Get a news item by its ID
+     * @param newsId The ID of the news to retrieve
+     * @return The News object if found, null otherwise
+     */
+    public News getNewsById(int newsId) {
+        News news = null;
+        try {
+            String sql = "SELECT * FROM News WHERE news_id = ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, newsId);
+            ResultSet rs = stm.executeQuery();
+
+            if (rs.next()) {
+                news = new News(
+                    rs.getInt("news_id"),
+                    rs.getString("title"),
+                    rs.getString("description"),
+                    rs.getInt("staff_id"),
+                    rs.getTimestamp("updateDate"),
+                    rs.getBoolean("status"),
+                    getAuthorByid(rs.getInt("staff_id"))
+                );
+            }
+            rs.close();
+            stm.close();
+        } catch (Exception e) {
+            System.out.println("Error in getNewsById: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return news;
+    }
+
     public static void main(String[] args) {
         NewsDAO dao = new NewsDAO();
         News news = new News("tesst", "tessssst", 1, new Date(), false);
