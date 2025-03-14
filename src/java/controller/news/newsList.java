@@ -206,7 +206,7 @@ public class newsList extends HttpServlet {
         request.setAttribute("count", count);
         request.setAttribute("sortOrder", sortOrder);
         request.setAttribute("searchType", searchType);
-        request.setAttribute(("searchQuery"), searchQuery);
+        request.setAttribute("searchQuery", searchQuery);
         request.setAttribute("authorQuery", authorQuery);
 
 
