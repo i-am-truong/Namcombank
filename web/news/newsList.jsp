@@ -138,23 +138,6 @@
         </style>
     </head>
     <body>
-        <div id="preloader" class="preeloader">
-            <div class="sk-circle">
-                <div class="sk-circle1 sk-child"></div>
-                <div class="sk-circle2 sk-child"></div>
-                <div class="sk-circle3 sk-child"></div>
-                <div class="sk-circle4 sk-child"></div>
-                <div class="sk-circle5 sk-child"></div>
-                <div class="sk-circle6 sk-child"></div>
-                <div class="sk-circle7 sk-child"></div>
-                <div class="sk-circle8 sk-child"></div>
-                <div class="sk-circle9 sk-child"></div>
-                <div class="sk-circle10 sk-child"></div>
-                <div class="sk-circle11 sk-child"></div>
-                <div class="sk-circle12 sk-child"></div>
-            </div>
-        </div>
-        <div class="off_canvars_overlay"></div>
 
         <!-- Header -->
         <header class="header">
@@ -198,7 +181,7 @@
                                     <div class="form-group mb-2 mb-md-0">
                                         <label for="search" class="small mb-1">Title</label>
                                         <input type="text" class="form-control form-control-sm" id="search" name="search"
-                                               placeholder="Search by title" value="${param.search}">
+                                               placeholder="Search by title" value="${not empty searchQuery ? searchQuery : ''}">
                                     </div>
                                 </div>
 
@@ -207,7 +190,7 @@
                                     <div class="form-group mb-2 mb-md-0">
                                         <label for="author" class="small mb-1">Author</label>
                                         <input type="text" class="form-control form-control-sm" id="author" name="author"
-                                               placeholder="Search by author" value="${param.author}">
+                                               placeholder="Search by author" value="${not empty authorQuery ? authorQuery : ''}">
                                     </div>
                                 </div>
 
@@ -403,22 +386,21 @@
         <script src="assets/js/wow.min.js"></script>
         <script src="assets/js/script.js"></script>
         <script src="assets/js/mobile-menu.js"></script>
+        <script src="${pageContext.request.contextPath}/adminassets/js/format-input.js"></script>
 
-        <!-- JavaScript for page size changing -->
+        <!-- Add JavaScript function to handle page size change -->
         <script>
             function changePageSize() {
+                // Get the current URL
+                const url = new URL(window.location.href);
+                // Get the selected page size value
                 const pageSize = document.getElementById('pageSize').value;
-                // Get current URL
-                let currentUrl = new URL(window.location.href);
-
-                // Set page size parameter
-                currentUrl.searchParams.set('page-size', pageSize);
-
-                // Reset to first page when changing page size
-                currentUrl.searchParams.set('page', '1');
-
-                // Navigate to new URL
-                window.location.href = currentUrl.toString();
+                // Set the page-size parameter
+                url.searchParams.set('page-size', pageSize);
+                // Reset to page 1 when changing page size
+                url.searchParams.set('page', '1');
+                // Navigate to the new URL
+                window.location.href = url.toString();
             }
         </script>
     </body>
