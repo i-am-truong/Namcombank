@@ -83,7 +83,7 @@ public class newsListStaff extends BaseRBACControlller {
                     n = dao.paggingWaitingList(index);
                 }
                 int count = dao.countWaiting();
-                pages = count == 0 ? 1 : (count % 4 != 0) ? (count / 4) + 1 : count / 4;
+                pages = count == 0 ? 1 : (count % 5 != 0) ? (count / 5) + 1 : count / 5;
                 request.setAttribute("type", "WaitingNews");
             } else {
                 // Mặc định hiển thị tất cả tin đã đăng cho Admin
@@ -94,7 +94,7 @@ public class newsListStaff extends BaseRBACControlller {
                     n = dao.pagging(index);
                 }
                 int count = dao.count("");
-                pages = count == 0 ? 1 : (count % 4 != 0) ? (count / 4) + 1 : count / 4;
+                pages = count == 0 ? 1 : (count % 5 != 0) ? (count / 5) + 1 : count / 5;
                 request.setAttribute("type", "News");
             }
         } // Nếu là role khác, hiển thị theo quyền
@@ -108,7 +108,7 @@ public class newsListStaff extends BaseRBACControlller {
                     n = dao.getNewsByStaffId(staffId, index);
                 }
                 int count = dao.countNewsByStaffId(staffId);
-                pages = count == 0 ? 1 : (count % 4 != 0) ? (count / 4) + 1 : count / 4;
+                pages = count == 0 ? 1 : (count % 5 != 0) ? (count / 5) + 1 : count / 5;
                 request.setAttribute("type", "News");
                 request.setAttribute("view", "myNews");
             } else if (view != null && view.equals("pendingNews") && staffId > 0) {
@@ -120,7 +120,7 @@ public class newsListStaff extends BaseRBACControlller {
                     n = dao.getPendingNewsByStaffId(staffId, index);
                 }
                 int count = dao.countPendingNewsByStaffId(staffId);
-                pages = count == 0 ? 1 : (count % 4 != 0) ? (count / 4) + 1 : count / 4;
+                pages = count == 0 ? 1 : (count % 5 != 0) ? (count / 5) + 1 : count / 5;
                 request.setAttribute("type", "News");
                 request.setAttribute("view", "pendingNews");
             } else if (view != null && view.equals("roleNews")) {
@@ -132,7 +132,7 @@ public class newsListStaff extends BaseRBACControlller {
                     n = dao.getNewsByRoleId(roleId, index);
                 }
                 int count = dao.countNewsByRoleId(roleId);
-                pages = count == 0 ? 1 : (count % 4 != 0) ? (count / 4) + 1 : count / 4;
+                pages = count == 0 ? 1 : (count % 5 != 0) ? (count / 5) + 1 : count / 5;
                 request.setAttribute("type", "News");
                 request.setAttribute("view", "roleNews");
             } else {
@@ -144,7 +144,7 @@ public class newsListStaff extends BaseRBACControlller {
                     n = dao.pagging(index);
                 }
                 int count = dao.count("");
-                pages = count == 0 ? 1 : (count % 4 != 0) ? (count / 4) + 1 : count / 4;
+                pages = count == 0 ? 1 : (count % 5 != 0) ? (count / 5) + 1 : count / 5;
                 request.setAttribute("type", "News");
                 request.setAttribute("view", "allNews");
             }
