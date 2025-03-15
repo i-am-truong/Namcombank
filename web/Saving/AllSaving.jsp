@@ -49,7 +49,6 @@
             function showPage(page) {
                 document.getElementById("withdrawable").classList.remove("active");
                 document.getElementById("nonWithdrawable").classList.remove("active");
-                document.getElementById("Saving_create").classList.remove("active");
 
                 document.getElementById(page).classList.add("active");
             }
@@ -61,8 +60,6 @@
         <div class="button-container">    
             <button onclick="showPage('withdrawable')">Gói Không Rút Trước Hạn</button>
             <button onclick="showPage('nonWithdrawable')">Gói Linh Hoạt</button>
-
-            <button onclick="showPage('Saving_create')">Tạo Gói Tiết Kiệm</button>
         </div>
 
         <div id="withdrawable" class="content active">
@@ -73,8 +70,5 @@
             <%@ include file="NonWithdrawableSaving.jsp" %>
         </div>
 
-        <div id="Saving_create" class="content">
-            <%@ include file="Saving_create.jsp" %>
-        </div>
     </body>
 </html>

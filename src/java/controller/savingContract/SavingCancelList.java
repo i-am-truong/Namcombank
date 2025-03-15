@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controller.saving;
+package controller.savingContract;
 
 import context.SavingDao;
 import controller.auth.BaseRBACControlller;
@@ -13,13 +13,16 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
+import model.Saving;
 import model.auth.Staff;
 
 /**
  *
  * @author admin
  */
-public class SavingCancel extends BaseRBACControlller {
+public class SavingCancelList extends BaseRBACControlller {
 
     private SavingDao dao = new SavingDao();
 
@@ -58,25 +61,47 @@ public class SavingCancel extends BaseRBACControlller {
         }
 
         String savings_idStr = request.getParameter("savings_id");
-        int savings_id = -1;
+        int savings_id;
+        if (savings_idStr != null && !savings_idStr.trim().isEmpty()) {
+            try {
+                savings_id = Integer.parseInt(savings_idStr);
+                Staff staff = (Staff) session.getAttribute("account");
+                if (staff != null) {
+                    int staff_id = staff.getId();
+                    dao.SavingCancel(savings_id, staff_id);
+                }
+            } catch (NumberFormatException e) {
+
+            }
+        }
+        List<Saving> list = new ArrayList<>();
+
+        int index = 1;
         try {
-            savings_id = Integer.parseInt(savings_idStr);
+            index = Integer.parseInt(request.getParameter("index"));
         } catch (NumberFormatException e) {
-            request.getRequestDispatcher("SavingCancelList").forward(request, response);
-            return;
+            index = 1; // Mặc định trang đầu
         }
 
-        Staff staff = (Staff) request.getSession().getAttribute("account");
-        if (staff == null) {
-            response.sendRedirect("admin.login");
-            return;
+        String name = request.getParameter("customer_name");
+        if (name != null && name.trim().isEmpty()) {
+            name = null;
         }
-        int staff_id = staff.getId();
+        int count;
+        if (name != null) {
+            count = dao.getTotalSavingName(name);
+            list = dao.pagingSavingByName(index, name);
+        } else {
+            count = dao.getTotalSaving();
+            list = dao.pagingSaving(index);
+        }
 
-        dao.SavingCancel(savings_id, staff_id);
-
-        request.getRequestDispatcher("SavingCancelList").forward(request, response);
-
+        int endPage = (count % 8 == 0) ? count / 8 : (count / 8) + 1;
+        request.setAttribute("endPage", endPage);
+        request.setAttribute("name_selected", name);
+        request.setAttribute("listPaging", list);
+        request.setAttribute("currentPage", index);
+        request.getRequestDispatcher("Saving/SavingCancelList.jsp").forward(request, response);
     }
 
     @Override
@@ -87,25 +112,36 @@ public class SavingCancel extends BaseRBACControlller {
             return;
         }
 
-        String savings_idStr = request.getParameter("savings_id");
-        int savings_id;
-        try {
-            savings_id = Integer.parseInt(savings_idStr);
-        } catch (NumberFormatException e) {
-            request.getRequestDispatcher("SavingCancelList").forward(request, response);
-            return;
+        List<Saving> list = new ArrayList<>();
+
+        String indexStr = request.getParameter("index");
+
+        int index = 1;
+        if (indexStr != null && !indexStr.isEmpty()) {
+            index = Integer.parseInt(indexStr);
+        }
+        String name = request.getParameter("customer_name");
+
+        if (name != null && !name.isEmpty()) {
+            name = request.getParameter("customer_name");
+        } else {
+            name = null;
+        }
+        int count;
+        if (name != null) {
+            count = dao.getTotalSavingName(name);
+            list = dao.pagingSavingByName(index, name);
+        } else {
+            count = dao.getTotalSaving();
+            list = dao.pagingSaving(index);
         }
 
-        Staff staff = (Staff) request.getSession().getAttribute("account");
-        if (staff == null) {
-            response.sendRedirect("admin.login");
-            return;
-        }
-        int staff_id = staff.getId();
-
-        dao.SavingCancel(savings_id, staff_id);
-
-        request.getRequestDispatcher("SavingCancelList").forward(request, response);
+        int endPage = (count % 8 == 0) ? count / 8 : (count / 8) + 1;
+        request.setAttribute("endPage", endPage);
+        request.setAttribute("name_selected", name);
+        request.setAttribute("listPaging", list);
+        request.setAttribute("currentPage", index);
+        request.getRequestDispatcher("Saving/SavingCancelList.jsp").forward(request, response);
     }
 
 }

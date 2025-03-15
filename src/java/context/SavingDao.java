@@ -158,13 +158,28 @@ public class SavingDao extends DBContext {
         return -1;
     }
 
-    public String selectName(int saving_package_id) {
+    public String selectSavingPackageName(int saving_package_id) {
         String query = "SELECT saving_package_name FROM SavingPackage WHERE saving_package_id=?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, saving_package_id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     return rs.getString("saving_package_name");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public String selectCustomerName(int customer_id) {
+        String query = "SELECT fullname FROM Customer WHERE customer_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, customer_id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("fullname");
                 }
             }
         } catch (SQLException e) {
@@ -222,11 +237,11 @@ public class SavingDao extends DBContext {
         return -1;
     }
 
-    public void insertSavingRequest(int customer_id, int saving_package_id, Double money, String created_at, double amount, String saving_package_name) {
+    public void insertSavingRequest(int customer_id, int saving_package_id, Double money, String created_at, double amount, String saving_package_name, String customer_name) {
         String query = "INSERT INTO SavingRequest "
                 + "(customer_id, saving_package_id, staff_id, money, saving_approval_status, "
-                + "saving_approval_date, money_approval_status, amount, created_at, saving_package_name) "
-                + "VALUES (?, ?, NULL, ?, 'pending', NULL, 'pending', ?, ?, ?)";
+                + "saving_approval_date, money_approval_status, amount, created_at, saving_package_name, [customer_name]) "
+                + "VALUES (?, ?, NULL, ?, 'pending', NULL, 'pending', ?, ?, ?, ?)";
 
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, customer_id);
@@ -235,7 +250,7 @@ public class SavingDao extends DBContext {
             ps.setDouble(4, amount);
             ps.setString(5, created_at);
             ps.setString(6, saving_package_name);
-
+            ps.setString(7, customer_name);
             int rowsInserted = ps.executeUpdate();
             if (rowsInserted > 0) {
                 System.out.println("Insert thành công!");
@@ -275,6 +290,7 @@ public class SavingDao extends DBContext {
                 sr.setAmount(rs.getDouble("amount")); // Bổ sung
                 sr.setCreated_at(rs.getString("created_at")); // Nếu `created_at` có time, dùng `Timestamp`
                 sr.setSaving_package_name(rs.getString("saving_package_name")); // Bổ sung
+                sr.setCustomer_name(rs.getString("customer_name")); // Bổ sung
                 list.add(sr);
             }
 
@@ -358,6 +374,7 @@ public class SavingDao extends DBContext {
                 sr.setAmount(rs.getDouble("amount")); // Bổ sung
                 sr.setCreated_at(rs.getString("created_at"));
                 sr.setSaving_package_name(rs.getString("saving_package_name")); // Bổ sung
+                sr.setCustomer_name(rs.getString("customer_name"));
                 list.add(sr);
             }
 
@@ -488,7 +505,7 @@ public class SavingDao extends DBContext {
     }
 
     public String selectCustomer_fullname(int customer_id) {
-        String query = "select fullname  from Customer where customer_id = ? ";
+        String query = "select fullname from Customer where customer_id = ? ";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, customer_id);
             try (ResultSet rs = ps.executeQuery()) {
@@ -662,6 +679,7 @@ public class SavingDao extends DBContext {
                 sr.setAmount(rs.getDouble("amount")); // Bổ sung
                 sr.setCreated_at(rs.getString("created_at"));
                 sr.setSaving_package_name(rs.getString("saving_package_name")); // Bổ sung
+                sr.setCustomer_name(rs.getString("customer_name"));
                 list.add(sr);
             }
 
@@ -689,9 +707,10 @@ public class SavingDao extends DBContext {
                 sr.setAmount(rs.getDouble("amount")); // Bổ sung
                 sr.setCreated_at(rs.getString("created_at"));
                 sr.setSaving_package_name(rs.getString("saving_package_name")); // Bổ sung
+                sr.setCustomer_name(rs.getString("customer_name"));
                 list.add(sr);
             }
-
+ 
         } catch (SQLException e) {
             e.printStackTrace();
         }

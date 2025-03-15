@@ -49,66 +49,68 @@
     <body id="page-top">
         <div id="wrapper">
             <%@include file="../homepage/sidebar_admin.jsp" %>
-
-            <div class="container">
-                <h2 class="text-center">Manager Saving Package</h2>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Staff ID</th>
-                            <th>Name</th>
-                            <th>Description</th>
-                            <th>Interest Rate</th>
-                            <th>Term (months)</th>
-                            <th>Min Deposit</th>
-                            <th>Max Deposit</th>
-                            <th>Status</th>
-                            <th>Approval Status</th>
-                            <th>Withdrawable</th>
-                            <th>Created At</th>
-                            <th>Updated At</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <c:forEach var="sp" items="${list}">
+            <div id="content-wrapper" class="d-flex flex-column">
+                <%@include file="../homepage/header_admin.jsp" %>
+                <div class="container">
+                    <h2 class="text-center">Manager Saving Package</h2>
+                    <table class="table">
+                        <thead>
                             <tr>
-                                <td>${sp.saving_package_id}</td>
-                                <td>${sp.staff_id}</td>
-                                <td>${sp.saving_package_name}</td>
-                                <td>${sp.saving_package_description}</td>
-                                <td>${sp.saving_package_interest_rate}</td>
-                                <td>${sp.saving_package_term_months}</td>
-                                <td><fmt:formatNumber value="${sp.saving_package_min_deposit}" pattern="#,##0" /></td>
-                                <td><fmt:formatNumber value="${sp.saving_package_max_deposit}" pattern="#,##0" /></td>
-                                <td>${sp.saving_package_status}</td>
-                                <td>${sp.saving_package_approval_status}</td>
-                                <td>${sp.saving_withdrawable ? '1' : '0'}</td>
-                                <td>
-                                    <fmt:parseDate value="${sp.saving_package_created_at}" pattern="yyyy-MM-dd" var="parsedDate" type="date"/>
-                                    <fmt:formatDate value="${parsedDate}" pattern="dd/MM/yyyy"/>
-                                </td> 
-                                <td>
-                                    <fmt:parseDate value="${sp.saving_package_updated_at}" pattern="yyyy-MM-dd" var="parsedDate" type="date"/>
-                                    <fmt:formatDate value="${parsedDate}" pattern="dd/MM/yyyy"/>
-                                </td> 
-                                <td>
-                                    <form action="updateSaving" method="post" style="display:inline;">
-                                        <input type="hidden" name="saving_package_id" value="${sp.saving_package_id}">
-                                        <input type="hidden" name="action" value="approved">
-                                        <button type="submit" class="btn btn-approve">✔</button>
-                                    </form>
-                                    <form action="updateSaving" method="post" style="display:inline;">
-                                        <input type="hidden" name="saving_package_id" value="${sp.saving_package_id}">
-                                        <input type="hidden" name="action" value="rejected">
-                                        <button type="submit" class="btn btn-reject">❌</button>
-                                    </form>
-                                </td>
+                                <th>ID</th>
+                                <th>Staff ID</th>
+                                <th>Name</th>
+                                <th>Description</th>
+                                <th>Interest Rate</th>
+                                <th>Term (months)</th>
+                                <th>Min Deposit</th>
+                                <th>Max Deposit</th>
+                                <th>Status</th>
+                                <th>Approval Status</th>
+                                <th>Withdrawable</th>
+                                <th>Created At</th>
+                                <th>Updated At</th>
+                                <th>Action</th>
                             </tr>
-                        </c:forEach>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            <c:forEach var="sp" items="${list}">
+                                <tr>
+                                    <td>${sp.saving_package_id}</td>
+                                    <td>${sp.staff_id}</td>
+                                    <td>${sp.saving_package_name}</td>
+                                    <td>${sp.saving_package_description}</td>
+                                    <td>${sp.saving_package_interest_rate}</td>
+                                    <td>${sp.saving_package_term_months}</td>
+                                    <td><fmt:formatNumber value="${sp.saving_package_min_deposit}" pattern="#,##0" /></td>
+                                    <td><fmt:formatNumber value="${sp.saving_package_max_deposit}" pattern="#,##0" /></td>
+                                    <td>${sp.saving_package_status}</td>
+                                    <td>${sp.saving_package_approval_status}</td>
+                                    <td>${sp.saving_withdrawable ? '1' : '0'}</td>
+                                    <td>
+                                        <fmt:parseDate value="${sp.saving_package_created_at}" pattern="yyyy-MM-dd" var="parsedDate" type="date"/>
+                                        <fmt:formatDate value="${parsedDate}" pattern="dd/MM/yyyy"/>
+                                    </td> 
+                                    <td>
+                                        <fmt:parseDate value="${sp.saving_package_updated_at}" pattern="yyyy-MM-dd" var="parsedDate" type="date"/>
+                                        <fmt:formatDate value="${parsedDate}" pattern="dd/MM/yyyy"/>
+                                    </td> 
+                                    <td>
+                                        <form action="updateSaving" method="post" style="display:inline;">
+                                            <input type="hidden" name="saving_package_id" value="${sp.saving_package_id}">
+                                            <input type="hidden" name="action" value="approved">
+                                            <button type="submit" class="btn btn-approve">✔</button>
+                                        </form>
+                                        <form action="updateSaving" method="post" style="display:inline;">
+                                            <input type="hidden" name="saving_package_id" value="${sp.saving_package_id}">
+                                            <input type="hidden" name="action" value="rejected">
+                                            <button type="submit" class="btn btn-reject">❌</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </tbody>
+                    </table>
+                </div>
             </div>
     </body>
 </html>

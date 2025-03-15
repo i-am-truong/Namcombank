@@ -18,7 +18,7 @@
             a {
                 display: inline-block;
                 padding: 8px 12px;
-                background-color: #007bff;
+                background-color: #28a745;
                 color: white;
                 text-decoration: none;
                 border-radius: 5px;
@@ -26,7 +26,7 @@
             }
 
             a:hover {
-                background-color: #0056b3;
+                background-color: #28a745;
             }
 
             h2 {
@@ -50,7 +50,7 @@
             }
 
             th {
-                background-color: #007bff;
+                background-color: #28a745;
                 color: white;
             }
 

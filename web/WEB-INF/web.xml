@@ -122,7 +122,7 @@
     </servlet>
     <servlet>
         <servlet-name>savingMoney</servlet-name>
-        <servlet-class>controller.saving.savingMoney</servlet-class>
+        <servlet-class>controller.savingContract.savingMoney</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>createSavingPackage</servlet-name>
@@ -298,11 +298,11 @@
     </servlet>
     <servlet>
         <servlet-name>updateSaving</servlet-name>
-        <servlet-class>controller.saving.updateSaving</servlet-class>
+        <servlet-class>controller.savingContract.updateSaving</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>SavingPay</servlet-name>
-        <servlet-class>controller.saving.SavingPay</servlet-class>
+        <servlet-class>controller.savingContract.SavingPay</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>SavingCustomer</servlet-name>
@@ -310,7 +310,7 @@
     </servlet>
     <servlet>
         <servlet-name>SavingCustomerActive</servlet-name>
-        <servlet-class>controller.feedback.SavingCustomerActive</servlet-class>
+        <servlet-class>controller.savingContract.SavingCustomerActive</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>SavingFeedback</servlet-name>
@@ -330,11 +330,11 @@
     </servlet>
     <servlet>
         <servlet-name>SavingCancelList</servlet-name>
-        <servlet-class>controller.saving.SavingCancelList</servlet-class>
+        <servlet-class>controller.savingContract.SavingCancelList</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>SavingCancel</servlet-name>
-        <servlet-class>controller.saving.SavingCancel</servlet-class>
+        <servlet-class>controller.savingContract.SavingCancel</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>viewCustomerDetail</servlet-name>

@@ -49,50 +49,52 @@
     <body id="page-top">
         <div id="wrapper">
             <%@include file="../homepage/sidebar_admin.jsp" %>
-
-            <div class="container">
-                <h2>Danh sách khoản tiết kiệm sắp đến hạn</h2>
-                <table border="1">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Customer ID</th>
-                            <th>Amount</th>
-                            <th>Interest Rate</th>
-                            <th>Term (Months)</th>
-                            <th>Opened Date</th>
-                            <th>Money Get Date</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <c:forEach var="saving" items="${list}">
+            <div id="content-wrapper" class="d-flex flex-column">
+                <%@include file="../homepage/header_admin.jsp" %>
+                <div class="container">
+                    <h2>Danh sách khoản tiết kiệm sắp đến hạn</h2>
+                    <table border="1">
+                        <thead>
                             <tr>
-                                <td>${saving.savings_id}</td>
-                                <td>${saving.customer_id}</td>
-                                <td><fmt:formatNumber value="${saving.amount}" type="number" /></td>
-                                <td><fmt:formatNumber value="${saving.interest_rate}" type="number" maxFractionDigits="3"/></td>
-                                <td>${saving.term_months}</td>
-                                <td>
-                                    <fmt:parseDate value="${saving.opened_date}" pattern="yyyy-MM-dd" var="parsedDate" type="date"/>
-                                    <fmt:formatDate value="${parsedDate}" pattern="dd/MM/yyyy"/>
-                                </td>
-                                <td>
-                                    <fmt:parseDate value="${saving.money_get_date}" pattern="yyyy-MM-dd" var="parsedDate" type="date"/>
-                                    <fmt:formatDate value="${parsedDate}" pattern="dd/MM/yyyy"/>
-                                </td>
-                                <td>${saving.status}</td>
-                                <td>
-                                    <form action="SavingPay" method="post">
-                                        <input type="hidden" name="savings_id" value="${saving.savings_id}">
-                                        <button type="submit" class="btn btn-approve">Paid</button>
-                                    </form>
-                                </td>
+                                <th>ID</th>
+                                <th>Customer ID</th>
+                                <th>Amount</th>
+                                <th>Interest Rate</th>
+                                <th>Term (Months)</th>
+                                <th>Opened Date</th>
+                                <th>Money Get Date</th>
+                                <th>Status</th>
                             </tr>
-                        </c:forEach>
-                    </tbody>
+                        </thead>
+                        <tbody>
+                            <c:forEach var="saving" items="${list}">
+                                <tr>
+                                    <td>${saving.savings_id}</td>
+                                    <td>${saving.customer_id}</td>
+                                    <td><fmt:formatNumber value="${saving.amount}" type="number" /></td>
+                                    <td><fmt:formatNumber value="${saving.interest_rate}" type="number" maxFractionDigits="3"/></td>
+                                    <td>${saving.term_months}</td>
+                                    <td>
+                                        <fmt:parseDate value="${saving.opened_date}" pattern="yyyy-MM-dd" var="parsedDate" type="date"/>
+                                        <fmt:formatDate value="${parsedDate}" pattern="dd/MM/yyyy"/>
+                                    </td>
+                                    <td>
+                                        <fmt:parseDate value="${saving.money_get_date}" pattern="yyyy-MM-dd" var="parsedDate" type="date"/>
+                                        <fmt:formatDate value="${parsedDate}" pattern="dd/MM/yyyy"/>
+                                    </td>
+                                    <td>${saving.status}</td>
+                                    <td>
+                                        <form action="SavingPay" method="post">
+                                            <input type="hidden" name="savings_id" value="${saving.savings_id}">
+                                            <button type="submit" class="btn btn-approve">Paid</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </tbody>
 
-                </table>
+                    </table>
+                </div>
             </div>
         </div>
     </body>

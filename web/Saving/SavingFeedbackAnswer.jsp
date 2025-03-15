@@ -49,7 +49,8 @@
     <body id="page-top">
         <div id="wrapper">
             <%@ include file="../homepage/sidebar_admin.jsp" %>
-
+            <div id="content-wrapper" class="d-flex flex-column">
+                <%@include file="../homepage/header_admin.jsp" %>
             <div class="container">
                 <h2 class="text-center">Danh Sách Phản Hồi Tiết Kiệm</h2>
                 <table class="table table-bordered">
@@ -105,6 +106,7 @@
 
 
                 </table>
+            </div>
             </div>
         </div>
     </body>

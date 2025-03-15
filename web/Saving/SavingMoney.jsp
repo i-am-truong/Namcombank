@@ -50,59 +50,64 @@
         <div id="wrapper">
             <%@include file="../homepage/sidebar_admin.jsp" %>
 
-            <div class="container">
-                <h2 class="text-center">Customer Saving Money</h2>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>saving_request_id</th>
-                            <th>Saving_Package_ID</th>
-                            <th>Customer ID</th>
-                            <th>Saving Package</th>
-                            <th>Money</th>
-                            <th>Approval Status</th>
-                            <th>Created At</th>
-                            <th>Approval Date</th>
-                            <!--<th>Saving Date</th>-->
-                            <th>Staff ID</th>
-                            <th>Money status</th>
-                            <th>Amount</th>
-                            <th>Thao tác</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <c:forEach var="sr" items="${list}">
+            <div id="content-wrapper" class="d-flex flex-column">
+                <%@include file="../homepage/header_admin.jsp" %>
+                <div class="container">
+                    <h2 class="text-center">Customer Saving Money</h2>
+                    <table class="table">
+                        <thead>
                             <tr>
-                                <td>${sr.saving_request_id}</td>
-                                <td>${sr.saving_package_id}</td>
-                                <td>${sr.customer_id}</td>
-                                <td>${sr.saving_package_name}</td>
-                                <td>${String.format("%.2f", sr.money)}</td>
-                                <td>${sr.saving_approval_status}</td>
-                                <td>
-                                    <fmt:parseDate value="${sr.created_at}" pattern="yyyy-MM-dd" var="parsedDate" type="date"/>
-                                    <fmt:formatDate value="${parsedDate}" pattern="dd/MM/yyyy"/>
-                                </td>
-                                <td>
-                                    <fmt:parseDate value="${sr.saving_approval_date}" pattern="yyyy-MM-dd" var="parsedDate" type="date"/>
-                                    <fmt:formatDate value="${parsedDate}" pattern="dd/MM/yyyy"/>
-                                </td>
-                                <!--<td>$/{sr.saving_date}</td>-->
-                                <td>${sr.staff_id}</td>
-                                <td>${sr.money_approval_status}</td>
-                                <td>${String.format("%.2f", sr.amount)}</td>
-                                <td>
-                                    <form action="savingMoney" method="post" style="display:inline;">
-                                        <input type="hidden" name="saving_request_id" value="${sr.saving_request_id}">
-                                        <input type="hidden" name="money_approval_status" value="received">
-                                        <button type="submit" class="btn btn-approve">Đã nhận được tiền</button>
-                                    </form>
-
-                                </td>
+                                <th>saving_request_id</th>
+                                <th>Saving_Package_ID</th>
+                                <th>Customer ID</th>
+                                <th>Customer Name</th>
+                                <th>Saving Package</th>
+                                <th>Money</th>
+                                <th>Approval Status</th>
+                                <th>Created At</th>
+                                <th>Approval Date</th>
+                                <!--<th>Saving Date</th>-->
+                                <th>Staff ID</th>
+                                <th>Money status</th>
+                                <th>Amount</th>
+                                <th>Thao tác</th>
                             </tr>
-                        </c:forEach>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            <c:forEach var="sr" items="${list}">
+                                <tr>
+                                    <td>${sr.saving_request_id}</td>
+                                    <td>${sr.saving_package_id}</td>
+                                    <td>${sr.customer_id}</td>
+                                    <td>${sr.customer_name}</td>
+                                    <td>${sr.saving_package_name}</td>
+                                    <td>${String.format("%.2f", sr.money)}</td>
+                                    <td>${sr.saving_approval_status}</td>
+                                    <td>
+                                        <fmt:parseDate value="${sr.created_at}" pattern="yyyy-MM-dd" var="parsedDate" type="date"/>
+                                        <fmt:formatDate value="${parsedDate}" pattern="dd/MM/yyyy"/>
+                                    </td>
+                                    <td>
+                                        <fmt:parseDate value="${sr.saving_approval_date}" pattern="yyyy-MM-dd" var="parsedDate" type="date"/>
+                                        <fmt:formatDate value="${parsedDate}" pattern="dd/MM/yyyy"/>
+                                    </td>
+                                    <!--<td>$/{sr.saving_date}</td>-->
+                                    <td>${sr.staff_id}</td>
+                                    <td>${sr.money_approval_status}</td>
+                                    <td>${String.format("%.2f", sr.amount)}</td>
+                                    <td>
+                                        <form action="savingMoney" method="post" style="display:inline;">
+                                            <input type="hidden" name="saving_request_id" value="${sr.saving_request_id}">
+                                            <input type="hidden" name="money_approval_status" value="received">
+                                            <button type="submit" class="btn btn-approve">Đã nhận được tiền</button>
+                                        </form>
+
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </tbody>
+                    </table>
+                </div>    
             </div>
     </body>
 </html>

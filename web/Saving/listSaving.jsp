@@ -13,29 +13,51 @@
             body {
                 font-family: Arial, sans-serif;
                 background-color: #f8f9fa;
+                margin: 0;
+                display: flex;
             }
-            .container {
-                margin-top: 20px;
+
+            /* Sidebar giữ nguyên */
+            #wrapper {
+                display: flex;
+                width: 100%;
+            }
+
+            /* Phần bên phải (Search + Table) */
+            .content {
+                flex: 1;
+                padding: 20px;
+            }
+
+            /* Search box nằm trên */
+            .search-container {
+                background-color: #e9ecef;
+                padding: 15px;
+                border: 1px solid green;
+                margin-bottom: 20px;
+            }
+
+            .search-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 10px;
+            }
+
+            /* Table */
+            .table-container {
                 background: white;
                 padding: 20px;
-                border-radius: 8px;
+                border: 1px solid green;
                 box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
             }
-            table {
-                width: 100%;
-                border-collapse: collapse;
-            }
-            th, td {
-                padding: 12px;
-                text-align: center;
-            }
+
             .btn {
                 padding: 5px 10px;
-                border: none;
                 border-radius: 5px;
                 cursor: pointer;
                 transition: 0.3s;
             }
+
             .btn-approve {
                 background-color: #28a745;
                 color: white;
@@ -49,63 +71,96 @@
     <body id="page-top">
         <div id="wrapper">
             <%@include file="../homepage/sidebar_admin.jsp" %>
+            <!-- Phần bên phải -->
+            <div id="content-wrapper" class="d-flex flex-column">
+                <%@include file="../homepage/header_admin.jsp" %>
+                <div class="content"> 
+                    <!-- Search Section -->
+                    <div class="search-container">
+                        <div class="search-grid">
+                            <div class="form-group">
+                                <label for="customerName">Customer Name</label>
+                                <input type="text" id="customerName" name="customerName" class="form-control" 
+                                       value="${customerName}" placeholder="Customer name">
+                            </div>
+                            <div class="form-group">
+                                <label for="packageName">Loan Package</label>
+                                <input type="text" id="packageName" name="packageName" class="form-control" 
+                                       value="${packageName}" placeholder="Loan package name">
+                            </div>
 
-            <div class="container">
-                <h2 class="text-center">Customer Saving Requests</h2>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>saving_request_id</th>
-                            <th>Saving_Package_ID</th>
-                            <th>Customer ID</th>
-                            <th>Saving Package</th>
-                            <th>Money</th>
-                            <th>Approval Status</th>
-                            <th>Created At</th>
-                            <th>Approval Date</th>
-                            <!--<th>Saving Date</th>-->
-                            <th>Staff ID</th>
-                            <th>Amount</th>
-                            <th>Thao tác</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <c:forEach var="sr" items="${list}">
-                            <tr>
-                                <td>${sr.saving_request_id}</td>
-                                <td>${sr.saving_package_id}</td>
-                                <td>${sr.customer_id}</td>
-                                <td>${sr.saving_package_name}</td>
-                                <td>${String.format("%.2f", sr.money)}</td>
-                                <td>${sr.saving_approval_status}</td>
-                                <td>
-                                    <fmt:parseDate value="${sr.created_at}" pattern="yyyy-MM-dd" var="parsedDate" type="date"/>
-                                    <fmt:formatDate value="${parsedDate}" pattern="dd/MM/yyyy"/>
-                                </td> 
-                                <td>
-                                    <fmt:parseDate value="${sr.saving_approval_date}" pattern="yyyy-MM-dd" var="parsedDate" type="date"/>
-                                    <fmt:formatDate value="${parsedDate}" pattern="dd/MM/yyyy"/>
-                                </td>
-                                <!--<td>$/{sr.saving_date}</td>-->
-                                <td>${sr.staff_id}</td>
-                                <td>${String.format("%.2f", sr.amount)}</td>
-                                <td>
-                                    <form action="listSaving" method="post" style="display:inline;">
-                                        <input type="hidden" name="saving_request_id" value="${sr.saving_request_id}">
-                                        <input type="hidden" name="saving_approval_status" value="approved">
-                                        <button type="submit" class="btn btn-approve">Chấp nhận</button>
-                                    </form>
-                                    <form action="listSaving" method="post" style="display:inline;">
-                                        <input type="hidden" name="saving_request_id" value="${sr.saving_request_id}">
-                                        <input type="hidden" name="saving_approval_status" value="rejected">
-                                        <button type="submit" class="btn btn-reject">Từ chối</button>
-                                    </form>
+                            <div class="form-group">
+                                <label for="minAmount">Amount From</label>
+                                <input type="number" id="minAmount" name="minAmount" class="form-control" 
+                                       value="${minAmount}" placeholder="Minimum amount">
+                            </div>
+                            <div class="form-group">
+                                <label for="maxAmount">Amount To</label>
+                                <input type="number" id="maxAmount" name="maxAmount" class="form-control" 
+                                       value="${maxAmount}" placeholder="Maximum amount">
+                            </div>
+                        </div>
+                    </div>
 
-                                </td>
-                            </tr>
-                        </c:forEach>
-                    </tbody>
-                </table>
+                    <!-- Data Table -->
+                    <div class="table-container">
+                        <h2 class="text-center">Customer Saving Requests</h2>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <!--<th>saving_request_id</th>-->
+                                    <!--<th>Saving_Package_ID</th>-->
+                                    <th>Customer ID</th>
+                                    <th>Customer Name</th>
+                                    <th>Saving Package</th>
+                                    <th>Money</th>
+                                    <th>Approval Status</th>
+                                    <th>Created At</th>
+                                    <!--<th>Approval Date</th>-->
+                                    <!--<th>Staff ID</th>-->
+                                    <th>Amount</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <c:forEach var="sr" items="${list}">
+                                    <tr>
+                                        <!--<td>$/{sr.saving_request_id}</td>-->
+                                        <!--<td>$/{sr.saving_package_id}</td>-->
+                                        <td>${sr.customer_id}</td>
+                                        <td>${sr.customer_name}</td>
+                                        <td>${sr.saving_package_name}</td>
+                                        <td>${String.format("%.2f", sr.money)}</td>
+                                        <td>${sr.saving_approval_status}</td>
+                                        <td>
+                                            <fmt:parseDate value="${sr.created_at}" pattern="yyyy-MM-dd" var="parsedDate" type="date"/>
+                                            <fmt:formatDate value="${parsedDate}" pattern="dd/MM/yyyy"/>
+                                        </td> 
+                                        <!--                                        <td>
+                                        <%--<fmt:parseDate value="${sr.saving_approval_date}" pattern="yyyy-MM-dd" var="parsedDate" type="date"/>--%>
+                                        <%--<fmt:formatDate value="${parsedDate}" pattern="dd/MM/yyyy"/>--%>
+                                    </td>-->
+                                        <!--<td>$/{sr.staff_id}</td>-->
+                                        <td>${String.format("%.2f", sr.amount)}</td>
+                                        <td>
+                                            <form action="listSaving" method="post" style="display:inline;">
+                                                <input type="hidden" name="saving_request_id" value="${sr.saving_request_id}">
+                                                <input type="hidden" name="saving_approval_status" value="approved">
+                                                <button type="submit" class="btn btn-approve">Chấp nhận</button>
+                                            </form>
+                                            <form action="listSaving" method="post" style="display:inline;">
+                                                <input type="hidden" name="saving_request_id" value="${sr.saving_request_id}">
+                                                <input type="hidden" name="saving_approval_status" value="rejected">
+                                                <button type="submit" class="btn btn-reject">Từ chối</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                </c:forEach>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
+        </div>
     </body>
 </html>
