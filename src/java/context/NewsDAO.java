@@ -1,4 +1,4 @@
-/*
+ /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
@@ -796,11 +796,6 @@ public class NewsDAO extends DBContext {
 
     /**
      * Search for news by both title and author name with pagination
-     * @param title Search term for title
-     * @param authorName Search term for author name
-     * @param index Page index
-     * @param sortOrder Sort order (newest/oldest)
-     * @return List of matching news items
      */
     public ArrayList<News> getNewsByTitleAndAuthor(String title, String authorName, int index, String sortOrder) {
         ArrayList<News> b = new ArrayList<>();
@@ -811,32 +806,64 @@ public class NewsDAO extends DBContext {
                 order = "ASC";
             }
 
-            String searchTitle = "%" + title + "%";
-            String searchName = "%" + authorName + "%";
+            // Build query based on which parameters are provided
+            StringBuilder sqlBuilder = new StringBuilder(
+                "SELECT n.* FROM News n " +
+                "INNER JOIN Staff s ON n.staff_id = s.staff_id " +
+                "WHERE n.status = 1 "
+            );
 
-            // Query to search by both title and author
-            String sql = "SELECT n.* FROM News n " +
-                         "INNER JOIN Staff s ON n.staff_id = s.staff_id " +
-                         "WHERE n.title LIKE ? AND s.fullname LIKE ? AND n.status = 1 " +
-                         "ORDER BY n.updateDate " + order + " OFFSET ? ROWS FETCH NEXT 5 ROWS ONLY";
+            boolean hasTitle = title != null && !title.trim().isEmpty();
+            boolean hasAuthor = authorName != null && !authorName.trim().isEmpty();
+
+            if (hasTitle) {
+                sqlBuilder.append("AND n.title LIKE ? ");
+            }
+
+            if (hasAuthor) {
+                sqlBuilder.append("AND s.fullname LIKE ? ");
+            }
+
+            sqlBuilder.append("ORDER BY n.updateDate " + order + " OFFSET ? ROWS FETCH NEXT 5 ROWS ONLY");
+
+            String sql = sqlBuilder.toString();
+            System.out.println("DEBUG - SQL query: " + sql);
 
             PreparedStatement stm = connection.prepareStatement(sql);
-            stm.setString(1, searchTitle);
-            stm.setString(2, searchName);
-            stm.setInt(3, (index - 1) * 5);
+
+            // Set parameters depending on which conditions are used
+            int paramIndex = 1;
+            if (hasTitle) {
+                String searchTitle = "%" + title + "%";
+                stm.setString(paramIndex++, searchTitle);
+                System.out.println("DEBUG - Search title parameter: " + searchTitle);
+            }
+
+            if (hasAuthor) {
+                String searchName = "%" + authorName + "%";
+                stm.setString(paramIndex++, searchName);
+                System.out.println("DEBUG - Search author parameter: " + searchName);
+            }
+
+            stm.setInt(paramIndex, (index - 1) * 5);
+            System.out.println("DEBUG - Offset parameter: " + ((index - 1) * 5));
 
             ResultSet rs = stm.executeQuery();
+            int resultCount = 0;
             while (rs.next()) {
+                resultCount++;
                 b.add(new News(rs.getInt(1), rs.getString(3), rs.getString(4), rs.getInt(2),
                       rs.getTimestamp(6), rs.getBoolean(5), getAuthorByid(rs.getInt(2))));
             }
+            System.out.println("DEBUG - Found " + resultCount + " results in query");
         } catch (Exception e) {
             System.out.println("Error in getNewsByTitleAndAuthor: " + e.getMessage());
             e.printStackTrace();
         }
         return b;
     }
-
+    
+    
     /**
      * Search for news by both title and author name with pagination and dynamic page size
      * @param title Search term for title
@@ -882,28 +909,54 @@ public class NewsDAO extends DBContext {
         return b;
     }
 
+
     /**
      * Count news items matching both title and author search criteria
-     * @param title Search term for title
-     * @param authorName Search term for author name
-     * @return Count of matching news items
      */
     public int countNewsByTitleAndAuthor(String title, String authorName) {
         try {
-            String searchTitle = "%" + title + "%";
-            String searchName = "%" + authorName + "%";
+            // Build query based on which parameters are provided
+            StringBuilder sqlBuilder = new StringBuilder(
+                "SELECT COUNT(*) FROM News n " +
+                "INNER JOIN Staff s ON n.staff_id = s.staff_id " +
+                "WHERE n.status = 1 "
+            );
 
-            String sql = "SELECT COUNT(*) FROM News n " +
-                         "INNER JOIN Staff s ON n.staff_id = s.staff_id " +
-                         "WHERE n.title LIKE ? AND s.fullname LIKE ? AND n.status = 1";
+            boolean hasTitle = title != null && !title.trim().isEmpty();
+            boolean hasAuthor = authorName != null && !authorName.trim().isEmpty();
+
+            if (hasTitle) {
+                sqlBuilder.append("AND n.title LIKE ? ");
+            }
+
+            if (hasAuthor) {
+                sqlBuilder.append("AND s.fullname LIKE ? ");
+            }
+
+            String sql = sqlBuilder.toString();
+            System.out.println("DEBUG - Count SQL query: " + sql);
 
             PreparedStatement stm = connection.prepareStatement(sql);
-            stm.setString(1, searchTitle);
-            stm.setString(2, searchName);
+
+            // Set parameters depending on which conditions are used
+            int paramIndex = 1;
+            if (hasTitle) {
+                String searchTitle = "%" + title + "%";
+                stm.setString(paramIndex++, searchTitle);
+                System.out.println("DEBUG - Count search title parameter: " + searchTitle);
+            }
+
+            if (hasAuthor) {
+                String searchName = "%" + authorName + "%";
+                stm.setString(paramIndex, searchName);
+                System.out.println("DEBUG - Count search author parameter: " + searchName);
+            }
 
             ResultSet rs = stm.executeQuery();
             if (rs.next()) {
-                return rs.getInt(1);
+                int count = rs.getInt(1);
+                System.out.println("DEBUG - Total count: " + count);
+                return count;
             }
         } catch (Exception e) {
             System.out.println("Error in countNewsByTitleAndAuthor: " + e.getMessage());
@@ -943,6 +996,454 @@ public class NewsDAO extends DBContext {
             e.printStackTrace();
         }
         return news;
+    }
+
+    /**
+     * Get waiting news with search and sort functionality
+     */
+    public ArrayList<News> getWaitingNewsSortedByDateAndSearch(int index, String sortOrder, String title, String authorName) {
+        ArrayList<News> b = new ArrayList<>();
+        try {
+            // Default to DESC (newest first) if sortOrder is not specified or invalid
+            String order = "DESC";
+            if (sortOrder != null && sortOrder.equalsIgnoreCase("oldest")) {
+                order = "ASC";
+            }
+
+            // Build query based on which parameters are provided
+            StringBuilder sqlBuilder = new StringBuilder(
+                "SELECT n.* FROM News n " +
+                "INNER JOIN Staff s ON n.staff_id = s.staff_id " +
+                "WHERE n.status = 0 "
+            );
+
+            boolean hasTitle = title != null && !title.trim().isEmpty();
+            boolean hasAuthor = authorName != null && !authorName.trim().isEmpty();
+
+            if (hasTitle) {
+                sqlBuilder.append("AND n.title LIKE ? ");
+            }
+
+            if (hasAuthor) {
+                sqlBuilder.append("AND s.fullname LIKE ? ");
+            }
+
+            sqlBuilder.append("ORDER BY n.updateDate " + order + " OFFSET ? ROWS FETCH NEXT 5 ROWS ONLY");
+
+            String sql = sqlBuilder.toString();
+            System.out.println("DEBUG - Waiting news SQL query: " + sql);
+
+            PreparedStatement stm = connection.prepareStatement(sql);
+
+            // Set parameters depending on which conditions are used
+            int paramIndex = 1;
+            if (hasTitle) {
+                String searchTitle = "%" + title + "%";
+                stm.setString(paramIndex++, searchTitle);
+                System.out.println("DEBUG - Waiting news search title parameter: " + searchTitle);
+            }
+
+            if (hasAuthor) {
+                String searchName = "%" + authorName + "%";
+                stm.setString(paramIndex++, searchName);
+                System.out.println("DEBUG - Waiting news search author parameter: " + searchName);
+            }
+
+            stm.setInt(paramIndex, (index - 1) * 5);
+            System.out.println("DEBUG - Waiting news offset parameter: " + ((index - 1) * 5));
+
+            ResultSet rs = stm.executeQuery();
+            int resultCount = 0;
+            while (rs.next()) {
+                resultCount++;
+                b.add(new News(
+                    rs.getInt(1),
+                    rs.getString(3),
+                    rs.getString(4),
+                    rs.getInt(2),
+                    rs.getTimestamp(6),
+                    rs.getBoolean(5),
+                    getAuthorByid(rs.getInt(2))
+                ));
+            }
+            System.out.println("DEBUG - Found " + resultCount + " waiting news results in query");
+        } catch (Exception e) {
+            System.out.println("Error in getWaitingNewsSortedByDateAndSearch: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return b;
+    }
+
+    /**
+     * Count total waiting news that match search criteria
+     */
+    public int countWaitingWithSearch(String title, String authorName) {
+        try {
+            // Build query based on which parameters are provided
+            StringBuilder sqlBuilder = new StringBuilder(
+                "SELECT COUNT(*) FROM News n " +
+                "INNER JOIN Staff s ON n.staff_id = s.staff_id " +
+                "WHERE n.status = 0 "
+            );
+
+            boolean hasTitle = title != null && !title.trim().isEmpty();
+            boolean hasAuthor = authorName != null && !authorName.trim().isEmpty();
+
+            if (hasTitle) {
+                sqlBuilder.append("AND n.title LIKE ? ");
+            }
+
+            if (hasAuthor) {
+                sqlBuilder.append("AND s.fullname LIKE ? ");
+            }
+
+            String sql = sqlBuilder.toString();
+            System.out.println("DEBUG - Count waiting news SQL query: " + sql);
+
+            PreparedStatement stm = connection.prepareStatement(sql);
+
+            // Set parameters depending on which conditions are used
+            int paramIndex = 1;
+            if (hasTitle) {
+                String searchTitle = "%" + title + "%";
+                stm.setString(paramIndex++, searchTitle);
+                System.out.println("DEBUG - Count waiting news search title parameter: " + searchTitle);
+            }
+
+            if (hasAuthor) {
+                String searchName = "%" + authorName + "%";
+                stm.setString(paramIndex, searchName);
+                System.out.println("DEBUG - Count waiting news search author parameter: " + searchName);
+            }
+
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                int count = rs.getInt(1);
+                System.out.println("DEBUG - Total waiting news count: " + count);
+                return count;
+            }
+        } catch (Exception e) {
+            System.out.println("Error in countWaitingWithSearch: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    /**
+     * Get staff news with search and sort functionality
+     */
+    public ArrayList<News> getStaffNewsSortedByDateAndSearch(int staffId, int index, String sortOrder, String title, String authorName) {
+        ArrayList<News> b = new ArrayList<>();
+        try {
+            // Default to DESC (newest first) if sortOrder is not specified or invalid
+            String order = "DESC";
+            if (sortOrder != null && sortOrder.equalsIgnoreCase("oldest")) {
+                order = "ASC";
+            }
+
+            StringBuilder sql = new StringBuilder(
+                "SELECT n.* FROM News n " +
+                "INNER JOIN Staff s ON n.staff_id = s.staff_id " +
+                "WHERE n.staff_id = ? "
+            );
+
+            // Add search conditions if parameters are provided
+            if (title != null && !title.trim().isEmpty()) {
+                sql.append("AND n.title LIKE ? ");
+            }
+            if (authorName != null && !authorName.trim().isEmpty()) {
+                sql.append("AND s.fullname LIKE ? ");
+            }
+
+            sql.append("ORDER BY n.updateDate " + order + " OFFSET ? ROWS FETCH NEXT 5 ROWS ONLY");
+
+            PreparedStatement stm = connection.prepareStatement(sql.toString());
+
+            // Set parameters
+            int paramIndex = 1;
+            stm.setInt(paramIndex++, staffId);
+
+            if (title != null && !title.trim().isEmpty()) {
+                stm.setString(paramIndex++, "%" + title + "%");
+            }
+            if (authorName != null && !authorName.trim().isEmpty()) {
+                stm.setString(paramIndex++, "%" + authorName + "%");
+            }
+
+            stm.setInt(paramIndex, (index - 1) * 5);
+
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                b.add(new News(
+                    rs.getInt(1),
+                    rs.getString(3),
+                    rs.getString(4),
+                    rs.getInt(2),
+                    rs.getTimestamp(6),
+                    rs.getBoolean(5),
+                    getAuthorByid(rs.getInt(2))
+                ));
+            }
+        } catch (Exception e) {
+            System.out.println("Error in getStaffNewsSortedByDateAndSearch: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return b;
+    }
+
+    /**
+     * Count staff news with search criteria
+     */
+    public int countStaffNewsWithSearch(int staffId, String title, String authorName) {
+        try {
+            StringBuilder sql = new StringBuilder(
+                "SELECT COUNT(*) FROM News n " +
+                "INNER JOIN Staff s ON n.staff_id = s.staff_id " +
+                "WHERE n.staff_id = ? "
+            );
+
+            // Add search conditions if parameters are provided
+            if (title != null && !title.trim().isEmpty()) {
+                sql.append("AND n.title LIKE ? ");
+            }
+            if (authorName != null && !authorName.trim().isEmpty()) {
+                sql.append("AND s.fullname LIKE ? ");
+            }
+
+            PreparedStatement stm = connection.prepareStatement(sql.toString());
+
+            // Set parameters
+            int paramIndex = 1;
+            stm.setInt(paramIndex++, staffId);
+
+            if (title != null && !title.trim().isEmpty()) {
+                stm.setString(paramIndex++, "%" + title + "%");
+            }
+            if (authorName != null && !authorName.trim().isEmpty()) {
+                stm.setString(paramIndex, "%" + authorName + "%");
+            }
+
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception e) {
+            System.out.println("Error in countStaffNewsWithSearch: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    /**
+     * Get pending staff news with search and sort functionality
+     */
+    public ArrayList<News> getPendingStaffNewsSortedByDateAndSearch(int staffId, int index, String sortOrder, String title, String authorName) {
+        ArrayList<News> b = new ArrayList<>();
+        try {
+            // Default to DESC (newest first) if sortOrder is not specified or invalid
+            String order = "DESC";
+            if (sortOrder != null && sortOrder.equalsIgnoreCase("oldest")) {
+                order = "ASC";
+            }
+
+            StringBuilder sql = new StringBuilder(
+                "SELECT n.* FROM News n " +
+                "INNER JOIN Staff s ON n.staff_id = s.staff_id " +
+                "WHERE n.staff_id = ? AND n.status = 0 "
+            );
+
+            // Add search conditions if parameters are provided
+            if (title != null && !title.trim().isEmpty()) {
+                sql.append("AND n.title LIKE ? ");
+            }
+            if (authorName != null && !authorName.trim().isEmpty()) {
+                sql.append("AND s.fullname LIKE ? ");
+            }
+
+            sql.append("ORDER BY n.updateDate " + order + " OFFSET ? ROWS FETCH NEXT 5 ROWS ONLY");
+
+            PreparedStatement stm = connection.prepareStatement(sql.toString());
+
+            // Set parameters
+            int paramIndex = 1;
+            stm.setInt(paramIndex++, staffId);
+
+            if (title != null && !title.trim().isEmpty()) {
+                stm.setString(paramIndex++, "%" + title + "%");
+            }
+            if (authorName != null && !authorName.trim().isEmpty()) {
+                stm.setString(paramIndex++, "%" + authorName + "%");
+            }
+
+            stm.setInt(paramIndex, (index - 1) * 5);
+
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                b.add(new News(
+                    rs.getInt(1),
+                    rs.getString(3),
+                    rs.getString(4),
+                    rs.getInt(2),
+                    rs.getTimestamp(6),
+                    rs.getBoolean(5),
+                    getAuthorByid(rs.getInt(2))
+                ));
+            }
+        } catch (Exception e) {
+            System.out.println("Error in getPendingStaffNewsSortedByDateAndSearch: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return b;
+    }
+
+    /**
+     * Count pending staff news with search criteria
+     */
+    public int countPendingStaffNewsWithSearch(int staffId, String title, String authorName) {
+        try {
+            StringBuilder sql = new StringBuilder(
+                "SELECT COUNT(*) FROM News n " +
+                "INNER JOIN Staff s ON n.staff_id = s.staff_id " +
+                "WHERE n.staff_id = ? AND n.status = 0 "
+            );
+
+            // Add search conditions if parameters are provided
+            if (title != null && !title.trim().isEmpty()) {
+                sql.append("AND n.title LIKE ? ");
+            }
+            if (authorName != null && !authorName.trim().isEmpty()) {
+                sql.append("AND s.fullname LIKE ? ");
+            }
+
+            PreparedStatement stm = connection.prepareStatement(sql.toString());
+
+            // Set parameters
+            int paramIndex = 1;
+            stm.setInt(paramIndex++, staffId);
+
+            if (title != null && !title.trim().isEmpty()) {
+                stm.setString(paramIndex++, "%" + title + "%");
+            }
+            if (authorName != null && !authorName.trim().isEmpty()) {
+                stm.setString(paramIndex, "%" + authorName + "%");
+            }
+
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception e) {
+            System.out.println("Error in countPendingStaffNewsWithSearch: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    /**
+     * Get role news with search and sort functionality
+     */
+    public ArrayList<News> getRoleNewsSortedByDateAndSearch(int roleId, int index, String sortOrder, String title, String authorName) {
+        ArrayList<News> b = new ArrayList<>();
+        try {
+            // Default to DESC (newest first) if sortOrder is not specified or invalid
+            String order = "DESC";
+            if (sortOrder != null && sortOrder.equalsIgnoreCase("oldest")) {
+                order = "ASC";
+            }
+
+            StringBuilder sql = new StringBuilder(
+                "SELECT n.* FROM News n " +
+                "INNER JOIN Staff s ON n.staff_id = s.staff_id " +
+                "INNER JOIN StaffRoles sr ON s.staff_id = sr.staff_id " +
+                "WHERE sr.role_id = ? AND n.status = 1 "
+            );
+
+            // Add search conditions if parameters are provided
+            if (title != null && !title.trim().isEmpty()) {
+                sql.append("AND n.title LIKE ? ");
+            }
+            if (authorName != null && !authorName.trim().isEmpty()) {
+                sql.append("AND s.fullname LIKE ? ");
+            }
+
+            sql.append("ORDER BY n.updateDate " + order + " OFFSET ? ROWS FETCH NEXT 5 ROWS ONLY");
+
+            PreparedStatement stm = connection.prepareStatement(sql.toString());
+
+            // Set parameters
+            int paramIndex = 1;
+            stm.setInt(paramIndex++, roleId);
+
+            if (title != null && !title.trim().isEmpty()) {
+                stm.setString(paramIndex++, "%" + title + "%");
+            }
+            if (authorName != null && !authorName.trim().isEmpty()) {
+                stm.setString(paramIndex++, "%" + authorName + "%");
+            }
+
+            stm.setInt(paramIndex, (index - 1) * 5);
+
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                b.add(new News(
+                    rs.getInt(1),
+                    rs.getString(3),
+                    rs.getString(4),
+                    rs.getInt(2),
+                    rs.getTimestamp(6),
+                    rs.getBoolean(5),
+                    getAuthorByid(rs.getInt(2))
+                ));
+            }
+        } catch (Exception e) {
+            System.out.println("Error in getRoleNewsSortedByDateAndSearch: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return b;
+    }
+
+    /**
+     * Count role news with search criteria
+     */
+    public int countRoleNewsWithSearch(int roleId, String title, String authorName) {
+        try {
+            StringBuilder sql = new StringBuilder(
+                "SELECT COUNT(*) FROM News n " +
+                "INNER JOIN Staff s ON n.staff_id = s.staff_id " +
+                "INNER JOIN StaffRoles sr ON s.staff_id = sr.staff_id " +
+                "WHERE sr.role_id = ? AND n.status = 1 "
+            );
+
+            // Add search conditions if parameters are provided
+            if (title != null && !title.trim().isEmpty()) {
+                sql.append("AND n.title LIKE ? ");
+            }
+            if (authorName != null && !authorName.trim().isEmpty()) {
+                sql.append("AND s.fullname LIKE ? ");
+            }
+
+            PreparedStatement stm = connection.prepareStatement(sql.toString());
+
+            // Set parameters
+            int paramIndex = 1;
+            stm.setInt(paramIndex++, roleId);
+
+            if (title != null && !title.trim().isEmpty()) {
+                stm.setString(paramIndex++, "%" + title + "%");
+            }
+            if (authorName != null && !authorName.trim().isEmpty()) {
+                stm.setString(paramIndex, "%" + authorName + "%");
+            }
+
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception e) {
+            System.out.println("Error in countRoleNewsWithSearch: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return 0;
     }
 
     public static void main(String[] args) {
