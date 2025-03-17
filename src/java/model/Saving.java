@@ -21,11 +21,14 @@ public class Saving {
     private int staff_id;
     private String money_get_date;
     private String customer_name;
+    private String payment_method;
+    private double money_getted;
+    private int saving_withdrawable;
 
     public Saving() {
     }
 
-    public Saving(int savings_id, int customer_id, double amount, double interest_rate, int term_months, String opened_date, String status, int saving_request_id, int staff_id, String money_get_date, String customer_name) {
+    public Saving(int savings_id, int customer_id, double amount, double interest_rate, int term_months, String opened_date, String status, int saving_request_id, int staff_id, String money_get_date, String customer_name, String payment_method, double money_getted, int saving_withdrawable) {
         this.savings_id = savings_id;
         this.customer_id = customer_id;
         this.amount = amount;
@@ -37,6 +40,33 @@ public class Saving {
         this.staff_id = staff_id;
         this.money_get_date = money_get_date;
         this.customer_name = customer_name;
+        this.payment_method = payment_method;
+        this.money_getted = money_getted;
+        this.saving_withdrawable = saving_withdrawable;
+    }
+
+    public String getPayment_method() {
+        return payment_method;
+    }
+
+    public void setPayment_method(String payment_method) {
+        this.payment_method = payment_method;
+    }
+
+    public double getMoney_getted() {
+        return money_getted;
+    }
+
+    public void setMoney_getted(double money_getted) {
+        this.money_getted = money_getted;
+    }
+
+    public int getSaving_withdrawable() {
+        return saving_withdrawable;
+    }
+
+    public void setSaving_withdrawable(int saving_withdrawable) {
+        this.saving_withdrawable = saving_withdrawable;
     }
 
     public String getCustomer_name() {

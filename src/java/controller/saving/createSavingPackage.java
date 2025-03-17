@@ -81,20 +81,24 @@ public class createSavingPackage extends BaseRBACControlller {
             String saving_package_status = request.getParameter("saving_package_status");
             String saving_package_approval_status = request.getParameter("saving_package_approval_status");
             String withdrawableStr = request.getParameter("saving_package_withdrawable");
-
+            String saving_package_under_haftStr = request.getParameter("saving_package_under_haft");
+            String saving_package_over_haftStr = request.getParameter("saving_package_over_haft");
             // Chuyển đổi kiểu dữ liệu với xử lý lỗi
             double saving_package_interest_rate;
             int saving_package_term_months;
             double saving_package_min_deposit;
             double saving_package_max_deposit;
             int saving_package_withdrawable;
+            double saving_package_under_haft;
+            double saving_package_over_haft;
 
             saving_package_interest_rate = Double.parseDouble(interestRateStr);
             saving_package_term_months = Integer.parseInt(termMonthsStr);
             saving_package_min_deposit = Double.parseDouble(minDepositStr);
             saving_package_max_deposit = Double.parseDouble(maxDepositStr);
             saving_package_withdrawable = Integer.parseInt(withdrawableStr);
-            
+            saving_package_under_haft = Double.parseDouble(saving_package_under_haftStr);
+            saving_package_over_haft = Double.parseDouble(saving_package_over_haftStr);
 
             Staff staff = (Staff) request.getSession().getAttribute("account");
             if (staff == null) {
@@ -108,7 +112,11 @@ public class createSavingPackage extends BaseRBACControlller {
 
             // Insert vào database
             SavingDao dao = new SavingDao();
-            dao.insertSavingPackage(staff_id, saving_package_name, saving_package_description, saving_package_created_at, saving_package_updated_at, saving_package_interest_rate, saving_package_term_months, saving_package_min_deposit, saving_package_max_deposit, saving_package_status, saving_package_withdrawable, saving_package_approval_status);
+            dao.insertSavingPackage(staff_id, saving_package_name, saving_package_description,
+                    saving_package_created_at, saving_package_updated_at, saving_package_interest_rate,
+                    saving_package_term_months, saving_package_min_deposit, saving_package_max_deposit,
+                    saving_package_status, saving_package_withdrawable, saving_package_approval_status, saving_package_under_haft,
+                    saving_package_over_haft);
 
             // Chuyển hướng sau khi thêm thành công
             response.sendRedirect("managerSaving");
@@ -128,7 +136,7 @@ public class createSavingPackage extends BaseRBACControlller {
             response.sendRedirect("admin.login");
             return;
         }
-        request.getRequestDispatcher("Saving/createSavingPackage.jsp").forward(request, response);
+        request.getRequestDispatcher("SavingPackage/createSavingPackage.jsp").forward(request, response);
     }
 
     private String getCurrentDate() {

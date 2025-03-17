@@ -50,13 +50,12 @@
                         <th>Ngày Mở</th>
                         <th>Trạng Thái</th>
                         <th>Nhân Viên Xử Lý</th>
-                        <th>Ngày Nhận Tiền</th>
-                        <th>Phản Hồi</th>
+                        <th>Ngày Nhận Tiền</th> 
                     </tr>
                 </thead>
                 <tbody>
                     <c:forEach var="s" items="${list}">
-                        <tr>
+                        <tr onclick="postToSavingCustomerActive('${s.savings_id}')" style="cursor: pointer;">
                             <td>${s.savings_id}</td>
                             <td><fmt:formatNumber value="${s.amount}" type="currency"/></td>
                             <td>${s.interest_rate}</td>
@@ -72,14 +71,7 @@
                                 <fmt:parseDate value="${s.money_get_date}" pattern="yyyy-MM-dd" var="parsedDate" type="date"/>
                                 <fmt:formatDate value="${parsedDate}" pattern="dd/MM/yyyy"/>
                             </td>
-                            <td>
-                                <form action="SavingFeedback" method="get">
-                                    <input type="hidden" name="savings_id" value="${s.savings_id}">
-                                    <button type="submit" class="btn btn-primary">Gửi phản hồi</button>
-                                </form>
-                                <a href="SavingFeedbackAnswerCustomer?savings_id=${s.savings_id}">xem phản hồi</a>
-
-                            </td>
+                            
                         </tr>
                     </c:forEach>
                 </tbody>
@@ -88,3 +80,19 @@
         </div>
     </body>
 </html>
+<script>
+    function postToSavingCustomerActive(savingsId) {
+        const form = document.createElement("form");
+        form.method = "POST";
+        form.action = "SavingCustomerActive";
+
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = "savings_id";
+        input.value = savingsId;
+
+        form.appendChild(input);
+        document.body.appendChild(form);
+        form.submit();
+    }
+</script>

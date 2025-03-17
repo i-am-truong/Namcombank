@@ -64,7 +64,7 @@ public class AllSaving extends HttpServlet {
 
         request.setAttribute("withdrawableList", list);
         request.setAttribute("nonWithdrawableList", listW);
-        request.getRequestDispatcher("Saving/AllSaving.jsp").forward(request, response);
+        request.getRequestDispatcher("SavingPackage/AllSaving.jsp").forward(request, response);
 
     }
 
@@ -85,7 +85,7 @@ public class AllSaving extends HttpServlet {
 
         request.setAttribute("withdrawableList", list);
         request.setAttribute("nonWithdrawableList", listW);
-        request.getRequestDispatcher("Saving/AllSaving.jsp").forward(request, response);
+        request.getRequestDispatcher("SavingPackage/AllSaving.jsp").forward(request, response);
 
     }
 

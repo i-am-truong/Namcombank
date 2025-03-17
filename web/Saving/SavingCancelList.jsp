@@ -44,6 +44,26 @@
                 background-color: #dc3545;
                 color: white;
             }
+            .search-container {
+                background-color: #e9ecef;
+                padding: 15px;
+                border: 1px solid green;
+                margin-bottom: 20px;
+            }
+            .search-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 10px;
+            }
+            .table-bordered {
+                border-color: #28a745 !important; /* Màu xanh lá */
+            }
+
+            .table-bordered th,
+            .table-bordered td {
+                border-color: #28a745 !important;
+            }
+
         </style>
     </head>
     <body id="page-top">
@@ -65,21 +85,44 @@
                         private String money_get_date;
                         private String customer_name;-->
                     <!-- Danh sách yêu cầu hủy sổ tiết kiệm -->
-
-                    <form action="SavingCancelList" method="post">
-                        <label for="customer_name">Nhập tên:</label>
-                        <input type="text" id="customer_name" name="customer_name" value="${name_selected}">
-                        <button type="submit" class="btn btn-primary">Tìm kiếm</button>
-                    </form>
+                    <!--                    <div class="form-group">
+                                            <form action="SavingCancelList" method="post">
+                                                <label for="customer_name">Nhập tên:</label>
+                                                <input type="text" id="customer_name" name="customer_name" value="${name_selected}">
+                                                <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                                            </form>
+                                        </div>-->
+                    <div class="search-container">
+                        <form action="SavingCancelList" method="post">
+                            <div class="search-grid">
+                                <div class="form-group">
+                                    <label for="customer_name">Customer Name</label>
+                                    <input type="text" id="customer_name" name="customer_name" class="form-control"
+                                           value="${name_selected}" placeholder="Customer name">
+                                </div>  
+                                <div class="form-group">
+                                    <label for="saving_withdrawable">Saving Withdrawable</label>
+                                    <select id="saving_withdrawable" name="saving_withdrawable" class="form-control">
+                                        <option value="" ${empty saving_withdrawable_selected ? 'selected' : ''}>-- Chọn loại --</option>
+                                        <option value="1" ${saving_withdrawable_selected == '1' ? 'selected' : ''}>Có thể rút</option>
+                                        <option value="0" ${saving_withdrawable_selected == '0' ? 'selected' : ''}>Không thể rút</option>
+                                    </select>
+                                </div> 
+                            </div>
+                            <button type="submit" class="btn btn-approve">Search</button>
+                            <button type="button" class="btn btn-primary" onclick="window.location.href = 'SavingCancelList'">Clear</button>
+                        </form>
+                    </div>
 
                     <c:if test="${not empty listPaging}">
-                        <table class="table table-bordered mt-3">
-                            <thead class="thead-dark">
+                        <table class="table-bordered">
+                            <thead class="table-bordered th">
                                 <tr>
                                     <th>ID</th>                                
                                     <th>Customer ID</th>
                                     <th>Customer Name</th>
                                     <th>Amount</th>
+                                    <th>Type</th>
                                     <th>Start Date</th>
                                     <th>End Date</th>
                                     <th>Action</th>
@@ -92,6 +135,7 @@
                                         <td>${saving.customer_id}</td>
                                         <td>${saving.customer_name}</td>
                                         <td><fmt:formatNumber value="${saving.amount}" type="currency" currencySymbol="VND" /></td>
+                                        <td>${saving.saving_withdrawable}</td>
                                         <td><fmt:parseDate value="${saving.opened_date}" pattern="yyyy-MM-dd" var="parsedDate" type="date"/>
                                             <fmt:formatDate value="${parsedDate}" pattern="dd/MM/yyyy"/>
                                         </td>

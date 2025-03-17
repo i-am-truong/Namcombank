@@ -98,7 +98,7 @@
                                         <form action="updateSaving" method="post" style="display:inline;">
                                             <input type="hidden" name="saving_package_id" value="${sp.saving_package_id}">
                                             <input type="hidden" name="action" value="approved">
-                                            <button type="submit" class="btn btn-approve">✔</button>
+                                            <button type="submit" class="btn btn-success">✔</button>
                                         </form>
                                         <form action="updateSaving" method="post" style="display:inline;">
                                             <input type="hidden" name="saving_package_id" value="${sp.saving_package_id}">

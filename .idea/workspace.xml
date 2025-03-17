@@ -4,7 +4,26 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="02bd9498-aa81-49a8-adce-9fd8b08249bb" name="Changes" comment="" />
+    <list default="true" id="02bd9498-aa81-49a8-adce-9fd8b08249bb" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/web/SavingContract/SavingMoney.jsp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web/SavingPackage/createSavingPackage.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nbproject/private/private.xml" beforeDir="false" afterPath="$PROJECT_DIR$/nbproject/private/private.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/controller/saving/AllSaving.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/controller/saving/AllSaving.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/controller/saving/createSavingPackage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/controller/saving/createSavingPackage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/controller/saving/listSaving.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/controller/savingContract/listSaving.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/controller/saving/managerSaving.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/controller/savingContract/managerSaving.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/Saving/AllSaving.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/web/SavingPackage/AllSaving.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/Saving/NonWithdrawableSaving.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/web/SavingPackage/NonWithdrawableSaving.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/Saving/SavingCancelList.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/web/Saving/SavingCancelList.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/Saving/SavingCustomerActive.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/web/Saving/SavingCustomerActive.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/Saving/SavingFeedbackAnswer.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/web/Saving/SavingFeedbackAnswer.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/Saving/SavingMoney.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/web/Saving/SavingMoney.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/Saving/Saving_create.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/web/Saving/Saving_create.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/Saving/WithdrawableSaving.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/web/SavingPackage/WithdrawableSaving.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/Saving/createSavingPackage.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/web/Saving/createSavingPackage.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/Saving/updateSaving.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/web/Saving/updateSaving.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/WEB-INF/web.xml" beforeDir="false" afterPath="$PROJECT_DIR$/web/WEB-INF/web.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -34,15 +53,15 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;linh&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/admin/OneDrive/Documents/GitHub/AssignmentPRJ&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "linh",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "D:/PRJ/DEMOPROJECT"
   }
-}</component>
+}]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">

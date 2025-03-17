@@ -118,7 +118,13 @@
 
             <label>Nhập số tiền muốn gửi:</label>
             <input type="number" name="money" required>
-
+            
+            <label>Vui lòng chọn loại tiền tiền:</label>
+            <select id="method_money" name="method_money"> 
+                <option value="TRANSFER">Tiền tài khoản</option>BALANCE
+                <option value="CASH">Thanh toán tại quầy</option>
+            </select>
+            
             <input type="text" name="saving_approval_status" value="pending" hidden>
             <input type="text" name="money_approval_status" value="pending" hidden>
 
@@ -134,8 +140,8 @@
             <% } %>
         </form>
 
-        <c:if test="${not empty errorMessage}">
-            <div>${errorMessage}</div>
-        </c:if>
-    </body>
+    <c:if test="${not empty errorMessage}">
+        <div>${errorMessage}</div>
+    </c:if>
+</body>
 </html>

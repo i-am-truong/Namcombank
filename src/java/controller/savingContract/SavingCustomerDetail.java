@@ -4,7 +4,6 @@
  */
 package controller.savingContract;
 
-import context.SavingDao;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -12,17 +11,12 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.util.List;
-import model.Saving;
-import model.SavingRequest;
 
 /**
  *
  * @author admin
  */
-public class SavingCustomerActive extends HttpServlet {
-
-    private final SavingDao dao = new SavingDao();
+public class SavingCustomerDetail extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -41,10 +35,10 @@ public class SavingCustomerActive extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet SavingCustomerActive</title>");
+            out.println("<title>Servlet SavingCustomerDetail</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet SavingCustomerActive at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet SavingCustomerDetail at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -67,10 +61,6 @@ public class SavingCustomerActive extends HttpServlet {
             response.sendRedirect("login");
             return;
         }
-        Integer customer_id = Integer.parseInt(session.getAttribute("customer_id").toString());
-        List<Saving> list = dao.getAllSavings(customer_id);
-        request.setAttribute("list", list);
-        request.getRequestDispatcher("Saving/SavingCustomerActive.jsp").forward(request, response);
     }
 
     /**
@@ -89,14 +79,11 @@ public class SavingCustomerActive extends HttpServlet {
             response.sendRedirect("login");
             return;
         }
+        String payment_method = request.getParameter("payment_method");
         String savings_idStr = request.getParameter("savings_id");
         int savings_id = Integer.parseInt(savings_idStr);
-//        Integer customer_id = Integer.parseInt(session.getAttribute("customer_id").toString());
-
-        List<Saving> list = dao.getSaving(savings_id);
         
-        request.setAttribute("list", list);
-        request.getRequestDispatcher("Saving/Saving_Customer_Detail.jsp").forward(request, response);
+        
     }
 
     /**

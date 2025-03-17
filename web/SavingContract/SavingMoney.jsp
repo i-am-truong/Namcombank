@@ -67,32 +67,28 @@
                     <h2 class="text-center">Customer Saving Money</h2>
                     <!-- Search Section -->
                     <div class="search-container">
-                        <form action="SavingMoney" method="post">
-                            <div class="search-grid">
-                                <div class="form-group">
-                                    <label for="customerName">Customer Name</label>
-                                    <input type="text" id="customerName" name="customerName" class="form-control" 
-                                           value="${customerName}" placeholder="Customer name">
-                                </div>
-                                <div class="form-group">
-                                    <label for="packageName">Loan Package</label>
-                                    <input type="text" id="packageName" name="packageName" class="form-control" 
-                                           value="${packageName}" placeholder="Loan package name">
-                                </div>
-                                <div class="form-group">
-                                    <label for="minAmount">Amount From</label>
-                                    <input type="number" id="minAmount" name="minAmount" class="form-control" 
-                                           value="${minAmount}" placeholder="Minimum amount">
-                                </div>
-                                <div class="form-group">
-                                    <label for="maxAmount">Amount To</label>
-                                    <input type="number" id="maxAmount" name="maxAmount" class="form-control" 
-                                           value="${maxAmount}" placeholder="Maximum amount">
-                                </div>
+                        <div class="search-grid">
+                            <div class="form-group">
+                                <label for="customerName">Customer Name</label>
+                                <input type="text" id="customerName" name="customerName" class="form-control" 
+                                       value="${customerName}" placeholder="Customer name">
                             </div>
-                            <button type="submit" class="btn btn-approve">Search</button>
-                            <button type="button" class="btn btn-primary" onclick="window.location.href = 'SavingCancelList'">Clear</button>
-                        </form>
+                            <div class="form-group">
+                                <label for="packageName">Loan Package</label>
+                                <input type="text" id="packageName" name="packageName" class="form-control" 
+                                       value="${packageName}" placeholder="Loan package name">
+                            </div>
+                            <div class="form-group">
+                                <label for="minAmount">Amount From</label>
+                                <input type="number" id="minAmount" name="minAmount" class="form-control" 
+                                       value="${minAmount}" placeholder="Minimum amount">
+                            </div>
+                            <div class="form-group">
+                                <label for="maxAmount">Amount To</label>
+                                <input type="number" id="maxAmount" name="maxAmount" class="form-control" 
+                                       value="${maxAmount}" placeholder="Maximum amount">
+                            </div>
+                        </div>
                     </div>
 
 

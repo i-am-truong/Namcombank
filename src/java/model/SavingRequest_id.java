@@ -22,11 +22,12 @@ public class SavingRequest_id {
     private String created_at;
     private String saving_package_name;
     private String customer_name;
+    private String method_money;
 
     public SavingRequest_id() {
     }
 
-    public SavingRequest_id(int saving_request_id, int customer_id, int saving_package_id, Integer staff_id, Double money, String saving_approval_status, String saving_approval_date, String money_approval_status, Double amount, String created_at, String saving_package_name, String customer_name) {
+    public SavingRequest_id(int saving_request_id, int customer_id, int saving_package_id, Integer staff_id, Double money, String saving_approval_status, String saving_approval_date, String money_approval_status, Double amount, String created_at, String saving_package_name, String customer_name, String method_money) {
         this.saving_request_id = saving_request_id;
         this.customer_id = customer_id;
         this.saving_package_id = saving_package_id;
@@ -39,7 +40,19 @@ public class SavingRequest_id {
         this.created_at = created_at;
         this.saving_package_name = saving_package_name;
         this.customer_name = customer_name;
+        this.method_money = method_money;
     }
+
+    public String getMethod_money() {
+        return method_money;
+    }
+
+    public void setMethod_money(String method_money) {
+        this.method_money = method_money;
+    }
+
+ 
+
 
     public String getCustomer_name() {
         return customer_name;
@@ -48,8 +61,6 @@ public class SavingRequest_id {
     public void setCustomer_name(String customer_name) {
         this.customer_name = customer_name;
     }
-
-
 
     public int getSaving_request_id() {
         return saving_request_id;

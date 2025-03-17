@@ -60,8 +60,11 @@ public class SavingPay extends BaseRBACControlller {
         }
         String savings_idStr = request.getParameter("savings_id");
         int savings_id = Integer.parseInt(savings_idStr);
-        dao.SavingPay(savings_id);
-        List<Saving> list = dao.getAllSaving();
+        double money_getted = dao.selectMoney_getted(savings_id);
+        if (money_getted > 0) {
+            dao.SavingPay(savings_id, money_getted);
+        }
+        List<Saving> list = dao.getAllSavingHad_payment_method();
         request.setAttribute("list", list);
         request.getRequestDispatcher("Saving/SavingPay.jsp").forward(request, response);
     }
@@ -74,7 +77,7 @@ public class SavingPay extends BaseRBACControlller {
             return;
         }
 
-        List<Saving> list = dao.getAllSaving();
+        List<Saving> list = dao.getAllSavingHad_payment_method();
         request.setAttribute("list", list);
         request.getRequestDispatcher("Saving/SavingPay.jsp").forward(request, response);
     }

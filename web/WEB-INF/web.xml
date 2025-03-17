@@ -114,11 +114,11 @@
     </servlet>
     <servlet>
         <servlet-name>listSaving</servlet-name>
-        <servlet-class>controller.saving.listSaving</servlet-class>
+        <servlet-class>controller.savingContract.listSaving</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>managerSaving</servlet-name>
-        <servlet-class>controller.saving.managerSaving</servlet-class>
+        <servlet-class>controller.savingContract.managerSaving</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>savingMoney</servlet-name>
@@ -335,6 +335,10 @@
     <servlet>
         <servlet-name>SavingCancel</servlet-name>
         <servlet-class>controller.savingContract.SavingCancel</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SavingCustomerDetail</servlet-name>
+        <servlet-class>controller.savingContract.SavingCustomerDetail</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>viewCustomerDetail</servlet-name>
@@ -663,6 +667,10 @@
     <servlet-mapping>
         <servlet-name>SavingCancel</servlet-name>
         <url-pattern>/SavingCancel</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SavingCustomerDetail</servlet-name>
+        <url-pattern>/SavingCustomerDetail</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

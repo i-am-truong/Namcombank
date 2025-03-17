@@ -37,7 +37,7 @@
     <table border="1">
         <tr>
             <th>Tên Gói</th>
-            <th>Kỳ Hạn (tháng)</th>
+            <th>Kỳ Hạn (th  áng)</th>
             <th>Số Tiền Gửi</th>
             <th>Lãi Suất</th>
             <th>Tiền Lãi</th>
@@ -47,10 +47,7 @@
             <c:set var="deposit" value="${param.amount}" />
             <c:set var="interestRate" value="${saving.saving_package_interest_rate / 100}" />
             <c:set var="months" value="${saving.saving_package_term_months}" />
-            <c:set var="n" value="12" />
-            <c:set var="t" value="${months / 12}" />
-            <c:set var="compoundFactor" value="${1 + (interestRate / n)}" />
-            <c:set var="interest" value="${deposit * (Math.pow(compoundFactor, n * t) - 1)}" />
+            <c:set var="interest" value="${deposit * interestRate * (months / 12)}" />
             <c:set var="totalAmount" value="${deposit + interest}" />
 
             <tr>

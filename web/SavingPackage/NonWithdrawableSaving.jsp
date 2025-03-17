@@ -141,7 +141,7 @@
                     <c:set var="interest" value="${deposit * interestRate * (1 / 12)}" />
                     <tr>
                         <td>${saving.saving_package_name}</td>
-                        <td>${saving.saving_package_term_months} tháng</td>
+                        <td>1 tháng</td>
                         <td><fmt:formatNumber value="${deposit}" type="currency" currencyCode="VND"/></td>
                         <td>${saving.saving_package_interest_rate}%</td>
                         <td><fmt:formatNumber value="${interest}" type="currency" currencyCode="VND"/></td>

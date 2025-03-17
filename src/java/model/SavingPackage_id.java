@@ -28,8 +28,44 @@ public class SavingPackage_id {
     private String saving_package_updated_at;
     private boolean saving_withdrawable;
     private String saving_package_approval_status;
+    private Double saving_package_under_haft;
+    private Double saving_package_over_haft;
 
     public SavingPackage_id() {
+    }
+
+    public SavingPackage_id(int saving_package_id, int staff_id, String saving_package_name, String saving_package_description, double saving_package_interest_rate, int saving_package_term_months, Double saving_package_min_deposit, Double saving_package_max_deposit, String saving_package_status, String saving_package_created_at, String saving_package_updated_at, boolean saving_withdrawable, String saving_package_approval_status, Double saving_package_under_haft, Double saving_package_over_haft) {
+        this.saving_package_id = saving_package_id;
+        this.staff_id = staff_id;
+        this.saving_package_name = saving_package_name;
+        this.saving_package_description = saving_package_description;
+        this.saving_package_interest_rate = saving_package_interest_rate;
+        this.saving_package_term_months = saving_package_term_months;
+        this.saving_package_min_deposit = saving_package_min_deposit;
+        this.saving_package_max_deposit = saving_package_max_deposit;
+        this.saving_package_status = saving_package_status;
+        this.saving_package_created_at = saving_package_created_at;
+        this.saving_package_updated_at = saving_package_updated_at;
+        this.saving_withdrawable = saving_withdrawable;
+        this.saving_package_approval_status = saving_package_approval_status;
+        this.saving_package_under_haft = saving_package_under_haft;
+        this.saving_package_over_haft = saving_package_over_haft;
+    }
+
+    public Double getSaving_package_under_haft() {
+        return saving_package_under_haft;
+    }
+
+    public void setSaving_package_under_haft(Double saving_package_under_haft) {
+        this.saving_package_under_haft = saving_package_under_haft;
+    }
+
+    public Double getSaving_package_over_haft() {
+        return saving_package_over_haft;
+    }
+
+    public void setSaving_package_over_haft(Double saving_package_over_haft) {
+        this.saving_package_over_haft = saving_package_over_haft;
     }
 
     public int getSaving_package_id() {

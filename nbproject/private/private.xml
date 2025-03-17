@@ -3,16 +3,14 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/admin/Documents/GitHub/Namcombank/web/homepage/home.jsp</file>
-            <file>file:/C:/Users/admin/Documents/GitHub/Namcombank/web/Saving/Saving_create_type.jsp</file>
-            <file>file:/C:/Users/admin/Documents/GitHub/Namcombank/web/Saving/AllSaving.jsp</file>
-            <file>file:/C:/Users/admin/Documents/GitHub/Namcombank/web/homepage/header_bottom.jsp</file>
-            <file>file:/C:/Users/admin/Documents/GitHub/Namcombank/web/Saving/SavingCustomer.jsp</file>
-            <file>file:/C:/Users/admin/Documents/GitHub/Namcombank/src/java/controller/saving/Saving_create.java</file>
-            <file>file:/C:/Users/admin/Documents/GitHub/Namcombank/web/homepage/sidebar_admin.jsp</file>
+            <file>file:/C:/Users/admin/Documents/GitHub/Namcombank/web/Saving/SavingCustomerActive.jsp</file>
+            <file>file:/C:/Users/admin/Documents/GitHub/Namcombank/src/java/controller/saving/Main.java</file>
+            <file>file:/C:/Users/admin/Documents/GitHub/Namcombank/src/java/controller/savingContract/SavingCustomerActive.java</file>
+            <file>file:/C:/Users/admin/Documents/GitHub/Namcombank/src/java/model/Saving.java</file>
+            <file>file:/C:/Users/admin/Documents/GitHub/Namcombank/web/Saving/Saving_Customer_Detail.jsp</file>
+            <file>file:/C:/Users/admin/Documents/GitHub/Namcombank/src/java/controller/savingContract/SavingCancelList.java</file>
+            <file>file:/C:/Users/admin/Documents/GitHub/Namcombank/src/java/context/SavingDao.java</file>
             <file>file:/C:/Users/admin/Documents/GitHub/Namcombank/web/Saving/SavingCancelList.jsp</file>
-            <file>file:/C:/Users/admin/Documents/GitHub/Namcombank/web/Saving/Saving_create.jsp</file>
-            <file>file:/C:/Users/admin/Documents/GitHub/Namcombank/web/Saving/NonWithdrawableSaving.jsp</file>
         </group>
     </open-files>
 </project-private>

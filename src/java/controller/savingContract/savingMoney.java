@@ -26,6 +26,8 @@ import model.auth.Staff;
  */
 public class savingMoney extends BaseRBACControlller {
 
+    private SavingDao dao = new SavingDao();
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -64,7 +66,6 @@ public class savingMoney extends BaseRBACControlller {
             response.sendRedirect("admin.login");
             return;
         }
-        SavingDao dao = new SavingDao();
 
         String saving_request_idStr = request.getParameter("saving_request_id");
         int saving_request_id = Integer.parseInt(saving_request_idStr);
@@ -86,7 +87,8 @@ public class savingMoney extends BaseRBACControlller {
             LocalDate openedLocalDate = LocalDate.parse(opened_date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             LocalDate moneyGetLocalDate = openedLocalDate.plusMonths(term_months);
             String money_get_date = moneyGetLocalDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            dao.AddSavingFinal(customer_id, amount, interest_rate, term_months, opened_date, saving_request_id, staff_id, money_get_date, customer_name);
+            int saving_package_withdrawable = dao.selectSaving_package_withdrawable(saving_package_id);
+            dao.AddSavingFinal(customer_id, amount, interest_rate, term_months, opened_date, saving_request_id, staff_id, money_get_date, customer_name, saving_package_withdrawable);
         }
         List<SavingRequest_id> list = dao.getAllSavingRequestMoneyPending();
         request.setAttribute("list", list);
