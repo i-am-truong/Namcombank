@@ -205,7 +205,9 @@
                                     else currentUrl.searchParams.delete('sort');
 
                                     // Reset to page 1 when searching
-                                    currentUrl.searchParams.set('index', '1');
+                                    currentUrl.searchParams.set('page', '1');
+                                    // Remove any old 'index' parameter if it exists
+                                    currentUrl.searchParams.delete('index');
 
                                     // Preserve type and view parameters if they exist
                                     let type = currentUrl.searchParams.get('type');
@@ -226,7 +228,9 @@
                                     currentUrl.searchParams.delete('sort');
 
                                     // Reset to page 1
-                                    currentUrl.searchParams.set('index', '1');
+                                    currentUrl.searchParams.set('page', '1');
+                                    // Remove any old 'index' parameter if it exists
+                                    currentUrl.searchParams.delete('index');
 
                                     // Preserve type and view parameters if they exist
                                     let type = currentUrl.searchParams.get('type');
@@ -288,6 +292,23 @@
                                 </div>
                             </div>
 
+                            <!-- Page Size and Results Count -->
+                            <c:if test="${not empty n}">
+                                <div class="d-flex justify-content-between align-items-center mb-3" style="padding-left: 40px; padding-right: 40px;">
+                                    <div>
+                                        <span class="text-muted">Found ${count} news items</span>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <label for="pageSize" class="text-nowrap mr-2 mb-0">Items per page:</label>
+                                        <select id="pageSize" class="form-control form-control-sm" style="width: auto;" onchange="changePageSize()">
+                                            <c:forEach items="${pagination.listPageSize}" var="size">
+                                                <option value="${size}" ${pagination.pageSize eq size ? 'selected' : ''}>${size}</option>
+                                            </c:forEach>
+                                        </select>
+                                    </div>
+                                </div>
+                            </c:if>
+
                             <div id="box" class="row" style="min-width: 500px;max-width: 1060px;position: relative;margin-left:40px;border:solid;height:auto;background-color:white;min-height: 350px;border-radius: 7px;overflow: auto;">
                                 <c:if test="${empty n}">
                                     <div class="col-12 text-center p-5">
@@ -346,25 +367,12 @@
                                 </c:forEach>
                             </div>
 
-                            <!-- Pagination -->
-                            <div aria-label="Page navigation example" class="mt-4">
-                                <ul class="pagination justify-content-center">
-                                    <c:forEach begin="1" end="${pages}" var="i">
-                                        <li class="page-item ${param.index == i ? 'active' : ''}">
-                                            <c:choose>
-                                                <c:when test="${sessionScope.roleId == 1}">
-                                                    <!-- For Admin: include search parameters in pagination -->
-                                                    <a class="page-link" href="newsListStaff?index=${i}&type=${param.type}${not empty param.sort ? '&sort='.concat(param.sort) : ''}${not empty param.searchTitle ? '&searchTitle='.concat(param.searchTitle) : ''}${not empty param.searchAuthor ? '&searchAuthor='.concat(param.searchAuthor) : ''}">${i}</a>
-                                                </c:when>
-                                                <c:otherwise>
-                                                    <!-- For other roles: include search parameters and view -->
-                                                    <a class="page-link" href="newsListStaff?index=${i}&type=${param.type}&view=${param.view}${not empty param.sort ? '&sort='.concat(param.sort) : ''}${not empty param.searchTitle ? '&searchTitle='.concat(param.searchTitle) : ''}${not empty param.searchAuthor ? '&searchAuthor='.concat(param.searchAuthor) : ''}">${i}</a>
-                                                </c:otherwise>
-                                            </c:choose>
-                                        </li>
-                                    </c:forEach>
-                                </ul>
-                            </div>
+                            <!-- Dynamic Pagination - Replace old pagination -->
+                            <c:if test="${not empty n}">
+                                <div class="pagination-container my-4">
+                                    <%@include file="../homepage/pagination.jsp" %>
+                                </div>
+                            </c:if>
                         </div>
                     </div>
                     <!-- /.container-fluid -->
@@ -388,7 +396,7 @@
         <!-- Page level custom scripts -->
         <script src="adminassets/js/demo/datatables-demo.js"></script>
 
-        <!-- Add approve news functionality -->
+        <!-- Add JavaScript functions for approveNews and changePageSize -->
         <script>
             function approveNews(newsId) {
                 var result = confirm("Approve this news?");
@@ -408,6 +416,21 @@
                         }
                     });
                 }
+            }
+
+            function changePageSize() {
+                // Get the current URL
+                const url = new URL(window.location.href);
+                // Get the selected page size value
+                const pageSize = document.getElementById('pageSize').value;
+                // Set the page-size parameter
+                url.searchParams.set('page-size', pageSize);
+                // Reset to page 1 when changing page size
+                url.searchParams.set('page', '1');
+                // Remove old index parameter if it exists
+                url.searchParams.delete('index');
+                // Navigate to the new URL
+                window.location.href = url.toString();
             }
         </script>
     </body>

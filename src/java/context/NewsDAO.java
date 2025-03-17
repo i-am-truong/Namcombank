@@ -1,4 +1,4 @@
- /*
+/*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
@@ -61,6 +61,32 @@ public class NewsDAO extends DBContext {
             ResultSet rs = stm.executeQuery();
 
             System.out.println("Executing waiting news query with offset: " + ((index - 1) * 5)); // Debug output
+
+            int count = 0; // For debug counting
+            while (rs.next()) {
+                count++;
+                b.add(new News(rs.getInt(1), rs.getString(3), rs.getString(4), rs.getInt(2),
+                              rs.getTimestamp(6), rs.getBoolean(5), getAuthorByid(rs.getInt(2))));
+            }
+            System.out.println("Found " + count + " waiting news items"); // Debug output
+        } catch (Exception e) {
+            System.out.println("Error in paggingWaitingList: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return b;
+    }
+
+    public ArrayList<News> paggingWaitingList(int index, int pageSize) {
+        ArrayList<News> b = new ArrayList<>();
+        try {
+            // Fix status value to use numeric 0 without quotes
+            String sql = "select * from News WHERE status = 0 order by news_id DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, (index - 1) * pageSize);
+            stm.setInt(2, pageSize);
+            ResultSet rs = stm.executeQuery();
+
+            System.out.println("Executing waiting news query with offset: " + ((index - 1) * pageSize) + " and page size: " + pageSize); // Debug output
 
             int count = 0; // For debug counting
             while (rs.next()) {
@@ -341,6 +367,28 @@ public class NewsDAO extends DBContext {
         return b;
     }
 
+    public ArrayList<News> getNewsByStaffId(int staffId, int index, int pageSize) {
+        ArrayList<News> b = new ArrayList<>();
+        try {
+            String sql = "SELECT * FROM News WHERE staff_id = ? ORDER BY news_id DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, staffId);
+            stm.setInt(2, (index - 1) * pageSize);
+            stm.setInt(3, pageSize);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                b.add(new News(rs.getInt(1), rs.getString(3), rs.getString(4), rs.getInt(2),
+                              rs.getTimestamp(6), rs.getBoolean(5), getAuthorByid(rs.getInt(2))));
+            }
+            rs.close();
+            stm.close();
+        } catch (Exception e) {
+            System.out.println("Error in getNewsByStaffId: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return b;
+    }
+
     // Thêm phương thức đếm số tin theo staffId
     public int countNewsByStaffId(int staffId) {
         try {
@@ -386,6 +434,32 @@ public class NewsDAO extends DBContext {
         return b;
     }
 
+    public ArrayList<News> getNewsByRoleId(int roleId, int index, int pageSize) {
+        ArrayList<News> b = new ArrayList<>();
+        try {
+            String sql = "SELECT n.* FROM News n " +
+                         "INNER JOIN Staff s ON n.staff_id = s.staff_id " +
+                         "INNER JOIN StaffRoles sr ON s.staff_id = sr.staff_id " +
+                         "WHERE sr.role_id = ? AND n.status = 1 " +
+                         "ORDER BY n.news_id DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, roleId);
+            stm.setInt(2, (index - 1) * pageSize);
+            stm.setInt(3, pageSize);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                b.add(new News(rs.getInt(1), rs.getString(3), rs.getString(4), rs.getInt(2),
+                              rs.getTimestamp(6), rs.getBoolean(5), getAuthorByid(rs.getInt(2))));
+            }
+            rs.close();
+            stm.close();
+        } catch (Exception e) {
+            System.out.println("Error in getNewsByRoleId: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return b;
+    }
+
     // Sửa lại phương thức đếm số tin theo roleId chỉ đếm tin đã duyệt (status = 1)
     public int countNewsByRoleId(int roleId) {
         try {
@@ -416,6 +490,28 @@ public class NewsDAO extends DBContext {
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setInt(1, staffId);
             stm.setInt(2, (index - 1) * 5);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                b.add(new News(rs.getInt(1), rs.getString(3), rs.getString(4), rs.getInt(2),
+                              rs.getTimestamp(6), rs.getBoolean(5), getAuthorByid(rs.getInt(2))));
+            }
+            rs.close();
+            stm.close();
+        } catch (Exception e) {
+            System.out.println("Error in getPendingNewsByStaffId: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return b;
+    }
+
+    public ArrayList<News> getPendingNewsByStaffId(int staffId, int index, int pageSize) {
+        ArrayList<News> b = new ArrayList<>();
+        try {
+            String sql = "SELECT * FROM News WHERE staff_id = ? AND status = 0 ORDER BY news_id DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, staffId);
+            stm.setInt(2, (index - 1) * pageSize);
+            stm.setInt(3, pageSize);
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
                 b.add(new News(rs.getInt(1), rs.getString(3), rs.getString(4), rs.getInt(2),
@@ -554,6 +650,32 @@ public class NewsDAO extends DBContext {
         return b;
     }
 
+    // Method to get waiting news sorted by date with dynamic page size
+    public ArrayList<News> getWaitingNewsSortedByDate(int index, String sortOrder, int pageSize) {
+        ArrayList<News> b = new ArrayList<>();
+        try {
+            // Default to DESC (newest first) if sortOrder is not specified or invalid
+            String order = "DESC"; // Default newest first
+            if (sortOrder != null && sortOrder.equalsIgnoreCase("oldest")) {
+                order = "ASC";
+            }
+
+            String sql = "select * from News WHERE status = 0 order by updateDate " + order + " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, (index - 1) * pageSize);
+            stm.setInt(2, pageSize);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                b.add(new News(rs.getInt(1), rs.getString(3), rs.getString(4), rs.getInt(2),
+                            rs.getTimestamp(6), rs.getBoolean(5), getAuthorByid(rs.getInt(2))));
+            }
+        } catch (Exception e) {
+            System.out.println("Error in getWaitingNewsSortedByDate: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return b;
+    }
+
     // Method to get role news sorted by date
     public ArrayList<News> getRoleNewsSortedByDate(int roleId, int index, String sortOrder) {
         ArrayList<News> b = new ArrayList<>();
@@ -572,6 +694,37 @@ public class NewsDAO extends DBContext {
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setInt(1, roleId);
             stm.setInt(2, (index - 1) * 5);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                b.add(new News(rs.getInt(1), rs.getString(3), rs.getString(4), rs.getInt(2),
+                            rs.getTimestamp(6), rs.getBoolean(5), getAuthorByid(rs.getInt(2))));
+            }
+        } catch (Exception e) {
+            System.out.println("Error in getRoleNewsSortedByDate: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return b;
+    }
+
+    // Method to get role news sorted by date with page size
+    public ArrayList<News> getRoleNewsSortedByDate(int roleId, int index, String sortOrder, int pageSize) {
+        ArrayList<News> b = new ArrayList<>();
+        try {
+            // Default to DESC (newest first) if sortOrder is not specified or invalid
+            String order = "DESC"; // Default newest first
+            if (sortOrder != null && sortOrder.equalsIgnoreCase("oldest")) {
+                order = "ASC";
+            }
+
+            String sql = "SELECT n.* FROM News n " +
+                         "INNER JOIN Staff s ON n.staff_id = s.staff_id " +
+                         "INNER JOIN StaffRoles sr ON s.staff_id = sr.staff_id " +
+                         "WHERE sr.role_id = ? AND n.status = 1 " +
+                         "ORDER BY n.updateDate " + order + " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, roleId);
+            stm.setInt(2, (index - 1) * pageSize);
+            stm.setInt(3, pageSize);
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
                 b.add(new News(rs.getInt(1), rs.getString(3), rs.getString(4), rs.getInt(2),
@@ -610,6 +763,33 @@ public class NewsDAO extends DBContext {
         return b;
     }
 
+    // Method to get staff news sorted by date with page size
+    public ArrayList<News> getStaffNewsSortedByDate(int staffId, int index, String sortOrder, int pageSize) {
+        ArrayList<News> b = new ArrayList<>();
+        try {
+            // Default to DESC (newest first) if sortOrder is not specified or invalid
+            String order = "DESC"; // Default newest first
+            if (sortOrder != null && sortOrder.equalsIgnoreCase("oldest")) {
+                order = "ASC";
+            }
+
+            String sql = "SELECT * FROM News WHERE staff_id = ? ORDER BY updateDate " + order + " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, staffId);
+            stm.setInt(2, (index - 1) * pageSize);
+            stm.setInt(3, pageSize);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                b.add(new News(rs.getInt(1), rs.getString(3), rs.getString(4), rs.getInt(2),
+                            rs.getTimestamp(6), rs.getBoolean(5), getAuthorByid(rs.getInt(2))));
+            }
+        } catch (Exception e) {
+            System.out.println("Error in getStaffNewsSortedByDate: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return b;
+    }
+
     // Method to get pending staff news sorted by date
     public ArrayList<News> getPendingStaffNewsSortedByDate(int staffId, int index, String sortOrder) {
         ArrayList<News> b = new ArrayList<>();
@@ -624,6 +804,33 @@ public class NewsDAO extends DBContext {
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setInt(1, staffId);
             stm.setInt(2, (index - 1) * 5);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                b.add(new News(rs.getInt(1), rs.getString(3), rs.getString(4), rs.getInt(2),
+                            rs.getTimestamp(6), rs.getBoolean(5), getAuthorByid(rs.getInt(2))));
+            }
+        } catch (Exception e) {
+            System.out.println("Error in getPendingStaffNewsSortedByDate: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return b;
+    }
+
+    // Method to get pending staff news sorted by date with page size
+    public ArrayList<News> getPendingStaffNewsSortedByDate(int staffId, int index, String sortOrder, int pageSize) {
+        ArrayList<News> b = new ArrayList<>();
+        try {
+            // Default to DESC (newest first) if sortOrder is not specified or invalid
+            String order = "DESC"; // Default newest first
+            if (sortOrder != null && sortOrder.equalsIgnoreCase("oldest")) {
+                order = "ASC";
+            }
+
+            String sql = "SELECT * FROM News WHERE staff_id = ? AND status = 0 ORDER BY updateDate " + order + " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, staffId);
+            stm.setInt(2, (index - 1) * pageSize);
+            stm.setInt(3, pageSize);
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
                 b.add(new News(rs.getInt(1), rs.getString(3), rs.getString(4), rs.getInt(2),
@@ -862,8 +1069,8 @@ public class NewsDAO extends DBContext {
         }
         return b;
     }
-    
-    
+
+
     /**
      * Search for news by both title and author name with pagination and dynamic page size
      * @param title Search term for title
@@ -1075,6 +1282,83 @@ public class NewsDAO extends DBContext {
     }
 
     /**
+     * Get waiting news with search and sort functionality with page size
+     */
+    public ArrayList<News> getWaitingNewsSortedByDateAndSearch(int index, String sortOrder, String title, String authorName, int pageSize) {
+        ArrayList<News> b = new ArrayList<>();
+        try {
+            // Default to DESC (newest first) if sortOrder is not specified or invalid
+            String order = "DESC";
+            if (sortOrder != null && sortOrder.equalsIgnoreCase("oldest")) {
+                order = "ASC";
+            }
+
+            // Build query based on which parameters are provided
+            StringBuilder sqlBuilder = new StringBuilder(
+                "SELECT n.* FROM News n " +
+                "INNER JOIN Staff s ON n.staff_id = s.staff_id " +
+                "WHERE n.status = 0 "
+            );
+
+            boolean hasTitle = title != null && !title.trim().isEmpty();
+            boolean hasAuthor = authorName != null && !authorName.trim().isEmpty();
+
+            if (hasTitle) {
+                sqlBuilder.append("AND n.title LIKE ? ");
+            }
+
+            if (hasAuthor) {
+                sqlBuilder.append("AND s.fullname LIKE ? ");
+            }
+
+            sqlBuilder.append("ORDER BY n.updateDate " + order + " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+
+            String sql = sqlBuilder.toString();
+            System.out.println("DEBUG - Waiting news SQL query: " + sql);
+
+            PreparedStatement stm = connection.prepareStatement(sql);
+
+            // Set parameters depending on which conditions are used
+            int paramIndex = 1;
+            if (hasTitle) {
+                String searchTitle = "%" + title + "%";
+                stm.setString(paramIndex++, searchTitle);
+                System.out.println("DEBUG - Waiting news search title parameter: " + searchTitle);
+            }
+
+            if (hasAuthor) {
+                String searchName = "%" + authorName + "%";
+                stm.setString(paramIndex++, searchName);
+                System.out.println("DEBUG - Waiting news search author parameter: " + searchName);
+            }
+
+            stm.setInt(paramIndex++, (index - 1) * pageSize);
+            stm.setInt(paramIndex, pageSize);
+            System.out.println("DEBUG - Waiting news offset parameter: " + ((index - 1) * pageSize) + ", page size: " + pageSize);
+
+            ResultSet rs = stm.executeQuery();
+            int resultCount = 0;
+            while (rs.next()) {
+                resultCount++;
+                b.add(new News(
+                    rs.getInt(1),
+                    rs.getString(3),
+                    rs.getString(4),
+                    rs.getInt(2),
+                    rs.getTimestamp(6),
+                    rs.getBoolean(5),
+                    getAuthorByid(rs.getInt(2))
+                ));
+            }
+            System.out.println("DEBUG - Found " + resultCount + " waiting news results in query");
+        } catch (Exception e) {
+            System.out.println("Error in getWaitingNewsSortedByDateAndSearch: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return b;
+    }
+
+    /**
      * Count total waiting news that match search criteria
      */
     public int countWaitingWithSearch(String title, String authorName) {
@@ -1171,6 +1455,69 @@ public class NewsDAO extends DBContext {
             }
 
             stm.setInt(paramIndex, (index - 1) * 5);
+
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                b.add(new News(
+                    rs.getInt(1),
+                    rs.getString(3),
+                    rs.getString(4),
+                    rs.getInt(2),
+                    rs.getTimestamp(6),
+                    rs.getBoolean(5),
+                    getAuthorByid(rs.getInt(2))
+                ));
+            }
+        } catch (Exception e) {
+            System.out.println("Error in getStaffNewsSortedByDateAndSearch: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return b;
+    }
+
+    /**
+     * Get staff news with search and sort functionality with page size
+     */
+    public ArrayList<News> getStaffNewsSortedByDateAndSearch(int staffId, int index, String sortOrder, String title, String authorName, int pageSize) {
+        ArrayList<News> b = new ArrayList<>();
+        try {
+            // Default to DESC (newest first) if sortOrder is not specified or invalid
+            String order = "DESC";
+            if (sortOrder != null && sortOrder.equalsIgnoreCase("oldest")) {
+                order = "ASC";
+            }
+
+            StringBuilder sql = new StringBuilder(
+                "SELECT n.* FROM News n " +
+                "INNER JOIN Staff s ON n.staff_id = s.staff_id " +
+                "WHERE n.staff_id = ? "
+            );
+
+            // Add search conditions if parameters are provided
+            if (title != null && !title.trim().isEmpty()) {
+                sql.append("AND n.title LIKE ? ");
+            }
+            if (authorName != null && !authorName.trim().isEmpty()) {
+                sql.append("AND s.fullname LIKE ? ");
+            }
+
+            sql.append("ORDER BY n.updateDate " + order + " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+
+            PreparedStatement stm = connection.prepareStatement(sql.toString());
+
+            // Set parameters
+            int paramIndex = 1;
+            stm.setInt(paramIndex++, staffId);
+
+            if (title != null && !title.trim().isEmpty()) {
+                stm.setString(paramIndex++, "%" + title + "%");
+            }
+            if (authorName != null && !authorName.trim().isEmpty()) {
+                stm.setString(paramIndex++, "%" + authorName + "%");
+            }
+
+            stm.setInt(paramIndex++, (index - 1) * pageSize);
+            stm.setInt(paramIndex, pageSize);
 
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
@@ -1297,6 +1644,69 @@ public class NewsDAO extends DBContext {
     }
 
     /**
+     * Get pending staff news with search and sort functionality with page size
+     */
+    public ArrayList<News> getPendingStaffNewsSortedByDateAndSearch(int staffId, int index, String sortOrder, String title, String authorName, int pageSize) {
+        ArrayList<News> b = new ArrayList<>();
+        try {
+            // Default to DESC (newest first) if sortOrder is not specified or invalid
+            String order = "DESC";
+            if (sortOrder != null && sortOrder.equalsIgnoreCase("oldest")) {
+                order = "ASC";
+            }
+
+            StringBuilder sql = new StringBuilder(
+                "SELECT n.* FROM News n " +
+                "INNER JOIN Staff s ON n.staff_id = s.staff_id " +
+                "WHERE n.staff_id = ? AND n.status = 0 "
+            );
+
+            // Add search conditions if parameters are provided
+            if (title != null && !title.trim().isEmpty()) {
+                sql.append("AND n.title LIKE ? ");
+            }
+            if (authorName != null && !authorName.trim().isEmpty()) {
+                sql.append("AND s.fullname LIKE ? ");
+            }
+
+            sql.append("ORDER BY n.updateDate " + order + " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+
+            PreparedStatement stm = connection.prepareStatement(sql.toString());
+
+            // Set parameters
+            int paramIndex = 1;
+            stm.setInt(paramIndex++, staffId);
+
+            if (title != null && !title.trim().isEmpty()) {
+                stm.setString(paramIndex++, "%" + title + "%");
+            }
+            if (authorName != null && !authorName.trim().isEmpty()) {
+                stm.setString(paramIndex++, "%" + authorName + "%");
+            }
+
+            stm.setInt(paramIndex++, (index - 1) * pageSize);
+            stm.setInt(paramIndex, pageSize);
+
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                b.add(new News(
+                    rs.getInt(1),
+                    rs.getString(3),
+                    rs.getString(4),
+                    rs.getInt(2),
+                    rs.getTimestamp(6),
+                    rs.getBoolean(5),
+                    getAuthorByid(rs.getInt(2))
+                ));
+            }
+        } catch (Exception e) {
+            System.out.println("Error in getPendingStaffNewsSortedByDateAndSearch: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return b;
+    }
+
+    /**
      * Count pending staff news with search criteria
      */
     public int countPendingStaffNewsWithSearch(int staffId, String title, String authorName) {
@@ -1382,6 +1792,70 @@ public class NewsDAO extends DBContext {
             }
 
             stm.setInt(paramIndex, (index - 1) * 5);
+
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                b.add(new News(
+                    rs.getInt(1),
+                    rs.getString(3),
+                    rs.getString(4),
+                    rs.getInt(2),
+                    rs.getTimestamp(6),
+                    rs.getBoolean(5),
+                    getAuthorByid(rs.getInt(2))
+                ));
+            }
+        } catch (Exception e) {
+            System.out.println("Error in getRoleNewsSortedByDateAndSearch: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return b;
+    }
+
+    /**
+     * Get role news with search and sort functionality with page size
+     */
+    public ArrayList<News> getRoleNewsSortedByDateAndSearch(int roleId, int index, String sortOrder, String title, String authorName, int pageSize) {
+        ArrayList<News> b = new ArrayList<>();
+        try {
+            // Default to DESC (newest first) if sortOrder is not specified or invalid
+            String order = "DESC";
+            if (sortOrder != null && sortOrder.equalsIgnoreCase("oldest")) {
+                order = "ASC";
+            }
+
+            StringBuilder sql = new StringBuilder(
+                "SELECT n.* FROM News n " +
+                "INNER JOIN Staff s ON n.staff_id = s.staff_id " +
+                "INNER JOIN StaffRoles sr ON s.staff_id = sr.staff_id " +
+                "WHERE sr.role_id = ? AND n.status = 1 "
+            );
+
+            // Add search conditions if parameters are provided
+            if (title != null && !title.trim().isEmpty()) {
+                sql.append("AND n.title LIKE ? ");
+            }
+            if (authorName != null && !authorName.trim().isEmpty()) {
+                sql.append("AND s.fullname LIKE ? ");
+            }
+
+            sql.append("ORDER BY n.updateDate " + order + " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+
+            PreparedStatement stm = connection.prepareStatement(sql.toString());
+
+            // Set parameters
+            int paramIndex = 1;
+            stm.setInt(paramIndex++, roleId);
+
+            if (title != null && !title.trim().isEmpty()) {
+                stm.setString(paramIndex++, "%" + title + "%");
+            }
+            if (authorName != null && !authorName.trim().isEmpty()) {
+                stm.setString(paramIndex++, "%" + authorName + "%");
+            }
+
+            stm.setInt(paramIndex++, (index - 1) * pageSize);
+            stm.setInt(paramIndex, pageSize);
 
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
