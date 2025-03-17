@@ -107,10 +107,10 @@ public class viewCustomer extends BaseRBACControlller {
             request.getRequestDispatcher("customer/viewCustomer.jsp").forward(request, response);
         } catch (NumberFormatException e) {
             // Invalid customer ID format
-            response.sendRedirect("manageCustomer");
+            response.sendRedirect("manageCustomerVer2/Search");
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendRedirect("manageCustomer");
+            response.sendRedirect("manageCustomerVer2/Search");
         }
     }
 
