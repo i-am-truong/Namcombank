@@ -24,9 +24,11 @@
                 </c:forEach>
             </c:if>
 
-            <!-- Navigation buttons -->
-            <button type="button" class="btn btn-success ${pagination.currentPage <= 1 ? 'disabled' : ''} btn-pagination" onclick="setPage(1)">&lt;&lt;</button>
-            <button type="button" class="btn btn-success ${pagination.currentPage <= 1 ? 'disabled' : ''} btn-pagination" onclick="setPage(${pagination.currentPage - 1})">&lt;</button>
+            <!-- Navigation buttons - Adding disabled attribute to prevent clicks -->
+            <button type="button" class="btn btn-success ${pagination.currentPage <= 1 ? 'disabled' : ''} btn-pagination"
+                    onclick="navigatePage(1)" ${pagination.currentPage <= 1 ? 'disabled' : ''}>&lt;&lt;</button>
+            <button type="button" class="btn btn-success ${pagination.currentPage <= 1 ? 'disabled' : ''} btn-pagination"
+                    onclick="navigatePage(${pagination.currentPage - 1})" ${pagination.currentPage <= 1 ? 'disabled' : ''}>&lt;</button>
 
             <!-- Page numbers -->
             <c:set var="startPage" value="${pagination.currentPage - (pagination.totalPagesToShow / 2) + 1}" />
@@ -42,19 +44,23 @@
             </c:if>
 
             <c:forEach var="i" begin="${startPage}" end="${endPage}">
-                <button type="button" class="btn btn-success ${i == pagination.currentPage ? 'active' : ''} btn-pagination" onclick="setPage(${i})">${i}</button>
+                <button type="button" class="btn btn-success ${i == pagination.currentPage ? 'active' : ''} btn-pagination"
+                        onclick="navigatePage(${i})">${i}</button>
             </c:forEach>
 
-            <!-- Navigation buttons -->
-            <button type="button" class="btn btn-success ${pagination.currentPage >= pagination.totalPages ? 'disabled' : ''} btn-pagination" onclick="setPage(${pagination.currentPage + 1})">&gt;</button>
-            <button type="button" class="btn btn-success ${pagination.currentPage >= pagination.totalPages ? 'disabled' : ''} btn-pagination" onclick="setPage(${pagination.totalPages})">&gt;&gt;</button>
+            <!-- Navigation buttons - Adding disabled attribute to prevent clicks -->
+            <button type="button" class="btn btn-success ${pagination.currentPage >= pagination.totalPages ? 'disabled' : ''} btn-pagination"
+                    onclick="navigatePage(${pagination.currentPage + 1})" ${pagination.currentPage >= pagination.totalPages ? 'disabled' : ''}>&gt;</button>
+            <button type="button" class="btn btn-success ${pagination.currentPage >= pagination.totalPages ? 'disabled' : ''} btn-pagination"
+                    onclick="navigatePage(${pagination.totalPages})" ${pagination.currentPage >= pagination.totalPages ? 'disabled' : ''}>&gt;&gt;</button>
         </div>
     </form>
 
     <!-- Page number input -->
     <div class="text-center" style="margin-top: 1rem;">
         <form class="row align-items-center justify-content-center" action="${pageContext.request.contextPath}${pagination.urlPattern}" method="get">
-            <input type="number" style="width:4.5rem; padding:.3rem .5rem" class="form-control mb-2 me-sm-2" id="inlineFormInputName2" name="page" min="1" max="${pagination.totalPages}" placeholder="Page">
+            <input type="number" style="width:4.5rem; padding:.3rem .5rem" class="form-control mb-2 me-sm-2"
+                   id="inlineFormInputName2" name="page" min="1" max="${pagination.totalPages}" placeholder="Page">
             <input type="hidden" name="page-size" value="${pagination.pageSize}">
 
             <!-- Include only necessary search fields -->
@@ -73,8 +79,37 @@
 
 <!-- Script for pagination -->
 <script>
-    function setPage(page) {
-        document.getElementById('pageInput').value = page;
-        document.getElementById('paginationForm').submit();
+    function navigatePage(page) {
+        // Check if the button is disabled (has the disabled attribute or disabled class)
+        const clickedButton = event.currentTarget;
+        if (clickedButton.hasAttribute('disabled') || clickedButton.classList.contains('disabled')) {
+            // If disabled, prevent navigation
+            event.preventDefault();
+            event.stopPropagation();
+            return false;
+        }
+
+        // If it's a valid page, set the page input value and submit the form
+        if (page >= 1 && page <= ${pagination.totalPages}) {
+            document.getElementById('pageInput').value = page;
+            document.getElementById('paginationForm').submit();
+        }
     }
+
+    // Backward compatibility with the old setPage function
+    function setPage(page) {
+        navigatePage(page);
+    }
+
+    // Add event listener to ensure disabled buttons don't do anything when clicked
+    document.addEventListener('DOMContentLoaded', function() {
+        const disabledButtons = document.querySelectorAll('.btn-pagination.disabled, .btn-pagination[disabled]');
+        disabledButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            });
+        });
+    });
 </script>

@@ -55,19 +55,38 @@ public class newsDetail extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-         NewsDAO dao = new NewsDAO();
-         News news = new News();
+        NewsDAO dao = new NewsDAO();
+        News news = null;
         String newsId = request.getParameter("id");
-        if(newsId!= null){
 
-         news = dao.detail(Integer.parseInt(newsId));
+        try {
+            // Check if newsId parameter exists and is a valid integer
+            if(newsId != null && !newsId.trim().isEmpty()) {
+                int id = Integer.parseInt(newsId);
+                news = dao.detail(id);
 
+                // Check if a news article with the given ID exists
+                if(news != null && news.getNews_id() > 0) {
+                    request.setAttribute("news", news);
+                    request.getRequestDispatcher("news/newsDetail.jsp").forward(request, response);
+                    return;
+                }
+            }
+
+            // If newsId is null, empty, not a valid integer, or no news found with that ID
+            // Redirect to the news list page
+            response.sendRedirect("newsList");
+
+        } catch(NumberFormatException e) {
+            // If newsId is not a valid integer
+            System.out.println("Invalid news ID format: " + newsId);
+            response.sendRedirect("newsList");
+        } catch(Exception e) {
+            // Handle any other exceptions
+            System.out.println("Error in newsDetail: " + e.getMessage());
+            e.printStackTrace();
+            response.sendRedirect("newsList");
         }
-        else{
-        news = dao.detail(0);
-        }
-         request.setAttribute("news", news);
-        request.getRequestDispatcher("news/newsDetail.jsp").forward(request, response);
     }
 
     /**

@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import model.Customer;
 import model.News;
 import model.auth.Staff;
+import model.Pagination;
 
 /**
  *
@@ -61,26 +62,69 @@ public class newsListStaff extends BaseRBACControlller {
         }
 
         // Lấy các tham số từ request
-        String indexPage = request.getParameter("index");
+        String pageParam = request.getParameter("page"); // Get the 'page' parameter instead of 'index'
+        String indexPage = request.getParameter("index"); // Keep this for backward compatibility
         String type = request.getParameter("type");
         String view = request.getParameter("view"); // Thêm tham số view để phân biệt chế độ xem
         String sortOrder = request.getParameter("sort"); // Thêm tham số sort để xác định thứ tự sắp xếp
         String searchTitle = SearchUtils.preprocessSearchQuery(request.getParameter("searchTitle"));
         String searchAuthor = SearchUtils.preprocessSearchQuery(request.getParameter("searchAuthor"));
+        String pageSizeStr = request.getParameter("page-size"); // Add page-size parameter
+
+        // Get page size
+        int pageSize = 5; // Default page size
+        if (pageSizeStr != null && !pageSizeStr.isEmpty()) {
+            try {
+                pageSize = Integer.parseInt(pageSizeStr);
+                if (pageSize < 1) {
+                    pageSize = 5;
+                }
+            } catch (NumberFormatException e) {
+                pageSize = 5;
+            }
+        }
 
         System.out.println("DEBUG - Search Parameters:");
+        System.out.println("Request page parameter: " + pageParam);
+        System.out.println("Request index parameter: " + indexPage);
         System.out.println("Request type parameter: " + type);
         System.out.println("Request view parameter: " + view);
         System.out.println("Request sort parameter: " + sortOrder);
         System.out.println("Search title: " + searchTitle);
         System.out.println("Search author: " + searchAuthor);
-        System.out.println("Index page: " + indexPage);
+        System.out.println("Page size: " + pageSize);
         System.out.println("Role ID: " + roleId);
         System.out.println("Staff ID: " + staffId);
 
         ArrayList<News> n = new ArrayList<News>();
         int pages = 1;
-        int index = indexPage != null ? Integer.parseInt(indexPage) : 1;
+
+        // Determine the current page - give preference to 'page' parameter, fall back to 'index'
+        int index = 1;
+        if (pageParam != null && !pageParam.isEmpty()) {
+            try {
+                index = Integer.parseInt(pageParam);
+                if (index < 1) index = 1;
+            } catch (NumberFormatException e) {
+                index = 1;
+            }
+        } else if (indexPage != null && !indexPage.isEmpty()) {
+            try {
+                index = Integer.parseInt(indexPage);
+                if (index < 1) index = 1;
+            } catch (NumberFormatException e) {
+                index = 1;
+            }
+        }
+
+        int count = 0; // To store total count for pagination
+
+        // Create pagination object for dynamic pagination
+        Pagination pagination = new Pagination();
+        pagination.setCurrentPage(index);
+        pagination.setPageSize(pageSize);
+        pagination.setTotalPagesToShow(5);
+        pagination.setUrlPattern("/newsListStaff");
 
         // Nếu là role Admin (roleId = 1), hiển thị tất cả - đơn giản hóa logic
         if (roleId == 1) {
@@ -89,18 +133,18 @@ public class newsListStaff extends BaseRBACControlller {
                 if ((searchTitle != null && !searchTitle.trim().isEmpty()) ||
                     (searchAuthor != null && !searchAuthor.trim().isEmpty())) {
                     // Search in waiting news
-                    n = dao.getWaitingNewsSortedByDateAndSearch(index, sortOrder, searchTitle, searchAuthor);
-                    int count = dao.countWaitingWithSearch(searchTitle, searchAuthor);
-                    pages = count == 0 ? 1 : (count % 5 != 0) ? (count / 5) + 1 : count / 5;
+                    n = dao.getWaitingNewsSortedByDateAndSearch(index, sortOrder, searchTitle, searchAuthor, pageSize);
+                    count = dao.countWaitingWithSearch(searchTitle, searchAuthor);
+                    pages = count == 0 ? 1 : (count % pageSize != 0) ? (count / pageSize) + 1 : count / pageSize;
                 } else {
                     // No search parameters, use regular waiting news list
                     if (sortOrder != null && (sortOrder.equals("newest") || sortOrder.equals("oldest"))) {
-                        n = dao.getWaitingNewsSortedByDate(index, sortOrder);
+                        n = dao.getWaitingNewsSortedByDate(index, sortOrder, pageSize);
                     } else {
-                        n = dao.paggingWaitingList(index);
+                        n = dao.paggingWaitingList(index, pageSize);
                     }
-                    int count = dao.countWaiting();
-                    pages = count == 0 ? 1 : (count % 5 != 0) ? (count / 5) + 1 : count / 5;
+                    count = dao.countWaiting();
+                    pages = count == 0 ? 1 : (count % pageSize != 0) ? (count / pageSize) + 1 : count / pageSize;
                 }
                 request.setAttribute("type", "WaitingNews");
             } else {
@@ -108,40 +152,41 @@ public class newsListStaff extends BaseRBACControlller {
                 if ((searchTitle != null && !searchTitle.trim().isEmpty()) ||
                     (searchAuthor != null && !searchAuthor.trim().isEmpty())) {
                     // Search in published news
-                    n = dao.getNewsByTitleAndAuthor(searchTitle, searchAuthor, index, sortOrder);
-                    int count = dao.countNewsByTitleAndAuthor(searchTitle, searchAuthor);
-                    pages = count == 0 ? 1 : (count % 5 != 0) ? (count / 5) + 1 : count / 5;
+                    n = dao.getNewsByTitleAndAuthor(searchTitle, searchAuthor, index, sortOrder, pageSize);
+                    count = dao.countNewsByTitleAndAuthor(searchTitle, searchAuthor);
+                    pages = count == 0 ? 1 : (count % pageSize != 0) ? (count / pageSize) + 1 : count / pageSize;
                 } else {
                     // No search parameters, use regular published news list
                     if (sortOrder != null && (sortOrder.equals("newest") || sortOrder.equals("oldest"))) {
-                        n = dao.getNewsSortedByDate(index, sortOrder);
+                        n = dao.getNewsSortedByDate(index, sortOrder, pageSize);
                     } else {
-                        n = dao.pagging(index);
+                        n = dao.pagging(index, pageSize);
                     }
-                    int count = dao.count("");
-                    pages = count == 0 ? 1 : (count % 5 != 0) ? (count / 5) + 1 : count / 5;
+                    count = dao.count("");
+                    pages = count == 0 ? 1 : (count % pageSize != 0) ? (count / pageSize) + 1 : count / pageSize;
                 }
                 request.setAttribute("type", "News");
             }
-        } // Nếu là role khác, hiển thị theo quyền
+        }
+        // Nếu là role khác, hiển thị theo quyền
         else {
             if (view != null && view.equals("myNews") && staffId > 0) {
                 // Hiển thị tin cá nhân đã đăng (có thể chỉnh sửa/xóa)
                 if ((searchTitle != null && !searchTitle.trim().isEmpty()) ||
                     (searchAuthor != null && !searchAuthor.trim().isEmpty())) {
                     // Search in personal news
-                    n = dao.getStaffNewsSortedByDateAndSearch(staffId, index, sortOrder, searchTitle, searchAuthor);
-                    int count = dao.countStaffNewsWithSearch(staffId, searchTitle, searchAuthor);
-                    pages = count == 0 ? 1 : (count % 5 != 0) ? (count / 5) + 1 : count / 5;
+                    n = dao.getStaffNewsSortedByDateAndSearch(staffId, index, sortOrder, searchTitle, searchAuthor, pageSize);
+                    count = dao.countStaffNewsWithSearch(staffId, searchTitle, searchAuthor);
+                    pages = count == 0 ? 1 : (count % pageSize != 0) ? (count / pageSize) + 1 : count / pageSize;
                 } else {
                     // No search parameters, use regular personal news list
                     if (sortOrder != null && (sortOrder.equals("newest") || sortOrder.equals("oldest"))) {
-                        n = dao.getStaffNewsSortedByDate(staffId, index, sortOrder);
+                        n = dao.getStaffNewsSortedByDate(staffId, index, sortOrder, pageSize);
                     } else {
-                        n = dao.getNewsByStaffId(staffId, index);
+                        n = dao.getNewsByStaffId(staffId, index, pageSize);
                     }
-                    int count = dao.countNewsByStaffId(staffId);
-                    pages = count == 0 ? 1 : (count % 5 != 0) ? (count / 5) + 1 : count / 5;
+                    count = dao.countNewsByStaffId(staffId);
+                    pages = count == 0 ? 1 : (count % pageSize != 0) ? (count / pageSize) + 1 : count / pageSize;
                 }
                 request.setAttribute("type", "News");
                 request.setAttribute("view", "myNews");
@@ -150,18 +195,18 @@ public class newsListStaff extends BaseRBACControlller {
                 if ((searchTitle != null && !searchTitle.trim().isEmpty()) ||
                     (searchAuthor != null && !searchAuthor.trim().isEmpty())) {
                     // Search in pending personal news
-                    n = dao.getPendingStaffNewsSortedByDateAndSearch(staffId, index, sortOrder, searchTitle, searchAuthor);
-                    int count = dao.countPendingStaffNewsWithSearch(staffId, searchTitle, searchAuthor);
-                    pages = count == 0 ? 1 : (count % 5 != 0) ? (count / 5) + 1 : count / 5;
+                    n = dao.getPendingStaffNewsSortedByDateAndSearch(staffId, index, sortOrder, searchTitle, searchAuthor, pageSize);
+                    count = dao.countPendingStaffNewsWithSearch(staffId, searchTitle, searchAuthor);
+                    pages = count == 0 ? 1 : (count % pageSize != 0) ? (count / pageSize) + 1 : count / pageSize;
                 } else {
                     // No search parameters, use regular pending personal news list
                     if (sortOrder != null && (sortOrder.equals("newest") || sortOrder.equals("oldest"))) {
-                        n = dao.getPendingStaffNewsSortedByDate(staffId, index, sortOrder);
+                        n = dao.getPendingStaffNewsSortedByDate(staffId, index, sortOrder, pageSize);
                     } else {
-                        n = dao.getPendingNewsByStaffId(staffId, index);
+                        n = dao.getPendingNewsByStaffId(staffId, index, pageSize);
                     }
-                    int count = dao.countPendingNewsByStaffId(staffId);
-                    pages = count == 0 ? 1 : (count % 5 != 0) ? (count / 5) + 1 : count / 5;
+                    count = dao.countPendingNewsByStaffId(staffId);
+                    pages = count == 0 ? 1 : (count % pageSize != 0) ? (count / pageSize) + 1 : count / pageSize;
                 }
                 request.setAttribute("type", "News");
                 request.setAttribute("view", "pendingNews");
@@ -170,18 +215,18 @@ public class newsListStaff extends BaseRBACControlller {
                 if ((searchTitle != null && !searchTitle.trim().isEmpty()) ||
                     (searchAuthor != null && !searchAuthor.trim().isEmpty())) {
                     // Search in role news
-                    n = dao.getRoleNewsSortedByDateAndSearch(roleId, index, sortOrder, searchTitle, searchAuthor);
-                    int count = dao.countRoleNewsWithSearch(roleId, searchTitle, searchAuthor);
-                    pages = count == 0 ? 1 : (count % 5 != 0) ? (count / 5) + 1 : count / 5;
+                    n = dao.getRoleNewsSortedByDateAndSearch(roleId, index, sortOrder, searchTitle, searchAuthor, pageSize);
+                    count = dao.countRoleNewsWithSearch(roleId, searchTitle, searchAuthor);
+                    pages = count == 0 ? 1 : (count % pageSize != 0) ? (count / pageSize) + 1 : count / pageSize;
                 } else {
                     // No search parameters, use regular role news list
                     if (sortOrder != null && (sortOrder.equals("newest") || sortOrder.equals("oldest"))) {
-                        n = dao.getRoleNewsSortedByDate(roleId, index, sortOrder);
+                        n = dao.getRoleNewsSortedByDate(roleId, index, sortOrder, pageSize);
                     } else {
-                        n = dao.getNewsByRoleId(roleId, index);
+                        n = dao.getNewsByRoleId(roleId, index, pageSize);
                     }
-                    int count = dao.countNewsByRoleId(roleId);
-                    pages = count == 0 ? 1 : (count % 5 != 0) ? (count / 5) + 1 : count / 5;
+                    count = dao.countNewsByRoleId(roleId);
+                    pages = count == 0 ? 1 : (count % pageSize != 0) ? (count / pageSize) + 1 : count / pageSize;
                 }
                 request.setAttribute("type", "News");
                 request.setAttribute("view", "roleNews");
@@ -190,18 +235,18 @@ public class newsListStaff extends BaseRBACControlller {
                 if ((searchTitle != null && !searchTitle.trim().isEmpty()) ||
                     (searchAuthor != null && !searchAuthor.trim().isEmpty())) {
                     // Search in all news
-                    n = dao.getNewsByTitleAndAuthor(searchTitle, searchAuthor, index, sortOrder);
-                    int count = dao.countNewsByTitleAndAuthor(searchTitle, searchAuthor);
-                    pages = count == 0 ? 1 : (count % 5 != 0) ? (count / 5) + 1 : count / 5;
+                    n = dao.getNewsByTitleAndAuthor(searchTitle, searchAuthor, index, sortOrder, pageSize);
+                    count = dao.countNewsByTitleAndAuthor(searchTitle, searchAuthor);
+                    pages = count == 0 ? 1 : (count % pageSize != 0) ? (count / pageSize) + 1 : count / pageSize;
                 } else {
                     // No search parameters, use regular all news list
                     if (sortOrder != null && (sortOrder.equals("newest") || sortOrder.equals("oldest"))) {
-                        n = dao.getNewsSortedByDate(index, sortOrder);
+                        n = dao.getNewsSortedByDate(index, sortOrder, pageSize);
                     } else {
-                        n = dao.pagging(index);
+                        n = dao.pagging(index, pageSize);
                     }
-                    int count = dao.count("");
-                    pages = count == 0 ? 1 : (count % 5 != 0) ? (count / 5) + 1 : count / 5;
+                    count = dao.count("");
+                    pages = count == 0 ? 1 : (count % pageSize != 0) ? (count / pageSize) + 1 : count / pageSize;
                 }
                 request.setAttribute("type", "News");
                 request.setAttribute("view", "allNews");
@@ -211,10 +256,51 @@ public class newsListStaff extends BaseRBACControlller {
         System.out.println("DEBUG - Search Results: Found " + n.size() + " news items");
         System.out.println("DEBUG - Total pages: " + pages);
 
+        // Set up pagination fields
+        pagination.setTotalPages(pages);
+        pagination.setListPageSize(count); // Generate list of available page sizes
+
+        // Build search parameters for pagination
+        ArrayList<String> searchFields = new ArrayList<>();
+        ArrayList<String> searchValues = new ArrayList<>();
+
+        if (searchTitle != null && !searchTitle.trim().isEmpty()) {
+            searchFields.add("searchTitle");
+            searchValues.add(searchTitle);
+        }
+
+        if (searchAuthor != null && !searchAuthor.trim().isEmpty()) {
+            searchFields.add("searchAuthor");
+            searchValues.add(searchAuthor);
+        }
+
+        if (sortOrder != null && !sortOrder.isEmpty()) {
+            searchFields.add("sort");
+            searchValues.add(sortOrder);
+        }
+
+        if (type != null && !type.isEmpty()) {
+            searchFields.add("type");
+            searchValues.add(type);
+        }
+
+        if (view != null && !view.isEmpty()) {
+            searchFields.add("view");
+            searchValues.add(view);
+        }
+
+        // Only set search fields if we have any
+        if (!searchFields.isEmpty()) {
+            pagination.setSearchFields(searchFields.toArray(new String[0]));
+            pagination.setSearchValues(searchValues.toArray(new String[0]));
+        }
+
         request.setAttribute("n", n);
         request.setAttribute("pages", pages);
+        request.setAttribute("count", count);
+        request.setAttribute("pagination", pagination);
         request.setAttribute("staffId", staffId);
-        request.setAttribute("sortOrder", sortOrder); // Lưu thông tin sắp xếp hiện tại
+        request.setAttribute("sortOrder", sortOrder);
         request.setAttribute("searchTitle", searchTitle);
         request.setAttribute("searchAuthor", searchAuthor);
 
