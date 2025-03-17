@@ -209,8 +209,11 @@
                                 <!-- Search Button -->
                                 <div class="col-md-3">
                                     <div class="form-group mb-0 d-flex align-items-end h-100">
-                                        <button type="submit" class="btn btn-primary btn-sm w-100" style="height: 38px;">
+                                        <button type="submit" class="btn btn-primary btn-sm me-2" style="height: 38px; width: 75%;">
                                             <i class="fas fa-search mr-1"></i> Search
+                                        </button>
+                                        <button type="button" id="clearSearchBtn" class="btn btn-secondary btn-sm" style="height: 38px; width: 25%;" title="Clear filters">
+                                            <i class="fas fa-times"></i>
                                         </button>
                                     </div>
                                 </div>
@@ -402,6 +405,21 @@
                 // Navigate to the new URL
                 window.location.href = url.toString();
             }
+
+            // Add event listener for the clear button
+            document.addEventListener('DOMContentLoaded', function() {
+                document.getElementById('clearSearchBtn').addEventListener('click', function() {
+                    // Clear all input fields
+                    document.getElementById('search').value = '';
+                    document.getElementById('author').value = '';
+
+                    // Reset sorting to default
+                    document.getElementById('sortOrderFilter').value = '';
+
+                    // Either submit the form or redirect to the base URL
+                    window.location.href = 'newsList';
+                });
+            });
         </script>
     </body>
 </html>
