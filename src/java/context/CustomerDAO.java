@@ -11,6 +11,7 @@ import jakarta.mail.Session;
 import jakarta.mail.Transport;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
+import java.math.BigDecimal;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -33,6 +34,22 @@ import model.Gender;
  * @author lenovo
  */
 public class CustomerDAO extends DBContext {
+
+    public boolean updateBalance(int customerId, BigDecimal newBalance) {
+        String sql = "UPDATE Customer SET balance = balance - ? WHERE customer_id = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setBigDecimal(1, newBalance);
+            ps.setInt(2, customerId);
+
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (Exception e) {
+            System.out.println("Error in updateBalance: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
 
     public int getBalanceMinMax(String order) {
         int balance = 0;
@@ -103,7 +120,7 @@ public class CustomerDAO extends DBContext {
                 customer.setDob(rs.getDate("dob"));
                 customer.setGender(rs.getInt("gender"));
                 customer.setPhonenumber(rs.getString("phonenumber"));
-                customer.setBalance(rs.getFloat("balance"));
+                customer.setBalance(rs.getBigDecimal("balance"));
                 customer.setCid(rs.getString("cid"));
                 customer.setAvatar(rs.getString("avatar")); // Avatar vẫn được lấy từ DB
             }
@@ -160,7 +177,7 @@ public class CustomerDAO extends DBContext {
                         rs.getDate("dob"),
                         rs.getInt("gender"),
                         rs.getString("phonenumber"),
-                        rs.getFloat("balance"),
+                        rs.getBigDecimal("balance"),
                         rs.getString("citizen_identification_card"),
                         rs.getString("address"),
                         rs.getString("avatar")
@@ -235,7 +252,7 @@ public class CustomerDAO extends DBContext {
                         rs.getDate("dob"),
                         rs.getInt("gender"),
                         rs.getString("phonenumber"),
-                        rs.getFloat("balance"),
+                        rs.getBigDecimal("balance"),
                         rs.getString("citizen_identification_card"),
                         rs.getString("address"),
                         rs.getString("avatar")
@@ -279,7 +296,7 @@ public class CustomerDAO extends DBContext {
                         rs.getDate("dob"),
                         rs.getInt("gender"),
                         rs.getString("phonenumber"),
-                        rs.getFloat("balance"),
+                        rs.getBigDecimal("balance"),
                         rs.getString("citizen_identification_card"),
                         rs.getString("address"),
                         rs.getString("avatar")
@@ -330,7 +347,7 @@ public class CustomerDAO extends DBContext {
                         rs.getDate("dob"),
                         rs.getInt("gender"),
                         rs.getString("phonenumber"),
-                        rs.getFloat("balance"),
+                        rs.getBigDecimal("balance"),
                         rs.getString("citizen_identification_card"),
                         rs.getString("address"),
                         rs.getString("avatar")
@@ -402,7 +419,7 @@ public class CustomerDAO extends DBContext {
                             rs.getDate("dob"),
                             rs.getInt("gender"),
                             rs.getString("phonenumber"),
-                            rs.getFloat("balance"),
+                            rs.getBigDecimal("balance"),
                             rs.getString("citizen_identification_card"),
                             rs.getString("address"),
                             rs.getString("avatar")
@@ -416,7 +433,7 @@ public class CustomerDAO extends DBContext {
     }
 
     // lay so du tai khoan cua khach hang
-    public double getBalanceByCId(Customer c) {
+    public BigDecimal getBalanceByCId(Customer c) {
         int cid = c.getCustomerId();
         String sql = "SELECT [balance]\n"
                 + "FROM [dbo].[Customer]\n"
@@ -426,12 +443,12 @@ public class CustomerDAO extends DBContext {
             st.setInt(1, cid);
             ResultSet rs = st.executeQuery();
             if (rs.next()) {
-                return rs.getInt("balance");
+                return rs.getBigDecimal("balance");
             }
         } catch (SQLException e) {
 
         }
-        return 0;
+        return null;
     }
 
     //___________________________Active Customer_________________________
@@ -674,7 +691,7 @@ public class CustomerDAO extends DBContext {
                 customer.setDob(rs.getDate("dob"));
                 customer.setGender(rs.getInt("gender"));
                 customer.setPhonenumber(rs.getString("phonenumber"));
-                customer.setBalance(rs.getFloat("balance"));
+                customer.setBalance(rs.getBigDecimal("balance"));
                 customer.setCid(rs.getString("citizen_identification_card"));
                 customer.setAddress(rs.getString("address"));
                 listCustomer.add(customer);
@@ -776,7 +793,7 @@ public class CustomerDAO extends DBContext {
                 customer.setDob(rs.getDate("dob"));
                 customer.setGender(rs.getInt("gender"));
                 customer.setPhonenumber(rs.getString("phonenumber"));
-                customer.setBalance(rs.getFloat("balance"));
+                customer.setBalance(rs.getBigDecimal("balance"));
                 customer.setCid(rs.getString("citizen_identification_card"));
                 customer.setAddress(rs.getString("address"));
                 listCustomer.add(customer);
@@ -969,7 +986,7 @@ public class CustomerDAO extends DBContext {
                 if (rs.next()) {
                     int generatedId = rs.getInt(1);
                     newCustomer = new Customer(generatedId, fullname, username, password, 1,
-                            email, defaultDob, gender, phonenumber, 0, defaultCID, address, null);
+                            email, defaultDob, gender, phonenumber, null, defaultCID, address, null);
                 }
             }
         } catch (SQLException e) {
@@ -1187,7 +1204,7 @@ public class CustomerDAO extends DBContext {
                         rs.getDate("dob"),
                         rs.getInt("gender"),
                         rs.getString("phonenumber"),
-                        rs.getFloat("balance"),
+                        rs.getBigDecimal("balance"),
                         rs.getString("citizen_identification_card"),
                         rs.getString("address"),
                         rs.getString("avatar")
@@ -1250,7 +1267,7 @@ public class CustomerDAO extends DBContext {
                             resultSet.getDate("dob"),
                             resultSet.getInt("gender"),
                             resultSet.getString("phonenumber"),
-                            resultSet.getFloat("balance"),
+                            resultSet.getBigDecimal("balance"),
                             resultSet.getString("citizen_identification_card"),
                             resultSet.getString("address"),
                             resultSet.getString("avatar")
@@ -1289,7 +1306,7 @@ public class CustomerDAO extends DBContext {
                         rs.getDate("dob"),
                         rs.getInt("gender"),
                         rs.getString("phonenumber"),
-                        rs.getFloat("balance"),
+                        rs.getBigDecimal("balance"),
                         rs.getString("citizen_identification_card"),
                         rs.getString("address"),
                         rs.getString("avatar")
@@ -1330,7 +1347,7 @@ public class CustomerDAO extends DBContext {
                         rs.getDate("dob"),
                         rs.getInt("gender"),
                         rs.getNString("phonenumber"),
-                        rs.getFloat("balance"),
+                        rs.getBigDecimal("balance"),
                         rs.getNString("citizen_identification_card"),
                         rs.getNString("address"),
                         rs.getNString("avatar")
@@ -1371,7 +1388,7 @@ public class CustomerDAO extends DBContext {
                         rs.getDate("dob"),
                         rs.getInt("gender"),
                         rs.getNString("phonenumber"),
-                        rs.getFloat("balance"),
+                        rs.getBigDecimal("balance"),
                         rs.getNString("citizen_identification_card"),
                         rs.getNString("address"),
                         rs.getNString("avatar")
@@ -1665,7 +1682,7 @@ public class CustomerDAO extends DBContext {
                         rs.getDate("dob"),
                         rs.getInt("gender"),
                         rs.getNString("phonenumber"),
-                        rs.getFloat("balance"),
+                        rs.getBigDecimal("balance"),
                         rs.getNString("citizen_identification_card"),
                         rs.getNString("address"),
                         rs.getNString("avatar")
@@ -1780,7 +1797,7 @@ public class CustomerDAO extends DBContext {
                             rs.getDate("dob"),
                             rs.getInt("gender"),
                             rs.getNString("phonenumber"),
-                            rs.getFloat("balance"),
+                            rs.getBigDecimal("balance"),
                             rs.getNString("citizen_identification_card"),
                             rs.getNString("address"),
                             rs.getNString("avatar")

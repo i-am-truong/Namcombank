@@ -234,7 +234,7 @@
     </servlet>
     <servlet>
         <servlet-name>RepaymentSchedule</servlet-name>
-        <servlet-class>controller.repayment_schedule.RepaymentSchedule</servlet-class>
+        <servlet-class>controller.repayment_schedule.RepaymentScheduleList</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ImportCustomers</servlet-name>

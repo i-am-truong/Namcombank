@@ -160,8 +160,8 @@
                                     <a href="customer-loan-requests">
                                         <i class="fas fa-shopping-bag"></i>&nbsp;&nbsp;History Request
                                     </a>
+                                    <a href="repaymentSchedule"><i class="fa fa-credit-card" aria-hidden="true"></i>&nbsp;&nbsp;Schedule Payment</a>
                                     <a href="logOut"><i class="fas fa-sign-out-alt"></i>&nbsp;&nbsp;Logout</a>
-
                                 </span>
                                 <span style="line-height: 30px; display: block; color: #04414d; white-space: nowrap ">${sessionScope.customer.fullname}</span>
                             </div>

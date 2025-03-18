@@ -15,39 +15,75 @@ import model.Customer;
 
 public class RepaymentScheduleDAO extends DBContext<RepaymentSchedule> {
 
-    public List<RepaymentSchedule> getAllRepaymentSchedules() {
+    public RepaymentSchedule getScheduleById(int scheduleId) {
+        RepaymentSchedule schedule = null;
+        String sql = "SELECT rs.schedule_id, rs.status, rs.due_date, rs.amount_due, rs.request_id, lr.customer_id "
+                + "FROM RepaymentSchedule rs "
+                + "LEFT JOIN LoanRequests lr ON lr.request_id = rs.request_id "
+                + "WHERE rs.schedule_id = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, scheduleId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                schedule = new RepaymentSchedule();
+                schedule.setSchedule_id(rs.getInt("schedule_id"));
+                schedule.setStatus(rs.getString("status"));
+                schedule.setDueDate(rs.getDate("due_date"));
+                schedule.setAmountDue(rs.getBigDecimal("amount_due"));
+                schedule.setRequestId(rs.getInt("request_id"));
+                schedule.setCustomerId(rs.getInt("customer_id"));
+            }
+        } catch (Exception e) {
+            System.out.println("Error in getScheduleById: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return schedule;
+    }
+
+    public List<RepaymentSchedule> getRepaymentSchedulesByCustomerId(int customerId) {
         List<RepaymentSchedule> schedules = new ArrayList<>();
-//        String query = "SELECT rs.schedule_id, lp.package_name, rs.status, rs.due_date, rs.amount_due, \n"
-//                + "       c.customer_id, c.fullname, c.email, c.phonenumber\n"
-//                + "FROM RepaymentSchedule rs\n"
-//                + "JOIN Loans l ON rs.loan_id = l.loan_id\n"
-//                + "JOIN LoanPackages lp ON lp.package_id = l.package_id\n"
-//                + "JOIN Customer c ON l.customer_id = c.customer_id;";
-//
-//        try (PreparedStatement ps = connection.prepareStatement(query); ResultSet rs = ps.executeQuery()) {
-//            while (rs.next()) {
-//                Customer customer = new Customer(
-//                        rs.getInt(6),
-//                        rs.getString(7),
-//                        rs.getString(8),
-//                        rs.getString(9)
-//                );
-//
-//                RepaymentSchedule schedule = new RepaymentSchedule(
-//                        rs.getInt(1),
-//                        rs.getInt(1),
-//                        rs.getString(3),
-//                        rs.getString(4),
-//                        rs.getFloat(5),
-//                        customer,
-//                        rs.getString(2)
-//                );
-//                schedules.add(schedule);
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace(); // Ghi log lỗi nếu cần
-//        }
+        String sql = "SELECT rs.schedule_id, rs.status, rs.due_date, rs.amount_due, rs.request_id, lr.customer_id "
+                + "FROM RepaymentSchedule rs "
+                + "LEFT JOIN LoanRequests lr ON lr.request_id = rs.request_id "
+                + "WHERE lr.customer_id = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, customerId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                RepaymentSchedule schedule = new RepaymentSchedule();
+                schedule.setSchedule_id(rs.getInt("schedule_id"));
+                schedule.setStatus(rs.getString("status"));
+                schedule.setDueDate(rs.getDate("due_date"));
+                schedule.setAmountDue(rs.getBigDecimal("amount_due"));
+                schedule.setRequestId(rs.getInt("request_id"));
+                schedule.setCustomerId(rs.getInt("customer_id"));  // Uncomment this line
+                schedules.add(schedule);
+            }
+        } catch (Exception e) {
+            System.out.println("Error in getRepaymentSchedulesByCustomerId: " + e.getMessage());
+            e.printStackTrace();
+        }
         return schedules;
+    }
+
+    public boolean updateStatus(int scheduleId, String status) {
+        String sql = "UPDATE RepaymentSchedule SET status = ? WHERE schedule_id = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, status);
+            ps.setInt(2, scheduleId);
+
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (Exception e) {
+            System.out.println("Error in updateStatus: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override
@@ -74,5 +110,4 @@ public class RepaymentScheduleDAO extends DBContext<RepaymentSchedule> {
     public RepaymentSchedule get(int id) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-
 }
