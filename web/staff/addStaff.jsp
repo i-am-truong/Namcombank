@@ -36,7 +36,9 @@
                 <div id="content">
                     <%@include file="../homepage/header_admin.jsp" %>
                     <div class="container-fluid">
-                        <h1>Add Staff</h1>
+                        <h1 class="h3 mb-0 text-gray-800">
+                            Add New Staff
+                        </h1>
                         <form action="addStaff" method="post" class="col-8">
                             <div class="form-group">
                                 <label for="name">Name:</label>

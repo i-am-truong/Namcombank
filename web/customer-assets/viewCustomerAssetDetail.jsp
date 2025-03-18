@@ -218,7 +218,7 @@
                                         </div>
                                         <div class="detail-row">
                                             <div class="detail-label">Creation Date:</div>
-                                            <div class="detail-value"><fmt:formatDate value="${asset.createdDate}" pattern="MM/dd/yyyy HH:mm"/></div>
+                                            <div class="detail-value"><fmt:formatDate value="${asset.createdDate}" pattern="dd/MM/yyyy HH:mm"/></div>
                                         </div>
                                     </div>
 
@@ -240,7 +240,7 @@
                                                     <div class="detail-value">
                                                         <c:choose>
                                                             <c:when test="${not empty asset.approvedDate}">
-                                                                <fmt:formatDate value="${asset.approvedDate}" pattern="MM/dd/yyyy HH:mm"/>
+                                                                <fmt:formatDate value="${asset.approvedDate}" pattern="dd/MM/yyyy HH:mm"/>
                                                             </c:when>
                                                             <c:otherwise>N/A</c:otherwise>
                                                         </c:choose>

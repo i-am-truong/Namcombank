@@ -229,7 +229,7 @@
                                         <div class="detail-row">
                                             <div class="detail-label">Request Date:</div>
                                             <div class="detail-value">
-                                                <fmt:formatDate value="${loanRequest.requestDate}" pattern="MM/dd/yyyy HH:mm:ss"/>
+                                                <fmt:formatDate value="${loanRequest.requestDate}" pattern="dd/MM/yyyy"/>
                                             </div>
                                         </div>
 
@@ -400,7 +400,7 @@
                                                     <div class="detail-value">
                                                         <c:choose>
                                                             <c:when test="${not empty loanRequest.approvalDate}">
-                                                                <fmt:formatDate value="${loanRequest.approvalDate}" pattern="MM/dd/yyyy HH:mm:ss"/>
+                                                                <fmt:formatDate value="${loanRequest.approvalDate}" pattern="dd/MM/yyyy "/>
                                                             </c:when>
                                                             <c:otherwise>N/A</c:otherwise>
                                                         </c:choose>
@@ -489,7 +489,7 @@
                                                 <c:forEach items="${repaymentSchedule}" var="payment" varStatus="status">
                                                     <tr>
                                                         <td>${status.index + 1}</td>
-                                                        <td><fmt:formatDate value="${payment.dueDate}" pattern="MM/dd/yyyy"/></td>
+                                                        <td><fmt:formatDate value="${payment.dueDate}" pattern="dd/MM/yyyy"/></td>
                                                         <td><fmt:formatNumber value="${payment.amountDue}" type="currency" currencySymbol="" maxFractionDigits="0"/> VND</td>
                                                         <td>
                                                             <c:choose>

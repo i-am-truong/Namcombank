@@ -297,7 +297,7 @@
                                                         <td>${request.customer.fullname}</td>
                                                         <td>${request.loanPackage.packageName}</td>
                                                         <td><fmt:formatNumber value="${request.amount}" type="currency" currencySymbol="" maxFractionDigits="0"/> VND</td>
-                                                        <td><fmt:formatDate value="${request.requestDate}" pattern="MM/dd/yyyy"/></td>
+                                                        <td><fmt:formatDate value="${request.requestDate}" pattern="dd/MM/yyyy"/></td>
                                                         <td>
                                                             <c:choose>
                                                                 <c:when test="${request.status eq 'Pending'}">
@@ -338,7 +338,7 @@
                                                         <td>
                                                             <c:choose>
                                                                 <c:when test="${not empty request.approvalDate}">
-                                                                    <fmt:formatDate value="${request.approvalDate}" pattern="MM/dd/yyyy"/>
+                                                                    <fmt:formatDate value="${request.approvalDate}" pattern="dd/MM/yyyy"/>
                                                                 </c:when>
                                                                 <c:otherwise>
                                                                     <span class="text-muted">Not yet</span>

@@ -60,7 +60,7 @@
                                         <tr>
                                                 <td>${s.fullname}</td>
                                                 <td>${s.gender ? "Male" : "Female"}</td>
-                                            <td>${s.dob}</td>
+                                                <td>${s.dob}</td>
                                                 <td>${s.phonenumber}</td>
                                                 <td>${s.citizenId}</td>
                                                 <td>${s.email}</td>

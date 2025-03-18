@@ -291,7 +291,7 @@
                                                         <td>${asset.customerName}</td>
                                                         <td><fmt:formatNumber value="${asset.assetValue}" type="currency" currencySymbol="" maxFractionDigits="0"/> VND</td>
                                                         <td>${asset.staffName}</td>
-                                                        <td><fmt:formatDate value="${asset.createdDate}" pattern="MM/dd/yyyy HH:mm"/></td>
+                                                        <td><fmt:formatDate value="${asset.createdDate}" pattern="dd/MM/yyyy HH:mm"/></td>
                                                         <td>
                                                             <c:choose>
                                                                 <c:when test="${asset.status eq 'PENDING'}">
@@ -309,7 +309,7 @@
                                                             </c:choose>
                                                         </td>
                                                         <td>${asset.approverName}</td>
-                                                        <td><fmt:formatDate value="${asset.approvedDate}" pattern="MM/dd/yyyy HH:mm"/></td>
+                                                        <td><fmt:formatDate value="${asset.approvedDate}" pattern="dd/MM/yyyy HH:mm"/></td>
                                                     </tr>
                                                 </c:forEach>
                                             </c:when>
