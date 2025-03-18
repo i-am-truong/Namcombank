@@ -852,6 +852,7 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
         PreparedStatement loanUpdateStm = null;
         PreparedStatement customerUpdateStm = null;
         PreparedStatement scheduleInsertStm = null;
+        PreparedStatement transactionInsertStm = null;
 
         try {
             conn = connection; // Use your existing connection
@@ -866,6 +867,7 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
             if (!"PENDING".equalsIgnoreCase(loanRequest.getStatus())) {
                 return false;
             }
+
             // 2. Check if the loan request already has an asset_id
             Integer assetId = getAssetIdFromLoanRequest(requestId);
 
@@ -901,7 +903,6 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
 
             // 4. Update the customer's balance
             String customerSql = "UPDATE Customer SET balance = balance + ? WHERE customer_id = ?";
-
             customerUpdateStm = conn.prepareStatement(customerSql);
             customerUpdateStm.setBigDecimal(1, loanRequest.getAmount());
             customerUpdateStm.setInt(2, loanRequest.getCustomerId());
@@ -912,7 +913,24 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
                 return false;
             }
 
-            // 5. Calculate monthly payment amount
+            // 5. Record the transaction - Adjusted to match the SQL example
+            String transactionSql = "INSERT INTO [dbo].[Transaction] "
+                    + "([request_id], [amount], [transaction_date], [type], [customer_id], [staff_id]) "
+                    + "VALUES (?, ?, GETDATE(), 'Loan', ?, ?)";
+
+            transactionInsertStm = conn.prepareStatement(transactionSql);
+            transactionInsertStm.setInt(1, requestId);
+            transactionInsertStm.setBigDecimal(2, loanRequest.getAmount());
+            transactionInsertStm.setInt(3, loanRequest.getCustomerId());
+            transactionInsertStm.setInt(4, staffId);
+
+            int transactionRowsInserted = transactionInsertStm.executeUpdate();
+            if (transactionRowsInserted == 0) {
+                conn.rollback();
+                return false;
+            }
+
+            // 6. Calculate monthly payment amount
             BigDecimal principal = loanRequest.getAmount();
             BigDecimal annualInterestRate;
 
@@ -937,7 +955,6 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
 
                 // Handle potential division by zero
                 if (denominator.compareTo(BigDecimal.ZERO) == 0) {
-                    System.err.println("Error: Denominator is zero in payment calculation");
                     monthlyPayment = principal.divide(new BigDecimal(loanTermMonths), 2, RoundingMode.HALF_UP);
                 } else {
                     monthlyPayment = numerator.divide(denominator, 2, RoundingMode.HALF_UP);
@@ -946,7 +963,8 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
                 // Fallback calculation: simple division of principal by term
                 monthlyPayment = principal.divide(new BigDecimal(loanTermMonths), 2, RoundingMode.HALF_UP);
             }
-            // 6. Generate repayment schedule
+
+            // 7. Generate repayment schedule
             String scheduleSql = "INSERT INTO RepaymentSchedule (loan_id, status, due_date, amount_due, request_id) "
                     + "VALUES (?, 'PENDING', DATEADD(month, ?, GETDATE()), ?, ?)";
 
@@ -976,7 +994,7 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
                 return false;
             }
 
-            // 7. Commit the transaction if everything succeeded
+            // 8. Commit the transaction if everything succeeded
             conn.commit();
             return true;
 
@@ -1009,6 +1027,9 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
                 }
                 if (customerUpdateStm != null) {
                     customerUpdateStm.close();
+                }
+                if (transactionInsertStm != null) {
+                    transactionInsertStm.close();
                 }
                 if (scheduleInsertStm != null) {
                     scheduleInsertStm.close();
