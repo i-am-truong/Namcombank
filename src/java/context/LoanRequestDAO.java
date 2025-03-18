@@ -8,10 +8,13 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.logging.Level;
 import model.Customer;
 import model.LoanPackage;
 import model.auth.Staff;
 import model.Asset;
+import java.sql.*;
+
 
 public class LoanRequestDAO extends DBContext<LoanRequest> {
 
@@ -341,6 +344,22 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
             e.printStackTrace();
         }
         return null;
+    }
+    
+    // Kiểm tra xem khách hàng đã có thẻ tín dụng chưa
+    public boolean hasCreditCard(int customerId) {
+        String sql = "SELECT COUNT(*) FROM CreditCards WHERE customer_id = ? and status = 'Approved'";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, customerId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     public ArrayList<LoanRequest> searchLoanRequests(
@@ -1139,6 +1158,25 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
         }
     }
 
+    public boolean approveLoanRequest(int requestId, int staffId, String notes) {
+        String query = "UPDATE LoanRequests SET status = 'Approved', approved_by = ?, "
+                + "approval_date = GETDATE(), approved_note = ? "
+                + "WHERE request_id = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, staffId);
+            stmt.setString(2, notes);
+            stmt.setInt(3, requestId);
+
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi từ chối yêu cầu vay: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     /**
      * Từ chối yêu cầu vay
      */
@@ -1274,6 +1312,80 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
         }
 
         System.out.println("===== VERIFICATION END =====");
+    }
+
+    
+    
+    public BigDecimal getTotalApprovedLoanAmount(int customerId) {
+        BigDecimal totalLoan = BigDecimal.ZERO; // Khởi tạo đúng kiểu BigDecimal
+        String query = "SELECT SUM(amount) FROM LoanRequests WHERE customer_id = ? and status = 'Approved'";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, customerId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    BigDecimal result = rs.getBigDecimal(1); // Lấy giá trị đúng kiểu
+                    if (result != null) {
+                        totalLoan = result;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return totalLoan;
+    }
+
+    public int getApprovedLoanCount(int customerId) {
+        int loanCount = 0;
+        String query = "SELECT COUNT(*) FROM LoanRequests WHERE customer_id = ? and status = 'Approved'";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, customerId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    loanCount = rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return loanCount;
+    }
+    
+    public BigDecimal getTotalLoanAmount(int customerId) {
+        BigDecimal totalLoan = BigDecimal.ZERO; // Khởi tạo đúng kiểu BigDecimal
+        String query = "SELECT SUM(amount) FROM LoanRequests WHERE customer_id = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, customerId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    BigDecimal result = rs.getBigDecimal(1); // Lấy giá trị đúng kiểu
+                    if (result != null) {
+                        totalLoan = result;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return totalLoan;
+    }
+
+    public int getLoanCount(int customerId) {
+        int loanCount = 0;
+        String query = "SELECT COUNT(*) FROM LoanRequests WHERE customer_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, customerId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    loanCount = rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return loanCount;
     }
 
 }

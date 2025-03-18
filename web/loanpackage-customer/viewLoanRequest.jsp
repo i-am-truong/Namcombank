@@ -105,6 +105,14 @@
                                     <i class="fas fa-plus"></i> View available loan packages
                                 </a>
                             </div>
+
+                            <c:if test="${not empty creditCardMessage}">
+                                <div style="padding: 10px; background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; margin-bottom: 15px;">
+                                    ${creditCardMessage}
+                                </div>
+                            </c:if>
+
+
                             <!-- Debug information -->
                             <c:if test="${not empty loanRequests}">
                                 <div class="alert alert-info">

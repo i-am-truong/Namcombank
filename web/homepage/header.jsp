@@ -156,6 +156,7 @@
                                 <span class="dropdown-menu" id="dropdownMenu">
                                     <a href="#">&nbsp;&nbsp;$${sessionScope.customer.balance}</a>
                                     <a href="userProfile"><i class="fas fa-user"></i>&nbsp;&nbsp;Show profile</a>
+                                    <a href="credit-cards"><i class="fas fa-card"></i>&nbsp;&nbsp;My Credit Card</a>
                                     <a href="customer-loan-requests">
                                         <i class="fas fa-shopping-bag"></i>&nbsp;&nbsp;History Request
                                     </a>
