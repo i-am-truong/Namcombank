@@ -23,6 +23,8 @@ import model.auth.Staff;
  */
 public class managerSaving extends BaseRBACControlller {
 
+    private final SavingDao dao = new SavingDao();
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -66,10 +68,13 @@ public class managerSaving extends BaseRBACControlller {
             response.sendRedirect("admin.login");
             return;
         }
-        SavingDao dao = new SavingDao();
+        String saving_package_idStr = request.getParameter("saving_package_id");
+        int saving_package_id = Integer.parseInt(saving_package_idStr);
+        dao.inactiveSavingPackage(saving_package_id);
+
         List<SavingPackage_id> list = dao.getAllSavingPackage();
         request.setAttribute("list", list);
-        request.getRequestDispatcher("Saving/managerSaving.jsp").forward(request, response);
+        request.getRequestDispatcher("SavingPackage/managerSaving.jsp").forward(request, response);
     }
 
     @Override
@@ -79,10 +84,9 @@ public class managerSaving extends BaseRBACControlller {
             response.sendRedirect("admin.login");
             return;
         }
-        SavingDao dao = new SavingDao();
         List<SavingPackage_id> list = dao.getAllSavingPackage();
         request.setAttribute("list", list);
-        request.getRequestDispatcher("Saving/managerSaving.jsp").forward(request, response);
+        request.getRequestDispatcher("SavingPackage/managerSaving.jsp").forward(request, response);
     }
 
 }

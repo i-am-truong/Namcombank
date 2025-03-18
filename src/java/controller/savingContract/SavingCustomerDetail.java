@@ -4,6 +4,7 @@
  */
 package controller.savingContract;
 
+import context.SavingDao;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -11,12 +12,16 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.util.List;
+import model.Saving;
 
 /**
  *
  * @author admin
  */
 public class SavingCustomerDetail extends HttpServlet {
+
+    private SavingDao dao = new SavingDao();
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -82,8 +87,13 @@ public class SavingCustomerDetail extends HttpServlet {
         String payment_method = request.getParameter("payment_method");
         String savings_idStr = request.getParameter("savings_id");
         int savings_id = Integer.parseInt(savings_idStr);
+        dao.UpdatePaymentMethod(payment_method, savings_id);
         
-        
+        List<Saving> list = dao.getSaving(savings_id);
+
+        request.setAttribute("list", list);
+        request.getRequestDispatcher("SavingContract/Saving_Customer_Detail.jsp").forward(request, response);
+
     }
 
     /**

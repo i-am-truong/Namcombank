@@ -68,7 +68,7 @@
                                 <th>Approval Status</th>
                                 <th>Withdrawable</th>
                                 <th>Created At</th>
-                                <th>Updated At</th>
+                                <!--<th>Updated At</th>-->
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -90,10 +90,10 @@
                                         <fmt:parseDate value="${sp.saving_package_created_at}" pattern="yyyy-MM-dd" var="parsedDate" type="date"/>
                                         <fmt:formatDate value="${parsedDate}" pattern="dd/MM/yyyy"/>
                                     </td> 
-                                    <td>
-                                        <fmt:parseDate value="${sp.saving_package_updated_at}" pattern="yyyy-MM-dd" var="parsedDate" type="date"/>
-                                        <fmt:formatDate value="${parsedDate}" pattern="dd/MM/yyyy"/>
-                                    </td> 
+<!--                                    <td>
+                                        <fmt/:parseDate value="$/{sp.saving_package_updated_at}" pattern="yyyy-MM-dd" var="parsedDate" type="date" />
+                                        <fmt/:formatDate value="$/{parsedDate}" pattern="dd/MM/yyyy"/>
+                                    </td> -->
                                     <td>
                                         <form action="updateSaving" method="post" style="display:inline;">
                                             <input type="hidden" name="saving_package_id" value="${sp.saving_package_id}">

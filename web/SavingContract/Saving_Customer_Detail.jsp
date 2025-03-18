@@ -34,17 +34,45 @@
                 border-radius: 5px;
                 cursor: pointer;
             }
+            .btn-back {
+                background-color: #28a745; /* Xanh lá chủ đạo */
+                color: white;
+                border: none;
+                padding: 8px 15px;
+                font-size: 16px;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+            }
+
+            .btn-back:hover {
+                background-color: #28a745; /* Màu xanh đậm hơn khi hover */
+            }
+            a {
+                display: inline-block;
+                background-color: #28a745; /* Xanh lá */
+                color: white;
+                padding: 8px 15px;
+                font-size: 16px;
+                border-radius: 5px;
+                text-decoration: none; /* Bỏ gạch chân */
+                transition: background-color 0.3s ease;
+            }
+            a:hover {
+                background-color: #218838;
+            }
+
         </style>
     </head>
     <body>
-        <a href="SavingCustomerActive">Quay Lại</a>
+
         <div class="container">
-            <h2>Danh sách tiết kiệm của bạn</h2>
+            <h2>Chi tiết gói tiết kiệm của bạn</h2>
             <table class="table table-bordered">
                 <thead>
                     <tr>
                         <th>Mã Tiết Kiệm</th>
-                        <th>Số Tiền Gửi</th>
+                        <th>Số Tiền Nhận</th>
                         <th>Lãi Suất (%)</th>
                         <th>Kỳ Hạn (Tháng)</th>
                         <th>Ngày Mở</th>
@@ -76,8 +104,8 @@
                     <td>${s.customer_name}</td>
                     <td>
                         <form action="SavingCustomerDetail" method="post">
-                            <input name="savings_id" value="${s.savings_id}">
-                            <select name="payment_method" onchange="confirmPaymentMethod(this)">
+                            <input name="savings_id" value="${s.savings_id}" hidden>
+                            <select name="payment_method" onchange="this.form.submit()">
                                 <c:choose>
                                     <c:when test="${empty s.payment_method}">
                                         <option value="" selected>-- Chọn phương thức --</option>
@@ -100,6 +128,7 @@
                 </c:forEach>
                 </tbody>
             </table>
+            <button class="btn-back" onclick="window.location.href = 'SavingCustomerActive'">Quay Lại</button>
 
         </div>
     </body>
@@ -113,4 +142,10 @@
             }
         }
     }
+    function confirmSubmit(select) {
+        if (confirm("Bạn có chắc chắn muốn thay đổi phương thức thanh toán?")) {
+            select.form.submit();
+        }
+    }
+
 </script>

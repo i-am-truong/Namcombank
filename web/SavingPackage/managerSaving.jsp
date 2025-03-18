@@ -44,6 +44,15 @@
                 background-color: #dc3545;
                 color: white;
             }
+            .ButtonColor{
+                display: inline-block;
+                padding: 10px 15px;
+                background-color: #28a745;
+                color: white;
+                text-decoration: none;
+                border-radius: 5px;
+                margin-bottom: 10px;
+            }
         </style>
     </head>
     <body id="page-top">
@@ -53,7 +62,7 @@
                 <%@include file="../homepage/header_admin.jsp" %>
                 <div class="container">
                     <h2 class="text-center">Manager Saving Package</h2>
-                    <a href="createSavingPackage">Tạo mới</a>
+                    <a href="createSavingPackage" class="ButtonColor">Tạo mới</a>
                     <table class="table">
                         <thead>
                             <tr>
@@ -70,6 +79,7 @@
                                 <th>Withdrawable</th>
                                 <th>Created At</th>
                                 <th>Updated At</th>
+                                <th>Thao Tác</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -94,6 +104,12 @@
                                         <fmt:parseDate value="${sp.saving_package_updated_at}" pattern="yyyy-MM-dd" var="parsedDate" type="date"/>
                                         <fmt:formatDate value="${parsedDate}" pattern="dd/MM/yyyy"/>
                                     </td> 
+                                    <td>
+                                        <form action="managerSaving" method="post" >
+                                            <input type="text" name="saving_package_id" value="${sp.saving_package_id}" hidden>
+                                            <button type="submit">Inactive</button>
+                                        </form>
+                                    </td>
                                 </tr>
                             </c:forEach>
                         </tbody>

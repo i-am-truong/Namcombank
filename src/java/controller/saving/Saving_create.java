@@ -162,7 +162,7 @@ public class Saving_create extends HttpServlet {
                         LocalDate moneyGetLocalDate = openedLocalDate.plusMonths(term_months);
                         String money_get_date = moneyGetLocalDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                         int saving_withdrawable = dao.selectSaving_package_withdrawable(saving_package_id);
-
+                        dao.balanceDow(money, customer_id);
                         dao.AddSavingFinal(customer_id, amount, interest_rate, term_months, created_at, saving_request_id, 0, money_get_date, customer_name, saving_withdrawable);
                         request.setAttribute("message", "Yêu cầu của bạn đã thành công, vui lòng kiểm tra lại tại danh sách tiết kiệm.");
                         request.getRequestDispatcher("Saving/Saving_create.jsp").forward(request, response);

@@ -2,9 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controller.savingContract;
+package controller.Tranfer;
 
-import context.SavingDao;
+import context.TranferDao;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -12,17 +12,16 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.util.List;
-import model.Saving;
-import model.SavingRequest;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  *
  * @author admin
  */
-public class SavingCustomerActive extends HttpServlet {
+public class TranferCreate extends HttpServlet {
 
-    private final SavingDao dao = new SavingDao();
+    private TranferDao dao = new TranferDao();
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -41,10 +40,10 @@ public class SavingCustomerActive extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet SavingCustomerActive</title>");
+            out.println("<title>Servlet TranferCreate</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet SavingCustomerActive at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet TranferCreate at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -67,13 +66,6 @@ public class SavingCustomerActive extends HttpServlet {
             response.sendRedirect("login");
             return;
         }
-        Integer customer_id = Integer.parseInt(session.getAttribute("customer_id").toString());
-        List<Saving> list = dao.getAllSavingWithdrawable(customer_id);
-        List<Saving> listP = dao.getAllSavingNoWithdrawable(customer_id);
-        request.setAttribute("listP", listP);
-        request.setAttribute("list", list);
-
-        request.getRequestDispatcher("Saving/SavingCustomerActive.jsp").forward(request, response);
     }
 
     /**
@@ -92,25 +84,26 @@ public class SavingCustomerActive extends HttpServlet {
             response.sendRedirect("login");
             return;
         }
-        String savings_idStr = request.getParameter("savings_id");
-//        String saving_withdrawableStr = request.getParameter("saving_withdrawable");
-//        int saving_withdrawable = Integer.parseInt(saving_withdrawableStr);
-        int savings_id = Integer.parseInt(savings_idStr);
-//        Integer customer_id = Integer.parseInt(session.getAttribute("customer_id").toString());
-//        if (saving_withdrawable == 1) {
-//            List<Saving> list = dao.getSaving(savings_id);
-//            request.setAttribute("list", list);
-//            request.getRequestDispatcher("SavingContract/Saving_Customer_Detail.jsp").forward(request, response);
-//            return;
-//        }
-//
-//        if (saving_withdrawable == 0) {
-            List<Saving> list = dao.getSaving(savings_id);
-            request.setAttribute("list", list);
-            request.getRequestDispatcher("SavingContract/Saving_Customer_Detail.jsp").forward(request, response);
-//            return;
-//        }
+        Integer customer_id = Integer.parseInt(session.getAttribute("customer_id").toString());
 
+        String name_received = request.getParameter("fullname_");
+        String phoneStr = request.getParameter("phone_");
+        int phone_received = Integer.parseInt(phoneStr);
+        
+        String moneyStr = request.getParameter("money");
+        double transfer_amount = Double.parseDouble(moneyStr);
+        String transfer_content = request.getParameter("transfer_content");
+        String transfer_date = getCurrentDate();
+
+        double balance = dao.getBalace(customer_id);
+        boolean a = dao.checkBalance(balance, transfer_amount);
+        if (a == true) {
+//            dao.tranferCreate(customer_id, customer_id_received, transfer_content, transfer_date, transfer_amount, phone, phone_received, name, name_received);
+        } else {
+            
+        }
+
+//        dao.checkBalance(money, )
     }
 
     /**
@@ -123,4 +116,8 @@ public class SavingCustomerActive extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
+    private String getCurrentDate() {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        return formatter.format(new Date());
+    }
 }

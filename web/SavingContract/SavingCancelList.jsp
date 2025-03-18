@@ -99,11 +99,14 @@
                                     <label for="customer_name">Customer Name</label>
                                     <input type="text" id="customer_name" name="customer_name" class="form-control"
                                            value="${name_selected}" placeholder="Customer name">
+                                    <c:if test="${not empty error}">
+                                        <p style="color: red;">${error}</p>
+                                    </c:if>
                                 </div>  
                                 <div class="form-group">
                                     <label for="saving_withdrawable">Saving Withdrawable</label>
                                     <select id="saving_withdrawable" name="saving_withdrawable" class="form-control">
-                                        <option value="" ${empty saving_withdrawable_selected ? 'selected' : ''}>-- Chọn loại --</option>
+                                        <option value="5" ${empty saving_withdrawable_selected ? 'selected' : ''}>-- Chọn loại --</option>
                                         <option value="1" ${saving_withdrawable_selected == '1' ? 'selected' : ''}>Có thể rút</option>
                                         <option value="0" ${saving_withdrawable_selected == '0' ? 'selected' : ''}>Không thể rút</option>
                                     </select>
@@ -144,7 +147,7 @@
                                         </td>
                                         <td>
                                             <form action="SavingCancel" method="post" style="display: inline;">
-                                                <input type="hidden" name="savings_id" value="${saving.savings_id}">
+                                                <input type="text" id="savings_id_cancel" name="savings_id_cancel" value="${saving.savings_id}">
                                                 <button type="submit" class="btn btn-approve">Cancel</button>
                                             </form>
                                         </td>

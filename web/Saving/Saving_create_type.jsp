@@ -9,77 +9,101 @@
         <title>Tạo yêu cầu gửi tiết kiệm</title>
         <style>
             body {
-                font-family: Arial, sans-serif;
-                margin: 20px;
-                padding: 20px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
                 background-color: #f4f4f4;
+                margin: 0;
+            }
+
+            .container {
+                width: 65%;
+                max-width: 900px;
+                min-height: 80vh;
+                background: white;
+                padding: 50px;
+                border-radius: 10px;
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+                text-align: center;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
             }
 
             h1 {
-                color: #333;
+                text-align: center;
+                margin-bottom: 20px;
+                font-size: 28px; /* Chữ to hơn */
             }
 
-            a {
-                display: inline-block;
-                margin-bottom: 10px;
-                text-decoration: none;
-                color: #007bff;
-                font-weight: bold;
-            }
-
-            a:hover {
-                text-decoration: underline;
-            }
 
             form {
-                background: white;
-                padding: 20px;
-                border-radius: 8px;
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-                max-width: 400px;
+                flex-grow: 1;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
             }
 
             label {
                 font-weight: bold;
-                display: block;
-                margin-bottom: 5px;
+                margin-top: 10px;
+                text-align: left;
+                font-size: 18px; /* Chữ to hơn */
             }
 
             select, input {
-                width: 100%;
-                padding: 8px;
-                margin-bottom: 10px;
+                width: 80%; /* Đảm bảo tất cả các ô có cùng chiều rộng */
+                height: 50px; /* Độ cao đồng nhất */
+                padding: 10px;
+                margin-top: 5px;
                 border: 1px solid #ccc;
+                border-radius: 5px;
+                font-size: 18px; /* Chữ to hơn */
+                box-sizing: border-box; /* Giữ kích thước đồng nhất */
+            }
+
+            button, a {
+                display: inline-block;
+                width: 150px;  /* Độ rộng cố định */
+                height: 30px;  /* Chiều cao cố định */
+                font-size: 16px; /* Cỡ chữ vừa phải */
+                padding: 10px;
+                text-align: center;
                 border-radius: 5px;
             }
 
             button {
-                background-color: #28a745;
-                color: white;
-                padding: 10px;
+                background-color: #28a745; /* Xanh lá cây */
                 border: none;
-                border-radius: 5px;
                 cursor: pointer;
-                width: 100%;
-                font-size: 16px;
             }
 
             button:hover {
                 background-color: #218838;
             }
 
-            div[style="color: red; font-weight: bold;"] {
-                color: red;
-                background: #ffe5e5;
-                padding: 10px;
-                border-radius: 5px;
-                margin-top: 10px;
+            a {
+                background-color: #90EE90; /* Xanh lá nhạt */
+                color: black;
+                text-decoration: none;
+                line-height: 45px; /* Căn giữa chữ theo chiều dọc */
             }
 
-            p {
-                color: green;
-                font-weight: bold;
+            a:hover {
+                background-color: #7cc576;
             }
+
+            .message {
+                color: red;
+                background: #ffe5e5;
+                padding: 12px;
+                border-radius: 5px;
+                margin-top: 10px;
+                font-size: 18px;
+            }
+
+
         </style>
 
         <script>
@@ -93,55 +117,58 @@
     </head>
 
     <body>
-        <a href="Saving_create">Quay Lại</a>
-        <h1>Tạo yêu cầu gửi tiết kiệm trực tuyến</h1>
-        <form action="Saving_create" method="post">
-            <input type="text" name="customer_id" value="${sessionScope.customer_id}" hidden>
+        <div class="container">
 
-            <label>Chọn gói tiết kiệm:</label>
-            <select name="saving_package_id" id="saving_package_id" onchange="updateSavingPackageName()">
-                <option value="">-- Chọn gói tiết kiệm --</option>
-                <%
-                    List<SavingPackage_id> list = (List<SavingPackage_id>) request.getAttribute("list");
-                    if (list != null) {
-                        for (SavingPackage_id sp : list) {
-                %>
-                <option value="<%= sp.getSaving_package_id() %>" 
-                        data-name="<%= sp.getSaving_package_name() %>">
-                    <%= sp.getSaving_package_name() %> - Lãi suất: <%= sp.getSaving_package_interest_rate() %>%
-                </option>
-                <%  
+            <h1>Tạo yêu cầu gửi tiết kiệm trực tuyến</h1>
+            <form action="Saving_create" method="post">
+                <input type="text" name="customer_id" value="${sessionScope.customer_id}" hidden>
+
+                <label>Chọn gói tiết kiệm:</label>
+                <select name="saving_package_id" id="saving_package_id" onchange="updateSavingPackageName()">
+                    <option value="">-- Chọn gói tiết kiệm --</option>
+                    <% 
+                        List<SavingPackage_id> list = (List<SavingPackage_id>) request.getAttribute("list");
+                        if (list != null) {
+                            for (SavingPackage_id sp : list) {
+                    %>
+                    <option value="<%= sp.getSaving_package_id() %>" 
+                            data-name="<%= sp.getSaving_package_name() %>">
+                        <%= sp.getSaving_package_name() %> - Lãi suất: <%= sp.getSaving_package_interest_rate() %>%
+                    </option>
+                    <%  
+                            }
                         }
-                    }
-                %>
-            </select>
+                    %>
+                </select>
 
-            <label>Nhập số tiền muốn gửi:</label>
-            <input type="number" name="money" required>
-            
-            <label>Vui lòng chọn loại tiền tiền:</label>
-            <select id="method_money" name="method_money"> 
-                <option value="TRANSFER">Tiền tài khoản</option>BALANCE
-                <option value="CASH">Thanh toán tại quầy</option>
-            </select>
-            
-            <input type="text" name="saving_approval_status" value="pending" hidden>
-            <input type="text" name="money_approval_status" value="pending" hidden>
+                <label>Nhập số tiền muốn gửi:</label>
+                <input type="number" name="money" required>
 
-            <label>Ngày tạo:</label>
-            <input type="date" name="created_at" id="created_at" value="${currentDate}" readonly>
+                <label>Vui lòng chọn loại tiền:</label>
+                <select id="method_money" name="method_money"> 
+                    <option value="TRANSFER">Tiền tài khoản</option>
+                    <option value="CASH">Thanh toán tại quầy</option>
+                </select>
 
-            <button type="submit">Gửi yêu cầu</button>
+                <input type="text" name="saving_approval_status" value="pending" hidden>
+                <input type="text" name="money_approval_status" value="pending" hidden>
 
-            <%-- In thông báo nếu có --%>
-            <% String message = (String) request.getAttribute("message");
+                <label>Ngày tạo:</label>
+                <input type="date" name="created_at" id="created_at" value="${currentDate}" readonly>
+
+                <button type="submit">Gửi yêu cầu</button>
+                <button type="button" onclick="window.location.href = 'Saving_create'" style="background-color: #90EE90; color: black;">
+                    Quay Lại
+                </button>
+
+                <% String message = (String) request.getAttribute("message");
                if (message != null) { %>
-            <p><%= message %></p>
-            <% } %>
-        </form>
+                <p class="message"><%= message %></p>
+                <% } %>
+            </form>
 
-    <c:if test="${not empty errorMessage}">
-        <div>${errorMessage}</div>
-    </c:if>
-</body>
+        </div>
+    </body>
+
+
 </html>

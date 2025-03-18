@@ -83,7 +83,7 @@ public class updateSaving extends BaseRBACControlller {
 
         List<SavingPackage_id> list = dao.getAllSavingPackageRequest();
         request.setAttribute("list", list);
-        request.getRequestDispatcher("Saving/updateSaving.jsp").forward(request, response);
+        request.getRequestDispatcher("SavingPackage/updateSaving.jsp").forward(request, response);
     }
 
     private String getCurrentDate() {

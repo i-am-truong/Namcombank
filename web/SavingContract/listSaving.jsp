@@ -76,7 +76,7 @@
                 <%@include file="../homepage/header_admin.jsp" %>
                 <div class="content"> 
                     <!-- Search Section -->
-                    <div class="search-container">
+<!--                    <div class="search-container">
                         <div class="search-grid">
                             <div class="form-group">
                                 <label for="customerName">Customer Name</label>
@@ -100,7 +100,7 @@
                                        value="${maxAmount}" placeholder="Maximum amount">
                             </div>
                         </div>
-                    </div>
+                    </div>-->
 
                     <!-- Data Table -->
                     <div class="table-container">
@@ -130,7 +130,7 @@
                                         <td>${sr.customer_id}</td>
                                         <td>${sr.customer_name}</td>
                                         <td>${sr.saving_package_name}</td>
-                                        <td>${String.format("%.2f", sr.money)}</td>
+                                        <td><fmt:formatNumber value="${sr.money}" />VND</td>
                                         <td>${sr.saving_approval_status}</td>
                                         <td>
                                             <fmt:parseDate value="${sr.created_at}" pattern="yyyy-MM-dd" var="parsedDate" type="date"/>

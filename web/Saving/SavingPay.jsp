@@ -52,7 +52,7 @@
             <div id="content-wrapper" class="d-flex flex-column">
                 <%@include file="../homepage/header_admin.jsp" %>
                 <div class="container">
-                    <h2>Danh sách khoản tiết kiệm sắp đến hạn</h2>
+                    <h2>Danh sách khoản tiết kiệm đến hạn</h2>
                     <table border="1">
                         <thead>
                             <tr>

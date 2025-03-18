@@ -13,6 +13,12 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
+import model.Saving;
 import model.auth.Staff;
 
 /**
@@ -57,13 +63,41 @@ public class SavingCancel extends BaseRBACControlller {
             return;
         }
 
-        String savings_idStr = request.getParameter("savings_id");
+        String savings_idStr = request.getParameter("savings_id_cancel");
         int savings_id = -1;
+
         try {
             savings_id = Integer.parseInt(savings_idStr);
         } catch (NumberFormatException e) {
-            request.getRequestDispatcher("SavingCancelList").forward(request, response);
+            request.getRequestDispatcher("SavingContract/SavingCancelList.jsp").forward(request, response);
             return;
+        }
+
+        int customer_id = dao.selectCustomer_id_by_savings_id(savings_id);
+
+        int saving_request_id = dao.selectSavingRequest_Id_(savings_id);
+        int saving_package_id = dao.selectSaving_package_id_by_SavingRequest(saving_request_id);
+        int term_months = dao.selectSaving_term(savings_id);
+        String opened_date = dao.selectSavingOpendate(savings_id);
+        double money = dao.selectMoney(saving_request_id);
+
+        double money_getted;
+
+        double rate1 = dao.selectSavingPackageOver_haft(saving_package_id);
+        double rate2 = dao.selectSavingPackageUnder_haft(saving_package_id);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate openedDateLocal = LocalDate.parse(opened_date, formatter);
+
+        LocalDate todayLocalDate = LocalDate.now();
+        long monthsElapsed = ChronoUnit.MONTHS.between(todayLocalDate, openedDateLocal);
+
+        money_getted = money;
+        double take = (monthsElapsed / (double) term_months);
+        if (take > 0.5) {
+            money_getted = money + money * rate1 / 100 * monthsElapsed / 24;
+        } else {
+            money_getted = money + money * rate2 / 100 * monthsElapsed / 24;
         }
 
         Staff staff = (Staff) request.getSession().getAttribute("account");
@@ -73,9 +107,19 @@ public class SavingCancel extends BaseRBACControlller {
         }
         int staff_id = staff.getId();
 
-        dao.SavingCancel(savings_id, staff_id);
+        boolean i = dao.SavingCancel(savings_id, staff_id, money_getted);
+        String payment_method = dao.selectPayment_method(savings_id);
+        if (i) {
+            if (payment_method.equals("TRANSFER")) {
+                dao.balanceUp(money_getted, customer_id);
+            }
+        }
 
-        request.getRequestDispatcher("SavingCancelList").forward(request, response);
+        int index = 1;
+        List<Saving> list = new ArrayList<>();
+        list = dao.pagingSaving(index);
+        request.setAttribute("listPaging", list);
+        request.getRequestDispatcher("SavingContract/SavingCancelList.jsp").forward(request, response);
 
     }
 
@@ -96,16 +140,6 @@ public class SavingCancel extends BaseRBACControlller {
             return;
         }
 
-        Staff staff = (Staff) request.getSession().getAttribute("account");
-        if (staff == null) {
-            response.sendRedirect("admin.login");
-            return;
-        }
-        int staff_id = staff.getId();
-
-        dao.SavingCancel(savings_id, staff_id);
-
-        request.getRequestDispatcher("SavingCancelList").forward(request, response);
     }
 
 }

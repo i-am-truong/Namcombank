@@ -66,30 +66,30 @@
                 <div class="container">
                     <h2 class="text-center">Customer Saving Money</h2>
                     <!-- Search Section -->
-                    <div class="search-container">
-                        <div class="search-grid">
-                            <div class="form-group">
-                                <label for="customerName">Customer Name</label>
-                                <input type="text" id="customerName" name="customerName" class="form-control" 
-                                       value="${customerName}" placeholder="Customer name">
-                            </div>
-                            <div class="form-group">
-                                <label for="packageName">Loan Package</label>
-                                <input type="text" id="packageName" name="packageName" class="form-control" 
-                                       value="${packageName}" placeholder="Loan package name">
-                            </div>
-                            <div class="form-group">
-                                <label for="minAmount">Amount From</label>
-                                <input type="number" id="minAmount" name="minAmount" class="form-control" 
-                                       value="${minAmount}" placeholder="Minimum amount">
-                            </div>
-                            <div class="form-group">
-                                <label for="maxAmount">Amount To</label>
-                                <input type="number" id="maxAmount" name="maxAmount" class="form-control" 
-                                       value="${maxAmount}" placeholder="Maximum amount">
-                            </div>
-                        </div>
-                    </div>
+                    <!--                    <div class="search-container">
+                                            <div class="search-grid">
+                                                <div class="form-group">
+                                                    <label for="customerName">Customer Name</label>
+                                                    <input type="text" id="customerName" name="customerName" class="form-control" 
+                                                           value="${customerName}" placeholder="Customer name">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="packageName">Loan Package</label>
+                                                    <input type="text" id="packageName" name="packageName" class="form-control" 
+                                                           value="${packageName}" placeholder="Loan package name">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="minAmount">Amount From</label>
+                                                    <input type="number" id="minAmount" name="minAmount" class="form-control" 
+                                                           value="${minAmount}" placeholder="Minimum amount">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="maxAmount">Amount To</label>
+                                                    <input type="number" id="maxAmount" name="maxAmount" class="form-control" 
+                                                           value="${maxAmount}" placeholder="Maximum amount">
+                                                </div>
+                                            </div>
+                                        </div>-->
 
 
                     <table class="table">
@@ -101,11 +101,11 @@
                                 <th>Customer Name</th>
                                 <th>Saving Package</th>
                                 <th>Money</th>
-                                <th>Approval Status</th>
+                                <!--<th>Approval Status</th>-->
                                 <th>Created At</th>
                                 <th>Approval Date</th>
                                 <!--<th>Saving Date</th>-->
-                                <th>Staff ID</th>
+                                <!--<th>Staff ID</th>-->
                                 <th>Money status</th>
                                 <th>Amount</th>
                                 <th>Thao tác</th>
@@ -119,8 +119,8 @@
                                     <td>${sr.customer_id}</td>
                                     <td>${sr.customer_name}</td>
                                     <td>${sr.saving_package_name}</td>
-                                    <td>${String.format("%.2f", sr.money)}</td>
-                                    <td>${sr.saving_approval_status}</td>
+                                    <td><fmt:formatNumber value="${sr.money}" />VND</td>
+                                    <!--<td>$/{sr.saving_approval_status}</td>-->
                                     <td>
                                         <fmt:parseDate value="${sr.created_at}" pattern="yyyy-MM-dd" var="parsedDate" type="date"/>
                                         <fmt:formatDate value="${parsedDate}" pattern="dd/MM/yyyy"/>
@@ -130,9 +130,9 @@
                                         <fmt:formatDate value="${parsedDate}" pattern="dd/MM/yyyy"/>
                                     </td>
                                     <!--<td>$/{sr.saving_date}</td>-->
-                                    <td>${sr.staff_id}</td>
+                                    <!--<td>$/{sr.staff_id}</td>-->
                                     <td>${sr.money_approval_status}</td>
-                                    <td>${String.format("%.2f", sr.amount)}</td>
+                                    <td><fmt:formatNumber value="${sr.amount}" />VND</td>
                                     <td>
                                         <form action="savingMoney" method="post" style="display:inline;">
                                             <input type="hidden" name="saving_request_id" value="${sr.saving_request_id}">

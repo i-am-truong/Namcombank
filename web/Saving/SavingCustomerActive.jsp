@@ -34,17 +34,32 @@
                 border-radius: 5px;
                 cursor: pointer;
             }
+            .btn-back {
+                background-color: #28a745; /* Xanh lá chủ đạo */
+                color: white;
+                border: none;
+                padding: 8px 15px;
+                font-size: 16px;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+            }
+
+            .btn-back:hover {
+                background-color: #218838; /* Màu xanh đậm hơn khi hover */
+            }
+
         </style>
     </head>
     <body>
-        <a href="Home">Quay Lại</a>
+
         <div class="container">
-            <h2>Danh sách tiết kiệm của bạn</h2>
+            <h2>Danh sách tiết kiệm kì hạn của bạn</h2>
             <table class="table table-bordered">
                 <thead>
                     <tr>
                         <th>Mã Tiết Kiệm</th>
-                        <th>Số Tiền Gửi</th>
+                        <th>Số Tiền Nhận</th>
                         <th>Lãi Suất (%)</th>
                         <th>Kỳ Hạn (Tháng)</th>
                         <th>Ngày Mở</th>
@@ -71,12 +86,50 @@
                                 <fmt:parseDate value="${s.money_get_date}" pattern="yyyy-MM-dd" var="parsedDate" type="date"/>
                                 <fmt:formatDate value="${parsedDate}" pattern="dd/MM/yyyy"/>
                             </td>
-                            
                         </tr>
                     </c:forEach>
                 </tbody>
             </table>
 
+        </div>
+        <div class="container">
+            <h2>Danh sách tiết kiệm không kì hạn của bạn</h2>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Mã Tiết Kiệm</th>
+                        <th>Số Tiền Nhận</th>
+                        <th>Lãi Suất (%)</th>
+                        <th>Kỳ Hạn (Tháng)</th>
+                        <th>Ngày Mở</th>
+                        <th>Trạng Thái</th>
+                        <th>Nhân Viên Xử Lý</th>
+                        <th>Ngày Nhận Tiền</th> 
+                    </tr>
+                </thead>
+                <tbody>
+                    <c:forEach var="t" items="${listP}">
+                        <tr onclick="postToSavingCustomerActive('${t.savings_id}')" style="cursor: pointer;">
+                            <td>${t.savings_id}</td>
+                            <td><fmt:formatNumber value="${t.amount}" type="currency"/></td>
+                            <td>${t.interest_rate}</td>
+                            <td>${t.term_months}</td>
+                            <td>
+                                <fmt:parseDate value="${t.opened_date}" pattern="yyyy-MM-dd" var="parsedDate" type="date"/>
+                                <fmt:formatDate value="${parsedDate}" pattern="dd/MM/yyyy"/>
+                            </td>
+                            <td>${t.status}</td>
+                            <td>${t.staff_id}</td>
+
+                            <td>
+                                <fmt:parseDate value="${t.money_get_date}" pattern="yyyy-MM-dd" var="parsedDate" type="date"/>
+                                <fmt:formatDate value="${parsedDate}" pattern="dd/MM/yyyy"/>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                </tbody>
+            </table>
+            <button class="btn-back" onclick="window.location.href = 'Home'">Quay Lại</button>
         </div>
     </body>
 </html>

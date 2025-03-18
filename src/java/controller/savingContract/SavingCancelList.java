@@ -67,13 +67,18 @@ public class SavingCancelList extends BaseRBACControlller {
                 savings_id = Integer.parseInt(savings_idStr);
                 Staff staff = (Staff) session.getAttribute("account");
                 if (staff != null) {
-                    int staff_id = staff.getId();
-                    dao.SavingCancel(savings_id, staff_id);
+//                    int staff_id = staff.getId();
+//                    dao.SavingCancel(savings_id,staff_id, 1);
                 }
             } catch (NumberFormatException e) {
 
             }
         }
+
+        String saving_withdrawableStr = request.getParameter("saving_withdrawable");
+        int saving_withdrawable;
+        saving_withdrawable = Integer.parseInt(saving_withdrawableStr);
+
         List<Saving> list = new ArrayList<>();
 
         int index = 1;
@@ -83,15 +88,45 @@ public class SavingCancelList extends BaseRBACControlller {
             index = 1; // Mặc định trang đầu
         }
 
-        String name = request.getParameter("customer_name");
-        if (name != null && name.trim().isEmpty()) {
+        String nameInput = request.getParameter("customer_name");
+        String name = null;
+        if (!checkInput(nameInput)) {
+            request.setAttribute("Vui lòng không nhập kí tự đặc biệt", "error");
+            list = dao.pagingSaving(index);
+            request.setAttribute("listPaging", list);
+            request.getRequestDispatcher("SavingContract/SavingCancelList.jsp").forward(request, response);
+            return;
+        } else if (nameInput != null) {
+            name = formatName(nameInput);
+        } else if (nameInput == null) {
             name = null;
         }
-        int count;
-        if (name != null) {
+
+        int count = 0;
+        if (name != null && saving_withdrawable == 1) {
+            count = dao.getTotalSavingName1(name);
+            list = dao.pagingSavingByName1(index, name);
+
+        }
+        if (name != null && saving_withdrawable == 0) {
+            count = dao.getTotalSavingName0(name);
+            list = dao.pagingSavingByName0(index, name);
+
+        }
+        if (name != null && saving_withdrawable == 5) {
             count = dao.getTotalSavingName(name);
             list = dao.pagingSavingByName(index, name);
-        } else {
+
+        }
+        if (name == null && saving_withdrawable == 1) {
+            count = dao.getTotalSaving1();
+            list = dao.pagingSaving1(index);
+        }
+        if (name == null && saving_withdrawable == 0) {
+            count = dao.getTotalSaving0();
+            list = dao.pagingSaving0(index);
+        }
+        if (name == null && saving_withdrawable == 5) {
             count = dao.getTotalSaving();
             list = dao.pagingSaving(index);
         }
@@ -99,9 +134,10 @@ public class SavingCancelList extends BaseRBACControlller {
         int endPage = (count % 8 == 0) ? count / 8 : (count / 8) + 1;
         request.setAttribute("endPage", endPage);
         request.setAttribute("name_selected", name);
+        request.setAttribute("saving_withdrawable_selected", saving_withdrawable);
         request.setAttribute("listPaging", list);
         request.setAttribute("currentPage", index);
-        request.getRequestDispatcher("Saving/SavingCancelList.jsp").forward(request, response);
+        request.getRequestDispatcher("SavingContract/SavingCancelList.jsp").forward(request, response);
     }
 
     @Override
@@ -141,7 +177,26 @@ public class SavingCancelList extends BaseRBACControlller {
         request.setAttribute("name_selected", name);
         request.setAttribute("listPaging", list);
         request.setAttribute("currentPage", index);
-        request.getRequestDispatcher("Saving/SavingCancelList.jsp").forward(request, response);
+        request.getRequestDispatcher("SavingContract/SavingCancelList.jsp").forward(request, response);
+    }
+
+    public boolean checkInput(String input) {
+        return input.matches("^[\\p{L}\\s.,!?]*$");
+    }
+
+    private String formatInput(String input) {
+
+        if (input == null || input.isEmpty()) {
+            return null;
+        }
+        return Character.toUpperCase(input.charAt(0)) + input.substring(1);
+    }
+
+    private String formatName(String name) {
+        if (name == null || name.isEmpty()) {
+            return null;
+        }
+        return name.trim().replaceAll("\\s+", " ");
     }
 
 }

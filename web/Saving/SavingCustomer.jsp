@@ -35,10 +35,24 @@
                 border-radius: 5px;
                 cursor: pointer;
             }
+            .btn-back {
+                background-color: #28a745; /* Xanh lá chủ đạo */
+                color: white;
+                border: none;
+                padding: 8px 15px;
+                font-size: 16px;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+            }
+
+            .btn-back:hover {
+                background-color: #218838; /* Màu xanh đậm hơn khi hover */
+            }
         </style>
     </head>
     <body>
-        <a href="Home">Quay Lại</a>
+
         <div class="container">
             <h2>Danh sách yêu cầu tiết kiệm</h2>
             <table class="table table-bordered">
@@ -113,6 +127,7 @@
                     </c:forEach>
                 </tbody>
             </table>
+            <button class="btn-back" onclick="window.location.href = 'Home'">Quay Lại</button>
         </div>
     </body>
 </html>

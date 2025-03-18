@@ -80,7 +80,7 @@ public class listSaving extends BaseRBACControlller {
         List<SavingRequest_id> list = dao.getAllSavingRequestPending();
         request.setAttribute("list", list);
 
-        request.getRequestDispatcher("Saving/listSaving.jsp").forward(request, response);
+        request.getRequestDispatcher("SavingContract/listSaving.jsp").forward(request, response);
     }
 
     @Override
@@ -94,7 +94,7 @@ public class listSaving extends BaseRBACControlller {
         SavingDao dao = new SavingDao();
         List<SavingRequest_id> list = dao.getAllSavingRequestPending();
         request.setAttribute("list", list);
-        request.getRequestDispatcher("Saving/listSaving.jsp").forward(request, response);
+        request.getRequestDispatcher("SavingContract/listSaving.jsp").forward(request, response);
     }
 
     private String getCurrentDate() {
