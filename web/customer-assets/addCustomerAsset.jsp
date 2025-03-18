@@ -322,46 +322,6 @@
         <!-- Custom scripts for all pages-->
         <script src="adminassets/js/sb-admin-2.min.js"></script>
 
-        <c:if test="${not viewMode}">
-<!--            <script>
-                // Định dạng số tiền khi nhập - chỉ định dạng, không validate
-                document.getElementById('asset_value').addEventListener('input', function (e) {
-                    // Lưu vị trí con trỏ
-                    var cursorPos = this.selectionStart;
-                    var oldLength = this.value.length;
-
-                    // Loại bỏ tất cả ký tự không phải số
-                    var value = this.value.replace(/[^\d]/g, '');
-
-                    // Nếu không có gì, không làm gì cả
-                    if (!value) {
-                        this.value = '';
-                        return;
-                    }
-
-                    // Định dạng số với dấu phẩy ngăn cách hàng nghìn mà không sử dụng parseInt
-                    var formattedValue = '';
-                    for (var i = 0; i < value.length; i++) {
-                        if (i > 0 && (value.length - i) % 3 === 0) {
-                            formattedValue += ',';
-                        }
-                        formattedValue += value.charAt(i);
-                    }
-
-                    // Cập nhật giá trị
-                    this.value = formattedValue;
-
-                    // Điều chỉnh vị trí con trỏ sau khi định dạng
-                    var newLength = this.value.length;
-                    var newCursorPos = cursorPos + (newLength - oldLength);
-                    if (newCursorPos < 0)
-                        newCursorPos = 0;
-                    if (newCursorPos > newLength)
-                        newCursorPos = newLength;
-                    this.setSelectionRange(newCursorPos, newCursorPos);
-                });
-            </script>-->
-        </c:if>
 
     </body>
 </html>

@@ -16,7 +16,8 @@ import model.LoanRequest;
 import model.auth.Staff;
 
 /**
- * Controller to display loan request details and handle approval/rejection/deletion
+ * Controller to display loan request details and handle
+ * approval/rejection/deletion
  */
 @WebServlet(name = "LoanRequestDetailAuth", urlPatterns = {"/loan-request-detail"})
 public class LoanRequestDetailAuth extends BaseRBACControlller {
@@ -96,17 +97,19 @@ public class LoanRequestDetailAuth extends BaseRBACControlller {
                     notes = "Approved by " + account.getUsername();
                 }
 
-                success = loanRequestDAO.approveLoanRequest(requestId, notes);
+                // Call the enhanced approval method that updates customer balance and creates repayment schedule
+                success = loanRequestDAO.approveLoanRequestWithSchedule(requestId, account.getId(), notes);
 
                 if (success) {
-                    request.getSession().setAttribute("successMessage", "Loan request has been approved successfully.");
+                    request.getSession().setAttribute("successMessage",
+                            "Loan request has been approved successfully. Customer balance has been updated and repayment schedule created.");
                 } else {
-                    request.getSession().setAttribute("errorMessage", "Could not approve loan request. Please try again.");
+                    request.getSession().setAttribute("errorMessage",
+                            "Could not approve loan request. Please check system logs for details.");
                 }
                 response.sendRedirect("loan-request-detail?id=" + requestId);
                 return;
             } else if ("reject".equals(action)) {
-
                 if (notes == null || notes.trim().isEmpty()) {
                     request.getSession().setAttribute("errorMessage", "Rejection reason cannot be empty.");
                     response.sendRedirect("loan-request-detail?id=" + requestId);
@@ -143,6 +146,7 @@ public class LoanRequestDetailAuth extends BaseRBACControlller {
             }
 
         } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error processing loan request action: ", e);
             request.getSession().setAttribute("errorMessage", "Error: " + e.getMessage());
             response.sendRedirect("loan-requests-auth");
         }

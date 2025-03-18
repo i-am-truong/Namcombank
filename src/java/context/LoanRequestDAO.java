@@ -1,9 +1,12 @@
 package context;
 
 import context.DBContext;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import model.LoanRequest;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import model.Customer;
 import model.LoanPackage;
@@ -174,14 +177,71 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
         }
     }
 
+    /**
+     * Deletes a loan request and its related repayment schedules
+     *
+     * @param requestId The ID of the loan request to delete
+     * @return true if the deletion is successful, false otherwise
+     */
     public boolean deleteLoanRequest(int requestId) {
-        String sql = "DELETE FROM LoanRequests WHERE request_id = ? ";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, requestId);
-            return stmt.executeUpdate() > 0;
+        Connection conn = null;
+        PreparedStatement deleteScheduleStm = null;
+        PreparedStatement deleteLoanStm = null;
+
+        try {
+            conn = connection; // Use your existing connection
+            conn.setAutoCommit(false); // Start transaction
+
+            // 1. Delete repayment schedule entries related to the loan request
+            String deleteScheduleSql = "DELETE FROM RepaymentSchedule WHERE request_id = ?";
+            deleteScheduleStm = conn.prepareStatement(deleteScheduleSql);
+            deleteScheduleStm.setInt(1, requestId);
+            int scheduleRowsDeleted = deleteScheduleStm.executeUpdate();
+
+            System.out.println("Repayment schedule entries deleted: " + scheduleRowsDeleted);
+
+            // 2. Delete the loan request
+            String deleteLoanSql = "DELETE FROM LoanRequests WHERE request_id = ?";
+            deleteLoanStm = conn.prepareStatement(deleteLoanSql);
+            deleteLoanStm.setInt(1, requestId);
+            int loanRowsDeleted = deleteLoanStm.executeUpdate();
+
+            if (loanRowsDeleted == 0) {
+                System.err.println("No loan request found with ID: " + requestId);
+                conn.rollback();
+                return false;
+            }
+
+            // 3. Commit the transaction if everything succeeded
+            conn.commit();
+            System.out.println("Loan request deleted successfully. Rows affected: " + loanRowsDeleted);
+            return true;
+
         } catch (SQLException e) {
+            try {
+                if (conn != null) {
+                    conn.rollback();
+                }
+            } catch (SQLException rollbackEx) {
+                System.err.println("Error rolling back transaction: " + rollbackEx.getMessage());
+            }
+            System.err.println("Error deleting loan request: " + e.getMessage());
             e.printStackTrace();
             return false;
+        } finally {
+            try {
+                if (deleteScheduleStm != null) {
+                    deleteScheduleStm.close();
+                }
+                if (deleteLoanStm != null) {
+                    deleteLoanStm.close();
+                }
+                if (conn != null) {
+                    conn.setAutoCommit(true); // Reset auto-commit to default
+                }
+            } catch (SQLException e) {
+                System.err.println("Error closing resources: " + e.getMessage());
+            }
         }
     }
 
@@ -429,7 +489,7 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
                     count++;
 
                 } catch (Exception e) {
-        System.err.println("Lỗi khi mapping loan request: " + e.getMessage());
+                    System.err.println("Lỗi khi mapping loan request: " + e.getMessage());
 
                     e.printStackTrace();
                 }
@@ -778,22 +838,283 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
     /**
      * Phê duyệt yêu cầu vay
      */
-    public boolean approveLoanRequest(int requestId, String notes) {
-        String query = "UPDATE LoanRequests SET status = 'Approved', approved_by = ?, "
-                + "approval_date = GETDATE(), approved_note = ? "
-                + "WHERE request_id = ?";
+    /**
+     * Approves a loan request, updates customer balance, and generates
+     * repayment schedule
+     *
+     * @param requestId The ID of the loan request to approve
+     * @param staffId The ID of the staff member approving the request
+     * @param note Approval note
+     * @return true if the approval process is successful, false otherwise
+     */
+    public boolean approveLoanRequestWithSchedule(int requestId, int staffId, String note) {
+        Connection conn = null;
+        PreparedStatement loanUpdateStm = null;
+        PreparedStatement customerUpdateStm = null;
+        PreparedStatement scheduleInsertStm = null;
 
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+        try {
+            conn = connection; // Use your existing connection
+            conn.setAutoCommit(false); // Start transaction
 
-            stmt.setString(1, notes);
-            stmt.setInt(1, requestId);
+            // 1. Get the loan request details with package information
+            LoanRequest loanRequest = getLoanRequestWithPackage(requestId);
+            if (loanRequest == null) {
+                return false;
+            }
 
-            int rowsAffected = stmt.executeUpdate();
-            return rowsAffected > 0;
+            if (!"PENDING".equalsIgnoreCase(loanRequest.getStatus())) {
+                return false;
+            }
+            // 2. Check if the loan request already has an asset_id
+            Integer assetId = getAssetIdFromLoanRequest(requestId);
+
+            // 3. Update the loan request status to APPROVED
+            // Modify SQL based on whether asset_id is available
+            String updateSql;
+            if (assetId != null && assetId > 0) {
+                updateSql = "UPDATE LoanRequests SET status = 'Approved', "
+                        + "approval_date = GETDATE(), approved_by = ?, "
+                        + "approved_note = ?, start_date = GETDATE(), "
+                        + "end_date = DATEADD(month, ?, GETDATE()) "
+                        + "WHERE request_id = ? AND status = 'PENDING'";
+            } else {
+                updateSql = "UPDATE LoanRequests SET status = 'Approved', "
+                        + "approval_date = GETDATE(), approved_by = ?, "
+                        + "approved_note = ?, start_date = GETDATE(), "
+                        + "end_date = DATEADD(month, ?, GETDATE()), "
+                        + "asset_id = NULL "
+                        + "WHERE request_id = ? AND status = 'PENDING'";
+            }
+
+            loanUpdateStm = conn.prepareStatement(updateSql);
+            loanUpdateStm.setString(1, String.valueOf(staffId)); // Staff ID as string
+            loanUpdateStm.setString(2, note);
+            loanUpdateStm.setInt(3, loanRequest.getLoanPackage().getLoanTerm());
+            loanUpdateStm.setInt(4, requestId);
+
+            int rowsUpdated = loanUpdateStm.executeUpdate();
+            if (rowsUpdated == 0) {
+                conn.rollback();
+                return false;
+            }
+
+            // 4. Update the customer's balance
+            String customerSql = "UPDATE Customer SET balance = balance + ? WHERE customer_id = ?";
+
+            customerUpdateStm = conn.prepareStatement(customerSql);
+            customerUpdateStm.setBigDecimal(1, loanRequest.getAmount());
+            customerUpdateStm.setInt(2, loanRequest.getCustomerId());
+
+            int customerRowsUpdated = customerUpdateStm.executeUpdate();
+            if (customerRowsUpdated == 0) {
+                conn.rollback();
+                return false;
+            }
+
+            // 5. Calculate monthly payment amount
+            BigDecimal principal = loanRequest.getAmount();
+            BigDecimal annualInterestRate;
+
+            try {
+                annualInterestRate = loanRequest.getLoanPackage().getInterestRate().divide(new BigDecimal("100")); // Convert percentage to decimal
+            } catch (NullPointerException e) {
+                conn.rollback();
+                return false;
+            }
+
+            BigDecimal monthlyRate = annualInterestRate.divide(new BigDecimal("12"), 10, RoundingMode.HALF_UP);
+            int loanTermMonths = loanRequest.getLoanPackage().getLoanTerm();
+
+            // Calculate monthly payment using the formula: PMT = P * r * (1+r)^n / ((1+r)^n - 1)
+            BigDecimal monthlyPayment;
+
+            try {
+                BigDecimal onePlusR = BigDecimal.ONE.add(monthlyRate);
+                BigDecimal onePlusRPowerN = onePlusR.pow(loanTermMonths);
+                BigDecimal numerator = principal.multiply(monthlyRate).multiply(onePlusRPowerN);
+                BigDecimal denominator = onePlusRPowerN.subtract(BigDecimal.ONE);
+
+                // Handle potential division by zero
+                if (denominator.compareTo(BigDecimal.ZERO) == 0) {
+                    System.err.println("Error: Denominator is zero in payment calculation");
+                    monthlyPayment = principal.divide(new BigDecimal(loanTermMonths), 2, RoundingMode.HALF_UP);
+                } else {
+                    monthlyPayment = numerator.divide(denominator, 2, RoundingMode.HALF_UP);
+                }
+            } catch (Exception e) {
+                // Fallback calculation: simple division of principal by term
+                monthlyPayment = principal.divide(new BigDecimal(loanTermMonths), 2, RoundingMode.HALF_UP);
+            }
+            // 6. Generate repayment schedule
+            String scheduleSql = "INSERT INTO RepaymentSchedule (loan_id, status, due_date, amount_due, request_id) "
+                    + "VALUES (?, 'PENDING', DATEADD(month, ?, GETDATE()), ?, ?)";
+
+            scheduleInsertStm = conn.prepareStatement(scheduleSql);
+
+            for (int month = 1; month <= loanTermMonths; month++) {
+                scheduleInsertStm.setInt(1, requestId); // Using request_id as loan_id
+                scheduleInsertStm.setInt(2, month); // Month number for DATEADD
+                scheduleInsertStm.setBigDecimal(3, monthlyPayment);
+                scheduleInsertStm.setInt(4, requestId);
+                scheduleInsertStm.addBatch();
+            }
+
+            int[] scheduleResults = scheduleInsertStm.executeBatch();
+
+            // Check if all schedule entries were created
+            boolean allSchedulesCreated = true;
+            for (int i = 0; i < scheduleResults.length; i++) {
+                int result = scheduleResults[i];
+                if (result <= 0) {
+                    allSchedulesCreated = false;
+                }
+            }
+
+            if (!allSchedulesCreated) {
+                conn.rollback();
+                return false;
+            }
+
+            // 7. Commit the transaction if everything succeeded
+            conn.commit();
+            return true;
+
         } catch (SQLException e) {
-            System.err.println("Lỗi khi phê duyệt yêu cầu vay: " + e.getMessage());
+            try {
+                if (conn != null) {
+                    conn.rollback();
+                }
+            } catch (SQLException rollbackEx) {
+                System.err.println("Error rolling back transaction: " + rollbackEx.getMessage());
+            }
+            System.err.println("SQL Error approving loan request: " + e.getMessage());
             e.printStackTrace();
             return false;
+        } catch (Exception e) {
+            try {
+                if (conn != null) {
+                    conn.rollback();
+                }
+            } catch (SQLException rollbackEx) {
+                System.err.println("Error rolling back transaction: " + rollbackEx.getMessage());
+            }
+            System.err.println("General Error approving loan request: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                if (loanUpdateStm != null) {
+                    loanUpdateStm.close();
+                }
+                if (customerUpdateStm != null) {
+                    customerUpdateStm.close();
+                }
+                if (scheduleInsertStm != null) {
+                    scheduleInsertStm.close();
+                }
+                if (conn != null) {
+                    conn.setAutoCommit(true); // Reset auto-commit to default
+                }
+            } catch (SQLException e) {
+                System.err.println("Error closing resources: " + e.getMessage());
+            }
+        }
+    }
+
+    /**
+     * Helper method to get the asset ID from a loan request
+     */
+    private Integer getAssetIdFromLoanRequest(int requestId) {
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+
+        try {
+            String sql = "SELECT asset_id FROM LoanRequests WHERE request_id = ?";
+            stm = connection.prepareStatement(sql);
+            stm.setInt(1, requestId);
+            rs = stm.executeQuery();
+
+            if (rs.next()) {
+                int assetId = rs.getInt("asset_id");
+                // Check if the value is NULL (SQL returns 0 for NULL integers in getInt)
+                if (rs.wasNull()) {
+                    return null;
+                }
+                return assetId;
+            }
+            return null;
+        } catch (SQLException e) {
+            System.err.println("Error getting asset ID from loan request: " + e.getMessage());
+            return null;
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stm != null) {
+                    stm.close();
+                }
+            } catch (SQLException e) {
+                System.err.println("Error closing resources: " + e.getMessage());
+            }
+        }
+    }
+
+    /**
+     * Helper method to retrieve loan request with package details
+     */
+    private LoanRequest getLoanRequestWithPackage(int requestId) {
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+
+        try {
+            // Updated SQL to match your database schema
+            String sql = "SELECT lr.*, lp.interest_rate, lp.loan_term, lp.package_name "
+                    + "FROM LoanRequests lr "
+                    + "JOIN LoanPackages lp ON lr.package_id = lp.package_id "
+                    + "WHERE lr.request_id = ?";
+
+            stm = connection.prepareStatement(sql);
+            stm.setInt(1, requestId);
+            rs = stm.executeQuery();
+
+            if (rs.next()) {
+                LoanRequest request = new LoanRequest();
+                request.setRequestId(rs.getInt("request_id"));
+                request.setCustomerId(rs.getInt("customer_id"));
+                request.setPackageId(rs.getInt("package_id"));
+                request.setAmount(rs.getBigDecimal("amount"));
+                request.setRequestDate(rs.getDate("request_date"));
+                request.setStatus(rs.getString("status"));
+                request.setStaffId(rs.getInt("staff_id"));
+
+                // Create and set loan package
+                LoanPackage loanPackage = new LoanPackage();
+                loanPackage.setPackageId(rs.getInt("package_id"));
+                loanPackage.setPackageName(rs.getString("package_name"));
+                loanPackage.setInterestRate(rs.getBigDecimal("interest_rate"));
+                loanPackage.setLoanTerm(rs.getInt("loan_term"));
+
+                request.setLoanPackage(loanPackage);
+
+                return request;
+            }
+            return null;
+        } catch (SQLException e) {
+            System.err.println("Error retrieving loan request details: " + e.getMessage());
+            return null;
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stm != null) {
+                    stm.close();
+                }
+            } catch (SQLException e) {
+                System.err.println("Error closing resources: " + e.getMessage());
+            }
         }
     }
 
@@ -857,6 +1178,81 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
         }
 
         return assets;
+    }
+
+    public static void main(String[] args) {
+        // Test the loan approval functionality
+        LoanRequestDAO dao = new LoanRequestDAO();
+
+        // Test parameters
+        int requestId = 10;  // Replace with a valid request ID from your database
+        int staffId = 1;    // Replace with a valid staff ID
+        String note = "Test approval via main method";
+
+        System.out.println("======= LOAN APPROVAL TEST =======");
+        System.out.println("Testing approval for request ID: " + requestId);
+        System.out.println("Staff ID: " + staffId);
+        System.out.println("Note: " + note);
+        System.out.println("=================================");
+
+        // Test the approval method
+        boolean success = dao.approveLoanRequestWithSchedule(requestId, staffId, note);
+
+        System.out.println("=================================");
+        System.out.println("Approval result: " + (success ? "SUCCESS" : "FAILED"));
+        System.out.println("=================================");
+
+        // Test with a custom method to verify database state
+        if (success) {
+            verifyApprovalResults(dao, requestId);
+        }
+    }
+
+    /**
+     * Verify the results of the approval process
+     */
+    private static void verifyApprovalResults(LoanRequestDAO dao, int requestId) {
+        System.out.println("\n======= VERIFICATION =======");
+
+        try (Connection conn = dao.connection) {
+            // 1. Verify loan request status
+            String loanSql = "SELECT status, approval_date, approved_by, approved_note FROM LoanRequests WHERE request_id = ?";
+            try (PreparedStatement loanStm = conn.prepareStatement(loanSql)) {
+                loanStm.setInt(1, requestId);
+                try (ResultSet loanRs = loanStm.executeQuery()) {
+                    if (loanRs.next()) {
+                        String status = loanRs.getString("status");
+                        Date approvalDate = loanRs.getDate("approval_date");
+                        String approvedBy = loanRs.getString("approved_by");
+                        String note = loanRs.getString("approved_note");
+
+                        System.out.println("Loan Request Status: " + status);
+                        System.out.println("Approval Date: " + approvalDate);
+                        System.out.println("Approved By: " + approvedBy);
+                        System.out.println("Note: " + note);
+                    } else {
+                        System.out.println("Loan request not found!");
+                    }
+                }
+            }
+
+            // 2. Check repayment schedule
+            String scheduleSql = "SELECT COUNT(*) as count FROM RepaymentSchedule WHERE request_id = ?";
+            try (PreparedStatement scheduleStm = conn.prepareStatement(scheduleSql)) {
+                scheduleStm.setInt(1, requestId);
+                try (ResultSet scheduleRs = scheduleStm.executeQuery()) {
+                    if (scheduleRs.next()) {
+                        int count = scheduleRs.getInt("count");
+                        System.out.println("Repayment Schedule Entries: " + count);
+                    }
+                }
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error verifying results: " + e.getMessage());
+        }
+
+        System.out.println("===== VERIFICATION END =====");
     }
 
 }

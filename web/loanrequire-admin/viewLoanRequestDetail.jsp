@@ -126,6 +126,40 @@
                 transform: translateY(-3px);
                 box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             }
+            .repayment-schedule {
+                margin-top: 30px;
+            }
+            .repayment-schedule table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            .repayment-schedule th, .repayment-schedule td {
+                padding: 10px;
+                border: 1px solid #e3e6f0;
+            }
+            .repayment-schedule th {
+                background-color: #f8f9fc;
+                font-weight: bold;
+            }
+            .payment-pending {
+                color: #f6c23e;
+                font-weight: bold;
+            }
+            .payment-paid {
+                color: #1cc88a;
+                font-weight: bold;
+            }
+            .payment-overdue {
+                color: #e74a3b;
+                font-weight: bold;
+            }
+            .warning-box {
+                background-color: #fff3cd;
+                border-left: 4px solid #f6c23e;
+                padding: 10px;
+                border-radius: 5px;
+                margin-top: 10px;
+            }
         </style>
     </head>
 
@@ -336,7 +370,13 @@
                                             </c:when>
                                             <c:otherwise>
                                                 <div class="detail-row">
-                                                    <div class="detail-label">Approved By:</div>
+                                                    <div class="detail-label">
+                                                        <c:choose>
+                                                            <c:when test="${loanRequest.status eq 'Approved'}">Approved By:</c:when>
+                                                            <c:when test="${loanRequest.status eq 'Rejected'}">Rejected By:</c:when>
+                                                            <c:otherwise>Processed By:</c:otherwise>
+                                                        </c:choose>
+                                                    </div>
                                                     <div class="detail-value">
                                                         <c:choose>
                                                             <c:when test="${not empty loanRequest.approvedBy}">
@@ -350,7 +390,13 @@
                                                 </div>
 
                                                 <div class="detail-row">
-                                                    <div class="detail-label">Approval Date:</div>
+                                                    <div class="detail-label">
+                                                        <c:choose>
+                                                            <c:when test="${loanRequest.status eq 'Approved'}">Approval Date:</c:when>
+                                                            <c:when test="${loanRequest.status eq 'Rejected'}">Rejection Date:</c:when>
+                                                            <c:otherwise>Process Date:</c:otherwise>
+                                                        </c:choose>
+                                                    </div>
                                                     <div class="detail-value">
                                                         <c:choose>
                                                             <c:when test="${not empty loanRequest.approvalDate}">
@@ -424,6 +470,56 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <!-- Repayment Schedule Section - Only shown for approved loans -->
+                            <c:if test="${loanRequest.status eq 'Approved' && not empty repaymentSchedule}">
+                                <div class="repayment-schedule">
+                                    <h5 class="mb-3"><i class="fas fa-calendar-alt"></i> Repayment Schedule</h5>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Due Date</th>
+                                                    <th>Amount</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <c:forEach items="${repaymentSchedule}" var="payment" varStatus="status">
+                                                    <tr>
+                                                        <td>${status.index + 1}</td>
+                                                        <td><fmt:formatDate value="${payment.dueDate}" pattern="MM/dd/yyyy"/></td>
+                                                        <td><fmt:formatNumber value="${payment.amountDue}" type="currency" currencySymbol="" maxFractionDigits="0"/> VND</td>
+                                                        <td>
+                                                            <c:choose>
+                                                                <c:when test="${payment.status eq 'PAID'}">
+                                                                    <span class="payment-paid"><i class="fas fa-check-circle"></i> Paid</span>
+                                                                </c:when>
+                                                                <c:when test="${payment.status eq 'OVERDUE'}">
+                                                                    <span class="payment-overdue"><i class="fas fa-exclamation-circle"></i> Overdue</span>
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <span class="payment-pending"><i class="fas fa-clock"></i> Pending</span>
+                                                                </c:otherwise>
+                                                            </c:choose>
+                                                        </td>
+                                                    </tr>
+                                                </c:forEach>
+                                            </tbody>
+                                            <tfoot>
+                                                <tr class="bg-light">
+                                                    <td colspan="2" class="text-right font-weight-bold">Total:</td>
+                                                    <td class="font-weight-bold">
+                                                        <fmt:formatNumber value="${totalRepaymentAmount}" type="currency" currencySymbol="" maxFractionDigits="0"/> VND
+                                                    </td>
+                                                    <td></td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </c:if>
 
                             <!-- Approval section - only shown if status is pending and user has permission -->
                             <c:if test="${loanRequest.status eq 'Pending' && canApprove}">
@@ -508,7 +604,5 @@
 
         <!-- Custom scripts for all pages-->
         <script src="adminassets/js/sb-admin-2.min.js"></script>
-
-
     </body>
 </html>
