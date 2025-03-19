@@ -110,23 +110,21 @@ public class RepaymentScheduleList extends HttpServlet {
             return "This payment has already been processed.";
         }
 
-        // Check if payment is due soon (within 7 days)
-        Date currentDate = new Date(System.currentTimeMillis());
-        long daysDiff = (schedule.getDueDate().getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24);
-
-        if (daysDiff >= 7) {
-            return "This payment is not yet due for payment. Payments can only be made within 7 days of the due date.";
-        }
-
         // Get payment amount
         BigDecimal amountDue = schedule.getAmountDue();
 
         // Check if customer has sufficient balance
         BigDecimal customerBalance = customer.getBalance();
 
+        // Format numbers for display
+        String formattedBalance = String.format("%,d", customerBalance.longValue());
+        String formattedAmountDue = String.format("%,d", amountDue.longValue());
+
+        // Check if balance is less than amount due
         if (customerBalance.compareTo(amountDue) < 0) {
-            return "Insufficient balance. Your current balance is $" + customerBalance
-                    + " but the payment requires $" + amountDue + ".";
+            // Return error message with properly formatted amounts and stop transaction
+            return "Insufficient balance. Your current balance is " + formattedBalance
+                    + " VND but the payment requires " + formattedAmountDue + " VND.";
         }
 
         // Process the payment using DAO method
@@ -144,7 +142,11 @@ public class RepaymentScheduleList extends HttpServlet {
         Customer updatedCustomer = customerDAO.getCustomerById(customer.getCustomerId());
         BigDecimal newBalance = updatedCustomer.getBalance();
 
-        return "Payment of $" + amountDue + " was successful. Your new balance is $" + newBalance + ".";
+        // Format new balance for display
+        String formattedNewBalance = String.format("%,d", newBalance.longValue());
+
+        // Return success message with properly formatted amounts
+        return "Payment of " + formattedAmountDue + " VND was successful. Your new balance is " + formattedNewBalance + " VND.";
     }
 
     @Override

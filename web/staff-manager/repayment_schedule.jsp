@@ -211,6 +211,15 @@
                     </a>
                 </div>
             </div>
+            <!-- Payment Message Alert -->
+            <c:if test="${not empty paymentMessage}">
+                <div class="alert ${paymentMessage.contains('successful') ? 'alert-success' : 'alert-danger'} alert-dismissible fade show" role="alert">
+                    <i class="${paymentMessage.contains('successful') ? 'fas fa-check-circle' : 'fas fa-exclamation-circle'} me-2"></i>
+                    ${paymentMessage}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </c:if>
+
 
 
             <div class="row">
@@ -365,6 +374,7 @@
         <script>
             // Add confirmation dialog for payment
             document.addEventListener('DOMContentLoaded', function () {
+                // Existing confirmation code
                 const payButtons = document.querySelectorAll('.btn-primary:not(.nav-btn)');
                 payButtons.forEach(button => {
                     button.addEventListener('click', function (e) {
@@ -373,7 +383,17 @@
                         }
                     });
                 });
+
+                // Auto-hide payment message after 5 seconds
+                const alertMessage = document.querySelector('.alert');
+                if (alertMessage) {
+                    setTimeout(function () {
+                        const bsAlert = new bootstrap.Alert(alertMessage);
+                        bsAlert.close();
+                    }, 5000); // 5000ms = 5 seconds
+                }
             });
         </script>
+
     </body>
 </html>
