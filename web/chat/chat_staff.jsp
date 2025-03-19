@@ -154,6 +154,13 @@
                     }
                 });
             }
+            // Bắt sự kiện Enter trong ô nhập tin nhắn
+            $("#messageInput").keypress(function (event) {
+                if (event.which === 13 && !event.shiftKey) {  // 13 là mã phím Enter
+                    event.preventDefault(); // Ngăn chặn xuống dòng mặc định
+                    sendMessage();
+                }
+            });
         </script>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

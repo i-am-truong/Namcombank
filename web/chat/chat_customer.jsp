@@ -1,4 +1,11 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%
+    Integer customerId = (Integer) session.getAttribute("customer_id"); // Lấy ID khách hàng từ session
+    if (customerId == null) {
+        response.sendRedirect("../login"); // Chuyển hướng về trang đăng nhập
+        return;
+    }
+%>
 <!DOCTYPE html>
 <html lang="vi">
     <head>
@@ -9,7 +16,7 @@
         <style>
             body {
                 font-family: Arial, sans-serif;
-                background-color: #f5f5f5;
+                background-color: #F0F8F5; /* Màu nền nhẹ nhàng */
                 display: flex;
                 justify-content: center;
                 align-items: center;
@@ -17,13 +24,13 @@
             }
             .chat-container {
                 width: 40%;
-                background: #fff;
+                background: white;
                 border-radius: 10px;
                 box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
                 overflow: hidden;
             }
             .chat-header {
-                background: #007bff;
+                background: #007A33; /* Màu chủ đạo Vietcombank */
                 color: white;
                 padding: 15px;
                 text-align: center;
@@ -36,6 +43,7 @@
                 padding: 15px;
                 display: flex;
                 flex-direction: column;
+                background: #F0F8F5;
             }
             .message {
                 max-width: 75%;
@@ -43,14 +51,15 @@
                 border-radius: 8px;
                 margin: 5px 0;
                 word-wrap: break-word;
+                box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
             }
             .customer {
-                background: #dcf8c6;
+                background: #D4EDDA; /* Màu xanh nhạt */
                 align-self: flex-end;
                 text-align: right;
             }
             .staff {
-                background: #f1f0f0;
+                background: #F1F0F0;
                 align-self: flex-start;
                 text-align: left;
             }
@@ -67,16 +76,31 @@
                 border-radius: 5px;
             }
             .input-box button {
-                background: #007bff;
+                background: #007A33;
                 color: white;
                 border: none;
                 padding: 10px 15px;
                 margin-left: 5px;
                 border-radius: 5px;
                 cursor: pointer;
+                font-weight: bold;
             }
             .input-box button:hover {
-                background: #0056b3;
+                background: #005922;
+            }
+            .home-btn {
+                width: 100%;
+                padding: 10px;
+                background: #007A33;
+                color: white;
+                border: none;
+                cursor: pointer;
+                text-align: center;
+                font-size: 16px;
+                border-radius: 0 0 10px 10px;
+            }
+            .home-btn:hover {
+                background: #005922;
             }
         </style>
     </head>
@@ -88,7 +112,7 @@
                 <input type="text" id="messageInput" placeholder="Nhập tin nhắn...">
                 <button onclick="sendMessage()">Gửi</button>
             </div>
-            <button class="home-btn" style="justify-content: center" onclick="window.location.href='../Home'">Trang chủ</button>
+            <button class="home-btn" style="justify-content: center" onclick="window.location.href = '../Home'">Trang chủ</button>
         </div>
 
         <script>
@@ -119,6 +143,13 @@
                     }
                 });
             }
+            // Bắt sự kiện Enter trong ô nhập tin nhắn
+            $("#messageInput").keypress(function (event) {
+                if (event.which === 13 && !event.shiftKey) {  // 13 là mã phím Enter
+                    event.preventDefault(); // Ngăn chặn xuống dòng mặc định
+                    sendMessage();
+                }
+            });
 
             setInterval(loadMessages, 3000);
         </script>
