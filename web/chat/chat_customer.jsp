@@ -151,7 +151,7 @@
                 }
             });
 
-            setInterval(loadMessages, 3000);
+            setInterval(loadMessages, 1000);
         </script>
     </body>
 </html>
