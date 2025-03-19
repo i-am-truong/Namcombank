@@ -810,21 +810,7 @@ public class AssetDAO extends DBContext<Asset> {
         return assets;
     }
 
-    // Helper method to convert asset type codes to display text
-    private String getAssetTypeDisplay(String assetType) {
-        switch (assetType) {
-            case "REAL_ESTATE":
-                return "Bất động sản";
-            case "VEHICLE":
-                return "Phương tiện";
-            case "INCOME":
-                return "Thu nhập";
-            case "OTHER":
-                return "Khác";
-            default:
-                return assetType;
-        }
-    }
+
 
     private void addSearchConditions(
             StringBuilder sql, ArrayList<Object> params,

@@ -13,6 +13,7 @@
         <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
         <link href="adminassets/css/sb-admin-2.min.css" rel="stylesheet">
         <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
         <style>
             .form-wrapper {
@@ -48,6 +49,41 @@
                 background-color: #f8f9fc;
                 border-radius: 4px;
                 min-height: 38px;
+            }
+        </style>
+        <style>
+            /* CSS tùy chỉnh cho Select2 */
+            .select2-container--default .select2-selection--single {
+                height: 38px;
+                border: 1px solid #d1d3e2;
+                border-radius: 4px;
+            }
+
+            .select2-container--default .select2-selection--single .select2-selection__rendered {
+                line-height: 38px;
+                padding-left: 12px;
+            }
+
+            .select2-container--default .select2-selection--single .select2-selection__arrow {
+                height: 36px;
+            }
+
+            .select2-dropdown {
+                border: 1px solid #d1d3e2;
+                border-radius: 4px;
+            }
+
+            .select2-search--dropdown .select2-search__field {
+                padding: 8px;
+                border: 1px solid #d1d3e2;
+            }
+
+            .select2-results__option {
+                padding: 8px 12px;
+            }
+
+            .select2-container--default .select2-results__option--highlighted[aria-selected] {
+                background-color: #4e73df;
             }
         </style>
     </head>
@@ -211,7 +247,7 @@
                                                 <div class="form-group">
                                                     <label for="customer_id" class="required-field">Customer</label>
                                                     <select class="form-control ${not empty errors.customer_id ? 'is-invalid' : ''}" 
-                                                            id="customer_id" name="customer_id">
+                                                            id="customer_id" name="customer_id" style="width: 100%;">
                                                         <option value="">-- Select Customer --</option>
                                                         <c:forEach items="${customers}" var="customer">
                                                             <option value="${customer.customerId}" 
@@ -224,6 +260,7 @@
                                                         <div class="error-message">${errors.customer_id}</div>
                                                     </c:if>
                                                 </div>
+
                                             </div>
 
                                             <div class="col-md-6">
@@ -312,55 +349,56 @@
 
         <!-- Custom scripts for all pages-->
         <script src="adminassets/js/sb-admin-2.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-        <!-- Money validation script -->
+
+        <!-- Money validation script -->       
         <script>
-            document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('DOMContentLoaded', function () {
                 const assetValueInput = document.getElementById('asset_value');
-                
+
                 if (assetValueInput) {
                     // Format the initial value if it exists
                     if (assetValueInput.value) {
                         assetValueInput.value = formatCurrency(assetValueInput.value);
                     }
-                    
+
                     // Add input event listener for real-time formatting
-                    assetValueInput.addEventListener('input', function(e) {
+                    assetValueInput.addEventListener('input', function (e) {
                         // Store cursor position
                         const cursorPos = this.selectionStart;
                         const oldLength = this.value.length;
-                        
+
                         // Remove non-numeric characters for processing
                         let value = this.value.replace(/[^\d]/g, '');
-                        
                         // Format the value
                         if (value) {
                             this.value = formatCurrency(value);
                         }
-                        
+
                         // Adjust cursor position after formatting
                         const newLength = this.value.length;
                         const cursorAdjustment = newLength - oldLength;
                         this.setSelectionRange(cursorPos + cursorAdjustment, cursorPos + cursorAdjustment);
                     });
-                    
+
                     // Add blur event to ensure proper formatting when leaving the field
-                    assetValueInput.addEventListener('blur', function() {
+                    assetValueInput.addEventListener('blur', function () {
                         if (this.value) {
                             // Remove non-numeric characters and format
                             let value = this.value.replace(/[^\d]/g, '');
                             this.value = formatCurrency(value);
                         }
                     });
-                    
+
                     // Add form submit handler to clean up the value before submission
                     const assetForm = document.getElementById('assetForm');
                     if (assetForm) {
-                        assetForm.addEventListener('submit', function(e) {
+                        assetForm.addEventListener('submit', function (e) {
                             // Remove formatting before submitting
                             if (assetValueInput.value) {
                                 assetValueInput.value = assetValueInput.value.replace(/[^\d]/g, '');
-                                
+
                                 // Validate maximum value (1,000 billion VND = 1,000,000,000,000)
                                 const numValue = Number(assetValueInput.value);
                                 if (numValue > 1000000000000) {
@@ -374,12 +412,64 @@
                         });
                     }
                 }
-                
+
                 // Function to format currency with commas as thousand separators
                 function formatCurrency(value) {
                     return value.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
                 }
             });
+
+
+
+            document.addEventListener('DOMContentLoaded', function () {
+                // Khởi tạo Select2 cho dropdown chọn customer
+                $('#customer_id').select2({
+                    placeholder: '-- Search and select customer --',
+                    allowClear: true,
+                    width: '100%',
+                    language: {
+                        noResults: function () {
+                            return "No customers found";
+                        },
+                        searching: function () {
+                            return "Searching...";
+                        }
+                    },
+                    escapeMarkup: function (markup) {
+                        return markup;
+                    },
+                    templateResult: formatCustomer,
+                    templateSelection: formatCustomerSelection
+                });
+
+// Format hiển thị kết quả tìm kiếm
+                function formatCustomer(customer) {
+                    if (customer.loading)
+                        return customer.text;
+                    if (!customer.id)
+                        return customer.text;
+
+                    var $container = $(
+                            '<div class="select2-result-customer clearfix">' +
+                            '<div class="select2-result-customer__name">' + customer.text + '</div>' +
+                            '</div>'
+                            );
+
+                    return $container;
+                }
+
+// Format hiển thị khi đã chọn
+                function formatCustomerSelection(customer) {
+                    return customer.text || customer.id;
+                }
+
+// Bắt sự kiện thay đổi để xử lý logic nếu cần
+                $('#customer_id').on('change', function () {
+                    console.log('Selected customer ID:', $(this).val());
+                });
+            });
+
+
         </script>
     </body>
 </html>
