@@ -15,7 +15,6 @@ import model.auth.Staff;
 import model.Asset;
 import java.sql.*;
 
-
 public class LoanRequestDAO extends DBContext<LoanRequest> {
 
     public List<LoanRequest> getAllLoanRequests() throws SQLException {
@@ -345,7 +344,7 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
         }
         return null;
     }
-    
+
     // Kiểm tra xem khách hàng đã có thẻ tín dụng chưa
     public boolean hasCreditCard(int customerId) {
         String sql = "SELECT COUNT(*) FROM CreditCards WHERE customer_id = ? and status = 'Approved'";
@@ -872,12 +871,13 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
         PreparedStatement customerUpdateStm = null;
         PreparedStatement scheduleInsertStm = null;
         PreparedStatement transactionInsertStm = null;
+        boolean success = false; // Biến để theo dõi trạng thái thành công
 
         try {
-            conn = connection; // Use your existing connection
-            conn.setAutoCommit(false); // Start transaction
+            conn = connection; // Sử dụng kết nối hiện có
+            conn.setAutoCommit(false); // Bắt đầu giao dịch
 
-            // 1. Get the loan request details with package information
+            // 1. Lấy thông tin khoản vay với thông tin gói vay
             LoanRequest loanRequest = getLoanRequestWithPackage(requestId);
             if (loanRequest == null) {
                 return false;
@@ -887,11 +887,10 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
                 return false;
             }
 
-            // 2. Check if the loan request already has an asset_id
+            // 2. Kiểm tra xem yêu cầu vay đã có asset_id chưa
             Integer assetId = getAssetIdFromLoanRequest(requestId);
 
-            // 3. Update the loan request status to APPROVED
-            // Modify SQL based on whether asset_id is available
+            // 3. Cập nhật trạng thái yêu cầu vay thành APPROVED
             String updateSql;
             if (assetId != null && assetId > 0) {
                 updateSql = "UPDATE LoanRequests SET status = 'Approved', "
@@ -909,7 +908,7 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
             }
 
             loanUpdateStm = conn.prepareStatement(updateSql);
-            loanUpdateStm.setString(1, String.valueOf(staffId)); // Staff ID as string
+            loanUpdateStm.setString(1, String.valueOf(staffId));
             loanUpdateStm.setString(2, note);
             loanUpdateStm.setInt(3, loanRequest.getLoanPackage().getLoanTerm());
             loanUpdateStm.setInt(4, requestId);
@@ -920,7 +919,7 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
                 return false;
             }
 
-            // 4. Update the customer's balance
+            // 4. Cập nhật số dư của khách hàng
             String customerSql = "UPDATE Customer SET balance = balance + ? WHERE customer_id = ?";
             customerUpdateStm = conn.prepareStatement(customerSql);
             customerUpdateStm.setBigDecimal(1, loanRequest.getAmount());
@@ -932,7 +931,7 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
                 return false;
             }
 
-            // 5. Record the transaction - Adjusted to match the SQL example
+            // 5. Ghi lại giao dịch
             String transactionSql = "INSERT INTO [dbo].[Transaction] "
                     + "([request_id], [amount], [transaction_date], [type], [customer_id], [staff_id]) "
                     + "VALUES (?, ?, GETDATE(), 'Loan', ?, ?)";
@@ -949,12 +948,12 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
                 return false;
             }
 
-            // 6. Calculate monthly payment amount
+            // 6. Tính toán số tiền trả hàng tháng
             BigDecimal principal = loanRequest.getAmount();
             BigDecimal annualInterestRate;
 
             try {
-                annualInterestRate = loanRequest.getLoanPackage().getInterestRate().divide(new BigDecimal("100")); // Convert percentage to decimal
+                annualInterestRate = loanRequest.getLoanPackage().getInterestRate().divide(new BigDecimal("100"));
             } catch (NullPointerException e) {
                 conn.rollback();
                 return false;
@@ -963,7 +962,7 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
             BigDecimal monthlyRate = annualInterestRate.divide(new BigDecimal("12"), 10, RoundingMode.HALF_UP);
             int loanTermMonths = loanRequest.getLoanPackage().getLoanTerm();
 
-            // Calculate monthly payment using the formula: PMT = P * r * (1+r)^n / ((1+r)^n - 1)
+            // Tính toán khoản thanh toán hàng tháng
             BigDecimal monthlyPayment;
 
             try {
@@ -972,34 +971,30 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
                 BigDecimal numerator = principal.multiply(monthlyRate).multiply(onePlusRPowerN);
                 BigDecimal denominator = onePlusRPowerN.subtract(BigDecimal.ONE);
 
-                // Handle potential division by zero
                 if (denominator.compareTo(BigDecimal.ZERO) == 0) {
                     monthlyPayment = principal.divide(new BigDecimal(loanTermMonths), 2, RoundingMode.HALF_UP);
                 } else {
                     monthlyPayment = numerator.divide(denominator, 2, RoundingMode.HALF_UP);
                 }
             } catch (Exception e) {
-                // Fallback calculation: simple division of principal by term
                 monthlyPayment = principal.divide(new BigDecimal(loanTermMonths), 2, RoundingMode.HALF_UP);
             }
 
-            // 7. Generate repayment schedule
-            String scheduleSql = "INSERT INTO RepaymentSchedule (loan_id, status, due_date, amount_due, request_id) "
-                    + "VALUES (?, 'PENDING', DATEADD(month, ?, GETDATE()), ?, ?)";
+            // 7. Tạo lịch trả nợ
+            String scheduleSql = "INSERT INTO RepaymentSchedule ( status, due_date, amount_due, request_id) "
+                    + "VALUES ('PENDING', DATEADD(month, ?, GETDATE()), ?, ?)";
 
             scheduleInsertStm = conn.prepareStatement(scheduleSql);
 
             for (int month = 1; month <= loanTermMonths; month++) {
-                scheduleInsertStm.setInt(1, requestId); // Using request_id as loan_id
-                scheduleInsertStm.setInt(2, month); // Month number for DATEADD
-                scheduleInsertStm.setBigDecimal(3, monthlyPayment);
-                scheduleInsertStm.setInt(4, requestId);
+                scheduleInsertStm.setInt(1, month);
+                scheduleInsertStm.setBigDecimal(2, monthlyPayment);
+                scheduleInsertStm.setInt(3, requestId);
                 scheduleInsertStm.addBatch();
             }
 
             int[] scheduleResults = scheduleInsertStm.executeBatch();
 
-            // Check if all schedule entries were created
             boolean allSchedulesCreated = true;
             for (int i = 0; i < scheduleResults.length; i++) {
                 int result = scheduleResults[i];
@@ -1013,8 +1008,9 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
                 return false;
             }
 
-            // 8. Commit the transaction if everything succeeded
+            // 8. Commit giao dịch nếu mọi thứ thành công
             conn.commit();
+            success = true; // Đánh dấu là thành công
             return true;
 
         } catch (SQLException e) {
@@ -1023,9 +1019,9 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
                     conn.rollback();
                 }
             } catch (SQLException rollbackEx) {
-                System.err.println("Error rolling back transaction: " + rollbackEx.getMessage());
+                System.err.println("Lỗi khi rollback giao dịch: " + rollbackEx.getMessage());
             }
-            System.err.println("SQL Error approving loan request: " + e.getMessage());
+            System.err.println("Lỗi SQL khi phê duyệt yêu cầu vay: " + e.getMessage());
             e.printStackTrace();
             return false;
         } catch (Exception e) {
@@ -1034,9 +1030,9 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
                     conn.rollback();
                 }
             } catch (SQLException rollbackEx) {
-                System.err.println("Error rolling back transaction: " + rollbackEx.getMessage());
+                System.err.println("Lỗi khi rollback giao dịch: " + rollbackEx.getMessage());
             }
-            System.err.println("General Error approving loan request: " + e.getMessage());
+            System.err.println("Lỗi chung khi phê duyệt yêu cầu vay: " + e.getMessage());
             e.printStackTrace();
             return false;
         } finally {
@@ -1054,11 +1050,12 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
                     scheduleInsertStm.close();
                 }
                 if (conn != null) {
-                    conn.setAutoCommit(true); // Reset auto-commit to default
+                    conn.setAutoCommit(true); // Đặt lại auto-commit về mặc định
                 }
             } catch (SQLException e) {
-                System.err.println("Error closing resources: " + e.getMessage());
+                System.err.println("Lỗi khi đóng tài nguyên: " + e.getMessage());
             }
+            return success; // Trả về giá trị thành công đã được đặt trước đó
         }
     }
 
@@ -1244,7 +1241,7 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
         LoanRequestDAO dao = new LoanRequestDAO();
 
         // Test parameters
-        int requestId = 10;  // Replace with a valid request ID from your database
+        int requestId = 20;  // Replace with a valid request ID from your database
         int staffId = 1;    // Replace with a valid staff ID
         String note = "Test approval via main method";
 
@@ -1314,8 +1311,6 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
         System.out.println("===== VERIFICATION END =====");
     }
 
-    
-    
     public BigDecimal getTotalApprovedLoanAmount(int customerId) {
         BigDecimal totalLoan = BigDecimal.ZERO; // Khởi tạo đúng kiểu BigDecimal
         String query = "SELECT SUM(amount) FROM LoanRequests WHERE customer_id = ? and status = 'Approved'";
@@ -1351,7 +1346,7 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
         }
         return loanCount;
     }
-    
+
     public BigDecimal getTotalLoanAmount(int customerId) {
         BigDecimal totalLoan = BigDecimal.ZERO; // Khởi tạo đúng kiểu BigDecimal
         String query = "SELECT SUM(amount) FROM LoanRequests WHERE customer_id = ?";

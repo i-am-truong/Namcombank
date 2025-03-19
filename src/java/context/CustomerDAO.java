@@ -36,7 +36,7 @@ import model.Gender;
 public class CustomerDAO extends DBContext {
 
     public boolean updateBalance(int customerId, BigDecimal newBalance) {
-        String sql = "UPDATE Customer SET balance = balance - ? WHERE customer_id = ?";
+        String sql = "UPDATE Customer SET balance = ? WHERE customer_id = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setBigDecimal(1, newBalance);

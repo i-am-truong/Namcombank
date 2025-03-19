@@ -326,7 +326,7 @@
                                                             <fmt:formatDate value="${schedule.dueDate}" pattern="dd-MM-yyyy" />
                                                         </td>
                                                         <td class="amount">
-                                                            <fmt:formatNumber value="${schedule.amountDue}" type="currency" currencySymbol="$" />
+                                                            <fmt:formatNumber value="${schedule.amountDue}" type="currency" currencySymbol="" />
                                                         </td>
 
                                                         <td>
