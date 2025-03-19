@@ -156,11 +156,11 @@
                                 <span class="dropdown-menu" id="dropdownMenu">
                                     <a href="#">&nbsp;&nbsp;$${sessionScope.customer.balance}</a>
                                     <a href="userProfile"><i class="fas fa-user"></i>&nbsp;&nbsp;Show profile</a>
-                                    <a href="credit-cards"><i class="fas fa-card"></i>&nbsp;&nbsp;My Credit Card</a>
+                                    <a href="credit-cards"><i class="fas fa-credit-card"></i>&nbsp;&nbsp;My Credit Card</a>
                                     <a href="customer-loan-requests">
-                                        <i class="fas fa-shopping-bag"></i>&nbsp;&nbsp;History Request
+                                        <i class="fas fa-history"></i>&nbsp;&nbsp;History Request
                                     </a>
-                                    <a href="repaymentSchedule"><i class="fa fa-credit-card" aria-hidden="true"></i>&nbsp;&nbsp;Schedule Payment</a>
+                                    <a href="repaymentSchedule"><i class="fa fa-calendar" aria-hidden="true"></i>&nbsp;&nbsp;Schedule Payment</a>
                                     <a href="logOut"><i class="fas fa-sign-out-alt"></i>&nbsp;&nbsp;Logout</a>
                                 </span>
                                 <span style="line-height: 30px; display: block; color: #04414d; white-space: nowrap ">${sessionScope.customer.fullname}</span>
