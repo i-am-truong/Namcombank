@@ -202,11 +202,16 @@
                     <a href="/Namcombank/Home" class="nav-btn nav-btn-outline">
                         <i class="fas fa-home"></i> Home
                     </a>
-                    <a href="${pageContext.request.contextPath}/customer-loan-requests" class="nav-btn nav-btn-primary">
+                    <a href="${pageContext.request.contextPath}/customer-loan-requests" class="nav-btn nav-btn-outline">
                         <i class="fas fa-file-invoice-dollar"></i> Loan Requests
+                    </a>
+                    <!-- Thêm nút dẫn đến trang lịch sử thanh toán -->
+                    <a href="${pageContext.request.contextPath}/payment-history" class="nav-btn nav-btn-primary">
+                        <i class="fas fa-history"></i> Payment History
                     </a>
                 </div>
             </div>
+
 
             <div class="row">
                 <div class="col-md-12">
@@ -257,7 +262,7 @@
                                                             </span>
                                                         </td>
                                                         <td class="amount">
-                                                            <fmt:formatNumber value="${schedule.amountDue}" type="currency" currencySymbol="$" />
+                                                            <fmt:formatNumber value="${schedule.amountDue}" type="currency" currencySymbol=""  /> VND
                                                         </td>
 
                                                         <td>
@@ -326,7 +331,7 @@
                                                             <fmt:formatDate value="${schedule.dueDate}" pattern="dd-MM-yyyy" />
                                                         </td>
                                                         <td class="amount">
-                                                            <fmt:formatNumber value="${schedule.amountDue}" type="currency" currencySymbol="" />
+                                                            <fmt:formatNumber value="${schedule.amountDue}" type="currency" currencySymbol="" /> VND
                                                         </td>
 
                                                         <td>

@@ -10,14 +10,126 @@ import model.RepaymentSchedule;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import model.Customer;
+import model.PaymentHistory;
 
 public class RepaymentScheduleDAO extends DBContext<RepaymentSchedule> {
 
+    public static void main(String[] args) {
+        // Khởi tạo DAO
+        RepaymentScheduleDAO dao = new RepaymentScheduleDAO();
+
+        // ID khách hàng cần kiểm tra
+        int customerId = 1; // Thay đổi ID khách hàng theo nhu cầu test
+
+        System.out.println("=== TESTING PAYMENT HISTORY RETRIEVAL ===");
+        System.out.println("Retrieving payment history for customer ID: " + customerId);
+        System.out.println("==========================================");
+
+        // Gọi phương thức cần test
+        List<PaymentHistory> paymentHistory = dao.getPaymentHistory(customerId);
+
+        // Hiển thị kết quả
+        if (paymentHistory.isEmpty()) {
+            System.out.println("No payment history found for customer ID: " + customerId);
+        } else {
+            System.out.println("Found " + paymentHistory.size() + " payment records:");
+            System.out.println();
+
+            // Format để hiển thị ngày tháng
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+            SimpleDateFormat dateTimeFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+
+            // Hiển thị header
+            System.out.printf("%-12s %-12s %-10s %-12s %-25s %-15s %-12s\n",
+                    "Schedule ID", "Request ID", "Status", "Due Date", "Transaction Date", "Amount", "Customer ID");
+            System.out.println("-----------------------------------------------------------------------------------------");
+
+            // Hiển thị dữ liệu
+            BigDecimal totalAmount = BigDecimal.ZERO;
+
+            for (PaymentHistory payment : paymentHistory) {
+                String dueDate = payment.getDueDate() != null ? dateFormat.format(payment.getDueDate()) : "N/A";
+                String transDate = payment.getTransactionDate() != null
+                        ? dateTimeFormat.format(payment.getTransactionDate()) : "N/A";
+
+                System.out.printf("%-12d %-12d %-10s %-12s %-25s $%-14.2f %-12d\n",
+                        payment.getScheduleId(),
+                        payment.getRequestId(),
+                        payment.getStatus(),
+                        dueDate,
+                        transDate,
+                        payment.getAmountDue(),
+                        payment.getCustomerId());
+
+                totalAmount = totalAmount.add(payment.getAmountDue());
+            }
+
+            System.out.println("-----------------------------------------------------------------------------------------");
+            System.out.printf("Total Amount Paid: $%.2f\n", totalAmount);
+        }
+
+        System.out.println("==========================================");
+        System.out.println("Test completed.");
+    }
+
+    public List<PaymentHistory> getPaymentHistory(int customerId) {
+        List<PaymentHistory> paymentHistory = new ArrayList<>();
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+
+            String sql = "SELECT rs.schedule_id, rs.status, rs.due_date, rs.amount_due, rs.request_id, "
+                    + "ts.transaction_date, lr.customer_id "
+                    + "FROM RepaymentSchedule rs "
+                    + "LEFT JOIN [Transaction] ts ON rs.schedule_id = ts.schedule_id "
+                    + "LEFT JOIN LoanRequests lr ON lr.request_id = rs.request_id "
+                    + "WHERE rs.status = 'PAID' AND lr.customer_id = ? "
+                    + "ORDER BY ts.transaction_date DESC";
+
+            stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, customerId);
+            rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                PaymentHistory payment = new PaymentHistory();
+                payment.setScheduleId(rs.getInt("schedule_id"));
+                payment.setStatus(rs.getString("status"));
+                payment.setDueDate(rs.getDate("due_date"));
+                payment.setAmountDue(rs.getBigDecimal("amount_due"));
+                payment.setRequestId(rs.getInt("request_id"));
+                payment.setTransactionDate(rs.getDate("transaction_date"));
+                payment.setCustomerId(rs.getInt("customer_id"));
+
+                paymentHistory.add(payment);
+            }
+
+            return paymentHistory;
+
+        } catch (SQLException e) {
+            System.err.println("SQL Error getting payment history: " + e.getMessage());
+            e.printStackTrace();
+            return new ArrayList<>();
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+            } catch (SQLException e) {
+                System.err.println("Error closing resources: " + e.getMessage());
+            }
+        }
+    }
+
     public boolean processPaymentTransaction(int scheduleId, int customerId, BigDecimal paymentAmount) {
-        
+
         PreparedStatement updateBalanceStmt = null;
         PreparedStatement updateStatusStmt = null;
         PreparedStatement insertTransactionStmt = null;
