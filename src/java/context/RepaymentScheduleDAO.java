@@ -4,6 +4,7 @@
  */
 package context;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import model.RepaymentSchedule;
 import java.sql.PreparedStatement;
@@ -14,6 +15,126 @@ import java.util.List;
 import model.Customer;
 
 public class RepaymentScheduleDAO extends DBContext<RepaymentSchedule> {
+
+    public boolean processPaymentTransaction(int scheduleId, int customerId, BigDecimal paymentAmount) {
+        
+        PreparedStatement updateBalanceStmt = null;
+        PreparedStatement updateStatusStmt = null;
+        PreparedStatement insertTransactionStmt = null;
+        boolean autoCommitOriginal = true;
+
+        try {
+            // 1. Update customer balance by subtracting the payment amount
+            String updateBalanceSql = "UPDATE Customer SET balance = balance - ? WHERE customer_id = ?";
+            updateBalanceStmt = connection.prepareStatement(updateBalanceSql);
+            updateBalanceStmt.setBigDecimal(1, paymentAmount);
+            updateBalanceStmt.setInt(2, customerId);
+
+            int balanceRowsUpdated = updateBalanceStmt.executeUpdate();
+            if (balanceRowsUpdated == 0) {
+                connection.rollback();
+                return false;
+            }
+
+            // 2. Update repayment schedule status to PAID
+            String updateStatusSql = "UPDATE RepaymentSchedule SET status = 'PAID' WHERE schedule_id = ?";
+            updateStatusStmt = connection.prepareStatement(updateStatusSql);
+            updateStatusStmt.setInt(1, scheduleId);
+
+            int statusRowsUpdated = updateStatusStmt.executeUpdate();
+            if (statusRowsUpdated == 0) {
+                connection.rollback();
+                return false;
+            }
+
+            // 3. Get request_id from RepaymentSchedule
+            int requestId = getRequestIdFromSchedule(scheduleId);
+            if (requestId <= 0) {
+                connection.rollback();
+                return false;
+            }
+
+            // 4. Insert transaction record
+            String insertTransactionSql = "INSERT INTO [dbo].[Transaction] "
+                    + "([schedule_id], [request_id], [amount], [transaction_date], [type], [customer_id], [staff_id]) "
+                    + "VALUES (?, ?, ?, GETDATE(), 'Repayment', ?, NULL)";
+
+            insertTransactionStmt = connection.prepareStatement(insertTransactionSql);
+            insertTransactionStmt.setInt(1, scheduleId);
+            insertTransactionStmt.setInt(2, requestId);
+            insertTransactionStmt.setBigDecimal(3, paymentAmount);
+            insertTransactionStmt.setInt(4, customerId);
+
+            int transactionRowsInserted = insertTransactionStmt.executeUpdate();
+            if (transactionRowsInserted == 0) {
+                connection.rollback();
+                return false;
+            }
+
+            // If all operations are successful, commit the transaction
+            connection.commit();
+            return true;
+
+        } catch (SQLException e) {
+            try {
+                if (connection != null) {
+                    connection.rollback();
+                }
+            } catch (SQLException rollbackEx) {
+                System.err.println("Error rolling back transaction: " + rollbackEx.getMessage());
+            }
+            System.err.println("SQL Error processing payment: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                // Close resources
+                if (updateBalanceStmt != null) {
+                    updateBalanceStmt.close();
+                }
+                if (updateStatusStmt != null) {
+                    updateStatusStmt.close();
+                }
+                if (insertTransactionStmt != null) {
+                    insertTransactionStmt.close();
+                }
+
+                // Reset auto-commit to original state
+                if (connection != null) {
+                    connection.setAutoCommit(autoCommitOriginal);
+                }
+            } catch (SQLException e) {
+                System.err.println("Error closing resources: " + e.getMessage());
+            }
+        }
+    }
+
+    /**
+     * Helper method to get request_id from a repayment schedule
+     */
+    private int getRequestIdFromSchedule(int scheduleId) throws SQLException {
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            String sql = "SELECT request_id FROM RepaymentSchedule WHERE schedule_id = ?";
+            stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, scheduleId);
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("request_id");
+            }
+            return 0;
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (stmt != null) {
+                stmt.close();
+            }
+        }
+    }
 
     public RepaymentSchedule getScheduleById(int scheduleId) {
         RepaymentSchedule schedule = null;
