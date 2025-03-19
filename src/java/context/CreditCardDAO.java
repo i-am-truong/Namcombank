@@ -17,7 +17,7 @@ public class CreditCardDAO extends DBContext<CreditCard> {
     // Lấy danh sách thẻ tín dụng của khách hàng
     public List<CreditCard> getCreditCardsByCustomerId(int customerId) {
         List<CreditCard> creditCards = new ArrayList<>();
-        String query = "SELECT * FROM CreditCards WHERE customer_id = ?";
+        String query = "SELECT * FROM CreditCards WHERE customer_id = ? and status = 'Approved'";
 
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, customerId);

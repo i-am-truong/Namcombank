@@ -4,7 +4,9 @@ import context.DBContext;
 import model.Message;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MessageDAO extends DBContext<Message> {
 
@@ -67,6 +69,50 @@ public class MessageDAO extends DBContext<Message> {
             ps.setInt(2, msg.getReceiverId());
             ps.setString(3, msg.getSenderType());
             ps.setString(4, msg.getContent());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Lấy danh sách khách hàng có tin nhắn với nhân viên
+//    public List<Integer> getCustomersWithMessages(int staffId) {
+//        List<Integer> customers = new ArrayList<>();
+//        String sql = "SELECT DISTINCT sender_id FROM Messages WHERE receiver_id = ?";
+//        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+//            ps.setInt(1, staffId);
+//            ResultSet rs = ps.executeQuery();
+//            while (rs.next()) {
+//                customers.add(rs.getInt("sender_id"));
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return customers;
+//    }
+
+    // Lấy số tin nhắn chưa đọc của từng khách hàng
+    public Map<Integer, Integer> getUnreadMessageCount(int staffId) {
+        Map<Integer, Integer> unreadCounts = new HashMap<>();
+        String sql = "SELECT sender_id, COUNT(*) AS unread_count FROM Messages WHERE receiver_id = ? AND is_read = 0 GROUP BY sender_id";
+        try ( PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, staffId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                unreadCounts.put(rs.getInt("sender_id"), rs.getInt("unread_count"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return unreadCounts;
+    }
+
+    // Đánh dấu tin nhắn của khách hàng là "đã đọc" khi nhân viên mở chat
+    public void markMessagesAsRead(int customerId, int staffId) {
+        String sql = "UPDATE Messages SET is_read = 1 WHERE sender_id = ? AND receiver_id = ? AND is_read = 0";
+        try ( PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, customerId);
+            ps.setInt(2, staffId);
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
