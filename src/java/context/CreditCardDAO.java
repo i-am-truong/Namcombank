@@ -17,31 +17,50 @@ public class CreditCardDAO extends DBContext<CreditCard> {
     // Lấy danh sách thẻ tín dụng của khách hàng
     public List<CreditCard> getCreditCardsByCustomerId(int customerId) {
         List<CreditCard> creditCards = new ArrayList<>();
-        String query = "SELECT * FROM CreditCards WHERE customer_id = ? and status = 'Approved'";
 
-        try (PreparedStatement ps = connection.prepareStatement(query)) {
-            ps.setInt(1, customerId);
-            try (ResultSet rs = ps.executeQuery()) {
+        // Kiểm tra điều kiện đủ nhận thẻ trước khi lấy danh sách thẻ
+        String checkEligibilitySQL = "SELECT COUNT(*) AS loan_count, SUM(amount) AS total_loan_amount "
+                + "FROM LoanRequests WHERE customer_id = ? AND status = 'approved' "
+                + "GROUP BY customer_id HAVING COUNT(*) >= 3 AND SUM(amount) >= 500000000";
+
+        String getCardsSQL = "SELECT * FROM CreditCards WHERE customer_id = ?";
+
+        try (PreparedStatement checkStmt = connection.prepareStatement(checkEligibilitySQL)) {
+            checkStmt.setInt(1, customerId);
+            try (ResultSet rs = checkStmt.executeQuery()) {
+                if (!rs.next()) {
+                    return creditCards; // Trả về danh sách rỗng nếu chưa đủ điều kiện
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Lỗi khi kiểm tra điều kiện hiển thị thẻ tín dụng: {0}", e.getMessage());
+            return creditCards;
+        }
+
+        // Nếu đủ điều kiện, lấy danh sách thẻ tín dụng
+        try (PreparedStatement stmt = connection.prepareStatement(getCardsSQL)) {
+            stmt.setInt(1, customerId);
+            try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    CreditCard card = new CreditCard(
-                            rs.getInt("card_id"),
-                            rs.getInt("customer_id"),
-                            rs.getString("card_number"),
-                            rs.getString("cvv"),
-                            rs.getDate("expiry_date"),
-                            rs.getBigDecimal("credit_limit"),
-                            rs.getBigDecimal("available_balance"),
-                            rs.getString("status")
-                    );
+                    CreditCard card = new CreditCard();
+                    card.setCardId(rs.getInt("card_id"));
+                    card.setCustomerId(rs.getInt("customer_id"));
+                    card.setCardNumber(rs.getString("card_number"));
+                    card.setCvv(rs.getString("cvv"));
+                    card.setCreditLimit(rs.getBigDecimal("credit_limit"));
+                    card.setAvailableBalance(rs.getBigDecimal("available_balance"));
+                    card.setExpiryDate(rs.getDate("expiry_date"));
+                    card.setStatus(rs.getString("status"));
                     creditCards.add(card);
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Lỗi khi lấy danh sách thẻ tín dụng: {0}", e.getMessage());
         }
+
         return creditCards;
     }
-    
+
     @Override
     public void update(CreditCard card) {
         String sql = "UPDATE CreditCards SET available_balance = ?, status = ? WHERE card_id = ?";
@@ -131,9 +150,15 @@ public class CreditCardDAO extends DBContext<CreditCard> {
             LOGGER.log(Level.INFO, "Khách hàng {0} đã có thẻ tín dụng, không cần cấp thêm.", customerId);
             return;
         }
-        
+
+        // Kiểm tra điều kiện cấp thẻ trước khi tạo
+        if (!isEligibleForCreditCard(customerId)) {
+            LOGGER.log(Level.INFO, "Khách hàng {0} chưa đủ điều kiện nhận thẻ tín dụng!", customerId);
+            return;
+        }
+
         String sql = "INSERT INTO CreditCards (customer_id, card_number, cvv, expiry_date, credit_limit, available_balance, status) "
-                   + "VALUES (?, ?, ?, DATEADD(YEAR, 5, GETDATE()), ?, ?, 'active')";
+                + "VALUES (?, ?, ?, DATEADD(YEAR, 5, GETDATE()), ?, ?, 'active')";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, customerId);
@@ -151,8 +176,8 @@ public class CreditCardDAO extends DBContext<CreditCard> {
     // Kiểm tra điều kiện cấp thẻ tín dụng
     public boolean isEligibleForCreditCard(int customerId) {
         String sql = "SELECT COUNT(*) AS loan_count, SUM(amount) AS total_loan_amount "
-                   + "FROM LoanRequests WHERE customer_id = ? AND status = 'approved' "
-                   + "GROUP BY customer_id HAVING COUNT(*) >= 3 AND SUM(amount) >= 500000000";
+                + "FROM LoanRequests WHERE customer_id = ? AND status = 'approved' "
+                + "GROUP BY customer_id HAVING COUNT(*) >= 3 AND SUM(amount) >= 500000000";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, customerId);
             try (ResultSet rs = stmt.executeQuery()) {

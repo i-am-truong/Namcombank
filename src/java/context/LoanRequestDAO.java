@@ -1312,13 +1312,18 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
     }
 
     public boolean hasApprovedLoan(int customerId) {
-        String sql = "SELECT COUNT(*) FROM LoanRequests WHERE customer_id = ? AND status = 'approved'";
+        String query = "SELECT COUNT(request_id) AS loanCount, SUM(amount) AS totalAmount "
+                + "FROM LoanRequests WHERE customer_id = ? AND status = 'approved' "
+                + "GROUP BY customer_id";
 
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, customerId);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next() && rs.getInt(1) > 0) {
-                return true; // Có ít nhất một khoản vay được duyệt
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    int loanCount = rs.getInt("loanCount");
+                    BigDecimal totalAmount = rs.getBigDecimal("totalAmount");
+                    return loanCount >= 3 && totalAmount.compareTo(new BigDecimal(500000000)) >= 0;
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
