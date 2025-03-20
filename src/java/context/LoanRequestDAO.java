@@ -157,7 +157,13 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
             stmt.setBigDecimal(3, model.getAmount());
             stmt.setDate(4, new java.sql.Date(model.getRequestDate().getTime()));
             stmt.setString(5, model.getStatus());
-            stmt.setInt(6, model.getAssetId());
+
+            // Xử lý asset_id: nếu là unsecured thì set null, ngược lại set giá trị assetId
+            if (model.getAssetId() == null) {
+                stmt.setNull(6, java.sql.Types.INTEGER);
+            } else {
+                stmt.setInt(6, model.getAssetId());
+            }
 
             stmt.executeUpdate();
             System.out.println("✅ Dữ liệu đã được lưu vào database!");

@@ -1,5 +1,6 @@
 package controller.loanrequest;
 
+import context.AssetDAO;
 import context.LoanRequestDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -10,6 +11,7 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import model.Asset;
 import model.Customer;
 import model.LoanRequest;
 
@@ -20,10 +22,12 @@ import model.LoanRequest;
 public class LoanRequestListCustomer extends HttpServlet {
 
     private LoanRequestDAO loanRequestDAO;
+    private AssetDAO assetDAO;
 
     @Override
     public void init() throws ServletException {
         loanRequestDAO = new LoanRequestDAO();
+        assetDAO = new AssetDAO();
     }
 
     @Override
@@ -42,6 +46,7 @@ public class LoanRequestListCustomer extends HttpServlet {
 
             // Lấy danh sách yêu cầu vay theo customer_id
             ArrayList<LoanRequest> loanRequests = loanRequestDAO.getLoanRequestsByCustomerId(customerId);
+            ArrayList<Asset> assets = assetDAO.getAssetsByCustomerId(customerId);
 
             // Tính toán số lượng yêu cầu vay theo trạng thái
             int totalRequests = loanRequestDAO.countLoanRequestsByCustomer(customerId);
@@ -67,6 +72,7 @@ public class LoanRequestListCustomer extends HttpServlet {
             }
 
             // Đặt các thuộc tính vào request
+            request.setAttribute("assets", assets);
             request.setAttribute("loanRequests", loanRequests);
             request.setAttribute("totalRequests", totalRequests);
             request.setAttribute("pendingRequests", pendingRequests);

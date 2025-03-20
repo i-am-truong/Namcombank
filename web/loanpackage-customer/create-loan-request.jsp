@@ -14,11 +14,12 @@
     int assetId = 0;
     LoanPackage loan = null;
     Asset asset = null;
+    List<Asset> assets = new ArrayList<>();
 
     try {
         packageId = Integer.parseInt(packageIdParam);
-        LoanPackageDAO dao = new LoanPackageDAO();
-        loan = dao.getLoanPackageById(packageId);
+        LoanPackageDAO loanDao = new LoanPackageDAO();
+        loan = loanDao.getLoanPackageById(packageId);
     } catch (NumberFormatException e) {
         response.sendRedirect("loanpackage-customer/loan_packages.jsp");
         return;
@@ -29,19 +30,20 @@
         return;
     }
 
+    AssetDAO assetDAO = new AssetDAO();
+    assets = assetDAO.getAllAssets();
+    
     if (assetIdParam != null) {
         try {
             assetId = Integer.parseInt(assetIdParam);
-            AssetDAO assetDAO = new AssetDAO();
-            asset = assetDAO.getAssetById(assetId); // Assuming `getAssetById()` exists in `AssetDAO`
+            asset = assetDAO.getAssetById(assetId);
         } catch (NumberFormatException e) {
-            asset = null; // Handle invalid asset_id gracefully
+            asset = null;
         }
     }
 
     List<String> errorMessages = (List<String>) request.getAttribute("errorMessages");
     String lastAmount = request.getParameter("amount");
-
     DecimalFormat formatter = new DecimalFormat("#,###");
 %>
 
@@ -68,18 +70,34 @@
 
                 <div>
                     <label for="amount" class="block text-gray-700 font-medium">Enter loan amount:</label>
-                    <input type="text" id="amount" name="amount" value="<%= lastAmount != null ? lastAmount : "" %>" 
-                           class="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200" 
+                    <input type="text" id="amount" name="amount" value="<%= lastAmount != null ? lastAmount : "" %>"
+                           class="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200"
                            oninput="formatCurrency(this)" required>
                     <p id="error-message" class="text-red-500 text-sm mt-2"></p>
                 </div>
 
                 <div>
-                    <label for="asset_id" class="block text-gray-700 font-medium">Enter Asset ID:</label>
-                    <input type="text" id="asset_id" name="asset_id" 
-                           value="<%= assetId > 0 ? assetId : "" %>"
-                           class="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200">
+                    <label for="asset_id" class="block text-gray-700 font-medium">Select Asset:</label>
+                    <select id="asset_id" name="asset_id"
+                            class="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200"
+                            <% if ("unsecured".equalsIgnoreCase(loan.getLoanType().trim())) { %> disabled <% } %>>
+                        <% if ("unsecured".equalsIgnoreCase(loan.getLoanType().trim())) { %>
+                        <option value="0" selected>None</option>
+                        <% } else { %>
+                        <option value="">-- Select an asset --</option>
+                        <% for (Asset a : assets) { %>
+                        <option value="<%= a.getAssetId() %>" 
+                                <% if (a.getAssetId() == assetId) { %> selected <% } %>>
+                            <%= a.getAssetName() %> - <%= a.getAssetType() %>
+                        </option>
+                        <% } %>
+                        <% } %>
+                    </select>
                 </div>
+
+
+
+
 
 
                 <button type="submit" class="w-full bg-green-500 text-white py-3 rounded-lg text-lg font-bold hover:bg-green-700 transition">
@@ -98,15 +116,15 @@
 
         <script>
             function formatCurrency(input) {
-                let value = input.value.replace(/\D/g, ""); // Remove all non-numeric characters
-                value = new Intl.NumberFormat("vi-VN").format(value); // Format as Vietnamese currency
+                let value = input.value.replace(/\D/g, "");
+                value = new Intl.NumberFormat("vi-VN").format(value);
                 input.value = value;
             }
 
             function validateAmount() {
                 let amountInput = document.getElementById("amount");
                 let errorMessage = document.getElementById("error-message");
-                let rawAmount = amountInput.value.replace(/\D/g, ""); // Keep only numbers
+                let rawAmount = amountInput.value.replace(/\D/g, "");
                 let amount = parseInt(rawAmount);
 
                 let minAmount = <%= loan.getMinAmount() %>;
@@ -120,9 +138,7 @@
                     errorMessage.textContent = "Loan amount must be between " + minAmount.toLocaleString("vi-VN") + " and " + maxAmount.toLocaleString("vi-VN") + " VND.";
                     return false;
                 }
-
-                errorMessage.textContent = ""; // Clear error if
-                // Clear error if valid
+                errorMessage.textContent = "";
                 return true;
             }
         </script>

@@ -89,14 +89,20 @@ public class LoanRequestServlet extends HttpServlet {
             }
         }
 
-        // Kiểm tra Asset ID hợp lệ
+        // Kiểm tra nếu gói vay là "unsecured", thì không cần tài sản
         Asset asset = null;
-        if (assetId > 0) {
-            AssetDAO assetDAO = new AssetDAO();
-            asset = assetDAO.getAssetById(assetId);
-            if (asset == null) {
-                errorMessages.add("Tài sản không tồn tại.");
+        if (!"unsecured".equalsIgnoreCase(loanPackage.getLoanType().trim())) {
+            if (assetId > 0) {
+                AssetDAO assetDAO = new AssetDAO();
+                asset = assetDAO.getAssetById(assetId);
+                if (asset == null) {
+                    errorMessages.add("Tài sản không tồn tại.");
+                }
+            } else {
+                errorMessages.add("Vui lòng chọn tài sản thế chấp.");
             }
+        } else {
+            assetId = 0; // Đảm bảo assetId là 0 khi khoản vay không cần tài sản
         }
 
         // Nếu có lỗi, quay lại trang đăng ký
@@ -116,7 +122,12 @@ public class LoanRequestServlet extends HttpServlet {
         loanRequest.setAmount(amount);
         loanRequest.setRequestDate(Date.valueOf(LocalDate.now()));
         loanRequest.setStatus("Pending");
-        loanRequest.setAssetId(assetId);
+        // Nếu là unsecured loan, đặt assetId là null
+        if ("unsecured".equalsIgnoreCase(loanPackage.getLoanType().trim())) {
+            loanRequest.setAssetId(null);
+        } else {
+            loanRequest.setAssetId(assetId);
+        }
 
         loanRequestDAO.insert(loanRequest);
 

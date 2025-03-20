@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import model.Asset;
 import java.sql.Timestamp;
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  *
@@ -890,6 +891,48 @@ public class AssetDAO extends DBContext<Asset> {
             sql.append(" AND a.approved_date <= ?");
             params.add(approvedDateTo);
         }
+    }
+
+    public List<Asset> getAllAssets() {
+        List<Asset> assets = new ArrayList<>();
+        String sql = "SELECT asset_id, asset_name, asset_type FROM CustomerAssets"; // Cập nhật đúng tên bảng nếu khác
+        try (PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Asset asset = new Asset();
+                asset.setAssetId(rs.getInt("asset_id"));
+                asset.setAssetName(rs.getString("asset_name"));
+                asset.setAssetType(rs.getString("asset_type"));
+                assets.add(asset);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return assets;
+    }
+
+    public ArrayList<Asset> getAssetsByCustomerId(int customerId) {
+        ArrayList<Asset> assets = new ArrayList<>();
+        String sql = "SELECT asset_id, customer_id, asset_name, asset_value FROM CustomerAssets WHERE customer_id = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setInt(1, customerId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Asset asset = new Asset();
+                asset.setAssetId(rs.getInt("asset_id"));
+                asset.setCustomerId(rs.getInt("customer_id"));
+                asset.setAssetName(rs.getString("asset_name"));
+                asset.setAssetValue(rs.getBigDecimal("asset_value"));
+
+                assets.add(asset);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return assets;
     }
 
 }

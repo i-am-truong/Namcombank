@@ -204,7 +204,6 @@
                                         <th>Amount</th>
                                         <th>Request Date</th>
                                         <th>Status</th>
-                                        <th>Collateral</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -234,17 +233,6 @@
                                                             </c:otherwise>
                                                         </c:choose>
                                                     </td>
-                                                    <td>
-                                                        <c:choose>
-                                                            <c:when test="${not empty request.asset}">
-                                                                <i class="fas fa-check-circle text-success"></i> ${request.asset.assetName}
-                                                            </c:when>
-                                                            <c:otherwise>
-                                                                <i class="fas fa-times-circle text-danger"></i> None
-                                                            </c:otherwise>
-                                                        </c:choose>
-                                                    </td>
-
                                                     <td>
                                                         <c:choose>
                                                             <c:when test="${request.status eq 'Pending'}">
@@ -295,25 +283,25 @@
     <!-- Custom scripts for all pages-->
     <script src="adminassets/js/sb-admin-2.min.js"></script>
     <script>
-        // Clear filters functionality
-        document.getElementById('clearFiltersBtn').addEventListener('click', function () {
-            // Reset all form fields
-            document.getElementById('customerName').value = '';
-            document.getElementById('packageName').value = '';
-            document.getElementById('status').value = '';
-            document.getElementById('minAmount').value = '';
-            document.getElementById('maxAmount').value = '';
-            document.getElementById('hasAsset').value = '';
-            document.getElementById('requestDateFrom').value = '';
-            document.getElementById('requestDateTo').value = '';
-            document.getElementById('approvedBy').value = '';
-            document.getElementById('approvedDate').value = '';
-            document.getElementById('approvalDateFrom').value = '';
-            document.getElementById('approvalDateTo').value = '';
+                                                                       // Clear filters functionality
+                                                                       document.getElementById('clearFiltersBtn').addEventListener('click', function () {
+                                                                           // Reset all form fields
+                                                                           document.getElementById('customerName').value = '';
+                                                                           document.getElementById('packageName').value = '';
+                                                                           document.getElementById('status').value = '';
+                                                                           document.getElementById('minAmount').value = '';
+                                                                           document.getElementById('maxAmount').value = '';
+                                                                           document.getElementById('hasAsset').value = '';
+                                                                           document.getElementById('requestDateFrom').value = '';
+                                                                           document.getElementById('requestDateTo').value = '';
+                                                                           document.getElementById('approvedBy').value = '';
+                                                                           document.getElementById('approvedDate').value = '';
+                                                                           document.getElementById('approvalDateFrom').value = '';
+                                                                           document.getElementById('approvalDateTo').value = '';
 
-            // Redirect to customer-loan-requests without search parameters
-            window.location.href = 'customer-loan-requests';
-        });
+                                                                           // Redirect to customer-loan-requests without search parameters
+                                                                           window.location.href = 'customer-loan-requests';
+                                                                       });
     </script>
 </body>
 </html>
