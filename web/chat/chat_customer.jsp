@@ -1,22 +1,22 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%
-    Integer customerId = (Integer) session.getAttribute("customer_id"); // Lấy ID khách hàng từ session
+    Integer customerId = (Integer) session.getAttribute("customer_id"); // Get customer ID from session
     if (customerId == null) {
-        response.sendRedirect("../login"); // Chuyển hướng về trang đăng nhập
+        response.sendRedirect("../login"); // Redirect to login page
         return;
     }
 %>
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Chat với Nhân Viên</title>
+        <title>Chat with Staff</title>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <style>
             body {
                 font-family: Arial, sans-serif;
-                background-color: #F0F8F5; /* Màu nền nhẹ nhàng */
+                background-color: #F0F8F5; /* Light background color */
                 display: flex;
                 justify-content: center;
                 align-items: center;
@@ -30,7 +30,7 @@
                 overflow: hidden;
             }
             .chat-header {
-                background: #007A33; /* Màu chủ đạo Vietcombank */
+                background: #007A33; /* Vietcombank primary color */
                 color: white;
                 padding: 15px;
                 text-align: center;
@@ -54,7 +54,7 @@
                 box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
             }
             .customer {
-                background: #D4EDDA; /* Màu xanh nhạt */
+                background: #D4EDDA; /* Light green */
                 align-self: flex-end;
                 text-align: right;
             }
@@ -106,13 +106,13 @@
     </head>
     <body>
         <div class="chat-container">
-            <div class="chat-header">Trò chuyện với Nhân viên</div>
+            <div class="chat-header">Chat with Admin</div>
             <div class="chat-box" id="chatBox"></div>
             <div class="input-box">
-                <input type="text" id="messageInput" placeholder="Nhập tin nhắn...">
-                <button onclick="sendMessage()">Gửi</button>
+                <input type="text" id="messageInput" placeholder="Enter your message...">
+                <button onclick="sendMessage()">Send</button>
             </div>
-            <button class="home-btn" style="justify-content: center" onclick="window.location.href = '../Home'">Trang chủ</button>
+            <button class="home-btn" style="justify-content: center" onclick="window.location.href = '../Home'">Home</button>
         </div>
 
         <script>
@@ -143,10 +143,10 @@
                     }
                 });
             }
-            // Bắt sự kiện Enter trong ô nhập tin nhắn
+            // Capture Enter key press in message input box
             $("#messageInput").keypress(function (event) {
-                if (event.which === 13 && !event.shiftKey) {  // 13 là mã phím Enter
-                    event.preventDefault(); // Ngăn chặn xuống dòng mặc định
+                if (event.which === 13 && !event.shiftKey) {  // 13 is Enter key code
+                    event.preventDefault(); // Prevent default line break
                     sendMessage();
                 }
             });

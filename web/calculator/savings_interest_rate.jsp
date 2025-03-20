@@ -1,10 +1,10 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Tính lãi suất tiết kiệm</title>
+        <title>Savings Interest Calculator</title>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
         <style>
             body {
@@ -56,55 +56,55 @@
         </style>
     </head>
     <body>
-        <h2>Lãi Suất Tiết Kiệm</h2>
+        <h2>Savings Interest Rates</h2>
 
         <table>
             <tr>
-                <th>Kỳ hạn</th>
+                <th>Term</th>
                 <th>VND</th>
                 <th>EUR</th>
                 <th>USD</th>
             </tr>
-            <tr><td>Không kỳ hạn</td><td>0.10%</td><td>0.30%</td><td>0.00%</td></tr>
-            <tr><td>7 ngày</td><td>0.20%</td><td>0.30%</td><td>0.00%</td></tr>
-            <tr><td>14 ngày</td><td>0.20%</td><td>0.30%</td><td>0.00%</td></tr>
-            <tr><td>1 tháng</td><td>1.60%</td><td>0.30%</td><td>0.00%</td></tr>
-            <tr><td>2 tháng</td><td>1.60%</td><td>0.30%</td><td>0.00%</td></tr>
-            <tr><td>3 tháng</td><td>1.90%</td><td>0.30%</td><td>0.00%</td></tr>
-            <tr><td>6 tháng</td><td>2.90%</td><td>0.30%</td><td>0.00%</td></tr>
-            <tr><td>9 tháng</td><td>2.90%</td><td>0.30%</td><td>0.00%</td></tr>
-            <tr><td>12 tháng</td><td>4.60%</td><td>0.30%</td><td>0.00%</td></tr>
-            <tr><td>24 tháng</td><td>4.70%</td><td>0.30%</td><td>0.00%</td></tr>
+            <tr><td>Non-term</td><td>0.10%</td><td>0.30%</td><td>0.00%</td></tr>
+            <tr><td>7 days</td><td>0.20%</td><td>0.30%</td><td>0.00%</td></tr>
+            <tr><td>14 days</td><td>0.20%</td><td>0.30%</td><td>0.00%</td></tr>
+            <tr><td>1 month</td><td>1.60%</td><td>0.30%</td><td>0.00%</td></tr>
+            <tr><td>2 months</td><td>1.60%</td><td>0.30%</td><td>0.00%</td></tr>
+            <tr><td>3 months</td><td>1.90%</td><td>0.30%</td><td>0.00%</td></tr>
+            <tr><td>6 months</td><td>2.90%</td><td>0.30%</td><td>0.00%</td></tr>
+            <tr><td>9 months</td><td>2.90%</td><td>0.30%</td><td>0.00%</td></tr>
+            <tr><td>12 months</td><td>4.60%</td><td>0.30%</td><td>0.00%</td></tr>
+            <tr><td>24 months</td><td>4.70%</td><td>0.30%</td><td>0.00%</td></tr>
         </table>
         <div class="container mt-4">
-            <h4>Ghi chú</h4>
+            <h4>Notes</h4>
             <div style="background: #f8f8f8; padding: 15px; border-radius: 8px;">
                 <ul>
-                    <li>Lãi suất trên chỉ mang tính tham khảo và có thể thay đổi theo từng thời điểm.</li>
-                    <li>Lãi được tính trên số ngày thực tế và cơ sở tính lãi là 365 ngày.</li>
-                    <li>Bảng tính toán chỉ mang tính chất tham khảo.</li>
-                    <li>Lãi suất các loại ngoại tệ khác hoặc các kỳ hạn không niêm yết, Quý khách liên hệ Vietcombank gần nhất để được hỗ trợ.</li>
+                    <li>The above interest rates are for reference only and may change over time.</li>
+                    <li>Interest is calculated based on actual days and a 365-day year.</li>
+                    <li>The calculations provided are for reference purposes only.</li>
+                    <li>For interest rates of other currencies or unlisted terms, please contact the nearest Vietcombank branch.</li>
                 </ul>
             </div>
         </div>
         <div class="container mt-5">
-            <h2>Tính Lãi Tiết Kiệm</h2>
+            <h2>Calculate Savings Interest</h2>
             <div class="row">
                 <!-- Khu vực nhập liệu -->
                 <div class="col-md-6 calculator">
-                    <h5>SỐ TIỀN GỬI</h5>
+                    <h5>DEPOSIT AMOUNT</h5>
                     <div class="input-group mb-3">
                         <span class="input-group-text">VND</span>
-                        <input type="text" id="amount" class="form-control" placeholder="Nhập số tiền" oninput="formatNumber(this)">
+                        <input type="text" id="amount" class="form-control" placeholder="Enter amount" oninput="formatNumber(this)">
                     </div>
 
-                    <h5>KỲ HẠN GỬI</h5>
+                    <h5>DEPOSIT TERM</h5>
                     <select id="term" class="form-select mb-3" onchange="setRateFromSelect()">
-                        <option value="-1">Chọn kỳ hạn gửi</option>
-                        <option value="1">1 tháng - 1.60%</option>
-                        <option value="6">6 tháng - 2.90%</option>
-                        <option value="12">12 tháng - 4.60%</option>
-                        <option value="24">24 tháng - 4.70%</option>
+                        <option value="-1">Select deposit term</option>
+                        <option value="1">1 month - 1.60%</option>
+                        <option value="6">6 months - 2.90%</option>
+                        <option value="12">12 months - 4.60%</option>
+                        <option value="24">24 months - 4.70%</option>
                     </select>
 
                     <div>
@@ -117,16 +117,16 @@
 
                 <!-- Khu vực hiển thị kết quả -->
                 <div class="col-md-6 result-box">
-                    <h5>Tiền lãi dự tính</h5>
-                    <p>Số tiền lãi: <b id="interest">0 VND</b></p>
-                    <p>Tổng tiền: <b id="total">0 VND</b></p>
-                    <p>Lãi suất: <b id="rate">0%</b></p>
+                    <h5>Expected return</h5>
+                    <p>Interest Amount: <b id="interest">0 VND</b></p>
+                    <p>Total amount: <b id="total">0 VND</b></p>
+                    <p>Interest rate: <b id="rate">0%</b></p>
                     <hr>
-                    <p>Lãi suất được cập nhật lúc <b id="updateTime"></b></p>
+                    <p>Interest rates are updated at <b id="updateTime"></b></p>
                 </div>
             </div>
         </div>
-        <a href="../Home" class="btn btn-success mt-3">🏠 Trang Chủ</a>
+        <a href="../Home" class="btn btn-success mt-3">🏠 Home</a>
         <script>
             const rates = {1: 0.016, 6: 0.029, 12: 0.046, 24: 0.047};
 
