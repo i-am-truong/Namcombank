@@ -83,11 +83,11 @@
         <div class="chat-container">
             <!-- Danh sách khách hàng -->
             <div class="customer-list">
-                <h3 class="text-center">Khách hàng</h3>
+                <h3 class="text-center">Customers</h3>
                 <ul class="list-group">
                     <% for (Integer customerId : customers) { %>
                     <li class="list-group-item">
-                        <a href="chat_staff.jsp?customer_id=<%= customerId %>">Khách hàng #<%= customerId %></a>
+                        <a href="chat_staff.jsp?customer_id=<%= customerId %>">Customer #<%= customerId %></a>
                     </li>
                     <% } %>
                 </ul>
@@ -95,7 +95,7 @@
 
             <!-- Khu vực chat -->
             <div class="container-fluid p-4">
-                <h2 class="text-center">Trò chuyện</h2>
+                <h2 class="text-center">Chat</h2>
 
                 <div class="chat-box" id="chatBox">
                     <% if (messages != null) { %>
@@ -105,15 +105,15 @@
                     </div>
                     <% } %>
                     <% } else { %>
-                    <p class="text-center text-muted">Chọn khách hàng để xem tin nhắn</p>
+                    <p class="text-center text-muted">Select customer to view message</p>
                     <% } %>
                 </div>  
 
                 <% if (selectedCustomerId != null) { %>
                 <div class="input-group mt-3">
                     <input type="hidden" id="customer_id" value="<%= selectedCustomerId %>">
-                    <input type="text" id="messageInput" class="form-control" placeholder="Nhập tin nhắn..." autocomplete="off">
-                    <button class="btn btn-success" onclick="sendMessage()">Gửi</button>
+                    <input type="text" id="messageInput" class="form-control" placeholder="Enter message..." autocomplete="off">
+                    <button class="btn btn-success" onclick="sendMessage()">Send</button>
                 </div>
                 <% } %>
                 <div class="back-button" style="text-align: center">

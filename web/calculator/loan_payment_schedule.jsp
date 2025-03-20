@@ -6,7 +6,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Tính Lịch Trả Nợ</title>
+        <title>Loan Repayment Schedule</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
         <link rel="stylesheet" href="style.css">
         <style>
@@ -105,55 +105,53 @@
     </head>
     <body>
         <div class="container">
-            <h2><i class="fas fa-calculator"></i> Tính Lịch Trả Nợ</h2>
-            <div class="info-message" id="info-message">Nhập thông tin để xem kết quả tính toán</div>
+            <h2><i class="fas fa-calculator"></i> Loan Repayment Schedule</h2>
+            <div class="info-message" id="info-message">Enter details to see the calculated results</div>
             <div class="form-group">
-                <label for="loanAmount">Số tiền vay (VND):</label>
-                <input type="text" id="loanAmount" placeholder="Ví dụ: 100.000.000" oninput="formatInputCurrency(this); calculateLoan();">
+                <label for="loanAmount">Loan Amount (VND):</label>
+                <input type="text" id="loanAmount" placeholder="e.g., 100,000,000" oninput="formatInputCurrency(this); calculateLoan();">
             </div>
             <div class="form-group">
-                <label for="interestRate">Lãi suất (%/năm):</label>
-                <input type="number" id="interestRate" step="0.1" placeholder="Ví dụ: 7.5" oninput="calculateLoan();">
+                <label for="interestRate">Interest Rate (% per year):</label>
+                <input type="number" id="interestRate" step="0.1" placeholder="e.g., 7.5" oninput="calculateLoan();">
             </div>
             <div class="form-group">
-                <label for="loanTerm">Số tháng vay:</label>
-                <input type="number" id="loanTerm" placeholder="Ví dụ: 12, 24, 36, ..." oninput="calculateLoan();">
+                <label for="loanTerm">Loan Term (months):</label>
+                <input type="number" id="loanTerm" placeholder="e.g., 12, 24, 36, ..." oninput="calculateLoan();">
             </div>
             <div class="form-group">
-                <label for="startDate">Ngày giải ngân:</label>
+                <label for="startDate">Disbursement Date:</label>
                 <input type="date" id="startDate" onchange="calculateLoan();">
             </div>
-<!--            <button onclick="calculateLoan()"><i class="fas fa-sync"></i> Tính toán</button>-->
-            <button class="toggle-btn" id="toggleBtn" onclick="toggleSchedule()" disabled><i class="fas fa-eye"></i> Xem lịch trả nợ</button>
-            <h3>Kết quả</h3>
-            <p><strong>Số tiền trả hàng tháng:</strong> <span id="monthly-payment">0</span> VND</p>
-            <p><strong>Tổng gốc phải trả:</strong> <span id="total-principal">0</span> VND</p>
-            <p><strong>Tổng lãi phải trả:</strong> <span id="total-interest">0</span> VND</p>
-            <h3><strong>Tổng số tiền cần trả:</strong> <span id="total-payment">0</span> VND</h3>
+            <button class="toggle-btn" id="toggleBtn" onclick="toggleSchedule()" disabled><i class="fas fa-eye"></i> View Repayment Schedule</button>
+            <h3>Results</h3>
+            <p><strong>Monthly Payment:</strong> <span id="monthly-payment">0</span> VND</p>
+            <p><strong>Total Principal to be Paid:</strong> <span id="total-principal">0</span> VND</p>
+            <p><strong>Total Interest to be Paid:</strong> <span id="total-interest">0</span> VND</p>
+            <h3><strong>Total Amount to be Paid:</strong> <span id="total-payment">0</span> VND</h3>
             <table id="loanSchedule">
                 <thead>
                     <tr>
-                        <th>Kỳ hạn</th>
-                        <th>Ngày trả nợ</th>
-                        <th>Số tiền gốc còn</th>
-                        <th>Tiền gốc trả</th>
-                        <th>Tiền lãi trả</th>
-                        <th>Tổng phải trả</th>
+                        <th>Term</th>
+                        <th>Repayment Date</th>
+                        <th>Remaining Principal</th>
+                        <th>Principal Payment</th>
+                        <th>Interest Payment</th>
+                        <th>Total Payment</th>
                     </tr>
                 </thead>
                 <tbody id="schedule-body"></tbody>
                 <tfoot>
                     <tr>
-                        <th colspan="3">TỔNG</th>
+                        <th colspan="3">TOTAL</th>
                         <th id="total-principal-footer">0</th>
                         <th id="total-interest-footer">0</th>
                         <th id="total-payment-footer">0</th>
                     </tr>
                 </tfoot>
             </table>
-            <button class="home-btn" onclick="window.location.href='../Home'">Trang chủ</button>
+            <button class="home-btn" onclick="window.location.href = '../Home'">Home</button>
         </div>
-
         <script>
             // Biến theo dõi trạng thái hiển thị bảng
             let loanScheduleVisible = false;
@@ -216,28 +214,28 @@
 
                 // Kiểm tra các trường và hiển thị thông báo phù hợp
                 if (amount <= 0) {
-                    infoMessage.textContent = "Vui lòng nhập số tiền vay";
+                    infoMessage.textContent = "Please enter loan amount";
                     resetResults();
                     toggleBtn.disabled = true;
                     return;
                 }
 
                 if (interestRate <= 0) {
-                    infoMessage.textContent = "Vui lòng nhập lãi suất";
+                    infoMessage.textContent = "Please enter interest rate";
                     resetResults();
                     toggleBtn.disabled = true;
                     return;
                 }
 
                 if (months <= 0) {
-                    infoMessage.textContent = "Vui lòng nhập số tháng vay";
+                    infoMessage.textContent = "Please enter the number of months of loan";
                     resetResults();
                     toggleBtn.disabled = true;
                     return;
                 }
 
                 if (!startDateStr) {
-                    infoMessage.textContent = "Vui lòng chọn ngày giải ngân";
+                    infoMessage.textContent = "Please select disbursement date";
                     resetResults();
                     toggleBtn.disabled = true;
                     return;

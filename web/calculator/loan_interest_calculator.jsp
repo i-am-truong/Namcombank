@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Tính Lãi Suất Vay</title>
+        <title>Loan Interest Calculation</title>
         <link rel="stylesheet" href="style.css">
         <style>
             body {
@@ -88,48 +88,43 @@
     </head>
 
     <body>
-        <div class="header">Tính Lãi Suất Vay</div>
+        <div class="header">Loan Interest Calculation</div>
 
         <div class="container">
             <div class="form-section">
-                <h3>Nhập thông tin khoản vay</h3>
-                <label for="amount">Số tiền muốn vay (VND)</label>
+                <h3>Enter Loan Details</h3>
+                <label for="amount">Loan Amount (VND)</label>
                 <input type="text" id="amount" oninput="formatCurrency(this); calculateLoan()">
-                <label for="interest">Lãi suất (%/năm)</label>
+                <label for="interest">Interest Rate (%/year)</label>
                 <input type="number" id="interest" step="0.1" oninput="calculateLoan()">
-                <label for="months">Số tháng vay</label>
+                <label for="months">Loan Term (Months)</label>
                 <input type="number" id="months" oninput="calculateLoan()">
-                <label for="startDate">Ngày giải ngân</label>
+                <label for="startDate">Disbursement Date</label>
                 <input type="date" id="startDate" onchange="calculateLoan()">
-                <!-- Giữ lại nút tính toán làm phương án dự phòng -->
-<!--                <button onclick="calculateLoan()">Tính toán</button>-->
             </div>
 
             <div class="result-section">
-                <h3>Kết quả</h3>
-                <p>Phương thức vay: <strong>Dư nợ giảm dần</strong></p>
-                <p><strong>Số tiền trả hàng tháng:</strong> <span id="monthly-payment">0</span> VND</p>
-                <p><strong>Tổng gốc phải trả:</strong> <span id="total-principal">0</span> VND</p>
-                <p><strong>Tổng lãi phải trả:</strong> <span id="total-interest">0</span> VND</p>
-                <h3><strong>Tổng số tiền cần trả:</strong> <span id="total-payment">0</span> VND</h3>
+                <h3>Result</h3>
+                <p>Loan Method: <strong>Reducing Balance</strong></p>
+                <p><strong>Monthly Payment:</strong> <span id="monthly-payment">0</span> VND</p>
+                <p><strong>Total Principal:</strong> <span id="total-principal">0</span> VND</p>
+                <p><strong>Total Interest:</strong> <span id="total-interest">0</span> VND</p>
+                <h3><strong>Total Amount Payable:</strong> <span id="total-payment">0</span> VND</h3>
             </div>
         </div>
 
         <script>
             function formatCurrency(input) {
-                // Lưu vị trí con trỏ trước khi định dạng
                 const cursorPosition = input.selectionStart;
                 const oldLength = input.value.length;
 
-                let value = input.value.replace(/\D/g, ""); // Loại bỏ tất cả ký tự không phải số
-                value = new Intl.NumberFormat("vi-VN").format(value); // Định dạng số tiền Việt Nam
+                let value = input.value.replace(/\D/g, "");
+                value = new Intl.NumberFormat("vi-VN").format(value);
                 input.value = value;
 
-                // Điều chỉnh vị trí con trỏ sau khi định dạng
                 const newLength = input.value.length;
                 const positionChange = newLength - oldLength;
 
-                // Đặt lại vị trí con trỏ
                 setTimeout(() => {
                     input.setSelectionRange(cursorPosition + positionChange, cursorPosition + positionChange);
                 }, 0);
@@ -141,7 +136,6 @@
                 let months = document.getElementById('months').value;
 
                 if (!amount || !interest || !months) {
-                    // Hiển thị giá trị mặc định khi trường chưa có đủ dữ liệu
                     document.getElementById('monthly-payment').innerText = "0";
                     document.getElementById('total-principal').innerText = amount ? parseFloat(amount).toLocaleString('vi-VN') : "0";
                     document.getElementById('total-interest').innerText = "0";
@@ -154,7 +148,7 @@
                 months = parseInt(months);
 
                 if (isNaN(amount) || isNaN(interest) || isNaN(months) || months <= 0) {
-                    return; // Nếu dữ liệu không hợp lệ, không cập nhật kết quả
+                    return;
                 }
 
                 let monthlyPayment = (amount * interest) / (1 - Math.pow(1 + interest, -months));
@@ -171,6 +165,6 @@
                 window.location.href = '../Home';
             }
         </script>
-        <button class="home-btn" onclick="goHome()">🏠 Trang Chủ</button>
+        <button class="home-btn" onclick="goHome()">🏠 Home</button>
     </body>
 </html>
