@@ -6,14 +6,13 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <head>
     <link rel="stylesheet" href="assets/css/fontawesome.all.min.css">
-
 </head>
 
 <ul class="navbar-nav bg-gradient-success sidebar sidebar-dark accordion" id="accordionSidebar">
     <!-- Sidebar - Brand -->
     <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
         <div class="sidebar-brand-icon rotate-n-15">
-            <i class="fas fa-laugh-wink"></i>
+            <i class="fas fa-university"></i>
         </div>
         <div class="sidebar-brand-text mx-3">Banking Services System
         </div>
@@ -37,44 +36,44 @@
 
     <li class="nav-item active">
         <a class="nav-link" href="staffProfile">
-            <i class="fas fa-fw fa-table"></i>
+            <i class="fas fa-fw fa-user-circle"></i>
             <span>Profile</span></a>
     </li>
 
     <li class="nav-item active">
         <a class="nav-link" href="loanpackage/listloanpackage">
-            <i class="fas fa-fw fa-table"></i>
+            <i class="fas fa-fw fa-money-bill-wave"></i>
             <span>Loan Packages Table</span></a>
     </li>
 
 
     <li class="nav-item active">
         <a class="nav-link" href="chat/chat_staff.jsp">
-            <i class="fas fa-fw fa-table"></i>
+            <i class="fas fa-fw fa-comments"></i>
             <span>Chat with Customer</span>
         </a>
     </li>
 
     <li class="nav-item">
         <a class="nav-link" href="#" data-toggle="collapse" data-target="#toolMenu" aria-expanded="false">
-            <i class="fas fa-fw fa-table"></i>
+            <i class="fas fa-fw fa-tools"></i>
             <span>Tool & Extensions</span>
         </a>
         <div id="toolMenu" class="collapse">
             <a class="nav-link sub-menu" href="repaymentSchedule">
-                <i class="fas fa-fw fa-table"></i> Repayment Schedule
+                <i class="fas fa-fw fa-calendar-alt"></i> Repayment Schedule
             </a>
             <a class="nav-link sub-menu" href="savingInterest">
-                <i class="fas fa-fw fa-table"></i> Savings Interest Rate
+                <i class="fas fa-fw fa-piggy-bank"></i> Savings Interest Rate
             </a>
             <a class="nav-link sub-menu" href="loanPackage">
-                <i class="fas fa-fw fa-table"></i> Loan Interest Rate
+                <i class="fas fa-fw fa-percentage"></i> Loan Interest Rate
             </a>
         </div>
     </li>
     <li class="nav-item">
         <a class="nav-link" href="#" data-toggle="collapse" data-target="#staffMenu" aria-expanded="false">
-            <i class="fas fa-fw fa-user"></i>
+            <i class="fas fa-fw fa-users-cog"></i>
             <span>Staff Manager</span>
         </a>
         <div id="staffMenu" class="collapse">
@@ -88,22 +87,22 @@
     </li>
     <li class="nav-item">
         <a class="nav-link" href="#" data-toggle="collapse" data-target="#assetMenu" aria-expanded="false">
-            <i class="fas fa-fw fa-user"></i>
+            <i class="fas fa-fw fa-chart-line"></i>
             <span>Asset Manager</span>
         </a>
         <div id="assetMenu" class="collapse">
             <a class="nav-link sub-menu" href="assets-filter">
-                <i class="fas fa-fw fa-filter"></i> Filter Asset
+                <i class="fas fa-fw fa-search-dollar"></i> Filter Asset
             </a>
             <a class="nav-link sub-menu" href="assets-add">
-                <i class="fas fa-fw fa-user-plus"></i> Add Asset
+                <i class="fas fa-fw fa-plus-circle"></i> Add Asset
             </a>
         </div>
     </li>
     <!-- manage contracts -->
     <li class="nav-item active">
         <a class="nav-link" href="loan-requests-auth">
-            <i class="fas fa-fw fa-table"></i>
+            <i class="fas fa-fw fa-file-contract"></i>
             <span>Loan Require Filter</span>
         </a>
     </li>
@@ -111,42 +110,21 @@
 
     <li class="nav-item active">
         <a class="nav-link" href="viewCustomerFeedback">
-            <i class="fas fa-fw fa-table"></i>
+            <i class="fas fa-fw fa-comment-dots"></i>
             <span>View Customer Feedback</span></a>
     </li>
 
-
-
-    <li class="nav-item active">
-        <a class="nav-link" href="listCate">
-            <i class="fas fa-fw fa-table"></i>
-            <span>Category Table</span></a>
-    </li>
-
-
-
     <li class="nav-item active">
         <a class="nav-link" href="newsListStaff">
-            <i class="fas fa-fw fa-table"></i>
+            <i class="fas fa-fw fa-newspaper"></i>
             <span>News Manager</span></a>
     </li>
 
-
-
-    <!--    <li class="nav-item active">
-            <a class="nav-link" href="listCate">
-                <i class="fas fa-fw fa-table"></i>
-                <span>Category Table</span></a>
-        </li>
-
-
-
--->    <li class="nav-item active">
+    <li class="nav-item active">
         <a class="nav-link" href="manageCustomerVer2">
-            <i class="fas fa-fw fa-table"></i>
+            <i class="fas fa-fw fa-user-friends"></i>
             <span> Manage Customer</span></a>
-    </li><!--
-
+    </li>
 
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">
