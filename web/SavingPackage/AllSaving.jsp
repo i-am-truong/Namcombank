@@ -56,6 +56,14 @@
         </script>
     </head>
     <body>
+
+
+        <header class="header">
+            <!-- Header Middle -->
+            <%@include file="../homepage/header.jsp" %>
+            <!-- Header Bottom -->
+            <%@include file="../homepage/header_bottom.jsp" %>
+        </header>
         <h1>Danh sách Gói Tiết Kiệm</h1>
 
         <div class="button-container">    
@@ -70,6 +78,56 @@
         <div id="nonWithdrawable" class="content">
             <%@ include file="NonWithdrawableSaving.jsp" %>
         </div>
+  </div>
+                </div>
+        <%@include file="../homepage/footer.jsp" %>
+        <div class="scroll-area">
+            <i class="fa fa-angle-up"></i>
+        </div>
 
+        <!-- Js File -->
+        <script src="assets/js/modernizr.min.js"></script>
+        <script src="assets/js/jquery-3.5.1.min.js"></script>
+        <script src="assets/js/popper.min.js"></script>
+        <script src="assets/js/bootstrap.min.js"></script>
+        <script src="assets/js/owl.carousel.min.js"></script>
+        <script src="assets/js/jquery.nav.min.js"></script>
+        <script src="assets/js/jquery.magnific-popup.min.js"></script>
+        <script src="assets/js/mixitup.min.js"></script>
+        <script src="assets/js/wow.min.js"></script>
+        <script src="assets/js/script.js"></script>
+        <script src="assets/js/mobile-menu.js"></script>
+        <script src="${pageContext.request.contextPath}/adminassets/js/format-input.js"></script>
+
+        <!-- Add JavaScript function to handle page size change -->
+        <script>
+                    function changePageSize() {
+                        // Get the current URL
+                        const url = new URL(window.location.href);
+                        // Get the selected page size value
+                        const pageSize = document.getElementById('pageSize').value;
+                        // Set the page-size parameter
+                        url.searchParams.set('page-size', pageSize);
+                        // Reset to page 1 when changing page size
+                        url.searchParams.set('page', '1');
+                        // Navigate to the new URL
+                        window.location.href = url.toString();
+                    }
+
+                    // Add event listener for the clear button
+                    document.addEventListener('DOMContentLoaded', function () {
+                        document.getElementById('clearSearchBtn').addEventListener('click', function () {
+                            // Clear all input fields
+                            document.getElementById('search').value = '';
+                            document.getElementById('author').value = '';
+
+                            // Reset sorting to default
+                            document.getElementById('sortOrderFilter').value = '';
+
+                            // Either submit the form or redirect to the base URL
+                            window.location.href = 'newsList';
+                        });
+                    });
+        </script>
     </body>
 </html>

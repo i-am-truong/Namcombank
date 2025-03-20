@@ -5,105 +5,130 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Tạo yêu cầu gửi tiết kiệm</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>Namcombank - Banking Services System</title>
+        <link rel="icon" href="assets/img/icon.png" type="image/gif" sizes="16x16">
+        <link rel="icon" href="assets/img/icon.png" type="image/gif" sizes="18x18">
+        <link rel="icon" href="assets/img/icon.png" type="image/gif" sizes="20x20">
+
+        <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+        <link rel="stylesheet" href="assets/css/fontawesome.all.min.css">
+        <link rel="stylesheet" href="assets/css/owl.carousel.min.css">
+        <link rel="stylesheet" href="assets/css/owl.theme.default.min.css">
+        <link rel="stylesheet" href="assets/css/animate.css">
+        <link rel="stylesheet" href="assets/css/magnific-popup.css">
+        <link rel="stylesheet" href="assets/css/normalize.css">
+        <link rel="stylesheet" href="assets/css/style.css">
+        <link rel="stylesheet" href="assets/css/responsive.css">
+
         <style>
-            body {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                height: 100vh;
-                background-color: #f4f4f4;
-                margin: 0;
+            .news-item {
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
             }
 
-            .container {
-                width: 65%;
-                max-width: 900px;
-                min-height: 80vh;
-                background: white;
-                padding: 50px;
-                border-radius: 10px;
-                box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-                text-align: center;
+            .news-item:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            }
+
+            .news-item .card {
+                border: 1px solid rgba(0,0,0,0.08);
+                border-radius: 8px;
+                overflow: hidden;
+                height: 100%;
+            }
+
+            .news-item .card-title {
+                font-size: 1.2rem;
+                font-weight: 600;
+                line-height: 1.3;
+                margin-bottom: 10px;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+            }
+
+            .news-item .card-text {
+                color: #555;
+            }
+
+            .news-item .card-body {
+                padding: 1.25rem;
+                height: 100%;
                 display: flex;
                 flex-direction: column;
-                justify-content: space-between;
             }
 
-            h1 {
-                text-align: center;
-                margin-bottom: 20px;
-                font-size: 28px; /* Chữ to hơn */
+            .news-item .btn-outline-primary {
+                margin-top: auto;
+                align-self: flex-start;
             }
 
+            .pagination-container .page-item.active .page-link {
+                background-color: #0b5ed7;
+                border-color: #0a58ca;
+            }
 
-            form {
-                flex-grow: 1;
+            @media (max-width: 767px) {
+                .news-item .card-img {
+                    height: 200px;
+                    border-radius: 4px 4px 0 0;
+                }
+            }
+
+            /* Make sidebar sticky */
+            .sticky-sidebar {
+                position: sticky;
+                top: 20px;
+            }
+
+            /* Fix for layout issues at different page sizes */
+            /* Force the columns to maintain their position side by side */
+            .row.news-container {
                 display: flex;
-                flex-direction: column;
-                justify-content: center;
+                flex-wrap: nowrap;
             }
 
-            label {
-                font-weight: bold;
-                margin-top: 10px;
-                text-align: left;
-                font-size: 18px; /* Chữ to hơn */
+            .news-main-column {
+                width: 67%;
+                padding-right: 15px;
+                flex: 0 0 67%;
             }
 
-            select, input {
-                width: 80%; /* Đảm bảo tất cả các ô có cùng chiều rộng */
-                height: 50px; /* Độ cao đồng nhất */
-                padding: 10px;
-                margin-top: 5px;
-                border: 1px solid #ccc;
-                border-radius: 5px;
-                font-size: 18px; /* Chữ to hơn */
-                box-sizing: border-box; /* Giữ kích thước đồng nhất */
+            .news-sidebar-column {
+                width: 33%;
+                padding-left: 15px;
+                flex: 0 0 33%;
             }
 
-            button, a {
-                display: inline-block;
-                width: 150px;  /* Độ rộng cố định */
-                height: 30px;  /* Chiều cao cố định */
-                font-size: 16px; /* Cỡ chữ vừa phải */
-                padding: 10px;
-                text-align: center;
-                border-radius: 5px;
+            /* Make sure sidebar sticks properly */
+            .sticky-sidebar {
+                position: sticky;
+                top: 20px;
+                height: fit-content;
             }
 
-            button {
-                background-color: #28a745; /* Xanh lá cây */
-                border: none;
-                cursor: pointer;
+            /* Ensure responsiveness */
+            @media (max-width: 991px) {
+                .row.news-container {
+                    flex-wrap: wrap;
+                }
+
+                .news-main-column,
+                .news-sidebar-column {
+                    width: 100%;
+                    flex: 0 0 100%;
+                    padding-left: 15px;
+                    padding-right: 15px;
+                }
+
+                .news-sidebar-column {
+                    margin-top: 30px;
+                }
             }
-
-            button:hover {
-                background-color: #218838;
-            }
-
-            a {
-                background-color: #90EE90; /* Xanh lá nhạt */
-                color: black;
-                text-decoration: none;
-                line-height: 45px; /* Căn giữa chữ theo chiều dọc */
-            }
-
-            a:hover {
-                background-color: #7cc576;
-            }
-
-            .message {
-                color: red;
-                background: #ffe5e5;
-                padding: 12px;
-                border-radius: 5px;
-                margin-top: 10px;
-                font-size: 18px;
-            }
-
-
         </style>
 
         <script>
@@ -117,6 +142,12 @@
     </head>
 
     <body>
+        <header class="header">
+            <!-- Header Middle -->
+            <%@include file="../homepage/header.jsp" %>
+            <!-- Header Bottom -->
+            <%@include file="../homepage/header_bottom.jsp" %>
+        </header>
         <div class="container">
 
             <h1>Tạo yêu cầu gửi tiết kiệm trực tuyến</h1>
@@ -168,6 +199,55 @@
             </form>
 
         </div>
+        <%@include file="../homepage/footer.jsp" %>
+        <div class="scroll-area">
+            <i class="fa fa-angle-up"></i>
+        </div>
+
+        <!-- Js File -->
+        <script src="assets/js/modernizr.min.js"></script>
+        <script src="assets/js/jquery-3.5.1.min.js"></script>
+        <script src="assets/js/popper.min.js"></script>
+        <script src="assets/js/bootstrap.min.js"></script>
+        <script src="assets/js/owl.carousel.min.js"></script>
+        <script src="assets/js/jquery.nav.min.js"></script>
+        <script src="assets/js/jquery.magnific-popup.min.js"></script>
+        <script src="assets/js/mixitup.min.js"></script>
+        <script src="assets/js/wow.min.js"></script>
+        <script src="assets/js/script.js"></script>
+        <script src="assets/js/mobile-menu.js"></script>
+        <script src="${pageContext.request.contextPath}/adminassets/js/format-input.js"></script>
+
+        <!-- Add JavaScript function to handle page size change -->
+        <script>
+                    function changePageSize() {
+                        // Get the current URL
+                        const url = new URL(window.location.href);
+                        // Get the selected page size value
+                        const pageSize = document.getElementById('pageSize').value;
+                        // Set the page-size parameter
+                        url.searchParams.set('page-size', pageSize);
+                        // Reset to page 1 when changing page size
+                        url.searchParams.set('page', '1');
+                        // Navigate to the new URL
+                        window.location.href = url.toString();
+                    }
+
+                    // Add event listener for the clear button
+                    document.addEventListener('DOMContentLoaded', function () {
+                        document.getElementById('clearSearchBtn').addEventListener('click', function () {
+                            // Clear all input fields
+                            document.getElementById('search').value = '';
+                            document.getElementById('author').value = '';
+
+                            // Reset sorting to default
+                            document.getElementById('sortOrderFilter').value = '';
+
+                            // Either submit the form or redirect to the base URL
+                            window.location.href = 'newsList';
+                        });
+                    });
+        </script>
     </body>
 
 
