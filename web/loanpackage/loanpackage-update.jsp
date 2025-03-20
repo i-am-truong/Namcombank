@@ -71,7 +71,7 @@
                        class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
 
                 <!-- Submit Button -->
-                <button type="submit" class="w-full bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600">Update</button>
+                <button type="submit" class="w-full bg-green-500 text-white p-3 rounded-lg hover:bg-green-600">Update</button>
             </form>
 
             <div class="text-center mt-4">

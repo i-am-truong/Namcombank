@@ -98,13 +98,21 @@
                     <div class="container-fluid">
                         <div class="table-wrapper">
                             <div class="text-right mb-3">
-                                <a href="Home" class="btn btn-primary">
+                                <a href="Home" class="btn btn-info">
                                     <i class="fas fa-home"></i> Home
                                 </a>
                                 <a href="loanpackage-customer/loan_packages.jsp" class="btn btn-success">
-                                    <i class="fas fa-plus"></i> Xem các gói vay có sẵn
+                                    <i class="fas fa-plus"></i> View available loan packages
                                 </a>
                             </div>
+
+                            <c:if test="${not empty creditCardMessage}">
+                                <div style="padding: 10px; background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; margin-bottom: 15px;">
+                                    ${creditCardMessage}
+                                </div>
+                            </c:if>
+
+
                             <!-- Debug information -->
                             <c:if test="${not empty loanRequests}">
                                 <div class="alert alert-info">
@@ -197,8 +205,6 @@
                                         <th>Request Date</th>
                                         <th>Status</th>
                                         <th>Collateral</th>
-                                        <th>Approved By</th>
-                                        <th>Approval Date</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -211,7 +217,7 @@
                                                     <td>${request.customer.fullname}</td>
                                                     <td>${request.loanPackage.packageName}</td>
                                                     <td><fmt:formatNumber value="${request.amount}" type="currency" currencySymbol="" maxFractionDigits="0"/> VND</td>
-                                                    <td><fmt:formatDate value="${request.requestDate}" pattern="MM/dd/yyyy"/></td>
+                                                    <td><fmt:formatDate value="${request.requestDate}" pattern="dd/MM/yyyy"/></td>
                                                     <td>
                                                         <c:choose>
                                                             <c:when test="${request.status eq 'Pending'}">
@@ -238,26 +244,7 @@
                                                             </c:otherwise>
                                                         </c:choose>
                                                     </td>
-                                                    <td>
-                                                        <c:choose>
-                                                            <c:when test="${not empty request.staff && not empty request.staff.fullname}">
-                                                                ${request.staff.fullname}
-                                                            </c:when>
-                                                            <c:otherwise>
-                                                                <span class="text-muted">Not yet</span>
-                                                            </c:otherwise>
-                                                        </c:choose>
-                                                    </td>
-                                                    <td>
-                                                        <c:choose>
-                                                            <c:when test="${not empty request.approvalDate}">
-                                                                <fmt:formatDate value="${request.approvalDate}" pattern="MM/dd/yyyy"/>
-                                                            </c:when>
-                                                            <c:otherwise>
-                                                                <span class="text-muted">Not yet</span>
-                                                            </c:otherwise>
-                                                        </c:choose>
-                                                    </td>
+
                                                     <td>
                                                         <c:choose>
                                                             <c:when test="${request.status eq 'Pending'}">
@@ -267,10 +254,11 @@
                                                                 </a>
                                                             </c:when>
                                                             <c:otherwise>
-                                                                <span class="text-muted">Active</span>
+                                                                <span class="text-muted">N/A</span>
                                                             </c:otherwise>
                                                         </c:choose>
                                                     </td>
+
 
                                                 </tr>
                                             </c:forEach>
@@ -282,6 +270,12 @@
                                         </c:otherwise>
                                     </c:choose>
                                 </tbody>
+                                <c:if test="${not empty requestScope.errorMessage}">
+                                    <div class="alert alert-danger mt-3">${requestScope.errorMessage}</div>
+                                </c:if>
+                                <c:if test="${not empty requestScope.successMessage}">
+                                    <div class="alert alert-success mt-3">${requestScope.successMessage}</div>
+                                </c:if>
 
                             </table>
                         </div>
@@ -301,25 +295,25 @@
     <!-- Custom scripts for all pages-->
     <script src="adminassets/js/sb-admin-2.min.js"></script>
     <script>
-                                                                       // Clear filters functionality
-                                                                       document.getElementById('clearFiltersBtn').addEventListener('click', function () {
-                                                                           // Reset all form fields
-                                                                           document.getElementById('customerName').value = '';
-                                                                           document.getElementById('packageName').value = '';
-                                                                           document.getElementById('status').value = '';
-                                                                           document.getElementById('minAmount').value = '';
-                                                                           document.getElementById('maxAmount').value = '';
-                                                                           document.getElementById('hasAsset').value = '';
-                                                                           document.getElementById('requestDateFrom').value = '';
-                                                                           document.getElementById('requestDateTo').value = '';
-                                                                           document.getElementById('approvedBy').value = '';
-                                                                           document.getElementById('approvedDate').value = '';
-                                                                           document.getElementById('approvalDateFrom').value = '';
-                                                                           document.getElementById('approvalDateTo').value = '';
+        // Clear filters functionality
+        document.getElementById('clearFiltersBtn').addEventListener('click', function () {
+            // Reset all form fields
+            document.getElementById('customerName').value = '';
+            document.getElementById('packageName').value = '';
+            document.getElementById('status').value = '';
+            document.getElementById('minAmount').value = '';
+            document.getElementById('maxAmount').value = '';
+            document.getElementById('hasAsset').value = '';
+            document.getElementById('requestDateFrom').value = '';
+            document.getElementById('requestDateTo').value = '';
+            document.getElementById('approvedBy').value = '';
+            document.getElementById('approvedDate').value = '';
+            document.getElementById('approvalDateFrom').value = '';
+            document.getElementById('approvalDateTo').value = '';
 
-                                                                           // Redirect to customer-loan-requests without search parameters
-                                                                           window.location.href = 'customer-loan-requests';
-                                                                       });
+            // Redirect to customer-loan-requests without search parameters
+            window.location.href = 'customer-loan-requests';
+        });
     </script>
 </body>
 </html>

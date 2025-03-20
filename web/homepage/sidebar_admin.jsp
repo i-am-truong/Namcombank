@@ -47,11 +47,11 @@
             <span>Loan Packages Table</span></a>
     </li>
 
-    <!-- manage contracts -->
+
     <li class="nav-item active">
-        <a class="nav-link" href="contractApproval">
+        <a class="nav-link" href="chat/chat_staff.jsp">
             <i class="fas fa-fw fa-table"></i>
-            <span>Manage Contracts</span>
+            <span>Chat with Customer</span>
         </a>
     </li>
 

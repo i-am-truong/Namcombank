@@ -1,6 +1,8 @@
+package servlet;
 
 import context.LoanPackageDAO;
 import context.LoanRequestDAO;
+import context.CreditCardDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -11,6 +13,10 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.Customer;
 import model.LoanPackage;
 import model.LoanRequest;
@@ -18,100 +24,110 @@ import model.LoanRequest;
 @WebServlet(name = "LoanRequestServlet", urlPatterns = {"/loan-request"})
 public class LoanRequestServlet extends HttpServlet {
 
+    private static final Logger LOGGER = Logger.getLogger(LoanRequestServlet.class.getName());
+
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            HttpSession session = request.getSession();
-            Customer customer = (Customer) session.getAttribute("customer");
+        HttpSession session = request.getSession();
+        Customer customer = (Customer) session.getAttribute("customer");
 
-            // Kiểm tra xem khách hàng đã đăng nhập chưa
-            if (customer == null) {
-                response.sendRedirect("../login");
-                return;
+        if (customer == null) {
+            response.sendRedirect("login");
+            return;
+        }
+
+        List<String> errorMessages = new ArrayList<>();
+        String packageIdStr = request.getParameter("package_id");
+        String amountStr = request.getParameter("amount");
+
+        int packageId = 0;
+        BigDecimal amount = null;
+
+        // Kiểm tra dữ liệu đầu vào
+        if (packageIdStr == null || amountStr == null || packageIdStr.trim().isEmpty() || amountStr.trim().isEmpty()) {
+            errorMessages.add("Vui lòng nhập đầy đủ thông tin.");
+        } else {
+            try {
+                packageId = Integer.parseInt(packageIdStr);
+            } catch (NumberFormatException e) {
+                errorMessages.add("Gói vay không hợp lệ.");
             }
-
-            // Lấy dữ liệu từ request
-            String packageIdStr = request.getParameter("package_id");
-            String amountStr = request.getParameter("amount");
-
-            // Kiểm tra dữ liệu rỗng
-            if (packageIdStr == null || amountStr == null
-                    || packageIdStr.trim().isEmpty() || amountStr.trim().isEmpty()) {
-                response.sendRedirect("create-loan-request.jsp?error=empty-fields");
-                return;
-            }
-
-            // Chuyển đổi dữ liệu sang kiểu số
-            int customerId = customer.getCustomerId();
-            int packageId = Integer.parseInt(packageIdStr);
-            BigDecimal amount;
 
             try {
-                amount = new BigDecimal(amountStr.trim());
+                amount = new BigDecimal(amountStr.replaceAll("[^0-9]", "")); // Chỉ giữ số
             } catch (NumberFormatException e) {
-                response.sendRedirect("create-loan-request.jsp?error=invalid-number-format");
-                return;
+                errorMessages.add("Số tiền vay không hợp lệ.");
             }
+        }
 
-            // Kiểm tra số tiền có hợp lệ không (phải lớn hơn 0)
-            if (amount.compareTo(BigDecimal.ZERO) <= 0) {
-                response.sendRedirect("create-loan-request.jsp?error=invalid-amount");
-                return;
+        // Kiểm tra gói vay có tồn tại không
+        LoanPackageDAO packageDAO = new LoanPackageDAO();
+        LoanPackage loanPackage = packageDAO.getLoanPackageById(packageId);
+        if (loanPackage == null) {
+            errorMessages.add("Gói vay không tồn tại.");
+        }
+
+        // Kiểm tra số tiền vay hợp lệ
+        if (amount != null && loanPackage != null) {
+            if (amount.compareTo(BigDecimal.ZERO) <= 0
+                    || amount.compareTo(loanPackage.getMinAmount()) < 0
+                    || amount.compareTo(loanPackage.getMaxAmount()) > 0) {
+                errorMessages.add("Số tiền vay phải nằm trong khoảng từ " + loanPackage.getMinAmount() + " đến " + loanPackage.getMaxAmount() + ".");
             }
+        }
 
-            // Kiểm tra số thập phân (ví dụ: không quá 2 chữ số thập phân)
-            if (amount.scale() > 2) {
-                response.sendRedirect("create-loan-request.jsp?error=too-many-decimals");
-                return;
-            }
+        // Nếu có lỗi, quay lại trang đăng ký vay
+        if (!errorMessages.isEmpty()) {
+            request.setAttribute("errorMessages", errorMessages);
+            request.setAttribute("amount", amountStr);
+            request.getRequestDispatcher("loanpackage-customer/create-loan-request.jsp").forward(request, response);
+            return;
+        }
 
-            // Kiểm tra số tiền có phải bội số của 1 triệu không
-            BigDecimal multiple = new BigDecimal("1000000");
-            if (amount.remainder(multiple).compareTo(BigDecimal.ZERO) != 0) {
-                response.sendRedirect("create-loan-request.jsp?error=amount-not-multiple");
-                return;
-            }
+        // Tạo yêu cầu vay
+        LoanRequestDAO loanRequestDAO = new LoanRequestDAO();
+        LoanRequest loanRequest = new LoanRequest();
+        loanRequest.setCustomerId(customer.getCustomerId());
+        loanRequest.setPackageId(packageId);
+        loanRequest.setAmount(amount);
+        loanRequest.setRequestDate(Date.valueOf(LocalDate.now()));
+        loanRequest.setStatus("Pending");
 
-            // Kiểm tra số tiền vay có nằm trong giới hạn của gói vay không
-            LoanPackageDAO packageDAO = new LoanPackageDAO();
-            LoanPackage loanPackage = packageDAO.getLoanPackageById(packageId);
+        loanRequestDAO.insert(loanRequest);
 
-            if (loanPackage == null) {
-                response.sendRedirect("create-loan-request.jsp?error=invalid-package");
-                return;
-            }
+        // Kiểm tra và cấp thẻ tín dụng nếu đủ điều kiện
+        checkAndGrantCreditCard(customer.getCustomerId());
 
-            if (amount.compareTo(loanPackage.getMinAmount()) < 0 || amount.compareTo(loanPackage.getMaxAmount()) > 0) {
-                response.sendRedirect("create-loan-request.jsp?error=amount-out-of-range");
-                return;
-            }
+        response.sendRedirect("customer-loan-requests?success=true");
+    }
 
-            // Kiểm tra khách hàng có yêu cầu vay nào đang chờ duyệt không       
-//            if (loanRequestDAO.hasPendingRequest(customerId)) {
-//                response.sendRedirect("create-loan-request.jsp?error=duplicate-request");
-//                return;
-//            }
-            LoanRequestDAO loanRequestDAO = new LoanRequestDAO();
-            // Tạo đối tượng LoanRequest
-            Date requestDate = Date.valueOf(LocalDate.now());
-            String status = "Pending";
+    // Kiểm tra điều kiện và cấp thẻ tín dụng nếu đủ tiêu chuẩn
+    private void checkAndGrantCreditCard(int customerId) {
+        LoanRequestDAO loanRequestDAO = new LoanRequestDAO();
+        CreditCardDAO cardDAO = new CreditCardDAO();
 
-            LoanRequest loanRequest = new LoanRequest();
-            loanRequest.setCustomerId(customerId);
-            loanRequest.setPackageId(packageId);
-            loanRequest.setAmount(amount);
-            loanRequest.setRequestDate(requestDate);
-            loanRequest.setStatus(status);
+        // Chuyển sang BigDecimal để tránh mất độ chính xác
+        BigDecimal totalLoan = loanRequestDAO.getTotalLoanAmount(customerId);
+        int loanCount = loanRequestDAO.getLoanCount(customerId);
 
-            // Lưu vào database
-            loanRequestDAO.insert(loanRequest);
+        if (totalLoan == null) {
+            totalLoan = BigDecimal.ZERO;
+        }
 
-            // Chuyển hướng về trang yêu cầu vay với thông báo thành công
-            response.sendRedirect("customer-loan-requests?success=true");
+        // Kiểm tra khách hàng đã có thẻ chưa
+        boolean hasCreditCard = cardDAO.hasCreditCard(customerId);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            response.sendRedirect("create-loan-request.jsp?error=internal-error");
+        // Điều kiện cấp thẻ: tổng khoản vay >= 500 triệu & >= 3 lần vay & chưa có thẻ
+        if (totalLoan.compareTo(BigDecimal.valueOf(500000000)) >= 0
+                && loanCount >= 3 && !hasCreditCard) {
+            BigDecimal creditLimit = BigDecimal.valueOf(100000000);
+            cardDAO.createCreditCard(customerId, "Visa", creditLimit);
+            LOGGER.log(Level.INFO, "Khách hàng {0} đủ điều kiện nhận thẻ Visa {1}!",
+                    new Object[]{customerId, creditLimit});
+        } else {
+            LOGGER.log(Level.INFO, "Khách hàng {0} chưa đủ điều kiện cấp thẻ. Tổng khoản vay: {1}, Số lần vay: {2}, Đã có thẻ: {3}",
+                    new Object[]{customerId, totalLoan, loanCount, hasCreditCard});
         }
     }
 }

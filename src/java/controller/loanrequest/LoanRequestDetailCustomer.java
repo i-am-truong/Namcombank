@@ -99,7 +99,7 @@ public class LoanRequestDetailCustomer extends HttpServlet {
             String message = "";
 
             if ("approve".equals(action)) {
-                success = loanRequestDAO.approveLoanRequest(requestId, notes);
+                success = loanRequestDAO.approveLoanRequest(requestId, loggedInStaff.getId(), notes);
                 message = success ? "Yêu cầu vay đã được phê duyệt." : "Lỗi khi phê duyệt.";
             } else if ("reject".equals(action)) {
                 success = loanRequestDAO.rejectLoanRequest(requestId, loggedInStaff.getId(), notes);

@@ -8,10 +8,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import model.Customer;
 import model.LoanRequest;
-import model.auth.Role;
-import model.auth.Staff;
 
 /**
  * Controller for displaying loan requests list
@@ -29,56 +29,42 @@ public class LoanRequestListCustomer extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Kiểm tra phiên đăng nhập
-
         try {
+            HttpSession session = request.getSession();
+            Customer customer = (Customer) session.getAttribute("customer");
 
-            // Lấy tham số tìm kiếm
-            String customerName = request.getParameter("customerName");
-            String packageName = request.getParameter("packageName");
-            String status = request.getParameter("status");
-            String minAmountStr = request.getParameter("minAmount");
-            String maxAmountStr = request.getParameter("maxAmount");
-            String requestDateFrom = request.getParameter("requestDateFrom");
-            String requestDateTo = request.getParameter("requestDateTo");
-            String approvedBy = request.getParameter("approvedBy");
-            String approvedDate = request.getParameter("approvedDate");
-            String approvalDateFrom = request.getParameter("approvalDateFrom");
-            String approvalDateTo = request.getParameter("approvalDateTo");
-            String hasAssetStr = request.getParameter("hasAsset");
-
-            // Chuyển đổi giá trị tìm kiếm
-            Double minAmount = null;
-            Double maxAmount = null;
-            Boolean hasAsset = null;
-
-            if (minAmountStr != null && !minAmountStr.isEmpty()) {
-                try {
-                    minAmount = Double.parseDouble(minAmountStr.replace(",", ""));
-                } catch (NumberFormatException e) {
-                    request.setAttribute("errorMessage", "Số tiền tối thiểu không hợp lệ");
-                }
+            if (customer == null) {
+                response.sendRedirect("login");
+                return;
             }
 
-            if (maxAmountStr != null && !maxAmountStr.isEmpty()) {
-                try {
-                    maxAmount = Double.parseDouble(maxAmountStr.replace(",", ""));
-                } catch (NumberFormatException e) {
-                    request.setAttribute("errorMessage", "Số tiền tối đa không hợp lệ");
-                }
-            }
+            int customerId = customer.getCustomerId();
 
-            if (hasAssetStr != null && !hasAssetStr.isEmpty()) {
-                hasAsset = "1".equals(hasAssetStr) || "true".equalsIgnoreCase(hasAssetStr);
-            }
+            // Lấy danh sách yêu cầu vay theo customer_id
+            ArrayList<LoanRequest> loanRequests = loanRequestDAO.getLoanRequestsByCustomerId(customerId);
 
-            // Lấy danh sách yêu cầu vay theo điều kiện tìm kiếm
-            ArrayList<LoanRequest> loanRequests = loanRequestDAO.list();
-            // Tính toán số lượng yêu cầu vay theo trạng thái (cho các card thống kê)
-            int totalRequests = loanRequestDAO.countAllLoanRequests();
-            int pendingRequests = loanRequestDAO.countLoanRequestsByStatus("Pending");
-            int approvedRequests = loanRequestDAO.countLoanRequestsByStatus("Approved");
-            int rejectedRequests = loanRequestDAO.countLoanRequestsByStatus("Rejected");
+            // Tính toán số lượng yêu cầu vay theo trạng thái
+            int totalRequests = loanRequestDAO.countLoanRequestsByCustomer(customerId);
+            int pendingRequests = loanRequestDAO.countLoanRequestsByStatusAndCustomer("Pending", customerId);
+            int approvedRequests = loanRequestDAO.countLoanRequestsByStatusAndCustomer("Approved", customerId);
+            int rejectedRequests = loanRequestDAO.countLoanRequestsByStatusAndCustomer("Rejected", customerId);
+
+            // Kiểm tra điều kiện cấp thẻ tín dụng
+            LoanRequestDAO loanDAO = new LoanRequestDAO();
+            BigDecimal totalApprovedLoanAmount = loanDAO.getTotalApprovedLoanAmount(customerId); // Chỉ tính khoản vay "Approved"
+            int approvedLoanCount = loanDAO.getApprovedLoanCount(customerId); // Đếm số khoản vay đã "Approved"
+            boolean hasCreditCard = loanDAO.hasCreditCard(customerId);
+
+            // Kiểm tra khách hàng đã có thẻ chưa
+            if (hasCreditCard) {
+                request.setAttribute("creditCardMessage", "✅ Bạn đã sở hữu thẻ tín dụng.");
+            } else if (approvedLoanCount >= 3 && totalApprovedLoanAmount.compareTo(new BigDecimal(500000000)) >= 0) {
+                // Nếu đủ điều kiện cấp thẻ
+                request.setAttribute("creditCardMessage", "🎉 Bạn đã đủ điều kiện nhận thẻ tín dụng! <a href='credit-cards'>Xem ngay</a>");
+            } else {
+                // Nếu chưa có thẻ và chưa đủ điều kiện
+                request.setAttribute("creditCardMessage", "❌ Bạn chưa có thẻ tín dụng hoặc chưa đủ điều kiện.");
+            }
 
             // Đặt các thuộc tính vào request
             request.setAttribute("loanRequests", loanRequests);
@@ -86,20 +72,8 @@ public class LoanRequestListCustomer extends HttpServlet {
             request.setAttribute("pendingRequests", pendingRequests);
             request.setAttribute("approvedRequests", approvedRequests);
             request.setAttribute("rejectedRequests", rejectedRequests);
-
-            // Lưu các tham số tìm kiếm để hiển thị lại trên form
-            request.setAttribute("customerName", customerName);
-            request.setAttribute("packageName", packageName);
-            request.setAttribute("status", status);
-            request.setAttribute("minAmount", minAmountStr);
-            request.setAttribute("maxAmount", maxAmountStr);
-            request.setAttribute("requestDateFrom", requestDateFrom);
-            request.setAttribute("requestDateTo", requestDateTo);
-            request.setAttribute("approvedBy", approvedBy);
-            request.setAttribute("approvedDate", approvedDate);
-            request.setAttribute("approvalDateFrom", approvalDateFrom);
-            request.setAttribute("approvalDateTo", approvalDateTo);
-            request.setAttribute("hasAsset", hasAssetStr);
+            request.setAttribute("customerId", customerId);
+            request.setAttribute("customerName", customer.getFullname());
 
             // Chuyển đến trang danh sách yêu cầu vay
             request.getRequestDispatcher("/loanpackage-customer/viewLoanRequest.jsp").forward(request, response);
@@ -107,11 +81,8 @@ public class LoanRequestListCustomer extends HttpServlet {
         } catch (Exception e) {
             System.err.println("Lỗi Controller: " + e.getMessage());
             e.printStackTrace();
-
-            // Thêm dòng này để hiển thị lỗi chi tiết
             request.setAttribute("errorDetail", e.toString() + ": " + e.getMessage());
             request.getRequestDispatcher("/error.jsp").forward(request, response);
-            return;
         }
     }
 
@@ -120,5 +91,4 @@ public class LoanRequestListCustomer extends HttpServlet {
             throws ServletException, IOException {
         doGet(request, response);
     }
-
 }

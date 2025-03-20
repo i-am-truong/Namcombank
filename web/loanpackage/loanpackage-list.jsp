@@ -10,21 +10,21 @@
     </head>
     <body class="bg-gray-100 text-gray-900">
         <div class="container mx-auto p-6">
-            <h1 class="text-4xl font-bold text-center text-blue-600 mb-6">Loan Package List</h1>
+            <h1 class="text-4xl font-bold text-center text-green-700 mb-6">Loan Package List</h1>
 
             <div class="overflow-x-auto shadow-lg rounded-lg">
                 <table class="w-full bg-white rounded-lg shadow-md">
                     <thead>
-                        <tr class="bg-gradient-to-r from-blue-500 to-blue-700 text-white">
+                        <tr class="bg-green-700 text-white">
                             <th class="px-4 py-3">Package ID</th>
                             <th class="px-4 py-3">Staff ID</th>
                             <th class="px-4 py-3">Package Name</th>
                             <th class="px-4 py-3">Loan Type</th>
                             <th class="px-4 py-3">Description</th>
-                            <th class="px-4 py-3">Interest Rate</th>
+                            <th class="px-4 py-3">Interest Rate (%)</th>
                             <th class="px-4 py-3">Max Amount</th>
                             <th class="px-4 py-3">Min Amount</th>
-                            <th class="px-4 py-3">Loan Term</th>
+                            <th class="px-4 py-3">Loan Term (months)</th>
                             <th class="px-4 py-3">Created Date</th>
                             <th class="px-4 py-3">Actions</th>
                         </tr>
@@ -33,16 +33,15 @@
                         <%
                             LoanPackageDAO dao = new LoanPackageDAO();
                             List<LoanPackage> loanPackages = dao.getAllLoanPackages();
-
                             for (LoanPackage loanPackage : loanPackages) {
                         %>
-                        <tr class="border-b hover:bg-gray-100">
+                        <tr class="border-b hover:bg-gray-200">
                             <td class="px-4 py-3 text-center"><%= loanPackage.getPackageId() %></td>
                             <td class="px-4 py-3 text-center"><%= loanPackage.getStaffId() %></td>
-                            <td class="px-4 py-3"><%= loanPackage.getPackageName() %></td>
+                            <td class="px-4 py-3 font-semibold text-green-700"><%= loanPackage.getPackageName() %></td>
                             <td class="px-4 py-3 text-center"><%= loanPackage.getLoanType() %></td>
                             <td class="px-4 py-3"><%= loanPackage.getDescription() %></td>
-                            <td class="px-4 py-3 text-center"><%= String.format("%.2f", loanPackage.getInterestRate()) %>%</td>
+                            <td class="px-4 py-3 text-center"><%= String.format("%.2f", loanPackage.getInterestRate()) %></td>
                             <td class="px-4 py-3 text-center font-semibold text-green-600">
                                 <%= String.format("%,.0f", loanPackage.getMaxAmount()) %> VND
                             </td>
@@ -53,7 +52,7 @@
                             <td class="px-4 py-3 text-center"><%= loanPackage.getCreatedDate() %></td>
                             <td class="px-4 py-3 flex flex-col space-y-2">
                                 <a href="loanpackage-detail.jsp?id=<%= loanPackage.getPackageId() %>"
-                                   class="bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 transition">
+                                   class="bg-green-600 text-white px-3 py-1 rounded-md hover:bg-green-700 transition">
                                     View Details
                                 </a>    
                                 <a href="loanpackage-update.jsp?id=<%= loanPackage.getPackageId() %>"
@@ -64,30 +63,26 @@
                                    class="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 transition"
                                    onclick="return confirm('Are you sure you want to delete this package?');">
                                     Delete
-                                </button>
+                                </a>
                             </td>
                         </tr>
-                        <%
-                            }
-                        %>
+                        <% } %>
                     </tbody>
                 </table>
             </div>
 
             <div class="mt-6 text-center">
                 <a href="loanpackage-create.jsp"
-                   class="bg-green-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-green-600 transition">
+                   class="bg-green-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-green-700 transition">
                     Create New Loan Package
                 </a>
-
             </div>
-            <div>
+            <div class="mt-4 text-center">
                 <a href="../staffFilter"
-                   class="bg-gray-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-green-600 transition">
+                   class="bg-gray-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-gray-600 transition">
                     Back
                 </a> 
             </div>
-
         </div>
     </body>
 </html>

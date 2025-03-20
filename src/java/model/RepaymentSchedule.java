@@ -4,70 +4,50 @@
  */
 package model;
 
+import java.math.BigDecimal;
+import java.sql.Date;
+
 public class RepaymentSchedule {
 
-    private int id;
-    private int loanId;
+    private int schedule_id;
+
     private String status;
-    private String dueDate;
-    private float amountDue;
-    private Customer customer;
-    private String packageName;
+    private Date dueDate;
+    private BigDecimal amountDue;
+    private int requestId;
+    private int customerId;
+    private LoanRequest loanRequest;
+
+    // Add these fields to RepaymentSchedule.java
+    private long daysDifference;
+    private boolean paymentAvailable;
 
     public RepaymentSchedule() {
     }
 
-    public RepaymentSchedule(int id, int loanId, String status, String dueDate, float amountDue) {
-        this.id = id;
-        this.loanId = loanId;
-        this.status = status;
-        this.dueDate = dueDate;
-        this.amountDue = amountDue;
+
+    public long getDaysDifference() {
+        return daysDifference;
     }
 
-    public RepaymentSchedule(int id, int loanId, String status, String dueDate, float amountDue, Customer customer, String packageName) {
-        this.id = id;
-        this.loanId = loanId;
-        this.status = status;
-        this.dueDate = dueDate;
-        this.amountDue = amountDue;
-        this.customer = customer;
-        this.packageName = packageName;
+    public void setDaysDifference(long daysDifference) {
+        this.daysDifference = daysDifference;
     }
 
-
-    public Customer getCustomer() {
-        return customer;
+    public boolean isPaymentAvailable() {
+        return paymentAvailable;
     }
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
+    public void setPaymentAvailable(boolean paymentAvailable) {
+        this.paymentAvailable = paymentAvailable;
     }
 
-    public String getPackageName() {
-        return packageName;
+    public int getSchedule_id() {
+        return schedule_id;
     }
 
-    public void setPackageName(String packageName) {
-        this.packageName = packageName;
-    }
-    
-    
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getLoanId() {
-        return loanId;
-    }
-
-    public void setLoanId(int loanId) {
-        this.loanId = loanId;
+    public void setSchedule_id(int schedule_id) {
+        this.schedule_id = schedule_id;
     }
 
     public String getStatus() {
@@ -78,20 +58,44 @@ public class RepaymentSchedule {
         this.status = status;
     }
 
-    public String getDueDate() {
-        return dueDate;
-    }
-
-    public void setDueDate(String dueDate) {
-        this.dueDate = dueDate;
-    }
-
-    public float getAmountDue() {
+    public BigDecimal getAmountDue() {
         return amountDue;
     }
 
-    public void setAmountDue(float amountDue) {
+    public void setAmountDue(BigDecimal amountDue) {
         this.amountDue = amountDue;
+    }
+
+    public Date getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(Date dueDate) {
+        this.dueDate = dueDate;
+    }
+
+    public int getRequestId() {
+        return requestId;
+    }
+
+    public void setRequestId(int requestId) {
+        this.requestId = requestId;
+    }
+
+    public int getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(int customerId) {
+        this.customerId = customerId;
+    }
+
+    public LoanRequest getLoanRequest() {
+        return loanRequest;
+    }
+
+    public void setLoanRequest(LoanRequest loanRequest) {
+        this.loanRequest = loanRequest;
     }
 
 }

@@ -20,6 +20,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import model.Customer;
+import org.apache.poi.ss.usermodel.RichTextString;
 
 
 /**
@@ -74,7 +75,7 @@ public class ExportCustomers extends HttpServlet {
                 row.createCell(5).setCellValue(customer.getDob().toString());
                 row.createCell(6).setCellValue(customer.getGender() == 0 ? "Female" : "Male");
                 row.createCell(7).setCellValue(customer.getPhonenumber());
-                row.createCell(8).setCellValue(customer.getBalance());
+                row.createCell(8).setCellValue((RichTextString) customer.getBalance());
                 row.createCell(9).setCellValue(customer.getCid());
                 row.createCell(10).setCellValue(customer.getAddress());
             }

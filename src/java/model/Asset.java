@@ -26,10 +26,10 @@ public class Asset {
     if (assetType == null) return "";
     
     switch (assetType) {
-        case "REAL_ESTATE": return "Bất động sản";
-        case "VEHICLE": return "Phương tiện";
-        case "INCOME": return "Thu nhập";
-        case "OTHER": return "Khác";
+        case "REAL_ESTATE": return "Real estate";
+        case "VEHICLE": return "Vehicle";
+        case "INCOME": return "Income";
+        case "OTHER": return "Other";
         default: return assetType;
     }
 }

@@ -235,6 +235,7 @@
                                     type="date"
                                     class="form-control"
                                     id="dob-input"
+                                    pattern="dd/MM/yyyy"
                                     placeholder="Enter date of birth"
                                     value="${sessionScope.customer.dob}"
                                     >

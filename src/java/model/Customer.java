@@ -4,6 +4,7 @@
  */
 package model;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 
 /**
@@ -21,7 +22,7 @@ public class Customer {
     private Date dob;
     private int gender;
     private String phonenumber;
-    private float balance;
+    private BigDecimal balance;
     private String cid;
     private String address;
     private String avatar; 
@@ -29,7 +30,7 @@ public class Customer {
     public Customer() {
     }
 
-    public Customer(int customerId, String fullname, String username, String password, int active, String email, Date dob, int gender, String phonenumber, float balance, String cid, String address, String avatar) {
+    public Customer(int customerId, String fullname, String username, String password, int active, String email, Date dob, int gender, String phonenumber, BigDecimal balance, String cid, String address, String avatar) {
         this.customerId = customerId;
         this.fullname = fullname;
         this.username = username;
@@ -121,13 +122,15 @@ public class Customer {
         this.phonenumber = phonenumber;
     }
 
-    public float getBalance() {
+    public BigDecimal getBalance() {
         return balance;
     }
 
-    public void setBalance(float balance) {
+    public void setBalance(BigDecimal balance) {
         this.balance = balance;
     }
+
+    
 
     public String getCid() {
         return cid;

@@ -17,6 +17,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.math.BigDecimal;
 import java.time.Instant;
 import model.Customer;
 
@@ -107,7 +108,7 @@ public class login extends HttpServlet {
         }
 
         // 🔹 Lấy số dư tài khoản
-        double balance = cdao.getBalanceByCId(customer);
+        BigDecimal balance = cdao.getBalanceByCId(customer);
 
         // 🔹 Lưu thông tin vào session
         HttpSession session = request.getSession();
@@ -217,7 +218,7 @@ public class login extends HttpServlet {
         }
 
         // Lưu thông tin vào session
-        double balance = cdao.getBalanceByCId(customer);
+        BigDecimal balance = cdao.getBalanceByCId(customer);
         session.setAttribute("balance", balance);
         session.setAttribute("customer", customer);
         session.setAttribute("customer_id", customer.getCustomerId());

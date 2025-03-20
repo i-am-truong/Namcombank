@@ -1,182 +1,399 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
-<html lang="en">
-
-
+<html>
     <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <meta name="description" content="">
-        <meta name="author" content="">
-
-        <title>Namcombank</title>
-
-        <!-- Custom fonts for this template -->
-        <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-        <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
-
-        <!-- Custom styles for this template -->
-        <link href="adminassets/css/sb-admin-2.min.css" rel="stylesheet">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-        <!-- Custom styles for this page -->
-        <link href="${pageContext.request.contextPath}/adminassets/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-        <link rel="stylesheet" href="assets/css/fontawesome.all.min.css">
-
-
-
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Repayment Schedules</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
         <style>
-            /* General form styling */
-            #registerStaffForm {
-                display: flex;
-                flex-direction: column; /* Align items vertically */
-                gap: 15px; /* Space between form elements */
-                margin-left: 30px;
+            :root {
+                --primary-color: #1e7e34;
+                --primary-light: #28a745;
+                --primary-dark: #145523;
+                --secondary-color: #f8f9fa;
+                --warning-color: #ffc107;
+                --danger-color: #dc3545;
+                --text-color: #212529;
             }
 
-            /* Styling for form inputs */
-            #registerStaffForm .form-control {
-                margin-bottom: 15px; /* Space between input fields */
+            body {
+                background-color: #f8f9fa;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                padding: 20px;
+                color: var(--text-color);
             }
 
-            /* Styling for the gender selection */
-            #registerStaffForm div {
+            .table-wrapper {
+                background: #fff;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                margin-top: 20px;
+            }
+
+            .card-header {
+                background-color: var(--primary-color);
+                color: white;
+                padding: 15px 20px;
+                border-radius: 8px 8px 0 0;
+            }
+
+            .table {
+                margin-bottom: 0;
+            }
+
+            .table th {
+                background-color: #f8f9fc;
+                color: var(--primary-color);
+                font-weight: 600;
+                border-top: none;
+            }
+
+            .amount {
+                font-weight: 600;
+                text-align: right;
+            }
+
+            .badge {
+                font-size: 0.85rem;
+                padding: 6px 10px;
+            }
+
+            .badge-pending {
+                background-color: var(--warning-color);
+                color: #212529;
+            }
+
+            .badge-overdue {
+                background-color: var(--danger-color);
+                color: #fff;
+            }
+
+            .badge-due-soon {
+                background-color: var(--warning-color);
+                color: #212529;
+            }
+
+            .no-data {
+                text-align: center;
+                padding: 50px;
+                color: #6c757d;
+            }
+
+            .btn-primary {
+                background-color: var(--primary-color);
+                border-color: var(--primary-color);
+            }
+
+            .btn-primary:hover {
+                background-color: var(--primary-dark);
+                border-color: var(--primary-dark);
+            }
+
+            .status-due-soon {
+                color: var(--warning-color);
+                font-weight: bold;
+            }
+
+            .status-overdue {
+                color: var(--danger-color);
+                font-weight: bold;
+            }
+
+            .navigation-bar {
+                background-color: white;
+                padding: 15px;
+                border-radius: 8px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                margin-bottom: 20px;
                 display: flex;
+                justify-content: space-between;
                 align-items: center;
-                gap: 10px; /* Space between gender options */
             }
 
-            /* Specific styling for the gender label */
-            #registerStaffForm div:first-of-type {
-                margin-bottom: 15px; /* Space before gender selection */
+            .navigation-bar h3 {
+                margin: 0;
+                color: var(--primary-color);
             }
 
-            /* Styling for the submit button */
-            #registerStaffForm button {
-                margin-bottom: 20px; /* Space below the button */
-                width: 250px;
-            }
-            .dataTables_wrapper {
-                margin-top: 30px; /* Đẩy xuống 30px, có thể chỉnh số lớn hơn */
+            .nav-buttons {
+                display: flex;
+                gap: 10px;
             }
 
+            .nav-btn {
+                padding: 8px 16px;
+                border-radius: 4px;
+                text-decoration: none;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: 500;
+                transition: all 0.3s ease;
+            }
+
+            .nav-btn i {
+                margin-right: 8px;
+            }
+
+            .nav-btn-outline {
+                color: var(--primary-color);
+                background-color: transparent;
+                border: 1px solid var(--primary-color);
+            }
+
+            .nav-btn-outline:hover {
+                background-color: var(--primary-color);
+                color: white;
+            }
+
+            .nav-btn-primary {
+                color: white;
+                background-color: var(--primary-color);
+                border: 1px solid var(--primary-color);
+            }
+
+            .nav-btn-primary:hover {
+                background-color: var(--primary-dark);
+                border-color: var(--primary-dark);
+            }
+
+            .search-filters {
+                background: white;
+                padding: 15px;
+                border-radius: 8px;
+                margin-bottom: 20px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+
+            .search-filters h4 {
+                color: var(--primary-color);
+                margin-bottom: 15px;
+            }
+
+            /* Hover effect for table rows */
+            .table tbody tr:hover {
+                background-color: rgba(30, 126, 52, 0.05);
+            }
+
+            .btn-disabled {
+                background-color: #6c757d;
+                border-color: #6c757d;
+                cursor: not-allowed;
+                opacity: 0.65;
+            }
+
+            .btn-disabled:hover {
+                background-color: #6c757d;
+                border-color: #6c757d;
+            }
         </style>
     </head>
-
-    <body id="page-top">
-        <!-- Page Wrapper -->
-        <div id="wrapper">
-            <!-- Sidebar -->
-            <%@include file="../homepage/sidebar_admin.jsp" %>
-            <!-- End of Sidebar -->
-
-            <!-- Content Wrapper -->
-            <div id="content-wrapper" class="d-flex flex-column">
-                <!-- Main Content -->
-                <div id="content">
-                    <!-- Topbar -->
-                    <%@include file="../homepage/header_admin.jsp" %>
-                    <!-- End of Topbar -->
-                    <!-- Begin Page Content -->
-                    <div class="container-fluid" >
-                        <!-- Page Heading -->
-                        <form  action="filterStaff" method="post" >
-                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                <thead>
-                                    <tr>
-                                        <th>Package Name</th>
-                                        <th>Customer</th>
-                                        <th>Phone</th>
-                                        <th>Amount</th>
-                                        <th>Status</th>
-                                        <th>Due Date</th>
-<!--                                        <th>Action</th>-->
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <c:forEach items="${schedules}" var="s">
-                                        <tr>
-                                            <td>${s.packageName}</td>
-                                            <td>${s.customer.fullname}</td>
-                                            <td>${s.customer.phonenumber}</td>
-                                            <td>${s.amountDue}</td>
-                                            <td>${s.status}</td>
-                                            <td>${s.dueDate}</td>
-<!--                                            <td>
-                                                <a href="updateStaff?id=${s.id}">Edit</a>
-                                                <a onclick="checkDeleteCustomer('${s.id}')" class="btn btn-danger btn-sm">
-                                                    Delete
-                                                </a>
-                                            </td>                                                    -->
-                                        </tr>
-                                    </c:forEach>
-                                </tbody>
-                            </table>
-                        </form>
-                    </div>
-                    <!-- /.container-fluid -->
+    <body>
+        <div class="container">
+            <!-- Navigation Bar -->
+            <div class="navigation-bar">
+                <h3><i class="fas fa-money-bill-wave me-2"></i>Repayment Schedules</h3>
+                <div class="nav-buttons">
+                    <a href="/Namcombank/Home" class="nav-btn nav-btn-outline">
+                        <i class="fas fa-home"></i> Home
+                    </a>
+                    <a href="${pageContext.request.contextPath}/customer-loan-requests" class="nav-btn nav-btn-outline">
+                        <i class="fas fa-file-invoice-dollar"></i> Loan Requests
+                    </a>
+                    <!-- Thêm nút dẫn đến trang lịch sử thanh toán -->
+                    <a href="${pageContext.request.contextPath}/payment-history" class="nav-btn nav-btn-primary">
+                        <i class="fas fa-history"></i> Payment History
+                    </a>
                 </div>
-                <!-- End of Main Content -->
             </div>
-            <!-- End of Content Wrapper -->
+            <!-- Payment Message Alert -->
+            <c:if test="${not empty paymentMessage}">
+                <div class="alert ${paymentMessage.contains('successful') ? 'alert-success' : 'alert-danger'} alert-dismissible fade show" role="alert">
+                    <i class="${paymentMessage.contains('successful') ? 'fas fa-check-circle' : 'fas fa-exclamation-circle'} me-2"></i>
+                    ${paymentMessage}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </c:if>
+
+
+
+            <div class="row">
+                <div class="col-md-12">
+
+                    <!-- Due Soon Payments Table -->
+                    <div class="table-wrapper">
+                        <div class="card-header">
+                            <h5 class="mb-0"><i class="fas fa-exclamation-circle me-2"></i>Due Soon Payments</h5>
+                        </div>
+                        <c:choose>
+                            <c:when test="${empty schedules}">
+                                <div class="no-data">
+                                    <i class="fas fa-info-circle fa-3x mb-3" style="color: #1e7e34;"></i>
+                                    <h5>No repayment schedules found</h5>
+                                    <p>There are no scheduled repayments for this customer.</p>
+                                </div>
+                            </c:when>
+                            <c:otherwise>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="dueSoonTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Request ID</th>
+                                                <th>Status</th>
+                                                <th>Due Date</th>
+                                                <th class="text-end">Amount Due</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <c:set var="dueSoonCount" value="0" />
+                                            <c:forEach var="schedule" items="${schedules}">
+                                                <c:set var="now" value="<%= new java.util.Date()%>" />
+                                                <c:set var="dueDate" value="${schedule.dueDate}" />
+                                                <c:set var="daysDiff" value="${(dueDate.time - now.time) / (1000 * 60 * 60 * 24)}" />
+
+                                                <c:if test="${daysDiff >= 0 && daysDiff < 7 && schedule.status != 'PAID'}">
+                                                    <c:set var="dueSoonCount" value="${dueSoonCount + 1}" />
+                                                    <tr>
+                                                        <td>${schedule.requestId}</td>
+                                                        <td>
+                                                            <span class="badge badge-due-soon">Due Soon</span>
+                                                        </td>
+                                                        <td>
+                                                            <fmt:formatDate value="${schedule.dueDate}" pattern="dd-MM-yyyy" />
+                                                            <span class="status-due-soon ms-2">
+                                                                (${Math.round(daysDiff)} days left)
+                                                            </span>
+                                                        </td>
+                                                        <td class="amount">
+                                                            <fmt:formatNumber value="${schedule.amountDue}" type="currency" currencySymbol=""  /> VND
+                                                        </td>
+
+                                                        <td>
+                                                            <!-- Pay Now button only appears for Due Soon status -->
+                                                            <a href="${pageContext.request.contextPath}/repaymentSchedule?scheduleId=${schedule.schedule_id}&action=pay" 
+                                                               class="btn btn-sm btn-primary">
+                                                                <i class="fas fa-credit-card"></i> Pay Now
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                </c:if>
+                                            </c:forEach>
+
+                                            <c:if test="${dueSoonCount == 0}">
+                                                <tr>
+                                                    <td colspan="5" class="text-center">No payments due soon</td>
+                                                </tr>
+                                            </c:if>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </c:otherwise>
+                        </c:choose>
+                    </div>
+
+                    <!-- Pending Payments Table -->
+                    <div class="table-wrapper">
+                        <div class="card-header">
+                            <h5 class="mb-0"><i class="fas fa-calendar-alt me-2"></i>Upcoming Payments</h5>
+                        </div>
+                        <c:choose>
+                            <c:when test="${empty schedules}">
+                                <div class="no-data">
+                                    <i class="fas fa-info-circle fa-3x mb-3" style="color: #1e7e34;"></i>
+                                    <h5>No repayment schedules found</h5>
+                                    <p>There are no scheduled repayments for this customer.</p>
+                                </div>
+                            </c:when>
+                            <c:otherwise>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="pendingPaymentsTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Request ID</th>
+                                                <th>Status</th>
+                                                <th>Due Date</th>
+                                                <th class="text-end">Amount Due</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <c:set var="pendingCount" value="0" />
+                                            <c:forEach var="schedule" items="${schedules}">
+                                                <c:set var="now" value="<%= new java.util.Date()%>" />
+                                                <c:set var="dueDate" value="${schedule.dueDate}" />
+                                                <c:set var="daysDiff" value="${(dueDate.time - now.time) / (1000 * 60 * 60 * 24)}" />
+
+                                                <c:if test="${daysDiff >= 7 && schedule.status != 'PAID'}">
+                                                    <c:set var="pendingCount" value="${pendingCount + 1}" />
+                                                    <tr>
+                                                        <td>${schedule.requestId}</td>
+                                                        <td>
+                                                            <span class="badge badge-pending">Pending</span>
+                                                        </td>
+                                                        <td>
+                                                            <fmt:formatDate value="${schedule.dueDate}" pattern="dd-MM-yyyy" />
+                                                        </td>
+                                                        <td class="amount">
+                                                            <fmt:formatNumber value="${schedule.amountDue}" type="currency" currencySymbol="" /> VND
+                                                        </td>
+
+                                                        <td>
+                                                            <!-- For pending payments, show disabled button -->
+                                                            <button class="btn btn-sm btn-disabled" disabled>
+                                                                <i class="fas fa-clock"></i> Not Yet Available
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                </c:if>
+                                            </c:forEach>
+
+                                            <c:if test="${pendingCount == 0}">
+                                                <tr>
+                                                    <td colspan="5" class="text-center">No pending payments</td>
+                                                </tr>
+                                            </c:if>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </c:otherwise>
+                        </c:choose>
+                    </div>
+
+                </div>
+            </div>
         </div>
-        <!-- End of Page Wrapper -->
 
+        <!-- JavaScript for Bootstrap -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
         <script>
-            $(document).ready(function () {
-                // Kiểm tra nếu DataTable chưa được khởi tạo
-                if (!$.fn.DataTable.isDataTable('#dataTable')) {
-                    var table = $('#dataTable').DataTable({
-                        "pageLength": 10, // Số bản ghi mặc định trên mỗi trang
-                        "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Tất cả"]]
+            // Add confirmation dialog for payment
+            document.addEventListener('DOMContentLoaded', function () {
+                // Existing confirmation code
+                const payButtons = document.querySelectorAll('.btn-primary:not(.nav-btn)');
+                payButtons.forEach(button => {
+                    button.addEventListener('click', function (e) {
+                        if (!confirm('Are you sure you want to make this payment?')) {
+                            e.preventDefault();
+                        }
                     });
-                }
+                });
 
+                // Auto-hide payment message after 5 seconds
+                const alertMessage = document.querySelector('.alert');
+                if (alertMessage) {
+                    setTimeout(function () {
+                        const bsAlert = new bootstrap.Alert(alertMessage);
+                        bsAlert.close();
+                    }, 5000); // 5000ms = 5 seconds
+                }
             });
-
-            function checkBan(sid) {
-                if (confirm("Ban customer with customerId = " + sid + "?")) {
-                    window.location = 'lockCustomer?type=lock&cid=' + sid;
-                }
-            }
-
-            function checkUnBan(sid) {
-                if (confirm("Unban customer with customerId = " + sid + "?")) {
-                    window.location = 'lockCustomer?type=unlock&cid=' + sid;
-                }
-            }
-
-            function checkDeleteCustomer(sid) {
-                if (confirm('Are you sure you want to delete this staff?')) {
-                    window.location = 'staffDelete?id=' + sid;
-                }
-            }
         </script>
 
-        <!-- jQuery -->
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-        <!-- Bootstrap core JavaScript -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-        <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"> -->
-
-        <!-- Core plugin JavaScript -->
-        <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-
-        <!-- DataTables Plugin -->
-        <script src="adminassets/vendor/datatables/jquery.dataTables.min.js"></script>
-        <script src="adminassets/vendor/datatables/dataTables.bootstrap4.min.js"></script>
-
-        <!-- Custom scripts -->
-        <script src="adminassets/js/sb-admin-2.min.js"></script>
-        <script src="${pageContext.request.contextPath}/adminassets/js/app.js"></script>
-        <script src="${pageContext.request.contextPath}/adminassets/js/datatables.js"></script>
-
-        <!-- Page level custom scripts -->
-        <script src="adminassets/js/demo/datatables-demo.js"></script>
-
     </body>
-
 </html>

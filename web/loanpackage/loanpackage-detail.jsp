@@ -26,7 +26,7 @@
 </head>
 <body class="bg-gray-100 text-gray-900">
     <div class="container mx-auto p-6">
-        <h1 class="text-4xl font-bold text-center text-blue-600 mb-6">Loan Package Details</h1>
+        <h1 class="text-4xl font-bold text-center text-green-600 mb-6">Loan Package Details</h1>
 
         <%
             if (loanPackage != null) {

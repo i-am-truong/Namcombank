@@ -2,23 +2,21 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controller.repayment_schedule;
+package controller.news;
 
-import context.RepaymentScheduleDAO;
+import context.NewsDAO;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.List;
+import model.News;
 
 /**
  *
- * @author chi
+ * @author Bernie
  */
-public class RepaymentSchedule extends HttpServlet {
+public class ViewNewsDetail extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -31,12 +29,37 @@ public class RepaymentSchedule extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        RepaymentScheduleDAO d = new RepaymentScheduleDAO();
-        List<model.RepaymentSchedule> schedules = new ArrayList<>();
-        schedules = d.getAllRepaymentSchedules();
-        request.setAttribute("schedules", schedules);
-        request.getRequestDispatcher("/staff-manager/repayment_schedule.jsp").forward(request, response);
+        try {
+            // Get news ID from request parameter
+            String newsIdParam = request.getParameter("nId");
+
+            if (newsIdParam != null && !newsIdParam.isEmpty()) {
+                int newsId = Integer.parseInt(newsIdParam);
+
+                // Retrieve news details using NewsDAO
+                NewsDAO newsDAO = new NewsDAO();
+                News news = newsDAO.getNewsById(newsId);
+
+                if (news != null) {
+                    // Set news as request attribute
+                    request.setAttribute("news", news);
+
+                    // Forward to the news detail JSP
+                    request.getRequestDispatcher("news/viewNewsDetail.jsp").forward(request, response);
+                    return;
+                }
+            }
+
+            // If news not found or invalid ID, redirect to news list
+            response.sendRedirect("newsListStaff");
+
+        } catch (NumberFormatException e) {
+            // If parsing fails, redirect to news list
+            response.sendRedirect("newsListStaff");
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.sendRedirect("newsListStaff");
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

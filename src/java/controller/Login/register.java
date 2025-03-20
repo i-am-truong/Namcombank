@@ -11,6 +11,9 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeParseException;
 
 /**
  *
@@ -70,31 +73,51 @@ public class register extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // lấy dữ liệu từ form đăng ký
+        // Lấy dữ liệu từ form đăng ký
         String fullname = request.getParameter("fullnameC");
         String phonenumber = request.getParameter("phonenumberC");
         String email = request.getParameter("emailC");
         String address = request.getParameter("addressC");
-        String dob = request.getParameter("dobC");
+        String dob = request.getParameter("dobC"); // Format: yyyy-MM-dd
         String gender = request.getParameter("genderC");
         String username = request.getParameter("usernameC");
         String password = request.getParameter("passwordC");
         String confirmPassword = request.getParameter("confirmPasswordC");
+        String cic = request.getParameter("cicC");
+
+        // Kiểm tra mật khẩu trùng khớp
         if (!password.equals(confirmPassword)) {
             request.setAttribute("error", "Passwords do not match!");
             request.getRequestDispatcher("login/register.jsp").forward(request, response);
             return;
         }
-        String cic = request.getParameter("cicC");
+
+        // Kiểm tra tuổi có >= 18 không
+        try {
+            LocalDate birthDate = LocalDate.parse(dob); // Chuyển String thành LocalDate
+            LocalDate today = LocalDate.now();
+            Period age = Period.between(birthDate, today);
+
+            if (age.getYears() < 18) {
+                request.setAttribute("error", "You must be at least 18 years old to register!");
+                request.getRequestDispatcher("login/register.jsp").forward(request, response);
+                return;
+            }
+        } catch (DateTimeParseException e) {
+            request.setAttribute("error", "Invalid date format! Please enter a valid date (yyyy-MM-dd).");
+            request.getRequestDispatcher("login/register.jsp").forward(request, response);
+            return;
+        }
+
+        // Kiểm tra username/email/phone đã tồn tại chưa
         CustomerDAO cd = new CustomerDAO();
-        // check xem username or email or phonenumber đã tồn tại hay chưa
         if (cd.checkUsername(username, email, phonenumber)) {
             password = cd.toSHA1(password);
             cd.registerAcc(fullname, username, password, email, dob, Integer.parseInt(gender), phonenumber, cic, address);
             request.setAttribute("suc", "Create account successfully!");
             request.getRequestDispatcher("login/register.jsp").forward(request, response);
         } else {
-            request.setAttribute("error", "Username or email or phonenumber already exist!");
+            request.setAttribute("error", "Username or email or phonenumber already exists!");
             request.getRequestDispatcher("login/register.jsp").forward(request, response);
         }
     }

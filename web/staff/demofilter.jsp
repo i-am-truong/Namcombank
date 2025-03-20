@@ -182,7 +182,7 @@
                                             <tr>
                                                 <td>${s.fullname}</td>
                                                 <td>${s.gender ? "Male" : "Female"}</td>
-                                                <td>${s.dob}</td>
+                                                <td><fmt:formatDate value="${s.dob}" pattern="dd/MM/yyyy"/></td>
                                                 <td>${s.phonenumber}</td>
                                                 <td>${s.citizenId}</td>
                                                 <td>${s.email}</td>

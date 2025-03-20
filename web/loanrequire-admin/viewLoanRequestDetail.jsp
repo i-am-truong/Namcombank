@@ -126,6 +126,40 @@
                 transform: translateY(-3px);
                 box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             }
+            .repayment-schedule {
+                margin-top: 30px;
+            }
+            .repayment-schedule table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            .repayment-schedule th, .repayment-schedule td {
+                padding: 10px;
+                border: 1px solid #e3e6f0;
+            }
+            .repayment-schedule th {
+                background-color: #f8f9fc;
+                font-weight: bold;
+            }
+            .payment-pending {
+                color: #f6c23e;
+                font-weight: bold;
+            }
+            .payment-paid {
+                color: #1cc88a;
+                font-weight: bold;
+            }
+            .payment-overdue {
+                color: #e74a3b;
+                font-weight: bold;
+            }
+            .warning-box {
+                background-color: #fff3cd;
+                border-left: 4px solid #f6c23e;
+                padding: 10px;
+                border-radius: 5px;
+                margin-top: 10px;
+            }
         </style>
     </head>
 
@@ -142,7 +176,7 @@
                                 <i class="fas fa-arrow-left"></i> Back to List
                             </a>
                         </div>
-                        
+
                         <c:if test="${not empty sessionScope.successMessage}">
                             <div class="alert alert-success alert-dismissible fade show" role="alert">
                                 ${sessionScope.successMessage}
@@ -152,7 +186,7 @@
                             </div>
                             <c:remove var="successMessage" scope="session" />
                         </c:if>
-                        
+
                         <c:if test="${not empty sessionScope.errorMessage}">
                             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                 ${sessionScope.errorMessage}
@@ -162,7 +196,7 @@
                             </div>
                             <c:remove var="errorMessage" scope="session" />
                         </c:if>
-                        
+
                         <div class="detail-card">
                             <div class="text-center mb-4">
                                 <h4>Loan Request #${loanRequest.requestId}</h4>
@@ -195,10 +229,9 @@
                                         <div class="detail-row">
                                             <div class="detail-label">Request Date:</div>
                                             <div class="detail-value">
-                                                <fmt:formatDate value="${loanRequest.requestDate}" pattern="MM/dd/yyyy HH:mm:ss"/>
+                                                <fmt:formatDate value="${loanRequest.requestDate}" pattern="dd/MM/yyyy"/>
                                             </div>
                                         </div>
-
 
                                         <div class="detail-row">
                                             <div class="detail-label">Status:</div>
@@ -223,7 +256,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="detail-section">
                                         <h5><i class="fas fa-money-bill-wave"></i> Loan Package Information</h5>
                                         <div class="detail-row">
@@ -253,7 +286,7 @@
                                             </div>
                                         </c:if>
                                     </div>
-                                    
+
                                     <div class="detail-section">
                                         <h5><i class="fas fa-user"></i> Customer Information</h5>
                                         <div class="detail-row">
@@ -288,7 +321,7 @@
                                         </c:if>
                                     </div>
                                 </div>
-                                
+
                                 <!-- Right Column -->
                                 <div class="col-md-6">
                                     <div class="detail-section">
@@ -326,7 +359,7 @@
                                             </c:otherwise>
                                         </c:choose>
                                     </div>
-                                    
+
                                     <div class="detail-section">
                                         <h5><i class="fas fa-user-check"></i> Approval Information</h5>
                                         <c:choose>
@@ -337,15 +370,37 @@
                                             </c:when>
                                             <c:otherwise>
                                                 <div class="detail-row">
-                                                    <div class="detail-label">Approved By:</div>
-                                                    <div class="detail-value">${not empty loanRequest.approvedBy ? loanRequest.approvedBy : 'N/A'}</div>
+                                                    <div class="detail-label">
+                                                        <c:choose>
+                                                            <c:when test="${loanRequest.status eq 'Approved'}">Approved By:</c:when>
+                                                            <c:when test="${loanRequest.status eq 'Rejected'}">Rejected By:</c:when>
+                                                            <c:otherwise>Processed By:</c:otherwise>
+                                                        </c:choose>
+                                                    </div>
+                                                    <div class="detail-value">
+                                                        <c:choose>
+                                                            <c:when test="${not empty loanRequest.approvedBy}">
+                                                                ${loanRequest.approvedBy}
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                N/A
+                                                            </c:otherwise>
+                                                        </c:choose>
+                                                    </div>
                                                 </div>
+
                                                 <div class="detail-row">
-                                                    <div class="detail-label">Approval Date:</div>
+                                                    <div class="detail-label">
+                                                        <c:choose>
+                                                            <c:when test="${loanRequest.status eq 'Approved'}">Approval Date:</c:when>
+                                                            <c:when test="${loanRequest.status eq 'Rejected'}">Rejection Date:</c:when>
+                                                            <c:otherwise>Process Date:</c:otherwise>
+                                                        </c:choose>
+                                                    </div>
                                                     <div class="detail-value">
                                                         <c:choose>
                                                             <c:when test="${not empty loanRequest.approvalDate}">
-                                                                <fmt:formatDate value="${loanRequest.approvalDate}" pattern="MM/dd/yyyy HH:mm:ss"/>
+                                                                <fmt:formatDate value="${loanRequest.approvalDate}" pattern="dd/MM/yyyy "/>
                                                             </c:when>
                                                             <c:otherwise>N/A</c:otherwise>
                                                         </c:choose>
@@ -376,7 +431,7 @@
                                             </c:otherwise>
                                         </c:choose>
                                     </div>
-                                    
+
                                     <div class="detail-section">
                                         <h5><i class="fas fa-list"></i> Customer's Other Assets</h5>
                                         <c:choose>
@@ -415,50 +470,122 @@
                                     </div>
                                 </div>
                             </div>
-                            
-                            <!-- Approval section - only shown if status is pending -->
-                            <c:if test="${loanRequest.status eq 'Pending'}">
+
+                            <!-- Repayment Schedule Section - Only shown for approved loans -->
+                            <c:if test="${loanRequest.status eq 'Approved' && not empty repaymentSchedule}">
+                                <div class="repayment-schedule">
+                                    <h5 class="mb-3"><i class="fas fa-calendar-alt"></i> Repayment Schedule</h5>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Due Date</th>
+                                                    <th>Amount</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <c:forEach items="${repaymentSchedule}" var="payment" varStatus="status">
+                                                    <tr>
+                                                        <td>${status.index + 1}</td>
+                                                        <td><fmt:formatDate value="${payment.dueDate}" pattern="dd/MM/yyyy"/></td>
+                                                        <td><fmt:formatNumber value="${payment.amountDue}" type="currency" currencySymbol="" maxFractionDigits="0"/> VND</td>
+                                                        <td>
+                                                            <c:choose>
+                                                                <c:when test="${payment.status eq 'PAID'}">
+                                                                    <span class="payment-paid"><i class="fas fa-check-circle"></i> Paid</span>
+                                                                </c:when>
+                                                                <c:when test="${payment.status eq 'OVERDUE'}">
+                                                                    <span class="payment-overdue"><i class="fas fa-exclamation-circle"></i> Overdue</span>
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <span class="payment-pending"><i class="fas fa-clock"></i> Pending</span>
+                                                                </c:otherwise>
+                                                            </c:choose>
+                                                        </td>
+                                                    </tr>
+                                                </c:forEach>
+                                            </tbody>
+                                            <tfoot>
+                                                <tr class="bg-light">
+                                                    <td colspan="2" class="text-right font-weight-bold">Total:</td>
+                                                    <td class="font-weight-bold">
+                                                        <fmt:formatNumber value="${totalRepaymentAmount}" type="currency" currencySymbol="" maxFractionDigits="0"/> VND
+                                                    </td>
+                                                    <td></td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </c:if>
+
+                            <!-- Approval section - only shown if status is pending and user has permission -->
+                            <c:if test="${loanRequest.status eq 'Pending' && canApprove}">
                                 <div class="approval-section mt-4" id="approval-section">
                                     <h5 class="mb-4"><i class="fas fa-check-double"></i> Approval Decision</h5>
-                                    
-                                    <form action="${pageContext.request.contextPath}/loan-request-detail" method="post" id="loanActionForm" class="mb-2">
-                                        <input type="hidden" name="requestId" value="${loanRequest.requestId}"/>
-                                        <input type="hidden" name="action" id="actionType" value=""/>
-                                        
-                                        <div class="row">
-                                            <!-- Left column - Approve -->
-                                            <div class="col-md-6">
-                                                <div class="approval-col approval-col-approve p-3">
-                                                    <div class="col-title">
-                                                        <i class="fas fa-check-circle text-success"></i> Approve Loan Request
-                                                    </div>
+
+                                    <div class="row">
+                                        <!-- Left column - Approve -->
+                                        <div class="col-md-6">
+                                            <div class="approval-col approval-col-approve p-3">
+                                                <div class="col-title">
+                                                    <i class="fas fa-check-circle text-success"></i> Approve Loan Request
+                                                </div>
+                                                <!-- Separate approval form -->
+                                                <form action="${pageContext.request.contextPath}/loan-request-detail" method="post" class="mb-2">
+                                                    <input type="hidden" name="requestId" value="${loanRequest.requestId}"/>
+                                                    <input type="hidden" name="action" value="approve"/>
                                                     <div class="form-group">
-                                                        <label for="notes">Notes (optional):</label>
-                                                        <textarea id="notes" name="notes" class="form-control" rows="3" placeholder="Enter approval notes (if needed)"></textarea>
+                                                        <label for="approveNotes">Notes (optional):</label>
+                                                        <textarea id="approveNotes" name="notes" class="form-control" rows="3" placeholder="Enter approval notes (if needed)"></textarea>
                                                     </div>
-                                                    <button type="button" class="btn btn-success btn-block" onclick="submitAction('approve')">
+                                                    <button type="submit" class="btn btn-success btn-block">
                                                         <i class="fas fa-check"></i> Approve Loan Request
                                                     </button>
-                                                </div>
-                                            </div>
-                                            
-                                            <!-- Right column - Reject -->
-                                            <div class="col-md-6">
-                                                <div class="approval-col approval-col-reject p-3">
-                                                    <div class="col-title">
-                                                        <i class="fas fa-times-circle text-danger"></i> Reject Loan Request
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="rejectReason"><span class="text-danger">*</span> Rejection Reason:</label>
-                                                        <textarea id="rejectReason" name="notes" class="form-control" rows="3" placeholder="Enter rejection reason (required)"></textarea>
-                                                        <small class="form-text text-muted">Rejection reason is required.</small>
-                                                    </div>
-                                                    <button type="button" class="btn btn-danger btn-block" onclick="submitReject()">
-                                                        <i class="fas fa-times"></i> Reject Loan Request
-                                                    </button>
-                                                </div>
+                                                </form>
                                             </div>
                                         </div>
+
+                                        <!-- Right column - Reject -->
+                                        <div class="col-md-6">
+                                            <div class="approval-col approval-col-reject p-3">
+                                                <div class="col-title">
+                                                    <i class="fas fa-times-circle text-danger"></i> Reject Loan Request
+                                                </div>
+                                                <!-- Separate rejection form -->
+                                                <form action="${pageContext.request.contextPath}/loan-request-detail" method="post" class="mb-2">
+                                                    <input type="hidden" name="requestId" value="${loanRequest.requestId}"/>
+                                                    <input type="hidden" name="action" value="reject"/>
+                                                    <div class="form-group">
+                                                        <label for="rejectReason"><span class="text-danger">*</span> Rejection Reason:</label>
+                                                        <textarea id="rejectReason" name="notes" class="form-control" rows="3" placeholder="Enter rejection reason (required)" required></textarea>
+                                                        <small class="form-text text-muted">Rejection reason is required.</small>
+                                                    </div>
+                                                    <button type="submit" class="btn btn-danger btn-block">
+                                                        <i class="fas fa-times"></i> Reject Loan Request
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </c:if>
+
+                            <!-- Delete section - only shown if user has permission -->
+                            <c:if test="${canDelete}">
+                                <div class="delete-section mt-4">
+                                    <h5 class="mb-3"><i class="fas fa-trash-alt text-danger"></i> Delete Loan Request</h5>
+                                    <div class="alert alert-warning">
+                                        <i class="fas fa-exclamation-triangle"></i> Warning: This action cannot be undone. Deleting a loan request will permanently remove it from the system.
+                                    </div>
+                                    <form action="${pageContext.request.contextPath}/loan-request-detail" method="post" id="deleteForm">
+                                        <input type="hidden" name="requestId" value="${loanRequest.requestId}"/>
+                                        <input type="hidden" name="action" value="delete"/>
+                                        <button type="submit" class="btn btn-danger">
+                                            <i class="fas fa-trash-alt"></i> Delete Loan Request
+                                        </button>
                                     </form>
                                 </div>
                             </c:if>
@@ -467,7 +594,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Bootstrap core JavaScript-->
         <script src="vendor/jquery/jquery.min.js"></script>
         <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -477,55 +604,5 @@
 
         <!-- Custom scripts for all pages-->
         <script src="adminassets/js/sb-admin-2.min.js"></script>
-        
-        <script>
-            function submitAction(action) {
-                const form = document.getElementById('loanActionForm');
-                const actionInput = document.getElementById('actionType');
-                
-                actionInput.value = action;
-                
-                if (action === 'approve') {
-                    // Confirm approval
-                    if (!confirm('Are you sure you want to approve this loan request?')) {
-                        return;
-                    }
-                }
-                
-                form.submit();
-            }
-            
-            function submitReject() {
-                const form = document.getElementById('loanActionForm');
-                const actionInput = document.getElementById('actionType');
-                const reasonInput = document.getElementById('rejectReason');
-                
-                // Set action
-                actionInput.value = 'reject';
-                
-                // Check rejection reason
-                if (!reasonInput.value.trim()) {
-                    alert('Please enter a rejection reason.');
-                    reasonInput.focus();
-                    return;
-                }
-                
-                // Confirm rejection
-                if (!confirm('Are you sure you want to reject this loan request?')) {
-                    return;
-                }
-                
-                form.submit();
-            }
-            
-            // Auto-scroll to approval section if hash in URL
-            $(document).ready(function() {
-                if (window.location.hash === '#approval-section') {
-                    $('html, body').animate({
-                        scrollTop: $('#approval-section').offset().top - 100
-                    }, 1000);
-                }
-            });
-        </script>
     </body>
 </html>
