@@ -148,8 +148,8 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
 //    }
     @Override
     public void insert(LoanRequest model) {
-        String sql = "INSERT INTO LoanRequests (customer_id, package_id, amount, request_date, status) "
-                + "VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO LoanRequests (customer_id, package_id, amount, request_date, status, asset_id) "
+                + "VALUES (?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, model.getCustomerId());
@@ -157,6 +157,7 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
             stmt.setBigDecimal(3, model.getAmount());
             stmt.setDate(4, new java.sql.Date(model.getRequestDate().getTime()));
             stmt.setString(5, model.getStatus());
+            stmt.setInt(6, model.getAssetId());
 
             stmt.executeUpdate();
             System.out.println("✅ Dữ liệu đã được lưu vào database!");

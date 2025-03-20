@@ -18,6 +18,7 @@ public class LoanRequest {
     private String notes;
     private Date startDate;
     private Date endDate;
+    private int assetId;
 
     private Staff staff;
     private LoanPackage loanPackage;
@@ -87,7 +88,8 @@ public class LoanRequest {
     }
 
     // Constructor đầy đủ (dùng khi lấy từ database)
-    public LoanRequest(int requestId, int customerId, int packageId, BigDecimal amount, Date requestDate, String status, int staffId, Date approvalDate, String approvedBy, String notes, Date start_date, Date endDate) {
+
+    public LoanRequest(int requestId, int customerId, int packageId, BigDecimal amount, Date requestDate, String status, int staffId, Date approvalDate, String approvedBy, String notes, Date startDate, Date endDate, int assetId, Staff staff, LoanPackage loanPackage, Customer customer, Asset asset) {
         this.requestId = requestId;
         this.customerId = customerId;
         this.packageId = packageId;
@@ -100,7 +102,13 @@ public class LoanRequest {
         this.notes = notes;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.assetId = assetId;
+        this.staff = staff;
+        this.loanPackage = loanPackage;
+        this.customer = customer;
+        this.asset = asset;
     }
+    
 
     public int getRequestId() {
         return requestId;
@@ -182,4 +190,13 @@ public class LoanRequest {
         this.notes = notes;
     }
 
+    public int getAssetId() {
+        return assetId;
+    }
+
+    public void setAssetId(int assetId) {
+        this.assetId = assetId;
+    }
+
+    
 }

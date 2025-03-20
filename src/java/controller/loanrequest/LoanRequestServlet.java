@@ -1,5 +1,6 @@
-package servlet;
+package controller.loanrequest;
 
+import context.AssetDAO;
 import context.LoanPackageDAO;
 import context.LoanRequestDAO;
 import context.CreditCardDAO;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import model.Asset;
 import model.Customer;
 import model.LoanPackage;
 import model.LoanRequest;
@@ -40,11 +42,13 @@ public class LoanRequestServlet extends HttpServlet {
         List<String> errorMessages = new ArrayList<>();
         String packageIdStr = request.getParameter("package_id");
         String amountStr = request.getParameter("amount");
+        String assetIdStr = request.getParameter("asset_id");
 
         int packageId = 0;
+        int assetId = 0;
         BigDecimal amount = null;
 
-        // Kiểm tra dữ liệu đầu vào
+        // Kiểm tra dữ liệu nhập
         if (packageIdStr == null || amountStr == null || packageIdStr.trim().isEmpty() || amountStr.trim().isEmpty()) {
             errorMessages.add("Vui lòng nhập đầy đủ thông tin.");
         } else {
@@ -55,13 +59,21 @@ public class LoanRequestServlet extends HttpServlet {
             }
 
             try {
-                amount = new BigDecimal(amountStr.replaceAll("[^0-9]", "")); // Chỉ giữ số
+                amount = new BigDecimal(amountStr.replaceAll("[^0-9]", ""));
             } catch (NumberFormatException e) {
                 errorMessages.add("Số tiền vay không hợp lệ.");
             }
+
+            if (assetIdStr != null && !assetIdStr.trim().isEmpty()) {
+                try {
+                    assetId = Integer.parseInt(assetIdStr);
+                } catch (NumberFormatException e) {
+                    errorMessages.add("Asset ID không hợp lệ.");
+                }
+            }
         }
 
-        // Kiểm tra gói vay có tồn tại không
+        // Kiểm tra gói vay
         LoanPackageDAO packageDAO = new LoanPackageDAO();
         LoanPackage loanPackage = packageDAO.getLoanPackageById(packageId);
         if (loanPackage == null) {
@@ -77,15 +89,26 @@ public class LoanRequestServlet extends HttpServlet {
             }
         }
 
-        // Nếu có lỗi, quay lại trang đăng ký vay
+        // Kiểm tra Asset ID hợp lệ
+        Asset asset = null;
+        if (assetId > 0) {
+            AssetDAO assetDAO = new AssetDAO();
+            asset = assetDAO.getAssetById(assetId);
+            if (asset == null) {
+                errorMessages.add("Tài sản không tồn tại.");
+            }
+        }
+
+        // Nếu có lỗi, quay lại trang đăng ký
         if (!errorMessages.isEmpty()) {
             request.setAttribute("errorMessages", errorMessages);
             request.setAttribute("amount", amountStr);
+            request.setAttribute("asset_id", assetIdStr);
             request.getRequestDispatcher("loanpackage-customer/create-loan-request.jsp").forward(request, response);
             return;
         }
 
-        // Tạo yêu cầu vay
+        // Tạo LoanRequest
         LoanRequestDAO loanRequestDAO = new LoanRequestDAO();
         LoanRequest loanRequest = new LoanRequest();
         loanRequest.setCustomerId(customer.getCustomerId());
@@ -93,21 +116,21 @@ public class LoanRequestServlet extends HttpServlet {
         loanRequest.setAmount(amount);
         loanRequest.setRequestDate(Date.valueOf(LocalDate.now()));
         loanRequest.setStatus("Pending");
+        loanRequest.setAssetId(assetId);
 
         loanRequestDAO.insert(loanRequest);
 
-        // Kiểm tra và cấp thẻ tín dụng nếu đủ điều kiện
+        // Kiểm tra điều kiện cấp thẻ tín dụng
         checkAndGrantCreditCard(customer.getCustomerId());
 
         response.sendRedirect("customer-loan-requests?success=true");
     }
 
-    // Kiểm tra điều kiện và cấp thẻ tín dụng nếu đủ tiêu chuẩn
+    // Kiểm tra điều kiện cấp thẻ tín dụng
     private void checkAndGrantCreditCard(int customerId) {
         LoanRequestDAO loanRequestDAO = new LoanRequestDAO();
         CreditCardDAO cardDAO = new CreditCardDAO();
 
-        // Chuyển sang BigDecimal để tránh mất độ chính xác
         BigDecimal totalLoan = loanRequestDAO.getTotalLoanAmount(customerId);
         int loanCount = loanRequestDAO.getLoanCount(customerId);
 
@@ -115,10 +138,8 @@ public class LoanRequestServlet extends HttpServlet {
             totalLoan = BigDecimal.ZERO;
         }
 
-        // Kiểm tra khách hàng đã có thẻ chưa
         boolean hasCreditCard = cardDAO.hasCreditCard(customerId);
 
-        // Điều kiện cấp thẻ: tổng khoản vay >= 500 triệu & >= 3 lần vay & chưa có thẻ
         if (totalLoan.compareTo(BigDecimal.valueOf(500000000)) >= 0
                 && loanCount >= 3 && !hasCreditCard) {
             BigDecimal creditLimit = BigDecimal.valueOf(100000000);
@@ -126,8 +147,8 @@ public class LoanRequestServlet extends HttpServlet {
             LOGGER.log(Level.INFO, "Khách hàng {0} đủ điều kiện nhận thẻ Visa {1}!",
                     new Object[]{customerId, creditLimit});
         } else {
-            LOGGER.log(Level.INFO, "Khách hàng {0} chưa đủ điều kiện cấp thẻ. Tổng khoản vay: {1}, Số lần vay: {2}, Đã có thẻ: {3}",
-                    new Object[]{customerId, totalLoan, loanCount, hasCreditCard});
+            LOGGER.log(Level.INFO, "Khách hàng {0} chưa đủ điều kiện cấp thẻ.",
+                    new Object[]{customerId});
         }
     }
 }

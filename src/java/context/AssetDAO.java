@@ -51,21 +51,22 @@ public class AssetDAO extends DBContext<Asset> {
 
         return success;
     }
+
     public boolean deleteAsset(int assetId) {
-    String sql = "DELETE FROM CustomerAssets WHERE asset_id = ?";
-    
-    try (PreparedStatement ps = connection.prepareStatement(sql)) {
-        
-        ps.setInt(1, assetId);
-        int rowsAffected = ps.executeUpdate();
-        
-        return rowsAffected > 0;
-        
-    } catch (SQLException e) {
-        System.out.println("Error closing resources: " + e.getMessage());
-        return false;
+        String sql = "DELETE FROM CustomerAssets WHERE asset_id = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setInt(1, assetId);
+            int rowsAffected = ps.executeUpdate();
+
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            System.out.println("Error closing resources: " + e.getMessage());
+            return false;
+        }
     }
-}
 
     @Override
     public void insert(Asset model) {
@@ -211,6 +212,29 @@ public class AssetDAO extends DBContext<Asset> {
                 System.out.println("Error closing resources: " + ex.getMessage());
             }
         }
+    }
+
+    public Asset getAssetById(int assetId) {
+        Asset asset = null;
+        String sql = "SELECT * FROM CustomerAssets WHERE asset_id = ?"; // Adjust table and column names if needed
+
+        try (
+                PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setInt(1, assetId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                asset = new Asset();
+                asset.setAssetId(rs.getInt("asset_id"));
+                asset.setAssetName(rs.getString("asset_name"));
+                asset.setAssetValue(rs.getBigDecimal("asset_value"));
+                // Add other fields based on your `Asset` model
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return asset;
     }
 
     @Override
@@ -809,8 +833,6 @@ public class AssetDAO extends DBContext<Asset> {
 
         return assets;
     }
-
-
 
     private void addSearchConditions(
             StringBuilder sql, ArrayList<Object> params,

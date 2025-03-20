@@ -1,5 +1,5 @@
 <%@ page session="true" %>
-<%@ page import="java.sql.*, context.LoanPackageDAO, model.LoanPackage, java.util.*, java.text.DecimalFormat" %>
+<%@ page import="java.sql.*, context.LoanPackageDAO, context.AssetDAO, model.LoanPackage, model.Asset, java.util.*, java.text.DecimalFormat" %>
 <%@ page contentType="text/html; charset=UTF-8" %>
 
 <%
@@ -9,8 +9,11 @@
     }
 
     String packageIdParam = request.getParameter("package_id");
+    String assetIdParam = request.getParameter("asset_id");
     int packageId = 0;
+    int assetId = 0;
     LoanPackage loan = null;
+    Asset asset = null;
 
     try {
         packageId = Integer.parseInt(packageIdParam);
@@ -24,6 +27,16 @@
     if (loan == null) {
         response.sendRedirect("loanpackage-customer/loan_packages.jsp");
         return;
+    }
+
+    if (assetIdParam != null) {
+        try {
+            assetId = Integer.parseInt(assetIdParam);
+            AssetDAO assetDAO = new AssetDAO();
+            asset = assetDAO.getAssetById(assetId); // Assuming `getAssetById()` exists in `AssetDAO`
+        } catch (NumberFormatException e) {
+            asset = null; // Handle invalid asset_id gracefully
+        }
     }
 
     List<String> errorMessages = (List<String>) request.getAttribute("errorMessages");
@@ -60,6 +73,14 @@
                            oninput="formatCurrency(this)" required>
                     <p id="error-message" class="text-red-500 text-sm mt-2"></p>
                 </div>
+
+                <div>
+                    <label for="asset_id" class="block text-gray-700 font-medium">Enter Asset ID:</label>
+                    <input type="text" id="asset_id" name="asset_id" 
+                           value="<%= assetId > 0 ? assetId : "" %>"
+                           class="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200">
+                </div>
+
 
                 <button type="submit" class="w-full bg-green-500 text-white py-3 rounded-lg text-lg font-bold hover:bg-green-700 transition">
                     Confirm Loan
@@ -100,7 +121,8 @@
                     return false;
                 }
 
-                errorMessage.textContent = ""; // Clear error if valid
+                errorMessage.textContent = ""; // Clear error if
+                // Clear error if valid
                 return true;
             }
         </script>
