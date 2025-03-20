@@ -54,7 +54,7 @@
         </a>
     </li>
 
-    <li class="nav-item">
+<!--    <li class="nav-item">
         <a class="nav-link" href="#" data-toggle="collapse" data-target="#toolMenu" aria-expanded="false">
             <i class="fas fa-fw fa-tools"></i>
             <span>Tool & Extensions</span>
@@ -70,7 +70,7 @@
                 <i class="fas fa-fw fa-percentage"></i> Loan Interest Rate
             </a>
         </div>
-    </li>
+    </li>-->
     <li class="nav-item">
         <a class="nav-link" href="#" data-toggle="collapse" data-target="#staffMenu" aria-expanded="false">
             <i class="fas fa-fw fa-users-cog"></i>
@@ -129,10 +129,10 @@
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">
 
-    <!-- Sidebar Toggler (Sidebar) -->
+<!--     Sidebar Toggler (Sidebar) 
     <div class="text-center d-none d-md-inline">
         <button class="rounded-circle border-0" id="sidebarToggle"></button>
-    </div>
+    </div>-->
 </ul>
 <script>
     document.getElementById('sidebarToggle').addEventListener('click', function () {
