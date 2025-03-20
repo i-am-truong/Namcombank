@@ -14,30 +14,11 @@ public class CreditCardDAO extends DBContext<CreditCard> {
 
     private static final Logger LOGGER = Logger.getLogger(CreditCardDAO.class.getName());
 
-    // Lấy danh sách thẻ tín dụng của khách hàng
     public List<CreditCard> getCreditCardsByCustomerId(int customerId) {
         List<CreditCard> creditCards = new ArrayList<>();
 
-        // Kiểm tra điều kiện đủ nhận thẻ trước khi lấy danh sách thẻ
-        String checkEligibilitySQL = "SELECT COUNT(*) AS loan_count, SUM(amount) AS total_loan_amount "
-                + "FROM LoanRequests WHERE customer_id = ? AND status = 'approved' "
-                + "GROUP BY customer_id HAVING COUNT(*) >= 3 AND SUM(amount) >= 500000000";
-
         String getCardsSQL = "SELECT * FROM CreditCards WHERE customer_id = ?";
 
-        try (PreparedStatement checkStmt = connection.prepareStatement(checkEligibilitySQL)) {
-            checkStmt.setInt(1, customerId);
-            try (ResultSet rs = checkStmt.executeQuery()) {
-                if (!rs.next()) {
-                    return creditCards; // Trả về danh sách rỗng nếu chưa đủ điều kiện
-                }
-            }
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, "Lỗi khi kiểm tra điều kiện hiển thị thẻ tín dụng: {0}", e.getMessage());
-            return creditCards;
-        }
-
-        // Nếu đủ điều kiện, lấy danh sách thẻ tín dụng
         try (PreparedStatement stmt = connection.prepareStatement(getCardsSQL)) {
             stmt.setInt(1, customerId);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -56,9 +37,47 @@ public class CreditCardDAO extends DBContext<CreditCard> {
             }
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Lỗi khi lấy danh sách thẻ tín dụng: {0}", e.getMessage());
+            return creditCards;
+        }
+
+        // Nếu khách hàng chưa có thẻ, kiểm tra điều kiện cấp thẻ
+        if (creditCards.isEmpty()) {
+            String checkEligibilitySQL = "SELECT COUNT(*) AS loan_count, SUM(amount) AS total_loan_amount "
+                    + "FROM LoanRequests WHERE customer_id = ? AND status = 'approved' "
+                    + "GROUP BY customer_id HAVING COUNT(*) >= 3 AND SUM(amount) >= 500000000";
+
+            try (PreparedStatement checkStmt = connection.prepareStatement(checkEligibilitySQL)) {
+                checkStmt.setInt(1, customerId);
+                try (ResultSet rs = checkStmt.executeQuery()) {
+                    if (rs.next()) {
+                        // Nếu đủ điều kiện, tạo một bản ghi thẻ tín dụng mới
+                        createCreditCardForCustomer(customerId);
+                        return getCreditCardsByCustomerId(customerId); // Gọi lại để lấy danh sách thẻ mới tạo
+                    }
+                }
+            } catch (SQLException e) {
+                LOGGER.log(Level.SEVERE, "Lỗi khi kiểm tra điều kiện cấp thẻ tín dụng: {0}", e.getMessage());
+            }
         }
 
         return creditCards;
+    }
+
+    // Hàm tạo thẻ tín dụng mới cho khách hàng nếu họ đủ điều kiện
+    private void createCreditCardForCustomer(int customerId) {
+        String insertCardSQL = "INSERT INTO CreditCards (customer_id, card_number, cvv, credit_limit, available_balance, expiry_date, status) "
+                + "VALUES (?, ?, ?, ?, ?, DATEADD(YEAR, 3, GETDATE()), 'Active')";
+
+        try (PreparedStatement stmt = connection.prepareStatement(insertCardSQL)) {
+            stmt.setInt(1, customerId);
+            stmt.setString(2, generateCardNumber());  // Hàm tạo số thẻ ngẫu nhiên
+            stmt.setString(3, generateCVV());         // Hàm tạo CVV ngẫu nhiên
+            stmt.setBigDecimal(4, new BigDecimal("100000000")); // Hạn mức 100 triệu VNĐ
+            stmt.setBigDecimal(5, new BigDecimal("100000000")); // Số dư ban đầu = hạn mức
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Lỗi khi tạo thẻ tín dụng: {0}", e.getMessage());
+        }
     }
 
     @Override
