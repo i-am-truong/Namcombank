@@ -54,23 +54,6 @@
         </a>
     </li>
 
-<!--    <li class="nav-item">
-        <a class="nav-link" href="#" data-toggle="collapse" data-target="#toolMenu" aria-expanded="false">
-            <i class="fas fa-fw fa-tools"></i>
-            <span>Tool & Extensions</span>
-        </a>
-        <div id="toolMenu" class="collapse">
-            <a class="nav-link sub-menu" href="repaymentSchedule">
-                <i class="fas fa-fw fa-calendar-alt"></i> Repayment Schedule
-            </a>
-            <a class="nav-link sub-menu" href="savingInterest">
-                <i class="fas fa-fw fa-piggy-bank"></i> Savings Interest Rate
-            </a>
-            <a class="nav-link sub-menu" href="loanPackage">
-                <i class="fas fa-fw fa-percentage"></i> Loan Interest Rate
-            </a>
-        </div>
-    </li>-->
     <li class="nav-item">
         <a class="nav-link" href="#" data-toggle="collapse" data-target="#staffMenu" aria-expanded="false">
             <i class="fas fa-fw fa-users-cog"></i>
@@ -99,14 +82,18 @@
             </a>
         </div>
     </li>
-    <!-- manage contracts -->
     <li class="nav-item active">
         <a class="nav-link" href="loan-requests-auth">
             <i class="fas fa-fw fa-file-contract"></i>
             <span>Loan Require Filter</span>
         </a>
     </li>
-    <!-- feedback cua admin -->
+    <li class="nav-item active">
+        <a class="nav-link" href="transaction-filter">
+            <i class="fas fa-fw fa-exchange-alt"></i>
+            <span>Transaction Filter</span>
+        </a>
+    </li>
 
     <li class="nav-item active">
         <a class="nav-link" href="viewCustomerFeedback">
@@ -129,16 +116,7 @@
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">
 
-<!--     Sidebar Toggler (Sidebar) 
-    <div class="text-center d-none d-md-inline">
-        <button class="rounded-circle border-0" id="sidebarToggle"></button>
-    </div>-->
 </ul>
-<script>
-    document.getElementById('sidebarToggle').addEventListener('click', function () {
-        document.getElementById('accordionSidebar').classList.toggle('toggled');
-    });
-</script>
 <!-- jQuery and Bootstrap  -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>

@@ -900,11 +900,11 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
             // 3. Cập nhật trạng thái yêu cầu vay thành APPROVED
             String updateSql;
             if (assetId != null && assetId > 0) {
-                updateSql = "UPDATE LoanRequests SET status = 'Approved', "
-                        + "approval_date = GETDATE(), approved_by = ?, "
-                        + "approved_note = ?, start_date = GETDATE(), "
-                        + "end_date = DATEADD(month, ?, GETDATE()) "
-                        + "WHERE request_id = ? AND status = 'PENDING'";
+                    updateSql = "UPDATE LoanRequests SET status = 'Approved', "
+                            + "approval_date = GETDATE(), approved_by = ?, "
+                            + "approved_note = ?, start_date = GETDATE(), "
+                            + "end_date = DATEADD(month, ?, GETDATE()) "
+                            + "WHERE request_id = ? AND status = 'PENDING'";
             } else {
                 updateSql = "UPDATE LoanRequests SET status = 'Approved', "
                         + "approval_date = GETDATE(), approved_by = ?, "
@@ -941,7 +941,7 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
             // 5. Ghi lại giao dịch
             String transactionSql = "INSERT INTO [dbo].[Transaction] "
                     + "([request_id], [amount], [transaction_date], [type], [customer_id], [staff_id]) "
-                    + "VALUES (?, ?, GETDATE(), 'Loan', ?, ?)";
+                    + "VALUES (?, ?, GETDATE(), 'Disbursement', ?, ?)";
 
             transactionInsertStm = conn.prepareStatement(transactionSql);
             transactionInsertStm.setInt(1, requestId);

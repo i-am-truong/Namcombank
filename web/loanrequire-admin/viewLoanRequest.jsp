@@ -373,24 +373,24 @@
         <!-- Custom scripts for all pages-->
         <script src="adminassets/js/sb-admin-2.min.js"></script>
         <script>
-                                                        // Clear filters functionality
-                                                        document.getElementById('clearFiltersBtn').addEventListener('click', function () {
-                                                            // Reset all form fields
-                                                            document.getElementById('customerName').value = '';
-                                                            document.getElementById('packageName').value = '';
-                                                            document.getElementById('status').value = '';
-                                                            document.getElementById('minAmount').value = '';
-                                                            document.getElementById('maxAmount').value = '';
-                                                            document.getElementById('hasAsset').value = '';
-                                                            document.getElementById('requestDateFrom').value = '';
-                                                            document.getElementById('requestDateTo').value = '';
-                                                            document.getElementById('approvedBy').value = '';
-                                                            document.getElementById('approvalDateFrom').value = '';
-                                                            document.getElementById('approvalDateTo').value = '';
+            // Clear filters functionality
+            document.getElementById('clearFiltersBtn').addEventListener('click', function () {
+                // Reset all form fields
+                document.getElementById('customerName').value = '';
+                document.getElementById('packageName').value = '';
+                document.getElementById('status').value = '';
+                document.getElementById('minAmount').value = '';
+                document.getElementById('maxAmount').value = '';
+                document.getElementById('hasAsset').value = '';
+                document.getElementById('requestDateFrom').value = '';
+                document.getElementById('requestDateTo').value = '';
+                document.getElementById('approvedBy').value = '';
+                document.getElementById('approvalDateFrom').value = '';
+                document.getElementById('approvalDateTo').value = '';
 
-                                                            // Redirect to loan-requests-auth without search parameters
-                                                            window.location.href = 'loan-requests-auth';
-                                                        });
+                // Redirect to loan-requests-auth without search parameters
+                window.location.href = 'loan-requests-auth';
+            });
         </script>
     </body>
 </html>
