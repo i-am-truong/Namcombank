@@ -117,36 +117,39 @@
 
         <script>
             function sendMessage() {
-                var content = $("#messageInput").val().trim();
-                if (content === "")
+                var content = $("#messageInput").val().trim(); // lấy nội dung tin nhắn và loại bỏ khung trắng thừa
+                if (content === "") // nếu tin nhắn rỗng thì k gửi
                     return;
+                
+                // gửi tin nhắn bằng AJAX tới CustomerChatServlet
                 $.ajax({
                     type: "POST",
                     url: "../CustomerChatServlet",
-                    data: {content: content, staff_id: 1},
+                    data: {content: content, staff_id: 1}, // dữ liệu gửi đi gồm nội dung tin nhắn và ID của staff = 1
                     success: function () {
-                        $("#messageInput").val("");
-                        $("#chatBox").append('<div class="message customer">' + content + '</div>');
-                        $("#chatBox").scrollTop($("#chatBox")[0].scrollHeight);
-                        loadMessages();
+                        $("#messageInput").val(""); // xóa nội dung trong ô nhập tin nhắn khi đã gửi đi
+                        $("#chatBox").append('<div class="message customer">' + content + '</div>'); // thêm tin nhắn vào khung chat của khách hàng
+                        $("#chatBox").scrollTop($("#chatBox")[0].scrollHeight); 
+                        loadMessages(); 
                     }
                 });
             }
-
+            
+            // load tin nhắn 
             function loadMessages() {
                 $.ajax({
                     type: "GET",
                     url: "../CustomerChatServlet",
                     success: function (data) {
-                        $("#chatBox").html(data);
+                        $("#chatBox").html(data); // ghi đè nội dung hộp chat bằng tin nhắn mới nhất từ servlet
                         $("#chatBox").scrollTop($("#chatBox")[0].scrollHeight);
                     }
                 });
             }
             // Capture Enter key press in message input box
             $("#messageInput").keypress(function (event) {
-                if (event.which === 13 && !event.shiftKey) {  // 13 is Enter key code
-                    event.preventDefault(); // Prevent default line break
+                if (event.which === 13 && !event.shiftKey) {  // 13 là mã phím Enter
+                    event.preventDefault(); // Ngăn chặn xuống dòng mặc định
                     sendMessage();
                 }
             });

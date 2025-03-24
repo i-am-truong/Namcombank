@@ -125,35 +125,39 @@
 
 
         <script>
+            // hàm gửi tin nhắn từ nhân viên đến khách hàng
             function sendMessage() {
-                var content = $("#messageInput").val().trim();
-                var customerId = $("#customer_id").val();
-                if (content === "")
+                var content = $("#messageInput").val().trim(); // lấy nội dung tin nhắn và loại bỏ khoảng trắng
+                var customerId = $("#customer_id").val(); // lấy id của khách hàng 
+                if (content === "") // kiểm tra nếu tin nhắn rỗng thì không gửi
                     return;
 
+            // gửi tin nhắn bằng AJAX tới StaffChatServlet
                 $.ajax({
                     type: "POST",
                     url: "../StaffChatServlet",
-                    data: {content: content, customer_id: customerId},
+                    data: {content: content, customer_id: customerId}, // dữ liệu gửi đi gồm nội dung và ID của khách hàng
                     success: function () {
-                        $("#messageInput").val("");
-                        $("#chatBox").append('<div class="message customer text-end">' + content + '</div>');
-                        $("#chatBox").scrollTop($("#chatBox")[0].scrollHeight);
+                        $("#messageInput").val(""); // xóa nội dung của ô nhập tin nhắn sau khi đã gửi
+                        $("#chatBox").append('<div class="message customer text-end">' + content + '</div>'); // thêm tin nhắn vào khung chat
+                        $("#chatBox").scrollTop($("#chatBox")[0].scrollHeight); // cuộn xuống cuối khung chat để hiển thị tin nhắn mới nhất
                     }
                 });
             }
-
+            
+            // load tin nhắn từ khách hàng
             function loadMessages() {
                 $.ajax({
                     type: "GET",
                     url: "../StaffChatServlet",
-                    data: {staff_id: $("#staff_id").val()},
+                    data: {staff_id: $("#staff_id").val()}, // gửi ID của nhân viên để lấy các tin nhắn có liên quan
                     success: function (data) {
-                        $("#chatBox").html(data);
-                        $("#chatBox").scrollTop($("#chatBox")[0].scrollHeight);
+                        $("#chatBox").html(data); // ghi đè nội dung hộp chat bằng tin nhắn mới từ servlet
+                        $("#chatBox").scrollTop($("#chatBox")[0].scrollHeight); // cuộn xuống cuối khung chat để hiển thị tin nhắn mới nhất
                     }
                 });
             }
+            
             // Bắt sự kiện Enter trong ô nhập tin nhắn
             $("#messageInput").keypress(function (event) {
                 if (event.which === 13 && !event.shiftKey) {  // 13 là mã phím Enter

@@ -83,7 +83,7 @@
                     <li>The above interest rates are for reference only and may change over time.</li>
                     <li>Interest is calculated based on actual days and a 365-day year.</li>
                     <li>The calculations provided are for reference purposes only.</li>
-                    <li>For interest rates of other currencies or unlisted terms, please contact the nearest Vietcombank branch.</li>
+                    <li>For interest rates of other currencies or unlisted terms, please contact the nearest Namcombank branch.</li>
                 </ul>
             </div>
         </div>
@@ -128,6 +128,7 @@
         </div>
         <a href="../Home" class="btn btn-success mt-3">🏠 Home</a>
         <script>
+            // rate theo từng kỳ hạn
             const rates = {1: 0.016, 6: 0.029, 12: 0.046, 24: 0.047};
 
             function calculate() {

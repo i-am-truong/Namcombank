@@ -41,6 +41,7 @@ public class CustomerChatServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
 
+        // Lặp qua danh sách tin nhắn, kiểm tra nếu người gửi là "customer" thì hiển thị tin nhắn bên phải, còn "staff" hiển thị bên trái.
         for (Message msg : messages) {
             out.println("<div class=\"message "
                     + (msg.getSenderType().equals("customer") ? "customer" : "staff")
