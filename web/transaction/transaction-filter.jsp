@@ -15,45 +15,7 @@
         <link href="assets/css/bootstrap.min.css" rel="stylesheet">
 
         <style>
-            /* Override sidebar styles to match loan-requests-auth */
-            .sidebar {
-                background-color: #1cc88a !important;
-                background-image: linear-gradient(180deg, #1cc88a 10%, #13855c 100%) !important;
-            }
-            
-            /* Remove any additional brightness effects */
-            .sidebar .nav-item .nav-link {
-                color: rgba(255, 255, 255, 0.8) !important;
-            }
-            
-            .sidebar .nav-item .nav-link:active,
-            .sidebar .nav-item .nav-link:focus,
-            .sidebar .nav-item .nav-link:hover {
-                color: rgba(255, 255, 255, 1) !important;
-            }
-            
-            .sidebar .sidebar-brand {
-                color: #fff !important;
-            }
-            
-            .sidebar-dark .nav-item .nav-link:active i, 
-            .sidebar-dark .nav-item .nav-link:focus i, 
-            .sidebar-dark .nav-item .nav-link:hover i {
-                color: #fff !important;
-            }
-            
-            .sidebar-dark .nav-item.active .nav-link {
-                color: #fff !important;
-            }
-            
-            .sidebar-dark .nav-item.active .nav-link i {
-                color: #fff !important;
-            }
-            
-            .sidebar-dark .sidebar-heading {
-                color: rgba(255, 255, 255, 0.4) !important;
-            }
-            
+
             /* Existing styles */
             .table-wrapper {
                 background: #fff;
