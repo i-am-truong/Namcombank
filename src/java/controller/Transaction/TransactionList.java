@@ -301,17 +301,7 @@ public class TransactionList extends BaseRBACControlller {
         request.setAttribute("sortOrder", sortOrder);
         request.setAttribute("filtersApplied", filtersApplied);
         
-        // Calculate summary statistics
-        if (!transactions.isEmpty()) {
-            BigDecimal totalAmount = BigDecimal.ZERO;
-            for (Transaction transaction : transactions) {
-                if (transaction.getAmount() != null) {
-                    totalAmount = totalAmount.add(transaction.getAmount());
-                }
-            }
-            request.setAttribute("totalAmount", totalAmount);
-            request.setAttribute("transactionCount", transactions.size());
-        }
+
         
         // Forward to the JSP
         RequestDispatcher dispatcher = request.getRequestDispatcher("transaction/transaction-filter.jsp");
