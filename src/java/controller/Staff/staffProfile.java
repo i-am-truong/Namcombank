@@ -24,7 +24,7 @@ public class staffProfile extends BaseRBACControlller {
     private static final Logger logger = Logger.getLogger(staffProfile.class.getName());
 
     private static final Pattern CIC_REGEX = Pattern.compile("^[0-9]{12}$"); // Chỉ chấp nhận 12 chữ số cho số căn cước công dân.
-    private static final Pattern PHONE_REGEX = Pattern.compile("^0[0-9]{9,10}$"); // Bắt đầu bằng số 0, tiếp theo là 9 hoặc 10 chữ số 
+    private static final Pattern PHONE_REGEX = Pattern.compile("^(03|08|09)[0-9]{8}$");// Bắt đầu bằng số 0, tiếp theo là 9 hoặc 10 chữ số 
     private static final Pattern EMAIL_REGEX = Pattern.compile("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"); // Định dạng email hợp lệ, ví dụ xxx@yyy.zzz
     private static final Pattern ADDRESS_REGEX = Pattern.compile("^[\\p{L}0-9\\s,.\\-'/()]{3,}$"); // Chấp nhận ký tự chữ, số, dấu câu, khoảng trắng
     private static final Pattern FULLNAME_REGEX = Pattern.compile("^\\p{L}+(?:\\s\\p{L}+)+$"); // Chỉ chấp nhận chữ cái và khoảng trắng giữa các từ
