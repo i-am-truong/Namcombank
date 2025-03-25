@@ -5,6 +5,10 @@
 --%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!-- Thêm thư viện Flatpickr -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
 <!DOCTYPE html>
 <html class="no-js" lang="en">
     <head>
@@ -133,10 +137,11 @@
                                     </div>
                                     <div class="col-12">
                                         <div class="form-floating mb-3">
-                                            <input type="date" class="form-control" name="dobC" id="dob" placeholder="Date of Birth">
+                                            <input type="text" class="form-control" name="dobC" id="dob" placeholder="Date of Birth">
                                             <label for="dob" class="form-label">Date of Birth</label>
                                         </div>
                                     </div>
+
                                     <div class="col-12">
                                         <div class="form-floating mb-3">
                                             <select class="form-select" name="genderC" id="gender" required>
@@ -234,14 +239,17 @@
     <script src="assets/js/script.js"></script>
 
     <script>
-        document.getElementById("dob").addEventListener("change", function () {
-            let inputDate = this.value; // Lấy giá trị ngày từ input (yyyy-MM-dd)
-            if (inputDate) {
-                let parts = inputDate.split("-"); // Tách ngày theo dấu "-"
-                let formattedDate = parts[2] + "/" + parts[1] + "/" + parts[0]; // Chuyển sang dd/MM/yyyy
-                this.setAttribute("data-formatted", formattedDate); // Lưu giá trị đã format vào thuộc tính data
-            }
+        
+        document.addEventListener("DOMContentLoaded", function () {
+            flatpickr("#dob", {
+                dateFormat: "d/m/Y", // Ép định dạng dd/MM/yyyy
+                allowInput: true, // Cho phép nhập tay
+                locale: {
+                    firstDayOfWeek: 1 // Đặt thứ Hai là ngày đầu tuần
+                }
+            });
         });
+        
         document.getElementById('registerForm').addEventListener('submit', function (event) {
             var fullname = document.getElementById('fullname').value.trim();
             var phonenumber = document.getElementById('phonenumber').value.trim();

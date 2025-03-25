@@ -115,8 +115,6 @@
                                     <div class="mt-3">
                                         <h4>${sessionScope.customer.fullname}</h4>
                                         <hr class="my-4">
-                                        <button class="btn btn-danger">Follow</button>
-                                        <button class="btn btn-outline-danger">Message</button>
                                     </div>
                                 </div>
 

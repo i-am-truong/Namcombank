@@ -36,8 +36,6 @@
                                 <div class="d-flex flex-column align-items-center text-center">
                                     <div class="mt-3">
                                         <h4>${staff.fullname}</h4>
-                                        <button type="button" class="btn btn-danger">Follow</button>
-                                        <button type="button" class="btn btn-outline-danger">Message</button>
                                         <hr class="my-4">
                                     </div>
                                 </div>
