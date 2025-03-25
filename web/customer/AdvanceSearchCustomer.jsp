@@ -210,7 +210,7 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label class="filter-label">Full Name</label>
-                                                <input type="search" 
+                                                <input type="search"
                                                        class="form-control"
                                                        placeholder="Search by name"
                                                        name="searchFullName"
@@ -643,6 +643,7 @@
             function checkDeleteCustomer(cid) {
                 if (confirm('Are you sure you want to delete this customer?')) {
                     window.location = 'deleteCustomer?cid=' + cid;
+                    return true;
                 }
                 return false;
             }
