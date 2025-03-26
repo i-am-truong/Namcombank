@@ -9,6 +9,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Date;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 import model.Department;
@@ -24,6 +26,9 @@ public class StaffAddController extends BaseRBACControlller {
     private static final Pattern ADDRESS_REGEX = Pattern.compile("^[\\p{L}0-9\\s,.\\-'/()]{3,}$");
     private static final Pattern USERNAME_REGEX = Pattern.compile("^[A-Za-z0-9_.]+$");
     private static final Pattern FULLNAME_REGEX = Pattern.compile("^\\p{L}+(?:\\s\\p{L}+)+$");
+    
+    // Minimum age requirement
+    private static final int MINIMUM_AGE = 18;
 
     @Override
     protected void doAuthorizedGet(HttpServletRequest request, HttpServletResponse response, Staff account)
@@ -61,37 +66,54 @@ public class StaffAddController extends BaseRBACControlller {
             String errorMessage = null;
             StaffDAO db = new StaffDAO();
 
-
             // Validate input parameters
             if (raw_sname == null || raw_sname.trim().isEmpty() || !FULLNAME_REGEX.matcher(raw_sname).matches()) {
                 errorMessage = "Fullname must include at least the first and last names, separated by spaces, and contain only valid characters.";
-            } else if (raw_phonenumber == null || !PHONE_REGEX.matcher(raw_phonenumber).matches()) {
-                errorMessage = "Invalid phone number.";
-            } else if (raw_email == null || !EMAIL_REGEX.matcher(raw_email).matches()) {
-                errorMessage = "Invalid email format.";
-            } else if (raw_cic == null || !CIC_REGEX.matcher(raw_cic).matches()) {
-                errorMessage = "Citizen Identification must be 12 digits.";
-            } else if (raw_address == null || raw_address.trim().isEmpty() || !ADDRESS_REGEX.matcher(raw_address).matches()) {
-                errorMessage = "Invalid address. Must be at least 3 characters and only contain letters, numbers, and allowed special characters.";
             } else if (raw_dob == null || raw_dob.isEmpty()) {
                 errorMessage = "Date of birth cannot be empty.";
-            } else if (raw_username == null || raw_username.trim().isEmpty() || !USERNAME_REGEX.matcher(raw_username).matches()) {
-                errorMessage = "Invalid username format.";
             } else {
-                boolean isCitizenIDExists = db.doesRecordExist("citizen_identification_card", raw_cic);
-                boolean isUsernameExists = db.doesRecordExist("username", raw_username);
-                boolean isEmailExists = db.doesRecordExist("email", raw_email);
-                boolean isPhoneExists = db.doesRecordExist("phonenumber", raw_phonenumber);
+                // Validate age (must be at least 18 years old)
+                try {
+                    LocalDate birthDate = LocalDate.parse(raw_dob);
+                    LocalDate currentDate = LocalDate.now();
+                    int age = Period.between(birthDate, currentDate).getYears();
+                    
+                    if (age < MINIMUM_AGE) {
+                        errorMessage = "Staff must be at least " + MINIMUM_AGE + " years old.";
+                    }
+                } catch (Exception e) {
+                    errorMessage = "Invalid date format for date of birth.";
+                }
+            }
+            
+            // Continue with other validations if age check passed
+            if (errorMessage == null) {
+                if (raw_phonenumber == null || !PHONE_REGEX.matcher(raw_phonenumber).matches()) {
+                    errorMessage = "Invalid phone number.";
+                } else if (raw_email == null || !EMAIL_REGEX.matcher(raw_email).matches()) {
+                    errorMessage = "Invalid email format.";
+                } else if (raw_cic == null || !CIC_REGEX.matcher(raw_cic).matches()) {
+                    errorMessage = "Citizen Identification must be 12 digits.";
+                } else if (raw_address == null || raw_address.trim().isEmpty() || !ADDRESS_REGEX.matcher(raw_address).matches()) {
+                    errorMessage = "Invalid address. Must be at least 3 characters and only contain letters, numbers, and allowed special characters.";
+                } else if (raw_username == null || raw_username.trim().isEmpty() || !USERNAME_REGEX.matcher(raw_username).matches()) {
+                    errorMessage = "Invalid username format.";
+                } else {
+                    boolean isCitizenIDExists = db.doesRecordExist("citizen_identification_card", raw_cic);
+                    boolean isUsernameExists = db.doesRecordExist("username", raw_username);
+                    boolean isEmailExists = db.doesRecordExist("email", raw_email);
+                    boolean isPhoneExists = db.doesRecordExist("phonenumber", raw_phonenumber);
 
-                // Check for existing credentials
-                if (isPhoneExists) {
-                    errorMessage = "Phone number already exists.";
-                } else if (isEmailExists) {
-                    errorMessage = "Email already exists.";
-                } else if (isCitizenIDExists) {
-                    errorMessage = "Citizen ID already exists.";
-                } else if (isUsernameExists) {
-                    errorMessage = "Username already exists.";
+                    // Check for existing credentials
+                    if (isPhoneExists) {
+                        errorMessage = "Phone number already exists.";
+                    } else if (isEmailExists) {
+                        errorMessage = "Email already exists.";
+                    } else if (isCitizenIDExists) {
+                        errorMessage = "Citizen ID already exists.";
+                    } else if (isUsernameExists) {
+                        errorMessage = "Username already exists.";
+                    }
                 }
             }
 

@@ -18,6 +18,8 @@ import java.util.logging.Logger;
 import model.auth.Role;
 import context.RoleDAO;
 import java.util.regex.Pattern;
+import java.time.LocalDate;
+import java.time.Period;
 
 public class StaffUpdateController extends BaseRBACControlller {
 
@@ -29,6 +31,9 @@ public class StaffUpdateController extends BaseRBACControlller {
     private static final Pattern EMAIL_REGEX = Pattern.compile("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
     private static final Pattern ADDRESS_REGEX = Pattern.compile("^[\\p{L}0-9\\s,.\\-'/()]{3,}$");
     private static final Pattern FULLNAME_REGEX = Pattern.compile("^\\p{L}+(?:\\s\\p{L}+)+$");
+    
+    // Minimum age requirement
+    private static final int MINIMUM_AGE = 18;
 
     @Override
     protected void doAuthorizedGet(HttpServletRequest request, HttpServletResponse response, Staff account)
@@ -92,26 +97,44 @@ public class StaffUpdateController extends BaseRBACControlller {
                 errorMessage = "Fullname must include at least the first and last names, separated by spaces, and contain only valid characters.";
             } else if (raw_dob == null || raw_dob.isEmpty()) {
                 errorMessage = "Date of birth cannot be empty.";
-            } else if (raw_phonenumber == null || !PHONE_REGEX.matcher(raw_phonenumber).matches()) {
-                errorMessage = "Invalid phone number.";
-            } else if (raw_email == null || !EMAIL_REGEX.matcher(raw_email).matches()) {
-                errorMessage = "Invalid email format.";
-            } else if (raw_cic == null || !CIC_REGEX.matcher(raw_cic).matches()) {
-                errorMessage = "Citizen Identification must be 12 digits.";
-            } else if (raw_address == null || raw_address.trim().isEmpty() || !ADDRESS_REGEX.matcher(raw_address).matches()) {
-                errorMessage = "Invalid address. Must be at least 3 characters and only contain letters, numbers, and allowed special characters.";
             } else {
-                int staffId = Integer.parseInt(raw_id);
-                boolean isEmailExists = db.isValueExistExcept("email", raw_email, staffId);
-                boolean isPhoneExists = db.isValueExistExcept("phonenumber", raw_phonenumber, staffId);
-                boolean isCitizenIDExists = db.isValueExistExcept("citizen_identification_card", raw_cic, staffId);
+                // Validate age (must be at least 18 years old)
+                try {
+                    LocalDate birthDate = LocalDate.parse(raw_dob);
+                    LocalDate currentDate = LocalDate.now();
+                    int age = Period.between(birthDate, currentDate).getYears();
+                    
+                    if (age < MINIMUM_AGE) {
+                        errorMessage = "Staff must be at least " + MINIMUM_AGE + " years old.";
+                    }
+                } catch (Exception e) {
+                    errorMessage = "Invalid date format for date of birth.";
+                }
+            }
+            
+            // Continue with other validations if age check passed
+            if (errorMessage == null) {
+                if (raw_phonenumber == null || !PHONE_REGEX.matcher(raw_phonenumber).matches()) {
+                    errorMessage = "Invalid phone number.";
+                } else if (raw_email == null || !EMAIL_REGEX.matcher(raw_email).matches()) {
+                    errorMessage = "Invalid email format.";
+                } else if (raw_cic == null || !CIC_REGEX.matcher(raw_cic).matches()) {
+                    errorMessage = "Citizen Identification must be 12 digits.";
+                } else if (raw_address == null || raw_address.trim().isEmpty() || !ADDRESS_REGEX.matcher(raw_address).matches()) {
+                    errorMessage = "Invalid address. Must be at least 3 characters and only contain letters, numbers, and allowed special characters.";
+                } else {
+                    int staffId = Integer.parseInt(raw_id);
+                    boolean isEmailExists = db.isValueExistExcept("email", raw_email, staffId);
+                    boolean isPhoneExists = db.isValueExistExcept("phonenumber", raw_phonenumber, staffId);
+                    boolean isCitizenIDExists = db.isValueExistExcept("citizen_identification_card", raw_cic, staffId);
 
-                if (isPhoneExists) {
-                    errorMessage = "Phone number already exists.";
-                } else if (isEmailExists) {
-                    errorMessage = "Email already exists.";
-                } else if (isCitizenIDExists) {
-                    errorMessage = "Citizen ID already exists.";
+                    if (isPhoneExists) {
+                        errorMessage = "Phone number already exists.";
+                    } else if (isEmailExists) {
+                        errorMessage = "Email already exists.";
+                    } else if (isCitizenIDExists) {
+                        errorMessage = "Citizen ID already exists.";
+                    }
                 }
             }
 

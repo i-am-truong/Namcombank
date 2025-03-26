@@ -46,7 +46,71 @@ public class StaffDAO extends DBContext<Staff> {
     // Method to send the password via email
     public void sendEmail(String recipientEmail, String password, String username) {
         String subject = "Your New Account Password";
-        String body = "Hello,\n\nYour account has been created successfully.\nYour username is: " + username + "\nYour password is: " + password + "\n\nPlease change it upon your first login.";
+
+        // Generate the HTML body with the account information
+        String htmlBody = "<!DOCTYPE html>"
+                + "<html>"
+                + "<head>"
+                + "    <meta charset='UTF-8'>"
+                + "    <style>"
+                + "        body {"
+                + "            font-family: Arial, sans-serif;"
+                + "            line-height: 1.6;"
+                + "            color: #333333;"
+                + "            max-width: 600px;"
+                + "            margin: 0 auto;"
+                + "            padding: 20px;"
+                + "        }"
+                + "        .container {"
+                + "            border: 1px solid #e0e0e0;"
+                + "            border-radius: 5px;"
+                + "            padding: 20px 30px;"
+                + "        }"
+                + "        .header {"
+                + "            text-align: center;"
+                + "            color: #2e7d32;"
+                + "            font-size: 20px;"
+                + "            font-weight: bold;"
+                + "            margin-bottom: 20px;"
+                + "        }"
+                + "        .credentials-container {"
+                + "            background-color: #f5f5f5;"
+                + "            padding: 15px;"
+                + "            text-align: center;"
+                + "            margin: 20px 0;"
+                + "            border-radius: 5px;"
+                + "        }"
+                + "        .credential-item {"
+                + "            font-size: 16px;"
+                + "            font-weight: bold;"
+                + "            color: #2e7d32;"
+                + "            margin: 10px 0;"
+                + "        }"
+                + "        p {"
+                + "            margin: 10px 0;"
+                + "        }"
+                + "        .footer {"
+                + "            margin-top: 20px;"
+                + "        }"
+                + "    </style>"
+                + "</head>"
+                + "<body>"
+                + "    <div class='container'>"
+                + "        <div class='header'>Namcombank - Account Information</div>"
+                + "        <p>Hello,</p>"
+                + "        <p>Your account has been created successfully. Below are your account credentials:</p>"
+                + "        <div class='credentials-container'>"
+                + "            <div class='credential-item'>Username: " + username + "</div>"
+                + "            <div class='credential-item'>Password: " + password + "</div>"
+                + "        </div>"
+                + "        <p>Please change your password upon your first login.</p>"
+                + "        <p>If you did not request this account, please contact our support team immediately.</p>"
+                + "        <div class='footer'>"
+                + "            <p>Best regards,<br>Namcombank Support Team</p>"
+                + "        </div>"
+                + "    </div>"
+                + "</body>"
+                + "</html>";
 
         // Set up email properties
         Properties properties = new Properties();
@@ -67,7 +131,10 @@ public class StaffDAO extends DBContext<Staff> {
             message.setFrom(new InternetAddress("doanvinhhung369@gmail.com")); // Sender email
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientEmail));
             message.setSubject(subject);
-            message.setText(body);
+
+            // Set the email content as HTML
+            message.setContent(htmlBody, "text/html; charset=utf-8");
+
             Transport.send(message); // Send the email
         } catch (MessagingException e) {
             System.out.println("Error sending email: " + e.getMessage());
@@ -117,7 +184,7 @@ public class StaffDAO extends DBContext<Staff> {
                 + "      ,[gender] = ?\n"
                 + "      ,[phonenumber] = ?\n"
                 + "      ,[citizen_identification_card] = ?\n"
-                + "      ,[address] = ?\n"  
+                + "      ,[address] = ?\n"
                 + " WHERE staff_id = ?";
 
         String sql_delete_roles = "DELETE FROM [dbo].[StaffRoles] WHERE staff_id = ?";
@@ -209,7 +276,7 @@ public class StaffDAO extends DBContext<Staff> {
                     staff.setEmail(rs.getString("email"));
                     staff.setDob(rs.getDate("dob"));
                     staff.setGender(rs.getBoolean("gender"));
-                    
+
                     staff.setCitizenId(rs.getString("citizen_identification_card"));
                     staff.setAddress(rs.getNString("address"));
 
