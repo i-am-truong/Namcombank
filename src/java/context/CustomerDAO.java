@@ -1243,10 +1243,10 @@ public class CustomerDAO extends DBContext {
         List<Customer> customers = new ArrayList<>();
         String query = "SELECT c.customer_id, c.fullname, c.username, c.email, "
                 + "c.password, c.dob, c.gender, c.balance, c.address, "
-                + "c.active, c.phonenumber, c.citizen_identification_card, c.avatar, " // Added active and other missing fields
-                + "a.activename " // Added activename from Active table
+                + "c.active, c.phonenumber, c.citizen_identification_card, c.avatar, "
+                + "a.activename " 
                 + "FROM Customer c "
-                + "JOIN Active a ON c.active = a.active " // Join with Active table
+                + "JOIN Active a ON c.active = a.active " 
                 + "ORDER BY c.customer_id "
                 + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
 

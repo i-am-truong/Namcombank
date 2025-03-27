@@ -15,7 +15,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <base href="${pageContext.request.contextPath}/">
-        
+
         <title>Namcombank</title>
 
         <!-- Custom styles -->
@@ -23,7 +23,7 @@
         <link href="adminassets/css/sb-admin-2.min.css" rel="stylesheet">
         <link href="assets/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-        
+
         <style>
             .table-wrapper {
                 background: #fff;
@@ -32,23 +32,23 @@
                 box-shadow: 0 2px 4px rgba(0,0,0,0.1);
                 margin-top: 20px;
             }
-            
+
             .search-container {
                 display: flex;
                 align-items: center;
                 gap: 5px;
                 margin-bottom: 15px;
             }
-            
+
             .search-container input[type="search"] {
                 flex: 1;
                 min-width: 300px;
             }
-            
+
             .search-container .btn {
                 flex-shrink: 0;
             }
-            
+
             .btn-pagination {
                 width: 40px;
                 height: 40px;
@@ -57,51 +57,51 @@
                 justify-content: center;
                 text-align: center;
             }
-            
+
             .btn-sort {
                 background: none;
                 border: none;
                 padding: 0;
                 cursor: pointer;
             }
-            
+
             .action-buttons {
                 display: flex;
                 justify-content: space-between;
                 margin-bottom: 15px;
             }
-            
+
             .customer-img {
                 width: 80px;
                 height: 100px;
                 object-fit: cover;
                 border-radius: 4px;
             }
-            
+
             .badge {
                 font-size: 85%;
             }
-            
+
             .alert {
                 margin-top: 15px;
             }
-            
+
             @media (max-width: 768px) {
                 .search-container {
                     flex-direction: column;
                     align-items: stretch;
                 }
-                
+
                 .search-container input[type="search"] {
                     min-width: auto;
                     width: 100%;
                 }
-                
+
                 .action-buttons {
                     flex-direction: column;
                     gap: 10px;
                 }
-                
+
                 .action-buttons .btn {
                     width: 100%;
                 }
@@ -112,16 +112,16 @@
     <body id="page-top">
         <div id="wrapper">
             <%@include file="../homepage/sidebar_admin.jsp" %>
-            
+
             <div id="content-wrapper" class="d-flex flex-column">
                 <div id="content">
                     <%@include file="../homepage/header_admin.jsp" %>
-                    
+
                     <div class="container-fluid">
                         <div class="table-wrapper">
                             <h1 class="h3 mb-2 text-gray-800">List Customers</h1>
                             <p class="mb-4">Manage all customer accounts in the system.</p>
-                            
+
                             <!-- Action Buttons -->
                             <div class="action-buttons">
                                 <div>
@@ -136,7 +136,7 @@
                                         </button>
                                     </form>
                                 </div>
-                                
+
                                 <div class="d-flex">
                                     <form action="ExportCustomers" method="get" class="me-2">
                                         <button type="submit" class="btn btn-info">
@@ -151,14 +151,14 @@
                                     </form>
                                 </div>
                             </div>
-                            
+
                             <!-- Search and Page Size Options -->
                             <form action="manageCustomerVer2" method="get">
                                 <div class="row mb-3">
                                     <input type="hidden" name="page" value="${pagination.currentPage}">
                                     <input type="hidden" name="sort" value="${pagination.sort}">
                                     <input type="hidden" name="order" value="${pagination.order}">
-                                    
+
                                     <div class="col-md-6 d-flex align-items-center">
                                         <label class="me-2">Show</label>
                                         <select name="page-size" class="form-select form-select-sm" style="width: auto;" onchange="this.form.submit()">
@@ -168,7 +168,7 @@
                                         </select>
                                         <label class="ms-2">entries</label>
                                     </div>
-                                    
+
                                     <div class="col-md-6">
                                         <div class="input-group">
                                             <input type="search"
@@ -184,7 +184,7 @@
                                     </div>
                                 </div>
                             </form>
-                            
+
                             <!-- Alert Messages -->
                             <c:if test="${not empty alertImportSuccess}">
                                 <div class="alert alert-success alert-dismissible" role="alert">
@@ -194,7 +194,7 @@
                                     </div>
                                 </div>
                             </c:if>
-                            
+
                             <c:if test="${not empty alertImportFail}">
                                 <div class="alert alert-warning alert-dismissible" role="alert">
                                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -211,7 +211,7 @@
                                     </div>
                                 </div>
                             </c:if>
-                            
+
                             <!-- Customers Table -->
                             <div class="table-responsive">
                                 <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
@@ -331,7 +331,7 @@
                                                         </c:when>
                                                     </c:choose>
                                                 </td>
-                                                <td>${customer.dob}</td>
+                                                <td><fmt:formatDate value="${customer.dob}" pattern="dd/MM/yyyy"/></td>
                                                 <td>${customer.email}</td>
                                                 <td>${customer.phonenumber}</td>
                                                 <td>${customer.cid}</td>
@@ -349,12 +349,12 @@
                                                 <td>${customer.address}</td>
                                                 <td>${customer.balance}</td>
                                             </tr>
-                                            
+
                                         </c:forEach>
                                     </tbody>
                                 </table>
                             </div>
-                            
+
                             <!-- Empty State -->
                             <c:if test="${totalCustomers==0}">
                                 <div class="alert alert-info text-center py-4" role="alert">
@@ -363,10 +363,10 @@
                                     <p class="mb-0">Try adjusting your search criteria or adding new customers.</p>
                                 </div>
                             </c:if>
-                            
+
                             <!-- Pagination -->
                             <jsp:include page="../homepage/pagination.jsp" />
-                            
+
                             <!-- Delete Status Alert -->
                             <c:if test="${not empty deleteStatus}">
                                 <div class="alert alert-warning alert-dismissible" role="alert">
@@ -398,7 +398,7 @@
                     document.getElementById("importForm").submit();
                 }
             });
-            
+
             // Initialize Bootstrap components
             var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
             var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {

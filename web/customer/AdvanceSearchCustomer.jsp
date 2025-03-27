@@ -5,6 +5,7 @@
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -559,7 +560,7 @@
                                                         <c:when test="${customer.gender == 1}">Male</c:when>
                                                     </c:choose>
                                                 </td>
-                                                <td>${customer.dob}</td>
+                                                <td><fmt:formatDate value="${customer.dob}" pattern="dd/MM/yyyy"/></td>
                                                 <td title="${customer.email}">${customer.email}</td>
                                                 <td>${customer.phonenumber}</td>
                                                 <td>${customer.cid}</td>
