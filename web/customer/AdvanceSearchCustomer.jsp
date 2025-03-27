@@ -548,7 +548,7 @@
                                                             </c:choose>
                                                         </c:when>
                                                         <c:otherwise>
-                                                            <img src="${pageContext.request.contextPath}/assets/img/Unknown.jpg"
+                                                            <img src="${customer.avatar}"
                                                                  alt="${customer.fullname}'s avatar"
                                                                  class="customer-img">
                                                         </c:otherwise>

@@ -337,9 +337,7 @@
 
                                                     <!-- Chỉ hiển thị nút Delete nếu là Admin hoặc chính người tạo -->
                                                     <c:if test="${sessionScope.roleId == 1 || (sessionScope.staffId == news.staffId)}">
-                                                        <button id="deletebtn" onclick="deleteNews(${news.nId})" style="float:right; border:none; width:103px; height:70px; appearance: none; background-color: inherit; display: flex; justify-content: center; align-items: center;">
-                                                            <img src="https://drive.google.com/thumbnail?id=1jMT2nYYaUtyf7OQbRk3t_6u8U5bnL8r2" style="width:103px; height:70px; display:inline-block;" class="img-rounded" alt="Load img fail">
-                                                        </button>
+                                                        <button id="deletebtn" onclick="deleteNews(${news.nId})" class="btn btn-danger" style="float:right; margin-top:15px; margin-right:10px;">Delete</button>
                                                     </c:if>
 
                                                     <!-- Chỉ hiển thị nút Edit nếu là Admin hoặc chính người tạo -->

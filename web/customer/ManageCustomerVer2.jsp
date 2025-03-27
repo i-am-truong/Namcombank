@@ -197,17 +197,17 @@
 
                             <c:if test="${not empty alertImportFail}">
                                 <div class="alert alert-warning alert-dismissible" role="alert">
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    <%-- <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> --%>
                                     <div class="d-flex align-items-center">
                                         <div class="alert-message flex-grow-1">
                                             <strong>${alertImportFail}</strong>
                                         </div>
-                                        <form action="ExportCustomers" method="get">
+                                        <%-- <form action="ExportCustomers" method="get">
                                             <input type="hidden" name="type" value="error">
                                             <button type="submit" class="btn btn-sm btn-warning">
                                                 <i class="fas fa-download"></i> Download Error Log
                                             </button>
-                                        </form>
+                                        </form> --%>
                                     </div>
                                 </div>
                             </c:if>
@@ -315,7 +315,7 @@
                                                             </c:choose>
                                                         </c:when>
                                                         <c:otherwise>
-                                                            <img src="${pageContext.request.contextPath}/assets/img/Unknown.jpg"
+                                                            <img src="${customer.avatar}"
                                                                  alt="${customer.fullname}'s avatar"
                                                                  class="customer-img">
                                                         </c:otherwise>

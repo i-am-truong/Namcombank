@@ -114,14 +114,14 @@
                 padding: 2rem;
                 margin-top: 2rem;
             }
-            
+
             /* Avatar styling */
             .avatar-container {
                 display: flex;
                 justify-content: center;
                 margin-bottom: 20px;
             }
-            
+
             .avatar-image {
                 width: 120px;
                 height: 150px;
@@ -171,7 +171,7 @@
                                         <div class="row gy-3 overflow-hidden">
                                             <input type="hidden" name="customerId" value="${customer.customerId}">
                                             <input type="hidden" name="avatar" value="${customer.avatar}">
-                                            
+
                                             <!-- Avatar Display -->
                                             <div class="col-12">
                                                 <div class="avatar-container">
@@ -188,24 +188,24 @@
                                                                          alt="Female Avatar"
                                                                          class="avatar-image">
                                                                 </c:when>
-                                                            </c:choose>   
+                                                            </c:choose>
                                                         </c:when>
                                                         <c:otherwise>
-                                                            <img src="${pageContext.request.contextPath}/assets/img/Unknown.jpg"
+                                                            <img src="${customer.avatar}"
                                                                  alt="${customer.fullname}'s avatar"
                                                                  class="avatar-image">
                                                         </c:otherwise>
                                                     </c:choose>
                                                 </div>
                                             </div>
-                                            
+
                                             <div class="col-12">
                                                 <div class="form-floating mb-3">
                                                     <input type="text" class="form-control" name="fullnameC" id="fullname" placeholder="Full Name" value="${customer.fullname}" readonly>
                                                     <label for="fullname" class="form-label">Full Name</label>
                                                 </div>
                                             </div>
-                                            
+
                                             <div class="col-12">
                                                 <div class="form-floating mb-3">
                                                     <input type="text" class="form-control" name="citizenIdC" id="citizenID" placeholder="Citizen Identification Card"
@@ -213,7 +213,7 @@
                                                     <label for="citizenID" class="form-label">Citizen Identification Card</label>
                                                 </div>
                                             </div>
-                                            
+
                                             <div class="col-12">
                                                 <div class="form-floating mb-3">
                                                     <input type="tel" class="form-control" name="phonenumberC" id="phonenumber"
@@ -221,14 +221,14 @@
                                                     <label for="phonenumber" class="form-label">Phone Number</label>
                                                 </div>
                                             </div>
-                                            
+
                                             <div class="col-12">
                                                 <div class="form-floating mb-3">
                                                     <input type="email" class="form-control" name="emailC" id="email" placeholder="name@example.com" value="${customer.email}" required>
                                                     <label for="email" class="form-label">Email</label>
                                                 </div>
                                             </div>
-                                            
+
                                             <div class="col-12">
                                                 <div class="form-floating mb-3">
                                                     <input type="text" class="form-control" name="addressC" id="address" placeholder="Address"
@@ -236,13 +236,13 @@
                                                     <label for="address" class="form-label">Address</label>
                                                 </div>
                                             </div>
-                                            
+
                                             <div class="col-12 mt-3">
                                                 <div class="d-grid">
                                                     <button type="submit" class="btn btn-success btn-lg">Update Customer</button>
                                                 </div>
                                             </div>
-                                            
+
                                             <!-- Add status messages -->
                                             <c:if test="${not empty error}">
                                                 <div class="alert alert-danger mt-3">${error}</div>

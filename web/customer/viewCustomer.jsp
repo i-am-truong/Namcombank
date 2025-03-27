@@ -114,14 +114,14 @@
                 padding: 2rem;
                 margin-top: 2rem;
             }
-            
+
             /* Avatar styling */
             .avatar-container {
                 display: flex;
                 justify-content: center;
                 margin-bottom: 20px;
             }
-            
+
             .avatar-image {
                 width: 120px;
                 height: 150px;
@@ -170,7 +170,7 @@
                                     <form id="registerForm" action="viewCustomer" method="get">
                                         <div class="row gy-3 overflow-hidden">
                                             <input type="hidden" name="customerId" value="${customer.customerId}">
-                                            
+
                                             <!-- Avatar Display -->
                                             <div class="col-12">
                                                 <div class="avatar-container">
@@ -187,17 +187,17 @@
                                                                          alt="Female Avatar"
                                                                          class="avatar-image">
                                                                 </c:when>
-                                                            </c:choose>   
+                                                            </c:choose>
                                                         </c:when>
                                                         <c:otherwise>
-                                                            <img src="${pageContext.request.contextPath}/assets/img/Unknown.jpg"
+                                                            <img src="${customer.avatar}"
                                                                  alt="${customer.fullname}'s avatar"
                                                                  class="avatar-image">
                                                         </c:otherwise>
                                                     </c:choose>
                                                 </div>
                                             </div>
-                                            
+
                                             <div class="col-12">
                                                 <div class="form-floating mb-3">
                                                     <input type="text" class="form-control" name="fullnameC" id="fullname" placeholder="Full Name" value="${customer.fullname}" disabled>
