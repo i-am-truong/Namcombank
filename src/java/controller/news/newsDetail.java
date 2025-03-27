@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.News;
+import java.util.ArrayList;
 
 /**
  *
@@ -68,6 +69,11 @@ public class newsDetail extends HttpServlet {
                 // Check if a news article with the given ID exists
                 if(news != null && news.getNews_id() > 0) {
                     request.setAttribute("news", news);
+
+                    // Fetch related news articles (3 items)
+                    ArrayList<News> relatedNews = dao.getRelatedNews(id, 3);
+                    request.setAttribute("relatedNews", relatedNews);
+
                     request.getRequestDispatcher("news/newsDetail.jsp").forward(request, response);
                     return;
                 }

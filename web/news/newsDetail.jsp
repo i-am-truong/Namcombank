@@ -222,6 +222,54 @@
                                 </div>
                             </div>
 
+                            <!-- Related News Section -->
+                            <div class="related-news mt-5">
+                                <h3 class="mb-4">Related News</h3>
+                                <div class="row">
+                                    <c:forEach items="${relatedNews}" var="related">
+                                        <div class="col-lg-4 col-md-6 mb-4">
+                                            <div class="related-news-item" style="height: 100%; border: 1px solid rgba(0,0,0,0.08); border-radius: 8px; overflow: hidden;">
+                                                <!-- Thumbnail -->
+                                                <a href="newsDetail?id=${related.nId}">
+                                                    <img src="${related.thumbnail}" alt="Related news thumbnail"
+                                                         style="width: 100%; height: 180px; object-fit: cover; border-radius: 8px 8px 0 0;">
+                                                </a>
+                                                <!-- Content -->
+                                                <div class="p-3">
+                                                    <h5 style="margin: 0 0 8px; font-size: 16px; font-weight: 600; line-height: 1.3;">
+                                                        <a href="newsDetail?id=${related.nId}" style="color: #333; text-decoration: none;">
+                                                            ${related.title}
+                                                        </a>
+                                                    </h5>
+                                                    <div class="meta" style="font-size: 13px; color: #777; margin-bottom: 8px;">
+                                                        <span style="margin-right: 10px;">
+                                                            <i class="fas fa-user" style="margin-right: 3px;"></i>
+                                                            ${not empty related.authorName ? related.authorName : 'Unknown'}
+                                                        </span>
+                                                        <span>
+                                                            <i class="fas fa-calendar-alt" style="margin-right: 3px;"></i>
+                                                            ${DateFormatter.formatDefault(related.updateDate)}
+                                                        </span>
+                                                    </div>
+                                                    <p style="font-size: 14px; margin-bottom: 8px; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+                                                        ${related.description.replaceAll("\\<[^>]*>", "").length() > 100 ?
+                                                          related.description.replaceAll("\\<[^>]*>", "").substring(0, 100).concat('...') :
+                                                          related.description.replaceAll("\\<[^>]*>", "")}
+                                                    </p>
+                                                    <a href="newsDetail?id=${related.nId}" class="btn btn-sm btn-outline-primary">Read More</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </c:forEach>
+                                    <c:if test="${empty relatedNews}">
+                                        <div class="col-12">
+                                            <div class="alert alert-light text-center">
+                                                No related news available at this time.
+                                            </div>
+                                        </div>
+                                    </c:if>
+                                </div>
+                            </div>
 
                         </div>
                     </div>

@@ -1920,6 +1920,116 @@ public class NewsDAO extends DBContext {
         return 0;
     }
 
+    /**
+     * Get related news based on title similarity
+     * @param currentNewsId Current news ID to exclude from results
+     * @param limit Maximum number of related news to return
+     * @return ArrayList of related news items
+     */
+    public ArrayList<News> getRelatedNews(int currentNewsId, int limit) {
+        ArrayList<News> relatedNews = new ArrayList<>();
+        try {
+            // Get the current news first to extract its title for comparison
+            News currentNews = getNewsById(currentNewsId);
+            if (currentNews == null) {
+                return relatedNews; // Return empty list if current news not found
+            }
+
+            // Extract keywords from the title (words longer than 3 characters)
+            String[] titleWords = currentNews.getTitle().split("\\s+");
+            StringBuilder likeConditions = new StringBuilder();
+
+            for (String word : titleWords) {
+                if (word.length() > 3) {
+                    if (likeConditions.length() > 0) {
+                        likeConditions.append(" OR ");
+                    }
+                    likeConditions.append("title LIKE ?");
+                }
+            }
+
+            // If no meaningful words found, just get recent news
+            String sql;
+            if (likeConditions.length() == 0) {
+                sql = "SELECT TOP " + limit + " * FROM News " +
+                      "WHERE news_id != ? AND status = 1 ORDER BY updateDate DESC";
+            } else {
+                sql = "SELECT TOP " + limit + " * FROM News " +
+                      "WHERE news_id != ? AND status = 1 AND (" + likeConditions.toString() + ") " +
+                      "ORDER BY updateDate DESC";
+            }
+
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, currentNewsId);
+
+            // Set parameters for LIKE conditions if any
+            if (likeConditions.length() > 0) {
+                int paramIndex = 2;
+                for (String word : titleWords) {
+                    if (word.length() > 3) {
+                        stm.setString(paramIndex++, "%" + word + "%");
+                    }
+                }
+            }
+
+            ResultSet rs = stm.executeQuery();
+
+            while (rs.next() && relatedNews.size() < limit) {
+                relatedNews.add(new News(
+                    rs.getInt("news_id"),
+                    rs.getString("title"),
+                    rs.getString("description"),
+                    rs.getInt("staff_id"),
+                    rs.getTimestamp("updateDate"),
+                    rs.getBoolean("status"),
+                    getAuthorByid(rs.getInt("staff_id"))
+                ));
+            }
+
+            // If not enough related articles found, supplement with recent articles
+            if (relatedNews.size() < limit) {
+                sql = "SELECT TOP " + (limit - relatedNews.size()) + " * FROM News " +
+                      "WHERE news_id != ? AND status = 1 " +
+                      "AND news_id NOT IN (";
+
+                // Exclude already found related news
+                for (int i = 0; i < relatedNews.size(); i++) {
+                    sql += (i == 0 ? "?" : ", ?");
+                }
+
+                sql += ") ORDER BY updateDate DESC";
+
+                stm = connection.prepareStatement(sql);
+                stm.setInt(1, currentNewsId);
+
+                // Set parameters for already found news IDs
+                for (int i = 0; i < relatedNews.size(); i++) {
+                    stm.setInt(i + 2, relatedNews.get(i).getNews_id());
+                }
+
+                rs = stm.executeQuery();
+                while (rs.next()) {
+                    relatedNews.add(new News(
+                        rs.getInt("news_id"),
+                        rs.getString("title"),
+                        rs.getString("description"),
+                        rs.getInt("staff_id"),
+                        rs.getTimestamp("updateDate"),
+                        rs.getBoolean("status"),
+                        getAuthorByid(rs.getInt("staff_id"))
+                    ));
+                }
+            }
+
+            rs.close();
+            stm.close();
+        } catch (Exception e) {
+            System.out.println("Error in getRelatedNews: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return relatedNews;
+    }
+
     public static void main(String[] args) {
         NewsDAO dao = new NewsDAO();
         News news = new News("tesst", "tessssst", 1, new Date(), false);
