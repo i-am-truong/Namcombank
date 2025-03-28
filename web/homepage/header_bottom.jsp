@@ -25,13 +25,13 @@
                             <li><a href="/Namcombank/Home" >Home<i class="fa fa-home"></i></a></li>
                             <li><a href="/Namcombank/loanpackage-customer/loan_packages.jsp">Loan Packages <i class="fa fa-money-bill"></i></a>
                             </li>
-                            <li><a href="/Namcombank/allSavings">Savings <i class="fas fa-piggy-bank"></i></a>
-                                <ul class="submenu-item">
-                                    <li><a href="/Namcombank/allSavings">All Savings</a></li>
-                                    <li><a href="savings-without-term">Savings without term</a></li>
-                                    <li><a href="term-savings">Term Savings</a></li>
-                                    <li><a href="accumulated-savings">Accumulated savings</a></li>
-                                </ul>
+                            <li><a href="javascript:void(0)">Savings <i class="fas fa-piggy-bank"></i></a>
+<!--                                <ul class="submenu-item">
+                                    <li><a href="javascript:void(0)">All Savings</a></li>
+                                    <li><a href="javascript:void(0)">Savings without term</a></li>
+                                    <li><a href="javascript:void(0)">Term Savings</a></li>
+                                    <li><a href="javascript:void(0)">Accumulated savings</a></li>
+                                </ul>-->
                             </li>
                             <li><a href="#">Tools and Extensions <i class="fa fa-tools"></i></a>
                                 <ul class="submenu-item">
@@ -42,8 +42,8 @@
                             </li>
                             <li><a href="newsList" >News <i class="fa fa-newspaper"></i></a>
                             </li>
-                            <li><a href="viewFeedback?customer_id=<%= session.getAttribute("customer_id") %>">Feedback <i class="fa fa-star"></i></a></li>
-                            <li><a href="chat/chat_customer.jsp">Chat with Admin <i class="fa fa-comment-dots"></i></a>
+                            <li><a href="javascript:void(0)">Feedback <i class="fa fa-star"></i></a></li>
+                            <li><a href="chat/chat_customer.jsp">Chat<i class="fa fa-comment-dots"></i></a>
 
                         </ul>
                     </nav>
