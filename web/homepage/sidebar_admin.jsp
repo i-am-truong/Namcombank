@@ -95,11 +95,11 @@
         </a>
     </li>
 
-    <li class="nav-item active">
+<!--    <li class="nav-item active">
         <a class="nav-link" href="viewCustomerFeedback">
             <i class="fas fa-fw fa-comment-dots"></i>
             <span>View Customer Feedback</span></a>
-    </li>
+    </li>-->
 
     <li class="nav-item active">
         <a class="nav-link" href="newsListStaff">
@@ -110,7 +110,7 @@
     <li class="nav-item active">
         <a class="nav-link" href="manageCustomerVer2">
             <i class="fas fa-fw fa-user-friends"></i>
-            <span> Manage Customer</span></a>
+            <span>Manage Customer</span></a>
     </li>
 
     <!-- Divider -->

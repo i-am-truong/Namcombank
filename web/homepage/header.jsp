@@ -113,13 +113,13 @@
             <div class="container">
                 <div class="row" style="display: flex; align-items: center;">
                     <!-- Logo -->
-                    <div class="col-lg-2">
+                    <div class="col-lg-10">
                         <div class="logo">
                             <h2 style="margin: 0"><a href="/Namcombank/Home"><img src="assets/img/logo3.png" alt="Logo"></a></h2>
                         </div>
                     </div>
                     <!-- Search Bar -->
-                    <div class="col-lg-6" style="margin-top: 10px;">
+<!--                    <div class="col-lg-6" style="margin-top: 10px;">
                         <div class="header-search-form">
                             <form action="search" method="get" style="display: flex; align-items: center;">
                                 <select class="form-select" name="loanPackages" style="height: 40px;">
@@ -132,7 +132,7 @@
                                 <button type="submit" style="height: 40px;"><i class="fas fa-search"></i></button>
                             </form>
                         </div>
-                    </div>
+                    </div>-->
 
                     <!-- User Icon and Name -->
                     <!-- <div class="col-lg-1 text-right">
@@ -142,7 +142,7 @@
 
 
                 </div> -->
-                    <div class="col-lg-1 text-center" style="margin-left: 100px">
+                    <div class="col-lg-2 text-center">
                         <c:if test="${sessionScope.customer != null}" >
                             <div style="position: relative; display: inline-block;">
 
@@ -167,7 +167,7 @@
                             </div>
                         </c:if>
                         <c:if test="${sessionScope.customer == null}">
-                            <div style="display: flex; align-items: center; gap: 20px;">
+                            <div class="col-md-6" style="display: flex; align-items: center; gap: 20px;">
                                 <a href="login" style="text-align: center;">
                                     <i class="fas fa-user" style="font-size: 30px; color: #ccc; cursor: pointer"></i>
                                     <span style="display: block; color: #04414d;">Login/Register</span>
