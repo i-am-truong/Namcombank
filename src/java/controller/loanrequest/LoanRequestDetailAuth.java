@@ -72,7 +72,7 @@ public class LoanRequestDetailAuth extends BaseRBACControlller {
             }
 
             // Determine approval or deletion rights
-            boolean canApprove = (roleId == 1 || roleId == 3); // Admin and HeadOfStaff
+            boolean canApprove = (roleId == 1 || roleId == 4); // Admin and Accountant
             boolean canDelete = (roleId == 1); // Only Admin can delete
 
             // Check permissions for the requested action
@@ -218,13 +218,13 @@ public class LoanRequestDetailAuth extends BaseRBACControlller {
                 roleId = 0;
             }
 
-            boolean canApprove = (roleId == 1 || roleId == 3); // Admin and HeadOfStaff
+            boolean canApprove = (roleId == 1 || roleId == 4); // Admin and Accountant
             boolean canDelete = (roleId == 1); // Only Admin can delete
 
             request.setAttribute("canApprove", canApprove);
             request.setAttribute("canDelete", canDelete);
             request.setAttribute("isAdmin", roleId == 1);
-            request.setAttribute("isHeadOfStaff", roleId == 3);
+            request.setAttribute("isAccountant", roleId == 4);
 
             // Forward to detail page
             request.getRequestDispatcher("/loanrequire-admin/viewLoanRequestDetail.jsp").forward(request, response);

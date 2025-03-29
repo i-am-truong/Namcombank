@@ -179,7 +179,7 @@
 
                             <div class="mt-3 text-left">
                                 <button class="btn btn-primary profile-button" type="submit">Save Profile</button>
-                                <a href="${sessionScope.previousPage != null ? sessionScope.previousPage : 'staffFilter'}" class="btn btn-secondary">Back</a>
+                                <a href="${sessionScope.previousPage != null ? sessionScope.previousPage : 'assets-filter'}" class="btn btn-secondary">Back</a>
                             </div>
                         </form>
                     </div>

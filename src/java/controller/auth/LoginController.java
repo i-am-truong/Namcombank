@@ -86,7 +86,7 @@ public class LoginController extends HttpServlet {
             for (Role role : roles) {
                 if ("Staff".equalsIgnoreCase(role.getName())) {
                     roleId = role.getId();
-                    redirectAfterOTP = "contractApproval";
+                    redirectAfterOTP = "assets-filter";
                     hasValidRole = true;
                     break;
                 } else if (role.getId() == 1) { // Admin Role
@@ -96,12 +96,12 @@ public class LoginController extends HttpServlet {
                     break;
                 } else if (role.getId() == 3) { // Head of Staff
                     roleId = role.getId();
-                    redirectAfterOTP = "contractApproval";
+                    redirectAfterOTP = "assets-filter";
                     hasValidRole = true;
                     break;
                 } else if (role.getId() == 4) { // Accountant
                     roleId = role.getId();
-                    redirectAfterOTP = "contractApproval";
+                    redirectAfterOTP = "assets-filter";
                     hasValidRole = true;
                     break;
                 }
