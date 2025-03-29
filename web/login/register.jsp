@@ -137,7 +137,7 @@
                                     </div>
                                     <div class="col-12">
                                         <div class="form-floating mb-3">
-                                            <input type="text" class="form-control" name="dobC" id="dob" placeholder="Date of Birth">
+                                            <input type="date" class="form-control" name="dobC" id="dob" placeholder="Date of Birth">
                                             <label for="dob" class="form-label">Date of Birth</label>
                                         </div>
                                     </div>
@@ -240,15 +240,6 @@
 
     <script>
         
-        document.addEventListener("DOMContentLoaded", function () {
-            flatpickr("#dob", {
-                dateFormat: "d/m/Y", // Ép định dạng dd/MM/yyyy
-                allowInput: true, // Cho phép nhập tay
-                locale: {
-                    firstDayOfWeek: 1 // Đặt thứ Hai là ngày đầu tuần
-                }
-            });
-        });
         
         document.getElementById('registerForm').addEventListener('submit', function (event) {
             var fullname = document.getElementById('fullname').value.trim();

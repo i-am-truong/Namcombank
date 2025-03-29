@@ -94,9 +94,9 @@ public class LoanRequestServlet extends HttpServlet {
         if (!"unsecured".equalsIgnoreCase(loanPackage.getLoanType().trim())) {
             if (assetId > 0) {
                 AssetDAO assetDAO = new AssetDAO();
-                asset = assetDAO.getAssetById(assetId);
+                asset = assetDAO.getAssetById(assetId, customer.getCustomerId()); // Kiểm tra quyền sở hữu
                 if (asset == null) {
-                    errorMessages.add("Tài sản không tồn tại.");
+                    errorMessages.add("Tài sản không hợp lệ hoặc không thuộc quyền sở hữu của bạn.");
                 }
             } else {
                 errorMessages.add("Vui lòng chọn tài sản thế chấp.");

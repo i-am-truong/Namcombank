@@ -215,27 +215,50 @@ public class AssetDAO extends DBContext<Asset> {
         }
     }
 
-    public Asset getAssetById(int assetId) {
+    public Asset getAssetById(int assetId, int customerId) {
         Asset asset = null;
-        String sql = "SELECT * FROM CustomerAssets WHERE asset_id = ?"; // Adjust table and column names if needed
+        String sql = "SELECT asset_id, asset_name, asset_value, customer_id FROM CustomerAssets "
+                + "WHERE asset_id = ? AND customer_id = ? AND status = 'Approved'";
 
-        try (
-                PreparedStatement ps = connection.prepareStatement(sql)) {
-
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, assetId);
+            ps.setInt(2, customerId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    asset = new Asset();
+                    asset.setAssetId(rs.getInt("asset_id"));
+                    asset.setAssetName(rs.getString("asset_name"));
+                    asset.setAssetValue(rs.getBigDecimal("asset_value"));
+                    asset.setCustomerId(rs.getInt("customer_id")); // Nếu Asset có thuộc tính này
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error fetching asset by ID: " + e.getMessage());
+        }
+        return asset;
+    }
+
+    public List<Asset> getApprovedAssetsByCustomerId(int customerId) {
+        List<Asset> assets = new ArrayList<>();
+        String sql = "SELECT * FROM CustomerAssets WHERE customer_id = ? AND status = 'Approved'";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, customerId);
             ResultSet rs = ps.executeQuery();
 
-            if (rs.next()) {
-                asset = new Asset();
+            while (rs.next()) {
+                Asset asset = new Asset();
                 asset.setAssetId(rs.getInt("asset_id"));
                 asset.setAssetName(rs.getString("asset_name"));
                 asset.setAssetValue(rs.getBigDecimal("asset_value"));
-                // Add other fields based on your `Asset` model
+                asset.setAssetType(rs.getString("asset_type"));
+                assets.add(asset);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return asset;
+        return assets;
     }
 
     @Override

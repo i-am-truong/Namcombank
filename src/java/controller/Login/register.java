@@ -95,9 +95,7 @@ public class register extends HttpServlet {
 
         // Kiểm tra tuổi có >= 18 không
         try {
-            // Định dạng đúng với đầu vào từ người dùng (dd/MM/yyyy)
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            LocalDate birthDate = LocalDate.parse(dob, formatter); // Chuyển String thành LocalDate
+            LocalDate birthDate = LocalDate.parse(dob); // Chuyển String thành LocalDate
 
             LocalDate today = LocalDate.now();
             Period age = Period.between(birthDate, today);
@@ -108,13 +106,10 @@ public class register extends HttpServlet {
                 return;
             }
 
-            // Nếu cần lưu vào database, chuyển sang yyyy-MM-dd
-            String formattedDate = birthDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-
             // Lưu formattedDate vào database (ví dụ)
             // userDAO.saveUser(birthDate);
         } catch (DateTimeParseException e) {
-            request.setAttribute("error", "Invalid date format! Please enter a valid date (dd/MM/yyyy).");
+            request.setAttribute("error", "Invalid date format! Please enter a valid date (yyyy-MM-dd).");
             request.getRequestDispatcher("login/register.jsp").forward(request, response);
             return;
         }

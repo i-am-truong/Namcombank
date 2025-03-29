@@ -1,5 +1,5 @@
 <%@ page session="true" %>
-<%@ page import="java.sql.*, context.LoanPackageDAO, context.AssetDAO, model.LoanPackage, model.Asset, java.util.*, java.text.DecimalFormat" %>
+<%@ page import="java.sql.*, context.LoanPackageDAO, context.AssetDAO, model.LoanPackage, model.Asset, java.util.*, model.Customer, java.text.DecimalFormat" %>
 <%@ page contentType="text/html; charset=UTF-8" %>
 
 <%
@@ -7,6 +7,9 @@
         response.sendRedirect("login");
         return;
     }
+
+    Customer customer = (Customer) session.getAttribute("customer");
+    int customerId = customer.getCustomerId(); // Lấy ID khách hàng
 
     String packageIdParam = request.getParameter("package_id");
     String assetIdParam = request.getParameter("asset_id");
@@ -31,12 +34,12 @@
     }
 
     AssetDAO assetDAO = new AssetDAO();
-    assets = assetDAO.getAllAssets();
-    
+    assets = assetDAO.getApprovedAssetsByCustomerId(customerId); // Chỉ lấy tài sản của khách hàng
+
     if (assetIdParam != null) {
         try {
             assetId = Integer.parseInt(assetIdParam);
-            asset = assetDAO.getAssetById(assetId);
+            asset = assetDAO.getAssetById(assetId, customerId); // Chỉ lấy tài sản của khách hàng
         } catch (NumberFormatException e) {
             asset = null;
         }
@@ -80,20 +83,27 @@
                     <label for="asset_id" class="block text-gray-700 font-medium">Select Asset:</label>
                     <select id="asset_id" name="asset_id"
                             class="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200"
-                            <% if ("unsecured".equalsIgnoreCase(loan.getLoanType().trim())) { %> disabled <% } %>>
+                            <%= "unsecured".equalsIgnoreCase(loan.getLoanType().trim()) ? "disabled" : "" %>>
+
                         <% if ("unsecured".equalsIgnoreCase(loan.getLoanType().trim())) { %>
                         <option value="0" selected>None</option>
+                        <% } else { %>
+                        <% if (assets.isEmpty()) { %>
+                        <option value="" disabled selected>No approved assets available</option>
                         <% } else { %>
                         <option value="">-- Select an asset --</option>
                         <% for (Asset a : assets) { %>
                         <option value="<%= a.getAssetId() %>" 
-                                <% if (a.getAssetId() == assetId) { %> selected <% } %>>
-                            <%= a.getAssetName() %> - <%= a.getAssetType() %>
+                                <%= (a.getAssetId() == assetId) ? "selected" : "" %>>
+                            <%= a.getAssetName() %> - <%= a.getAssetType() %> 
+                            (Value: <%= formatter.format(a.getAssetValue()) %> VND)
                         </option>
+                        <% } %>
                         <% } %>
                         <% } %>
                     </select>
                 </div>
+
 
 
 
