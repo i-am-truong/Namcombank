@@ -1,6 +1,11 @@
 <%@ page import="java.util.List" %>
 <%@ page import="model.LoanPackage" %>
 <%@ page import="context.LoanPackageDAO" %>
+<%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="java.util.Date" %>
+<%
+    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+%>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -21,8 +26,8 @@
                             <th class="px-4 py-3">Loan Type</th>
                             <th class="px-4 py-3">Description</th>
                             <th class="px-4 py-3">Interest Rate (%)</th>
-                            <th class="px-4 py-3">Max Amount</th>
                             <th class="px-4 py-3">Min Amount</th>
+                            <th class="px-4 py-3">Max Amount</th>
                             <th class="px-4 py-3">Loan Term (months)</th>
                             <th class="px-4 py-3">Created Date</th>
                             <th class="px-4 py-3">Actions</th>
@@ -40,14 +45,16 @@
                             <td class="px-4 py-3 text-center"><%= loanPackage.getLoanType() %></td>
                             <td class="px-4 py-3"><%= loanPackage.getDescription() %></td>
                             <td class="px-4 py-3 text-center"><%= String.format("%.2f", loanPackage.getInterestRate()) %></td>
-                            <td class="px-4 py-3 text-center font-semibold text-green-600">
-                                <%= String.format("%,.0f", loanPackage.getMaxAmount()) %> VND
-                            </td>
                             <td class="px-4 py-3 text-center font-semibold text-red-600">
                                 <%= String.format("%,.0f", loanPackage.getMinAmount()) %> VND
                             </td>
+                            <td class="px-4 py-3 text-center font-semibold text-green-600">
+                                <%= String.format("%,.0f", loanPackage.getMaxAmount()) %> VND
+                            </td> 
                             <td class="px-4 py-3 text-center"><%= loanPackage.getLoanTerm() %> months</td>
-                            <td class="px-4 py-3 text-center"><%= loanPackage.getCreatedDate() %></td>
+                            <td class="px-4 py-3 text-center">
+                                <%= sdf.format(loanPackage.getCreatedDate()) %>
+                            </td>
                             <td class="px-4 py-3 flex flex-col space-y-2">
                                 <a href="loanpackage-detail.jsp?id=<%= loanPackage.getPackageId() %>"
                                    class="bg-green-600 text-white px-3 py-1 rounded-md hover:bg-green-700 transition">
