@@ -9,7 +9,7 @@
     }
 
     Customer customer = (Customer) session.getAttribute("customer");
-    int customerId = customer.getCustomerId(); // Lấy ID khách hàng
+    int customerId = customer.getCustomerId();
 
     String packageIdParam = request.getParameter("package_id");
     String assetIdParam = request.getParameter("asset_id");
@@ -34,12 +34,12 @@
     }
 
     AssetDAO assetDAO = new AssetDAO();
-    assets = assetDAO.getApprovedAssetsByCustomerId(customerId); // Chỉ lấy tài sản của khách hàng
+    assets = assetDAO.getApprovedAssetsByCustomerId(customerId); 
 
     if (assetIdParam != null) {
         try {
             assetId = Integer.parseInt(assetIdParam);
-            asset = assetDAO.getAssetById(assetId, customerId); // Chỉ lấy tài sản của khách hàng
+            asset = assetDAO.getAssetById(assetId, customerId);
         } catch (NumberFormatException e) {
             asset = null;
         }
@@ -48,6 +48,7 @@
     List<String> errorMessages = (List<String>) request.getAttribute("errorMessages");
     String lastAmount = request.getParameter("amount");
     DecimalFormat formatter = new DecimalFormat("#,###");
+    String loanType = loan.getLoanType().trim().toLowerCase();
 %>
 
 <!DOCTYPE html>
@@ -60,7 +61,7 @@
         <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-lg">
             <h2 class="text-2xl font-bold text-center text-green-600 mb-4">Loan Registration</h2>
 
-            <form action="../loan-request" method="POST" class="space-y-4" onsubmit="return validateAmount()">
+            <form action="../loan-request" method="POST" class="space-y-4" onsubmit="return validateForm()">
                 <input type="hidden" name="package_id" value="<%= loan.getPackageId() %>">
 
                 <div class="p-4 border border-gray-300 rounded-lg">
@@ -76,16 +77,16 @@
                     <input type="text" id="amount" name="amount" value="<%= lastAmount != null ? lastAmount : "" %>"
                            class="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200"
                            oninput="formatCurrency(this)" required>
-                    <p id="error-message" class="text-red-500 text-sm mt-2"></p>
+                    <p id="amount-error" class="text-red-500 text-sm mt-2"></p>
                 </div>
 
                 <div>
                     <label for="asset_id" class="block text-gray-700 font-medium">Select Asset:</label>
                     <select id="asset_id" name="asset_id"
                             class="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200"
-                            <%= "unsecured".equalsIgnoreCase(loan.getLoanType().trim()) ? "disabled" : "" %>>
+                            <%= loanType.equals("unsecured") ? "disabled" : "" %>>
 
-                        <% if ("unsecured".equalsIgnoreCase(loan.getLoanType().trim())) { %>
+                        <% if (loanType.equals("unsecured")) { %>
                         <option value="0" selected>None</option>
                         <% } else { %>
                         <% if (assets.isEmpty()) { %>
@@ -102,13 +103,8 @@
                         <% } %>
                         <% } %>
                     </select>
+                    <p id="asset-error" class="text-red-500 text-sm mt-2"></p>
                 </div>
-
-
-
-
-
-
 
                 <button type="submit" class="w-full bg-green-500 text-white py-3 rounded-lg text-lg font-bold hover:bg-green-700 transition">
                     Confirm Loan
@@ -133,7 +129,7 @@
 
             function validateAmount() {
                 let amountInput = document.getElementById("amount");
-                let errorMessage = document.getElementById("error-message");
+                let errorMessage = document.getElementById("amount-error");
                 let rawAmount = amountInput.value.replace(/\D/g, "");
                 let amount = parseInt(rawAmount);
 
@@ -150,6 +146,27 @@
                 }
                 errorMessage.textContent = "";
                 return true;
+            }
+
+            function validateAsset() {
+                let assetSelect = document.getElementById("asset_id");
+                let assetError = document.getElementById("asset-error");
+                let loanType = "<%= loanType %>";
+
+                if (loanType === "secured" && (assetSelect.value === "" || assetSelect.value === "0")) {
+                    assetError.textContent = "Bạn cần chọn tài sản thế chấp cho gói vay loại Secured.";
+                    return false;
+                }
+
+                assetError.textContent = "";
+                return true;
+            }
+
+            function validateForm() {
+                let isAmountValid = validateAmount();
+                let isAssetValid = validateAsset();
+
+                return isAmountValid && isAssetValid;
             }
         </script>
     </body>

@@ -91,15 +91,17 @@ public class LoanRequestServlet extends HttpServlet {
 
         // Kiểm tra nếu gói vay là "unsecured", thì không cần tài sản
         Asset asset = null;
+
         if (!"unsecured".equalsIgnoreCase(loanPackage.getLoanType().trim())) {
-            if (assetId > 0) {
+            if (assetId <= 0) { // Nếu assetId không hợp lệ
+                errorMessages.add("Gói vay này yêu cầu tài sản thế chấp. Vui lòng thêm tài sản vào hồ sơ trước khi gửi yêu cầu vay.");
+            } else {
                 AssetDAO assetDAO = new AssetDAO();
                 asset = assetDAO.getAssetById(assetId, customer.getCustomerId()); // Kiểm tra quyền sở hữu
+
                 if (asset == null) {
                     errorMessages.add("Tài sản không hợp lệ hoặc không thuộc quyền sở hữu của bạn.");
                 }
-            } else {
-                errorMessages.add("Vui lòng chọn tài sản thế chấp.");
             }
         } else {
             assetId = 0; // Đảm bảo assetId là 0 khi khoản vay không cần tài sản
