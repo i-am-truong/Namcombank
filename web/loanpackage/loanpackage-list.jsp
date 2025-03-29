@@ -17,7 +17,6 @@
                     <thead>
                         <tr class="bg-green-700 text-white">
                             <th class="px-4 py-3">Package ID</th>
-                            <th class="px-4 py-3">Staff ID</th>
                             <th class="px-4 py-3">Package Name</th>
                             <th class="px-4 py-3">Loan Type</th>
                             <th class="px-4 py-3">Description</th>
@@ -37,7 +36,6 @@
                         %>
                         <tr class="border-b hover:bg-gray-200">
                             <td class="px-4 py-3 text-center"><%= loanPackage.getPackageId() %></td>
-                            <td class="px-4 py-3 text-center"><%= loanPackage.getStaffId() %></td>
                             <td class="px-4 py-3 font-semibold text-green-700"><%= loanPackage.getPackageName() %></td>
                             <td class="px-4 py-3 text-center"><%= loanPackage.getLoanType() %></td>
                             <td class="px-4 py-3"><%= loanPackage.getDescription() %></td>

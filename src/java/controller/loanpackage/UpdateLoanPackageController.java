@@ -20,14 +20,14 @@ public class UpdateLoanPackageController extends HttpServlet {
             int packageId = Integer.parseInt(request.getParameter("package_id").trim());
             int staffId = Integer.parseInt(request.getParameter("staff_id").trim());
 
-            String packageName = request.getParameter("package_name").trim();
-            String loanType = request.getParameter("loan_type").trim();
+            String packageName = request.getParameter("packageName").trim();  // Sửa lại đúng tên tham số trong JSP
+            String loanType = request.getParameter("loanType").trim();
             String description = request.getParameter("description").trim();
 
-            BigDecimal interestRate = new BigDecimal(request.getParameter("interest_rate").trim());
-            BigDecimal maxAmount = new BigDecimal(request.getParameter("max_amount").trim());
-            BigDecimal minAmount = new BigDecimal(request.getParameter("min_amount").trim());
-            int loanTerm = Integer.parseInt(request.getParameter("loan_term").trim());
+            BigDecimal interestRate = new BigDecimal(request.getParameter("interestRate").trim());
+            BigDecimal maxAmount = new BigDecimal(request.getParameter("maxAmount").trim());
+            BigDecimal minAmount = new BigDecimal(request.getParameter("minAmount").trim());
+            int loanTerm = Integer.parseInt(request.getParameter("loanTerm").trim());
 
             Date updatedDate = new Date(System.currentTimeMillis());
 
@@ -41,18 +41,18 @@ public class UpdateLoanPackageController extends HttpServlet {
             boolean isUpdated = dao.updateLoanPackage(loanPackage);
 
             if (isUpdated) {
-                response.sendRedirect("loanpackage-list.jsp?success=true");
+                response.sendRedirect("loanpackage-list.jsp?success=Update successful");
             } else {
-                response.sendRedirect("update-loan-package.jsp?package_id=" + packageId + "&error=Update failed");
+                response.sendRedirect("loanpackage-update.jsp?id=" + packageId + "&error=Update failed");
             }
 
         } catch (NumberFormatException e) {
             Logger.getLogger(UpdateLoanPackageController.class.getName()).log(Level.SEVERE, "Lỗi định dạng dữ liệu đầu vào", e);
-            response.sendRedirect("update-loan-package.jsp?error=Invalid input");
+            response.sendRedirect("loanpackage-update.jsp?id=" + request.getParameter("package_id") + "&error=Invalid input");
 
         } catch (Exception e) {
             Logger.getLogger(UpdateLoanPackageController.class.getName()).log(Level.SEVERE, "Lỗi hệ thống", e);
-            response.sendRedirect("update-loan-package.jsp?error=System error");
+            response.sendRedirect("loanpackage-update.jsp?id=" + request.getParameter("package_id") + "&error=System error");
         }
     }
 }
