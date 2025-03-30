@@ -1,3 +1,4 @@
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
@@ -119,20 +120,20 @@
                         </div>
                     </div>
                     <!-- Search Bar -->
-<!--                    <div class="col-lg-6" style="margin-top: 10px;">
-                        <div class="header-search-form">
-                            <form action="search" method="get" style="display: flex; align-items: center;">
-                                <select class="form-select" name="loanPackages" style="height: 40px;">
-                                    <option value="0" selected>All Loan Packages</option>
-                                    <c:forEach var="loan" items="${loanPackages}">
-                                        <option value="${loan.getPackageId()}">${loan.getPackageName()}</option>
-                                    </c:forEach>
-                                </select>
-                                <input type="search" name="searchKeyword" placeholder="Search keyword here..." style="height: 40px; color: #0D4F2F">
-                                <button type="submit" style="height: 40px;"><i class="fas fa-search"></i></button>
-                            </form>
-                        </div>
-                    </div>-->
+                    <!--                    <div class="col-lg-6" style="margin-top: 10px;">
+                                            <div class="header-search-form">
+                                                <form action="search" method="get" style="display: flex; align-items: center;">
+                                                    <select class="form-select" name="loanPackages" style="height: 40px;">
+                                                        <option value="0" selected>All Loan Packages</option>
+                    <c:forEach var="loan" items="${loanPackages}">
+                        <option value="${loan.getPackageId()}">${loan.getPackageName()}</option>
+                    </c:forEach>
+                </select>
+                <input type="search" name="searchKeyword" placeholder="Search keyword here..." style="height: 40px; color: #0D4F2F">
+                <button type="submit" style="height: 40px;"><i class="fas fa-search"></i></button>
+            </form>
+        </div>
+    </div>-->
 
                     <!-- User Icon and Name -->
                     <!-- <div class="col-lg-1 text-right">
@@ -154,7 +155,7 @@
                                 </span>
 
                                 <span class="dropdown-menu" id="dropdownMenu">
-                                    <a href="#">&nbsp;&nbsp;${sessionScope.customer.balance} VND</a>
+                                    <a href="#" id="balanceLink">${sessionScope.customer.balance} VND</a>
                                     <a href="userProfile"><i class="fas fa-user"></i>&nbsp;&nbsp;Show profile</a>
                                     <a href="credit-cards"><i class="fas fa-credit-card"></i>&nbsp;&nbsp;My Credit Card</a>
                                     <a href="customer-loan-requests">
@@ -205,6 +206,12 @@
                 var userIcon = document.getElementById("userIcon");
                 var avatarSrc = userIcon.src;
                 userIcon.src = avatarSrc + "?t=" + new Date().getTime();
+            });
+
+            document.addEventListener('DOMContentLoaded', function () {
+                const balanceElement = document.getElementById('balanceLink');
+                const balance = parseFloat(balanceElement.textContent);
+                balanceElement.textContent = balance.toLocaleString('vi-VN') + ' VND';
             });
         </script>
     </body>

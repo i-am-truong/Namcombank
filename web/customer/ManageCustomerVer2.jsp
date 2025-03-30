@@ -347,7 +347,9 @@
                                                 </td>
                                                 <td>${customer.username}</td>
                                                 <td>${customer.address}</td>
-                                                <td>${customer.balance}</td>
+                                                <td>
+                                                    <fmt:formatNumber value="${customer.balance}" pattern="#,##0"></fmt:formatNumber>
+                                                </td>
                                             </tr>
 
                                         </c:forEach>
