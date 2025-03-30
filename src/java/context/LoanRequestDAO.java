@@ -412,7 +412,7 @@ public class LoanRequestDAO extends DBContext<LoanRequest> {
         }
 
         // Thêm sắp xếp
-        sql.append(" ORDER BY r.request_date DESC");
+        sql.append(" ORDER BY r.request_id DESC");
 
         try (PreparedStatement stmt = connection.prepareStatement(sql.toString())) {
             // Thiết lập tham số

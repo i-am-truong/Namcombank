@@ -4,21 +4,15 @@ import context.AssetDAO;
 import context.CustomerDAO;
 import controller.auth.BaseRBACControlller;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import model.Asset;
 import model.auth.Staff;
 
-/**
- * @author Asus
- */
 public class AssetAddController extends BaseRBACControlller {
 
     private AssetDAO assetDAO;
@@ -33,27 +27,27 @@ public class AssetAddController extends BaseRBACControlller {
     @Override
     protected void doAuthorizedPost(HttpServletRequest request, HttpServletResponse response, Staff account) throws ServletException, IOException {
         try {
-            // Lấy thông tin từ form
+            // Get form information
             String customerIdStr = request.getParameter("customer_id");
             String assetType = request.getParameter("asset_type");
             String assetName = request.getParameter("asset_name");
             String assetValueStr = request.getParameter("asset_value");
             String description = request.getParameter("description");
 
-            // Lấy thông tin nhân viên từ session
+            // Get staff ID from session
             int staffId = account.getId();
 
-            // Tạo map để lưu lỗi
+            // Create map to store errors
             Map<String, String> errors = new HashMap<>();
 
-            // Validate dữ liệu
+            // Validate data
             int customerId = 0;
             if (customerIdStr == null || customerIdStr.trim().isEmpty()) {
                 errors.put("customer_id", "Vui lòng chọn khách hàng");
             } else {
                 try {
                     customerId = Integer.parseInt(customerIdStr);
-                    // Kiểm tra khách hàng tồn tại
+                    // Check if customer exists
                     if (customerDAO.getCustomerById(customerId) == null) {
                         errors.put("customer_id", "Khách hàng không tồn tại");
                     }
@@ -75,67 +69,41 @@ public class AssetAddController extends BaseRBACControlller {
                 errors.put("asset_name", "Tên tài sản không được vượt quá 100 ký tự");
             }
 
-            // Kiểm tra asset_value 
+            // Validate asset value (simplified - frontend already handles most validation)
             BigDecimal assetValue = null;
             if (assetValueStr == null || assetValueStr.trim().isEmpty()) {
                 errors.put("asset_value", "Vui lòng nhập giá trị tài sản");
             } else {
                 try {
-                    // Loại bỏ dấu phẩy và khoảng trắng
-                    String cleanValue = assetValueStr.replaceAll("[\\s.,]", "").trim();
-
-                    // Kiểm tra nếu giá trị không phải số
-                    if (!cleanValue.matches("^\\d+$")) {
-                        errors.put("asset_value", "Giá trị tài sản phải là số");
-                    } else {
-                        // Chuyển đổi sang BigDecimal
-                        assetValue = new BigDecimal(cleanValue);
-
-                        // Kiểm tra giá trị phải lớn hơn 0
-                        if (assetValue.compareTo(BigDecimal.ZERO) <= 0) {
-                            errors.put("asset_value", "Giá trị tài sản phải lớn hơn 0");
-                        }
-
-                        // Kiểm tra giá trị quá lớn
-                        if (assetValue.compareTo(new BigDecimal("1000000000000")) > 0) {
-                            errors.put("asset_value", "Giá trị tài sản quá lớn (tối đa 1.000 tỷ VND)");
-                        }
+                    // The JS already removes formatting before submission
+                    assetValue = new BigDecimal(assetValueStr);
+                    
+                    // Simple validation for negative values
+                    if (assetValue.compareTo(BigDecimal.ZERO) <= 0) {
+                        errors.put("asset_value", "Giá trị tài sản phải lớn hơn 0");
                     }
                 } catch (NumberFormatException e) {
                     errors.put("asset_value", "Giá trị tài sản không hợp lệ");
                 }
             }
 
-            // Nếu có lỗi, quay lại form với thông báo lỗi
+            // If there are errors, return to the form with error messages
             if (!errors.isEmpty()) {
-                // Log lỗi để debug
-                System.out.println("Có lỗi validate:");
-                for (Map.Entry<String, String> entry : errors.entrySet()) {
-                    System.out.println(entry.getKey() + ": " + entry.getValue());
-                }
-
-                // Lưu lại các giá trị đã nhập
+                // Save entered values
                 request.setAttribute("customer_id", customerIdStr);
                 request.setAttribute("asset_type", assetType);
                 request.setAttribute("asset_name", assetName);
-                request.setAttribute("asset_value", assetValueStr); // Giữ nguyên giá trị đã nhập
+                request.setAttribute("asset_value", assetValueStr);
                 request.setAttribute("description", description);
-
-                // Lưu lỗi để hiển thị trong JSP
                 request.setAttribute("errors", errors);
-
-                // Lấy lại danh sách khách hàng
                 request.setAttribute("customers", customerDAO.getAllCustomers());
-
-                // Đặt viewMode = false để hiển thị form thêm tài sản
                 request.setAttribute("viewMode", false);
-
-                // Chuyển tiếp đến trang JSP
+                
                 request.getRequestDispatcher("/customer-assets/addCustomerAsset.jsp").forward(request, response);
                 return;
             }
 
-            // Tạo đối tượng Asset
+            // Create Asset object
             Asset asset = new Asset();
             asset.setCustomerId(customerId);
             asset.setStaffId(staffId);
@@ -145,34 +113,29 @@ public class AssetAddController extends BaseRBACControlller {
             asset.setDescription(description);
             asset.setStatus("PENDING");
 
-            // Lưu vào database
+            // Save to database
             boolean success = assetDAO.insertAsset(asset);
 
             if (success) {
-                // Chuyển hướng đến trang danh sách tài sản
+                // Redirect to asset list
                 response.sendRedirect("assets-filter");
             } else {
-                // Thêm thất bại, hiển thị lại form với thông báo lỗi
+                // Add failed, display form with error message
                 request.getSession().setAttribute("errorMessage", "Có lỗi xảy ra khi thêm tài sản. Vui lòng thử lại.");
-
-                // Lưu lại các giá trị đã nhập
+                
+                // Save entered values
                 request.setAttribute("customer_id", customerIdStr);
                 request.setAttribute("asset_type", assetType);
                 request.setAttribute("asset_name", assetName);
                 request.setAttribute("asset_value", assetValueStr);
                 request.setAttribute("description", description);
-
-                // Lấy lại danh sách khách hàng
                 request.setAttribute("customers", customerDAO.getAllCustomers());
-
-                // Đặt viewMode = false
                 request.setAttribute("viewMode", false);
-
+                
                 request.getRequestDispatcher("/customer-assets/addCustomerAsset.jsp").forward(request, response);
             }
 
         } catch (Exception e) {
-            System.err.println("Lỗi: " + e.getMessage());
             e.printStackTrace();
             request.getSession().setAttribute("errorMessage", "Lỗi: " + e.getMessage());
             response.sendRedirect("error.jsp");
@@ -182,10 +145,10 @@ public class AssetAddController extends BaseRBACControlller {
     @Override
     protected void doAuthorizedGet(HttpServletRequest request, HttpServletResponse response, Staff account) throws ServletException, IOException {
         try {
-            // Lấy danh sách khách hàng với đầy đủ thông tin cần thiết
+            // Get customer list
             request.setAttribute("customers", customerDAO.getAllCustomers());
 
-            // Lấy asset_id từ tham số URL (nếu có)
+            // Get asset_id from URL parameter (if any)
             String assetIdParam = request.getParameter("asset_id");
             if (assetIdParam != null && !assetIdParam.isEmpty()) {
                 try {
@@ -193,10 +156,10 @@ public class AssetAddController extends BaseRBACControlller {
                     Asset asset = assetDAO.get(assetId);
                     if (asset != null) {
                         request.setAttribute("asset", asset);
-                        request.setAttribute("viewMode", true); // Chế độ xem thông tin
+                        request.setAttribute("viewMode", true); // View mode
                     }
                 } catch (NumberFormatException e) {
-                    // Không làm gì nếu asset_id không hợp lệ
+                    // Do nothing if asset_id is invalid
                 }
             }
 

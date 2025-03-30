@@ -64,7 +64,7 @@ public class VerifyOTPServlet extends HttpServlet {
                 // Send OTP via email
                 sendEmail(staffEmail, otpValue);
 
-                // Store OTP in session with expiry time (1 minute)
+                // Store OTP in session with expiry time (5 minute)
                 session.setAttribute("otp", otpValue);
                 session.setAttribute("otpExpiry", System.currentTimeMillis() + 300000);
                 session.setAttribute("otpSent", true);

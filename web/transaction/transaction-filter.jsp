@@ -92,12 +92,6 @@
                     <%@include file="../homepage/header_admin.jsp" %>
                     <div class="container-fluid">
                         <div class="table-wrapper">
-                            <!-- Debug information -->
-                            <c:if test="${not empty transactions}">
-                                <div class="alert alert-info">
-                                    Number of transactions found: ${transactions.size()}
-                                </div>
-                            </c:if>
 
                             <c:if test="${not empty sessionScope.successMessage}">
                                 <div class="alert alert-success alert-dismissible fade show" role="alert">

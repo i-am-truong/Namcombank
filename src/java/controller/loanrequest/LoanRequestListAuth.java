@@ -1,6 +1,7 @@
 package controller.loanrequest;
 
 import context.LoanRequestDAO;
+import controller.auth.BaseRBACControlller;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -17,7 +18,7 @@ import model.auth.Staff;
  * Controller for displaying loan requests list
  */
 @WebServlet(name = "LoanRequestListAuth", urlPatterns = {"/loan-requests-auth"})
-public class LoanRequestListAuth extends HttpServlet {
+public class LoanRequestListAuth extends BaseRBACControlller {
 
     private LoanRequestDAO loanRequestDAO;
 
@@ -26,13 +27,17 @@ public class LoanRequestListAuth extends HttpServlet {
         loanRequestDAO = new LoanRequestDAO();
     }
 
+
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doAuthorizedPost(HttpServletRequest request, HttpServletResponse response, Staff account) throws ServletException, IOException {
+        doAuthorizedGet(request, response,account);
+    }
+
+    @Override
+    protected void doAuthorizedGet(HttpServletRequest request, HttpServletResponse response, Staff account) throws ServletException, IOException {
         // Kiểm tra phiên đăng nhập
 
         try {
-
             // Lấy tham số tìm kiếm
             String customerName = request.getParameter("customerName");
             String packageName = request.getParameter("packageName");
@@ -117,12 +122,6 @@ public class LoanRequestListAuth extends HttpServlet {
             request.getRequestDispatcher("/error.jsp").forward(request, response);
             return;
         }
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        doGet(request, response);
     }
 
 }

@@ -420,7 +420,6 @@
             });
 
 
-
             document.addEventListener('DOMContentLoaded', function () {
                 // Khởi tạo Select2 cho dropdown chọn customer
                 $('#customer_id').select2({
@@ -442,7 +441,7 @@
                     templateSelection: formatCustomerSelection
                 });
 
-// Format hiển thị kết quả tìm kiếm
+                // Format hiển thị kết quả tìm kiếm
                 function formatCustomer(customer) {
                     if (customer.loading)
                         return customer.text;
@@ -458,12 +457,12 @@
                     return $container;
                 }
 
-// Format hiển thị khi đã chọn
+                // Format hiển thị khi đã chọn
                 function formatCustomerSelection(customer) {
                     return customer.text || customer.id;
                 }
 
-// Bắt sự kiện thay đổi để xử lý logic nếu cần
+                // Bắt sự kiện thay đổi để xử lý logic nếu cần
                 $('#customer_id').on('change', function () {
                     console.log('Selected customer ID:', $(this).val());
                 });

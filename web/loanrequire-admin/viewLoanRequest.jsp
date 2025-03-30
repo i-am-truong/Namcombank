@@ -93,12 +93,6 @@
                     <%@include file="../homepage/header_admin.jsp" %>
                     <div class="container-fluid">
                         <div class="table-wrapper">
-                            <!-- Debug information -->
-                            <c:if test="${not empty loanRequests}">
-                                <div class="alert alert-info">
-                                    Number of loan requests found: ${loanRequests.size()}
-                                </div>
-                            </c:if>
 
                             <c:if test="${not empty sessionScope.successDeleteMessage}">
                                 <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -111,7 +105,7 @@
                             </c:if>
 
                             <!-- Search Filters Form -->
-                            <form action="${pageContext.request.contextPath}/loan-requests-auth" method="GET" id="searchForm">
+                            <form action="${pageContext.request.contextPath}/loan-requests-auth" method="POST" id="searchForm">
                                 <div class="search-filters">
                                     <h4 class="mb-3">Search Loan Requests</h4>
 
@@ -325,14 +319,14 @@
                                                             </c:choose>
                                                         </td>
                                                         <td>
-                                                        <c:choose>
-                                                            <c:when test="${not empty request.approvedBy}">
-                                                                ${request.approvedBy}
-                                                            </c:when>
-                                                            <c:otherwise>
-                                                                N/A
-                                                            </c:otherwise>
-                                                        </c:choose>
+                                                            <c:choose>
+                                                                <c:when test="${not empty request.approvedBy}">
+                                                                    ${request.approvedBy}
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    N/A
+                                                                </c:otherwise>
+                                                            </c:choose>
                                                         </td>
 
                                                         <td>
@@ -373,24 +367,24 @@
         <!-- Custom scripts for all pages-->
         <script src="adminassets/js/sb-admin-2.min.js"></script>
         <script>
-            // Clear filters functionality
-            document.getElementById('clearFiltersBtn').addEventListener('click', function () {
-                // Reset all form fields
-                document.getElementById('customerName').value = '';
-                document.getElementById('packageName').value = '';
-                document.getElementById('status').value = '';
-                document.getElementById('minAmount').value = '';
-                document.getElementById('maxAmount').value = '';
-                document.getElementById('hasAsset').value = '';
-                document.getElementById('requestDateFrom').value = '';
-                document.getElementById('requestDateTo').value = '';
-                document.getElementById('approvedBy').value = '';
-                document.getElementById('approvalDateFrom').value = '';
-                document.getElementById('approvalDateTo').value = '';
+                    // Clear filters functionality
+                    document.getElementById('clearFiltersBtn').addEventListener('click', function () {
+                        // Reset all form fields
+                        document.getElementById('customerName').value = '';
+                        document.getElementById('packageName').value = '';
+                        document.getElementById('status').value = '';
+                        document.getElementById('minAmount').value = '';
+                        document.getElementById('maxAmount').value = '';
+                        document.getElementById('hasAsset').value = '';
+                        document.getElementById('requestDateFrom').value = '';
+                        document.getElementById('requestDateTo').value = '';
+                        document.getElementById('approvedBy').value = '';
+                        document.getElementById('approvalDateFrom').value = '';
+                        document.getElementById('approvalDateTo').value = '';
 
-                // Redirect to loan-requests-auth without search parameters
-                window.location.href = 'loan-requests-auth';
-            });
+                        // Redirect to loan-requests-auth without search parameters
+                        window.location.href = 'loan-requests-auth';
+                    });
         </script>
     </body>
 </html>

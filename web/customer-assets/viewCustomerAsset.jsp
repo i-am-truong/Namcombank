@@ -93,15 +93,8 @@
                     <%@include file="../homepage/header_admin.jsp" %>
                     <div class="container-fluid">
                         <div class="table-wrapper">
-                            <!-- Debug information -->
-                            <c:if test="${not empty assets}">
-                                <div class="alert alert-info">
-                                    Assets found: ${assets.size()}
-                                </div>
-                            </c:if>
-
                             <!-- Search Filters Form -->
-                            <form action="${pageContext.request.contextPath}/assets-filter" method="GET" id="searchForm">
+                            <form action="${pageContext.request.contextPath}/assets-filter" method="POST" id="searchForm">
                                 <div class="search-filters">
                                     <h4 class="mb-3">Search Assets</h4>
 

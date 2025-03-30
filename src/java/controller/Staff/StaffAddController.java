@@ -22,7 +22,7 @@ public class StaffAddController extends BaseRBACControlller {
 
     private static final Pattern CIC_REGEX = Pattern.compile("^[0-9]{12}$");
     private static final Pattern PHONE_REGEX = Pattern.compile("^0[0-9]{9}$");
-    private static final Pattern EMAIL_REGEX = Pattern.compile("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+    private static final Pattern EMAIL_REGEX = Pattern.compile("^[a-zA-Z0-9._]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
     private static final Pattern ADDRESS_REGEX = Pattern.compile("^[\\p{L}0-9\\s,.\\-'/()]{3,}$");
     private static final Pattern USERNAME_REGEX = Pattern.compile("^[A-Za-z0-9_.]+$");
     private static final Pattern FULLNAME_REGEX = Pattern.compile("^\\p{L}+(?:\\s\\p{L}+)+$");
