@@ -6,7 +6,6 @@ package controller.customer;
 
 import context.CustomerDAO;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,11 +16,10 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import model.Customer;
-import org.apache.poi.ss.usermodel.RichTextString;
-
 
 /**
  *
@@ -47,12 +45,13 @@ public class ExportCustomers extends HttpServlet {
         HttpSession session = request.getSession();
         try (Workbook workbook = new XSSFWorkbook(); OutputStream out = response.getOutputStream();) {
 
-            Sheet sheet = workbook.createSheet("Components");
+            Sheet sheet = workbook.createSheet("Customers");
             Row header = sheet.createRow(0);
             String[] columns = {"ID", "Fullname", "Username", "Active", "Email", "DOB", "Gender", "Phonenumber", "Balance", "CID", "Address"};
             for (int i = 0; i < columns.length; i++) {
                 header.createCell(i).setCellValue(columns[i]);
             }
+
             int rowNum = 1;
             List<Customer> customers = new ArrayList<>();
             if ("error".equalsIgnoreCase(type)) {
@@ -60,10 +59,12 @@ public class ExportCustomers extends HttpServlet {
                 if (customers == null || customers.isEmpty()) {
                     customers = cdao.getAllCustomers();
                 }
-                session.removeAttribute("errorComponents");
+                session.removeAttribute("errorCustomers");
             } else {
                 customers = cdao.getAllCustomers();
             }
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
             for (Customer customer : customers) {
                 Row row = sheet.createRow(rowNum++);
@@ -72,12 +73,20 @@ public class ExportCustomers extends HttpServlet {
                 row.createCell(2).setCellValue(customer.getUsername());
                 row.createCell(3).setCellValue(customer.getActive() == 0 ? "Closed" : "Opening");
                 row.createCell(4).setCellValue(customer.getEmail());
-                row.createCell(5).setCellValue(customer.getDob().toString());
+                row.createCell(5).setCellValue(customer.getDob() != null ? dateFormat.format(customer.getDob()) : "");
                 row.createCell(6).setCellValue(customer.getGender() == 0 ? "Female" : "Male");
                 row.createCell(7).setCellValue(customer.getPhonenumber());
-                row.createCell(8).setCellValue((RichTextString) customer.getBalance());
+
+                // Fix for the balance value - convert BigDecimal to String
+                row.createCell(8).setCellValue(customer.getBalance() != null ? customer.getBalance().toString() : "0");
+
                 row.createCell(9).setCellValue(customer.getCid());
                 row.createCell(10).setCellValue(customer.getAddress());
+            }
+
+            // Auto-size columns for better readability
+            for (int i = 0; i < columns.length; i++) {
+                sheet.autoSizeColumn(i);
             }
 
             workbook.write(out);
