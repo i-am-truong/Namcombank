@@ -43,7 +43,7 @@
                             <li><a href="newsList" >News <i class="fa fa-newspaper"></i></a>
                             </li>
                             <li><a href="javascript:void(0)">Feedback <i class="fa fa-star"></i></a></li>
-                            <li><a href="chat/chat_customer.jsp">Chat<i class="fa fa-comment-dots"></i></a>
+                            <li><a href="chat/chat_customer.jsp">Chat With Admin<i class="fa fa-comment-dots"></i></a>
 
                         </ul>
                     </nav>

@@ -584,7 +584,9 @@
                                                 </td>
                                                 <td title="${customer.username}">${customer.username}</td>
                                                 <td title="${customer.address}">${customer.address}</td>
-                                                <td>${customer.balance}</td>
+                                                <td>
+                                                    <fmt:formatNumber value="${customer.balance}" pattern="#,##0"></fmt:formatNumber>
+                                                </td>
                                                 <td class="actions-cell">
                                                     <div class="d-flex">
                                                         <a href="editCustomer?customerId=${customer.customerId}" class="btn btn-primary btn-sm me-1" title="Edit customer">
